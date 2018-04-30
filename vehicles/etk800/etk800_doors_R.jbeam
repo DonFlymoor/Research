@@ -1,0 +1,576 @@
+{
+"etk800_door_RR_wagon": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Right Door",
+        "value":600,
+    }
+    "slotType" : "etk800_door_RR_wagon",
+    "slots": [
+        ["type", "default", "description"]
+        ["etk800_doorglass_RR_wagon","etk800_doorglass_RR_wagon", "Rear Right Door Glass"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_door_RR", ["etk800_door_RR"]],
+         ["etk800_doorpanel_RR", ["etk800_door_RR"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //rear right door
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"selfCollision":true},
+         {"collision":true},
+         {"group":"etk800_door_RR"},
+         {"nodeWeight":1.9},
+         ["d15r",-0.88,0.33, 0.23],
+         ["d16r",-0.89,0.89, 0.23],
+         ["d17r",-0.91,0.3, 0.62],
+         ["d18r",-0.94,1.06, 0.64],
+         {"nodeWeight":1.43},
+         ["d19r",-0.85,0.33, 0.90],
+         ["d20r",-0.855,0.71, 0.91{"selfCollision":false}],
+         ["d21r",-0.86,1.20, 0.93],
+
+         {"nodeWeight":1.24},
+         ["d22r",-0.76, 0.40, 1.14],
+         ["d23r",-0.66, 0.45, 1.33],
+         ["d24r",-0.66, 0.75, 1.32],
+         ["d25r",-0.66, 1.06, 1.31],
+         ["d26r",-0.74, 1.12, 1.17],
+
+         //rigidifier
+         {"selfCollision":false},
+         {"collision":false}
+         {"nodeWeight":1.43},
+         ["d27r",-0.50, 0.8, 0.7],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--DOORS--
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":1401000,"beamDamp":90},
+          {"beamDeform":28000,"beamStrength":"FLT_MAX"},
+          //rear door main shape
+          ["d15r","d16r"],
+          ["d17r","d18r"],
+          ["d19r","d20r"],
+          ["d20r","d21r"],
+          ["d19r","d22r"],
+          ["d22r","d23r"],
+          ["d23r","d24r"],
+          ["d24r","d25r"],
+          ["d25r","d26r"],
+          ["d26r","d21r"],
+
+          ["d15r","d17r"],
+          ["d16r","d18r"],
+          ["d17r","d19r"],
+          ["d18r","d20r"],
+          ["d18r","d21r"],
+
+          //surficial crossing
+          {"beamDeform":5500,"beamStrength":"FLT_MAX"},
+          ["d15r","d18r"],
+          ["d16r","d17r"],
+          ["d18r","d19r"],
+          ["d20r","d17r"],
+
+          //corner rigids
+          {"beamSpring":1101000,"beamDamp":90},
+          {"beamDeform":3200,"beamStrength":"FLT_MAX"},
+          ["d15r","d19r"],
+          ["d16r","d19r"],
+          ["d16r","d20r"],
+          ["d16r","d21r"],
+
+          ["d20r","d26r"],
+          ["d24r","d26r"],
+          ["d23r","d25r"],
+
+          ["d22r","d20r"],
+
+          ["d25r","d21r"],
+          ["d22r","d24r"],
+          ["d19r","d23r"],
+
+          ["d22r","d17r"],
+          ["d26r","d18r"],
+
+          ["d19r","d21r"],
+
+          //window frame
+          ["d23r", "d17r"],
+          ["d24r", "d17r"],
+          ["d24r", "d18r"],
+          ["d25r", "d18r"],
+
+          //rigidifier
+          {"beamSpring":1401000,"beamDamp":90},
+          {"beamDeform":4400,"beamStrength":"FLT_MAX"},
+          {"deformGroup":"doorglass_RR_break", "deformationTriggerRatio":0.05}
+          ["d15r","d27r"],
+          ["d16r","d27r"],
+          ["d17r","d27r"],
+          ["d18r","d27r"],
+          ["d19r","d27r"],
+          ["d20r","d27r"],
+          ["d21r","d27r"],
+
+          {"beamDeform":3600,"beamStrength":"FLT_MAX"},
+          ["d22r","d27r"],
+          ["d23r","d27r"],
+          ["d24r","d27r"],
+          ["d25r","d27r"],
+          ["d26r","d27r"],
+          {"deformGroup":""}
+
+          //rear door hinge
+          {"beamSpring":2501000,"beamDamp":150},
+          {"beamDeform":28000,"beamStrength":75000},
+          {"disableTriangleBreaking":true}
+          {"breakGroup":"doorhinge_a_RR"},
+          ["d15r","f3rr"],
+          ["d15r","f4rr"],
+          ["d15r","p3r"],
+
+          ["d19r","f2rr"],
+          ["d19r","p5r"],
+          ["d19r","p8r"],
+
+          {"breakGroup":"doorhinge_b_RR"},
+          ["d15r","f3r"],
+          ["d15r","p4r"],
+          ["d15r","p6r"],
+
+          ["d19r","f8r"],
+          ["d19r","p6r"],
+          {"breakGroup":""},
+
+          //--REAR DOOR LATCH--
+          {"beamSpring":2501000,"beamDamp":150},
+          {"beamDeform":18000,"beamStrength":36000},
+          {"breakGroup":"doorlatch_RR"},
+          ["d27r","q1r"],
+          ["d27r","q5r"],
+          ["d18r","q1r"],
+          ["d18r","q5r"],
+          ["d16r","f4rr"],
+          {"breakGroup":""},
+
+          //damping
+          {"beamDeform":27600,"beamStrength":225000},
+          {"beamSpring":0,"beamDamp":15},
+          {"breakGroup":"doorhinge_a_RR"},
+          ["d27r","f9r"],
+          {"breakGroup":"doorhinge_b_RR"},
+          ["d19r","f9r"],
+          {"breakGroup":""},
+
+          //rear door support beams
+          {"beamType":"|SUPPORT","beamLongBound":4},
+          {"beamSpring":901000,"beamDamp":90},
+          {"beamDeform":11000,"beamStrength":100000},
+          ["d20r","q1r"],
+          ["d16r","f4r"],
+          ["d16r","f9r"],
+          ["d17r","f3rr",{"beamPrecompression":0.95}],
+          ["d20r","p6r"],
+          ["d15r","f3r"],
+          ["d19r","f9r"],
+          ["d15r","f2rr"],
+          ["d20r","f5rr"{"beamPrecompression":0.85}],
+          ["d23r","p7r",{"beamPrecompression":0.95}],
+          ["d23r","p8r",{"beamPrecompression":0.95}],
+
+          ["d17r","p4r",{"beamPrecompression":0.98}],
+          ["d17r","p3r",{"beamPrecompression":0.65}],
+
+          ["d17r","f3r",{"beamPrecompression":0.96}],
+
+          ["d23r","rf2",{"beamPrecompression":0.98}],
+          ["d24r","rf3",{"beamPrecompression":0.98}],
+          ["d25r","rf4",{"beamPrecompression":0.98}],
+
+          ["d23r","rf2r",{"beamPrecompression":0.98,"beamLongBound":8}],
+          ["d24r","rf3r",{"beamPrecompression":0.98,"beamLongBound":8}],
+          ["d25r","rf4r",{"beamPrecompression":0.98,"beamLongBound":8}],
+
+          ["d26r","rf4r",{"beamPrecompression":0.98}],
+          ["d26r","p9r",{"beamPrecompression":0.98}],
+
+          ["d21r","q1r"],
+          ["d18r","f9r"],
+          {"beamPrecompression":1.0},
+          {"disableTriangleBreaking":false}
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //rear right door
+            {"groundModel":"metal"},
+            {"group":"etk800_door_RR"},
+            {"dragCoef":10},
+            ["d17r","d16r","d15r"],
+            ["d17r","d18r","d16r"],
+            ["d19r","d18r","d17r"],
+            ["d19r","d20r","d18r"],
+            ["d20r","d21r","d18r"],
+            ["d22r","d20r","d19r"],
+            ["d24r","d22r","d23r"],
+            ["d24r","d20r","d22r"],
+            ["d24r","d26r","d20r"],
+            ["d25r","d26r","d24r"],
+            ["d26r","d21r","d20r"],
+
+            //door edge tris
+            {"dragCoef":0},
+            {"group":""},
+            //{"breakGroup":"doorhinge_b_RR"},
+            //["d17r", "p4r", "d19r"],
+            //["p4r", "p6r", "d19r"],
+            //["p4r", "d17r", "d15r"],
+            //["p4r", "d15r", "f3rr"],
+            //["d18r", "d21r", "q1r"],
+            //["d18r", "q1r", "q5r"],
+            //["d18r", "q5r", "f4rr"],
+            //["d18r", "f4rr", "d16r"],
+            //
+            //{"group":""},
+            //{"breakGroup":["doorhinge_a_RR","doorhinge_a_FR"]}
+            //{"optional":true},
+            //["d19r","d17r","d6r"],
+            //["d19r","d6r","d9r"],
+            //["d17r","d15r","d3r"],
+            //["d17r","d3r","d6r"],
+            //{"optional":false},
+            //{"breakGroup":""}
+    ],
+}
+"etk800_door_RL_wagon": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Left Door",
+        "value":600,
+    }
+    "slotType" : "etk800_door_RL_wagon",
+    "slots": [
+        ["type", "default", "description"]
+        ["etk800_doorglass_RL_wagon","etk800_doorglass_RL_wagon", "Rear Left Door Glass"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_door_RL", ["etk800_door_RL"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //rear left door
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"selfCollision":true},
+         {"collision":true},
+         {"group":"etk800_door_RL"},
+         {"nodeWeight":1.9},
+         ["d15l", 0.88,0.33, 0.23],
+         ["d16l", 0.89,0.89, 0.23],
+         ["d17l", 0.91,0.3, 0.62],
+         ["d18l", 0.94,1.06, 0.64],
+         {"nodeWeight":1.43},
+         ["d19l", 0.85,0.33, 0.90],
+         ["d20l", 0.855,0.71, 0.91{"selfCollision":false}],
+         ["d21l", 0.86,1.20, 0.93],
+
+         {"nodeWeight":1.24},
+         ["d22l", 0.76, 0.40, 1.14],
+         ["d23l", 0.66, 0.45, 1.33],
+         ["d24l", 0.66, 0.75, 1.32],
+         ["d25l", 0.66, 1.06, 1.31],
+         ["d26l", 0.74, 1.12, 1.17],
+
+         //rigidifier
+         {"selfCollision":false},
+         {"collision":false}
+         {"nodeWeight":1.43},
+         ["d27l", 0.50, 0.8, 0.7],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--DOORS--
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":1401000,"beamDamp":90},
+          {"beamDeform":28000,"beamStrength":"FLT_MAX"},
+          //rear door main shape
+          ["d15l","d16l"],
+          ["d17l","d18l"],
+          ["d19l","d20l"],
+          ["d20l","d21l"],
+          ["d19l","d22l"],
+          ["d22l","d23l"],
+          ["d23l","d24l"],
+          ["d24l","d25l"],
+          ["d25l","d26l"],
+          ["d26l","d21l"],
+
+          ["d15l","d17l"],
+          ["d16l","d18l"],
+          ["d17l","d19l"],
+          ["d18l","d20l"],
+          ["d18l","d21l"],
+
+          //surficial crossing
+          {"beamDeform":5500,"beamStrength":"FLT_MAX"},
+          ["d15l","d18l"],
+          ["d16l","d17l"],
+          ["d18l","d19l"],
+          ["d20l","d17l"],
+
+          //corner rigids
+          {"beamSpring":1101000,"beamDamp":90},
+          {"beamDeform":3200,"beamStrength":"FLT_MAX"},
+          ["d15l","d19l"],
+          ["d16l","d19l"],
+          ["d16l","d20l"],
+          ["d16l","d21l"],
+
+          ["d24l","d26l"],
+          ["d23l","d25l"],
+
+          ["d22l","d20l"],
+          ["d26l","d20l"],
+
+          ["d25l","d21l"],
+          ["d22l","d24l"],
+          ["d19l","d23l"],
+
+          ["d22l","d17l"],
+          ["d26l","d18l"],
+
+          ["d19l","d21l"],
+
+          //window frame
+          ["d23l", "d17l"],
+          ["d24l", "d17l"],
+          ["d24l", "d18l"],
+          ["d25l", "d18l"],
+
+          //rigidifier
+          {"beamSpring":1401000,"beamDamp":90},
+          {"beamDeform":4400,"beamStrength":"FLT_MAX"},
+          {"deformGroup":"doorglass_RL_break", "deformationTriggerRatio":0.05}
+          ["d15l","d27l"],
+          ["d16l","d27l"],
+          ["d17l","d27l"],
+          ["d18l","d27l"],
+          ["d19l","d27l"],
+          ["d20l","d27l"],
+          ["d21l","d27l"],
+
+          {"beamDeform":3600,"beamStrength":"FLT_MAX"},
+          ["d22l","d27l"],
+          ["d23l","d27l"],
+          ["d24l","d27l"],
+          ["d25l","d27l"],
+          ["d26l","d27l"],
+          {"deformGroup":""}
+
+          //rear door hinge
+          {"beamSpring":2501000,"beamDamp":150},
+          {"beamDeform":28000,"beamStrength":75000},
+          {"disableTriangleBreaking":true}
+          {"breakGroup":"doorhinge_a_RL"},
+          ["d15l","f3ll"],
+          ["d15l","f4ll"],
+          ["d15l","p3l"],
+
+          ["d19l","f2ll"],
+          ["d19l","p5l"],
+          ["d19l","p8l"],
+
+          {"breakGroup":"doorhinge_b_RL"},
+          ["d15l","f3l"],
+          ["d15l","p4l"],
+          ["d15l","p6l"],
+
+          ["d19l","f8l"],
+          ["d19l","p6l"],
+          {"breakGroup":""},
+
+          //--REAR DOOR LATCH--
+          {"beamSpring":2501000,"beamDamp":150},
+          {"beamDeform":18000,"beamStrength":36000},
+          {"breakGroup":"doorlatch_RL"},
+          ["d27l","q1l"],
+          ["d27l","q5l"],
+          ["d18l","q1l"],
+          ["d18l","q5l"],
+          ["d16l","f4ll"],
+          {"breakGroup":""},
+
+          //damping
+          {"beamDeform":27600,"beamStrength":225000},
+          {"beamSpring":0,"beamDamp":15},
+          {"breakGroup":"doorhinge_a_RL"},
+          ["d27l","f9l"],
+          {"breakGroup":"doorhinge_b_RL"},
+          ["d19l","f9l"],
+          {"breakGroup":""},
+
+          //rear door support beams
+          {"beamType":"|SUPPORT","beamLongBound":4},
+          {"beamSpring":901000,"beamDamp":90},
+          {"beamDeform":10950,"beamStrength":100000},
+          ["d20l","q1l"],
+          ["d16l","f4l"],
+          ["d16l","f9l"],
+          ["d17l","f3ll",{"beamPrecompression":0.95}],
+          ["d20l","p6l"],
+          ["d15l","f3l"],
+          ["d19l","f9l"],
+          ["d15l","f2ll"],
+          ["d20l","f5ll"{"beamPrecompression":0.85}],
+          ["d23l","p7l",{"beamPrecompression":0.95}],
+          ["d23l","p8l",{"beamPrecompression":0.95}],
+
+          ["d17l","p4l",{"beamPrecompression":0.98}],
+          ["d17l","p3l",{"beamPrecompression":0.65}],
+
+          ["d17l","f3l",{"beamPrecompression":0.96}],
+
+          ["d23l","rf2",{"beamPrecompression":0.98}],
+          ["d24l","rf3",{"beamPrecompression":0.98}],
+          ["d25l","rf4",{"beamPrecompression":0.98}],
+
+          ["d23l","rf2l",{"beamPrecompression":0.98,"beamLongBound":8}],
+          ["d24l","rf3l",{"beamPrecompression":0.98,"beamLongBound":8}],
+          ["d25l","rf4l",{"beamPrecompression":0.98,"beamLongBound":8}],
+
+          ["d26l","rf4l",{"beamPrecompression":0.98}],
+          ["d26l","p9l",{"beamPrecompression":0.98}],
+
+          ["d21l","q1l"],
+          ["d18l","f9l"],
+          {"beamPrecompression":1.0},
+          {"disableTriangleBreaking":false}
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //rear left door
+            {"groundModel":"metal"},
+            {"group":"etk800_door_RL"},
+            {"dragCoef":10},
+            ["d17l","d15l","d16l"],
+            ["d17l","d16l","d18l"],
+            ["d19l","d17l","d18l"],
+            ["d19l","d18l","d20l"],
+            ["d20l","d18l","d21l"],
+            ["d22l","d19l","d20l"],
+            ["d24l","d23l","d22l"],
+            ["d24l","d22l","d20l"],
+            ["d24l","d20l","d26l"],
+            ["d25l","d24l","d26l"],
+            ["d26l","d20l","d21l"],
+
+            //door edge tris
+            {"dragCoef":0},
+            {"group":""},
+            //{"breakGroup":"doorhinge_b_RL"},
+            //["p4l", "d17l", "d19l"],
+            //["p4l", "d19l", "p6l"],
+            //["d17l", "p4l", "d15l"],
+            //["p4l", "f3ll", "d15l"],
+            //["d18l", "q1l", "d21l"],
+            //["d18l", "q5l", "q1l"],
+            //["d18l", "d16l", "f4ll"],
+            //["d18l", "f4ll", "q5l"],
+            //
+            //{"group":""},
+            //{"breakGroup":["doorhinge_a_RL","doorhinge_a_FL"]}
+            //{"optional":true},
+            //["d17l","d19l","d6l"],
+            //["d19l","d9l","d6l"],
+            //["d3l","d15l","d17l"],
+            //["d17l","d6l","d3l"],
+            //{"optional":false},
+            //{"breakGroup":""}
+    ],
+}
+"etk800_doorglass_RR_wagon": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Right Door Glass",
+        "value":50,
+    }
+    "slotType" : "etk800_doorglass_RR_wagon",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         {"deformGroup":"doorglass_RR_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_doorglass_RR", ["etk800_door_RR"],[]{"deformSound":"GlassBreakSound7", "deformVolume":0.7}],
+         {"deformGroup":"doorglass_RR_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_doorglass_RR_int", ["etk800_door_RR"]],
+         {"deformGroup":""}
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamPrecompression":1, "beamLongBound":1.0, "beamShortBound":1.0},
+          //brittle glass beams
+          {"disableMeshBreaking":true,"disableTriangleBreaking":true},
+          {"deformGroup":"doorglass_RR_break", "deformationTriggerRatio":0.02}
+          {"beamSpring":1401000,"beamDamp":90},
+          {"beamDeform":8000,"beamStrength":7000},
+          {"breakGroup":"doorglass_RR"},
+          ["d22r","d21r"],
+          ["d22r","d25r"],
+          ["d24r","d20r"],
+          ["d25r","d20r"],
+          ["d23r","d20r"],
+          ["d24r","d19r"],
+          ["d21r","d24r"],
+          ["d26r","d23r"],
+          {"breakGroup":""},
+          {"deformGroup":""}
+          {"disableMeshBreaking":false,"disableTriangleBreaking":false},
+    ],
+}
+"etk800_doorglass_RL_wagon": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Left Door Glass",
+        "value":50,
+    }
+    "slotType" : "etk800_doorglass_RL_wagon",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_doorpanel_RL", ["etk800_door_RL"]],
+         {"deformGroup":"doorglass_RL_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_doorglass_RL", ["etk800_door_RL"],[]{"deformSound":"GlassBreakSound8", "deformVolume":0.7}],
+         {"deformGroup":"doorglass_RL_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_doorglass_RL_int", ["etk800_door_RL"]],
+         {"deformGroup":""}
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamPrecompression":1, "beamLongBound":1.0, "beamShortBound":1.0},
+          //brittle glass beams
+          {"disableMeshBreaking":true,"disableTriangleBreaking":true},
+          {"deformGroup":"doorglass_RL_break", "deformationTriggerRatio":0.02}
+          {"beamSpring":1401000,"beamDamp":90},
+          {"beamDeform":8000,"beamStrength":7000},
+          {"breakGroup":"doorglass_RL"},
+          ["d22l","d21l"],
+          ["d22l","d25l"],
+          ["d24l","d20l"],
+          ["d25l","d20l"],
+          ["d23l","d20l"],
+          ["d24l","d19l"],
+          ["d21l","d24l"],
+          ["d26l","d23l"],
+          {"breakGroup":""},
+          {"deformGroup":""}
+          {"disableMeshBreaking":false,"disableTriangleBreaking":false},
+    ],
+},
+}

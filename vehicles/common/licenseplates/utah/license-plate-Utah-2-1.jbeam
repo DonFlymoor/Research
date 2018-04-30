@@ -1,0 +1,11 @@
+{
+	"license_plate_Utah_2_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Utah US Plate Design",
+        "value":50,
+    }
+    "slotType" : "licenseplate_design_2_1",
+    "licenseplate_path" : "vehicles/common/licenseplates/utah/licenseplate-default.json",
+	}
+}

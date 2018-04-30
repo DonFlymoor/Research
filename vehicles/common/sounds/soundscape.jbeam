@@ -1,0 +1,947 @@
+/*
+available sounds:
+
+event:>Vehicle>Electrics>Horns>AU5       // Soundscape 6
+event:>Vehicle>Electrics>Horns>BM1_V1    // Soundscape 7
+event:>Vehicle>Electrics>Horns>BM1_V2
+event:>Vehicle>Electrics>Horns>BM318    -// Soundscape 1
+event:>Vehicle>Electrics>Horns>CORS_V1   // Soundscape 8
+event:>Vehicle>Electrics>Horns>CORS_V2
+event:>Vehicle>Electrics>Horns>FIPA_V1   // Soundscape 9
+event:>Vehicle>Electrics>Horns>FIPA_V2
+event:>Vehicle>Electrics>Horns>MER_V1   -
+event:>Vehicle>Electrics>Horns>MER_V2   -// Soundscape 2
+event:>Vehicle>Electrics>Horns>PEU_V1   -
+event:>Vehicle>Electrics>Horns>PEU_V2   -// Soundscape 3
+event:>Vehicle>Electrics>Horns>POL       // Soundscape 10
+event:>Vehicle>Electrics>Horns>SUB_V1   -// Soundscape 4
+event:>Vehicle>Electrics>Horns>SUB_V2
+event:>Vehicle>Electrics>Horns>TRUCK     // Soundscape 5
+event:>Vehicle>Electrics>Horns>BUS_AIR   // Soundscape 11
+event:>Vehicle>Electrics>Horns>BUS_CITY   // Soundscape 12
+
+event:>Vehicle>Electrics>Sirens>Ambulance_01   -// Siren 1
+event:>Vehicle>Electrics>Sirens>Ambulance_04   -// Siren 2
+event:>Vehicle>Electrics>Sirens>Ambulance_05   -// Siren 11
+event:>Vehicle>Electrics>Sirens>Ambulance_06   -// Siren 12
+event:>Vehicle>Electrics>Sirens>Ambulance_07   -// Siren 13
+event:>Vehicle>Electrics>Sirens>Ambulance_08   -// Siren 14
+event:>Vehicle>Electrics>Sirens>Ambulance_09   -// Siren 15
+event:>Vehicle>Electrics>Sirens>Ambulance_10   -// Siren 16
+event:>Vehicle>Electrics>Sirens>Ambulance_11    // Siren 17
+event:>Vehicle>Electrics>Sirens>Ambulance_12    // Siren 18
+event:>Vehicle>Electrics>Sirens>Ambulance_13    // Siren 19
+event:>Vehicle>Electrics>Sirens>Police_05      -// Siren 8
+event:>Vehicle>Electrics>Sirens>Police_07      -// Siren 9
+event:>Vehicle>Electrics>Sirens>Police_08      -// Siren 4
+event:>Vehicle>Electrics>Sirens>Police_09  ,    -// Siren 6
+event:>Vehicle>Electrics>Sirens>Police_10      -// Siren 5
+event:>Vehicle>Electrics>Sirens>Police_11      -// Siren 3
+event:>Vehicle>Electrics>Sirens>Police_12      -// Siren 7
+event:>Vehicle>Electrics>Sirens>Police_13       // Siren 10
+event:>Vehicle>Electrics>Sirens>Police_14       // Siren 20
+event:>Vehicle>Electrics>Sirens>Police_15       // Siren 21
+event:>Vehicle>Electrics>Sirens>Police_16       // Siren 22
+event:>Vehicle>Electrics>Sirens>Police_17       // Siren 23
+event:>Vehicle>Electrics>Sirens>Police_18       // Siren 24
+
+event:>Vehicle>Interior>Indicator>AU3_On         // Indicator 1
+event:>Vehicle>Interior>Indicator>AU3_Off        // Indicator 1
+event:>Vehicle>Interior>Indicator>AU3_Click      // Indicator 1
+event:>Vehicle>Interior>Indicator>AU3_Clack      // Indicator 1
+event:>Vehicle>Interior>Indicator>AU5_On         // Indicator 9
+event:>Vehicle>Interior>Indicator>AU5_Off        // Indicator 9
+event:>Vehicle>Interior>Indicator>AU5_Click      // Indicator 9
+event:>Vehicle>Interior>Indicator>AU5_Clack      // Indicator 9
+event:>Vehicle>Interior>Indicator>BM1_On         // Indicator 2
+event:>Vehicle>Interior>Indicator>BM1_Off        // Indicator 2
+event:>Vehicle>Interior>Indicator>BM1_Click      // Indicator 2
+event:>Vehicle>Interior>Indicator>BM1_Clack      // Indicator 2
+event:>Vehicle>Interior>Indicator>CORS_On        // Indicator 3
+event:>Vehicle>Interior>Indicator>CORS_Off       // Indicator 3
+event:>Vehicle>Interior>Indicator>CORS_Click     // Indicator 3
+event:>Vehicle>Interior>Indicator>CORS_Clack     // Indicator 3
+event:>Vehicle>Interior>Indicator>FIPA_On        // Indicator 4
+event:>Vehicle>Interior>Indicator>FIPA_Off       // Indicator 4
+event:>Vehicle>Interior>Indicator>FIPA_Click     // Indicator 4
+event:>Vehicle>Interior>Indicator>FIPA_Clack     // Indicator 4
+event:>Vehicle>Interior>Indicator>MER_On         // Indicator 5
+event:>Vehicle>Interior>Indicator>MER_Off        // Indicator 5
+event:>Vehicle>Interior>Indicator>MER_Click      // Indicator 5
+event:>Vehicle>Interior>Indicator>MER_Clack      // Indicator 5
+event:>Vehicle>Interior>Indicator>PEU_On         // Indicator 6
+event:>Vehicle>Interior>Indicator>PEU_Off        // Indicator 6
+event:>Vehicle>Interior>Indicator>PEU_Click      // Indicator 6
+event:>Vehicle>Interior>Indicator>PEU_Clack      // Indicator 6
+event:>Vehicle>Interior>Indicator>POL_On         // Indicator 7
+event:>Vehicle>Interior>Indicator>POL_Off        // Indicator 7
+event:>Vehicle>Interior>Indicator>POL_Click      // Indicator 7
+event:>Vehicle>Interior>Indicator>POL_Clack      // Indicator 7
+event:>Vehicle>Interior>Indicator>SUB_On         // Indicator 8
+event:>Vehicle>Interior>Indicator>SUB_Off        // Indicator 8
+event:>Vehicle>Interior>Indicator>SUB_Click      // Indicator 8
+event:>Vehicle>Interior>Indicator>SUB_Clack      // Indicator 8
+
+event:>Vehicle>Interior>Light>AU3_On             // Lights 1
+event:>Vehicle>Interior>Light>AU3_Off            // Lights 1
+event:>Vehicle>Interior>Light>AU5_AC_Dial_On     // Lights 2
+event:>Vehicle>Interior>Light>AU5_AC_Dial_Off    // Lights 2
+event:>Vehicle>Interior>Light>AU5_Light_On       // Lights 3
+event:>Vehicle>Interior>Light>AU5_Light_Off      // Lights 3
+event:>Vehicle>Interior>Light>BM1_On             // Lights 4
+event:>Vehicle>Interior>Light>BM1_Off            // Lights 4
+event:>Vehicle>Interior>Light>BM318_On           // Lights 5
+event:>Vehicle>Interior>Light>BM318_Off          // Lights 5
+event:>Vehicle>Interior>Light>CIVI_On            // Lights 6
+event:>Vehicle>Interior>Light>CIVI_Off           // Lights 6
+event:>Vehicle>Interior>Light>CORS_On            // Lights 7
+event:>Vehicle>Interior>Light>CORS_Off           // Lights 7
+event:>Vehicle>Interior>Light>MAZ                // Lights 8
+event:>Vehicle>Interior>Light>MER_On             // Lights 9
+event:>Vehicle>Interior>Light>MER_Off            // Lights 9
+event:>Vehicle>Interior>Light>POL_Beam_On        // Lights 10
+event:>Vehicle>Interior>Light>POL_Beam_Off       // Lights 10
+event:>Vehicle>Interior>Light>POL_Light_On       // Lights 11
+event:>Vehicle>Interior>Light>POL_Light_Off      // Lights 11
+event:>Vehicle>Interior>Light>VOL_Button         // Lights 12
+event:>Vehicle>Interior>Light>VOL_Button         // Lights 12
+event:>Vehicle>Interior>Light>VOL_Light_On       // Lights 13
+event:>Vehicle>Interior>Light>VOL_Light_Off      // Lights 13
+event:>Vehicle>Interior>Light>FIPA_On            // Lights 14
+event:>Vehicle>Interior>Light>FIPA_Off           // Lights 14
+event:>Vehicle>Interior>Light>PEU_On             // Lights 15
+event:>Vehicle>Interior>Light>PEU_Off            // Lights 15
+
+event:>Vehicle>Interior>Gearshift>AU3            // Gear 1
+event:>Vehicle>Interior>Gearshift>AU5            // Gear 2
+event:>Vehicle>Interior>Gearshift>BM1            // Gear 3
+event:>Vehicle>Interior>Gearshift>CHRY           // Gear 4
+event:>Vehicle>Interior>Gearshift>CORS           // Gear 5
+event:>Vehicle>Interior>Gearshift>FIPA           // Gear 6
+event:>Vehicle>Interior>Gearshift>MER            // Gear 7
+event:>Vehicle>Interior>Gearshift>PEU            // Gear 8
+event:>Vehicle>Interior>Gearshift>POL            // Gear 9
+event:>Vehicle>Interior>Gearshift>SUB            // Gear 10
+
+To attach to nodeId use this:
+["horn", "event:>...", {"node:":"nodeId"}],
+*/
+{
+"soundscape_horn_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 1"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>BM318"],
+    ]
+},
+"soundscape_horn_2": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 2"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>MER_V2"],
+    ]
+},
+"soundscape_horn_3": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 3"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>PEU_V2"],
+    ]
+},
+
+"soundscape_horn_4": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 4"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>SUB_V1"],
+    ]
+},
+"soundscape_horn_5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 5"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>TRUCK"],
+    ]
+},
+"soundscape_horn_6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 6"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>AU5"],
+    ]
+},
+"soundscape_horn_7": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 7"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>BM1_V1"],
+    ]
+},
+"soundscape_horn_8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 8"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>CORS_V1"],
+    ]
+},
+"soundscape_horn_9": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 9"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>FIPA_V1"],
+    ]
+},
+"soundscape_horn_10": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 10"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>POL"],
+    ]
+},
+"soundscape_horn_11": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 11"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>BUS_AIR"],
+    ]
+},
+"soundscape_horn_12": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Horn 12"
+    },
+    "slotType" : "soundscape_horn",
+    "soundscape": [
+        ["name", "src"],
+        ["horn", "event:>Vehicle>Electrics>Horns>BUS_CITY"],
+    ]
+},
+"soundscape_siren_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 1"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_01"],
+    ]
+}
+"soundscape_siren_2": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 2"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_04"],
+    ]
+}
+"soundscape_siren_3": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 3"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_11"],
+    ]
+}
+"soundscape_siren_4": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 4"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_08"],
+    ]
+}
+"soundscape_siren_5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 5"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_10"],
+    ]
+}
+"soundscape_siren_6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 6"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_09"],
+    ]
+}
+"soundscape_siren_7": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 7"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_12"],
+    ]
+}
+"soundscape_siren_8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 8"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_05"],
+    ]
+}
+"soundscape_siren_9": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 9"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_07"],
+    ]
+}
+"soundscape_siren_10": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 10"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_13"],
+    ]
+},
+"soundscape_siren_11": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 11"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_05"],
+    ]
+},
+"soundscape_siren_12": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 12"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_06"],
+    ]
+},
+"soundscape_siren_13": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 13"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_07"],
+    ]
+},
+"soundscape_siren_14": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 14"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_08"],
+    ]
+},
+"soundscape_siren_15": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 15"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_09"],
+    ]
+},
+"soundscape_siren_16": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 16"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_10"],
+    ]
+},
+"soundscape_siren_17": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 17"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_11"],
+    ]
+},
+"soundscape_siren_18": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 18"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_12"],
+    ]
+},
+"soundscape_siren_19": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 19"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Ambulance_13"],
+    ]
+},
+"soundscape_siren_20": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 19"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_14"],
+    ]
+},
+"soundscape_siren_21": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 20"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_15"],
+    ]
+},
+"soundscape_siren_22": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 21"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_16"],
+    ]
+},
+"soundscape_siren_23": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 22"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_17"],
+    ]
+},
+"soundscape_siren_24": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Siren 23"
+    },
+    "slotType" : "soundscape_siren",
+    "soundscape": [
+        ["name", "src"],
+        ["siren", "event:>Vehicle>Electrics>Sirens>Police_18"],
+    ]
+},
+//////////////Indicator Sounds/////////////////////////////////////
+"soundscape_indicator1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 1"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>AU3_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>AU3_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>AU3_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>AU3_Clack"],
+    ]
+},
+"soundscape_indicator2": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 2"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>BM1_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>BM1_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>BM1_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>BM1_Clack"],
+    ]
+},
+"soundscape_indicator3": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 3"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>CORS_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>CORS_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>CORS_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>CORS_Clack"],
+    ]
+},
+"soundscape_indicator4": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 4"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>FIPA_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>FIPA_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>FIPA_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>FIPA_Clack"],
+    ]
+},
+"soundscape_indicator5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 5"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>MER_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>MER_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>MER_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>MER_Clack"],
+    ]
+},
+"soundscape_indicator6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 6"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>PEU_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>PEU_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>PEU_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>PEU_Clack"],
+    ]
+},
+"soundscape_indicator7": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 7"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>POL_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>POL_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>POL_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>POL_Clack"],
+    ]
+},
+"soundscape_indicator8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 8"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>SUB_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>SUB_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>SUB_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>SUB_Clack"],
+    ]
+},
+"soundscape_indicator9": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Indicator 9"
+    },
+    "slotType" : "soundscape_indicator",
+    "soundscape": [
+        ["name", "src"],
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>AU5_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>AU5_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>AU5_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>AU5_Clack"],
+    ]
+},
+//////////////Lights Sounds/////////////////////////////////////////
+"soundscape_lights1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 1"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>AU3_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>AU3_Off"],
+    ]
+},
+"soundscape_lights2": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 2"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>AU5_AC_Dial_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>AU5_AC_Dial_On"],
+    ]
+},
+"soundscape_lights3": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 3"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>AU5_Light_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>AU5_Light_Off"],
+    ]
+},
+"soundscape_lights4": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 4"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>BM1_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>BM1_On"],
+    ]
+},
+"soundscape_lights5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 5"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>BM318_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>BM318_On"],
+    ]
+},
+"soundscape_lights6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 6"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>CIVI_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>CIVI_Off"],
+    ]
+},
+"soundscape_lights7": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 7"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>CORS_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>CORS_On"],
+    ]
+},
+"soundscape_lights8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 8"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>MAZ"],
+        ["LightOff", "event:>Vehicle>Interior>Light>MAZ"],
+    ]
+},
+"soundscape_lights9": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 9"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>MER_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>MER_On"],
+    ]
+},
+"soundscape_lights10": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 10"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>POL_Beam_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>POL_Beam_Off"],
+    ]
+},
+"soundscape_lights11": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 11"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>POL_Light_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>POL_Light_On"],
+    ]
+},
+"soundscape_lights12": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 12"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>VOL_Button_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>VOL_Button_On"],
+    ]
+},
+"soundscape_lights13": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 13"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>VOL_Light_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>VOL_Light_On"],
+    ]
+},
+"soundscape_lights14": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 14"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>FIPA_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>FIPA_Off"],
+    ]
+},
+"soundscape_lights15": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lights 15"
+    },
+    "slotType" : "soundscape_lights",
+    "soundscape": [
+        ["name", "src"],
+        ["LightOn", "event:>Vehicle>Interior>Light>PEU_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>PEU_Off"],
+    ]
+},
+///////////Gear Sound//////////////
+"soundscape_gear1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 1"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>AU3"],
+    ]
+},
+"soundscape_gear2": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 2"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>AU5"],
+    ]
+},
+"soundscape_gear3": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 3"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>BM1"],
+    ]
+},
+"soundscape_gear4": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 4"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>CHRY"],
+    ]
+},
+"soundscape_gear5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 5"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>CORS"],
+    ]
+},
+
+"soundscape_gear6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 6"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>FIPA"],
+    ]
+},
+"soundscape_gear7": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 7"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>MER"],
+    ]
+},
+"soundscape_gear8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 8"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>PEU"],
+    ]
+},
+"soundscape_gear9": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 9"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>POL"],
+    ]
+},
+"soundscape_gear10": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Gear 10"
+    },
+    "slotType" : "soundscape_gear",
+    "soundscape": [
+        ["name", "src"],
+        ["gear", "event:>Vehicle>Interior>Gearshift>SUB"],
+    ]
+},
+}

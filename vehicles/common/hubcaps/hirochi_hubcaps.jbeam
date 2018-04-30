@@ -1,0 +1,66 @@
+{
+"hirochi_hubcap_01a_15_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Hirochi Splitter Front Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_F_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["hirochi_hubcap_01a_15", ["hubcap_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hirochi_hubcap_01a_15", ["hubcap_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1020, "hubcapAttachBeamStrength":1800},
+            {"hubcapNodeWeight":0.14},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"hirochi_hubcap_01a_15_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Hirochi Splitter Rear Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_R_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["hirochi_hubcap_01a_15", ["hubcap_RR"], [], {"pos":{"x":-0.48, "y":0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hirochi_hubcap_01a_15", ["hubcap_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1020, "hubcapAttachBeamStrength":1800},
+            {"hubcapNodeWeight":0.14},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+}

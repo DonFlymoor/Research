@@ -1,0 +1,26 @@
+{
+"linelock_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Wheel Line Lock",
+        "value":100,
+    }
+    "slotType" : "linelock",
+    "controller": [
+        ["fileName"],
+        ["lineLock", {"lockedLines":["RR","RL"]}],
+    ],
+}
+"linelock_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Wheel Line Lock",
+        "value":100,
+    }
+    "slotType" : "linelock",
+    "controller": [
+        ["fileName"],
+        ["lineLock", {"lockedLines":["FR","FL"]}],
+    ],
+}
+}

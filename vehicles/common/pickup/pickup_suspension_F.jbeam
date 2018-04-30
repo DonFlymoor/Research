@@ -1,0 +1,1433 @@
+{
+"pickup_IFS": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Independent Front Suspension",
+        "value":250,
+    },
+    "slotType" : "pickup_suspension_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_coilover_IFS","pickup_coilover_IFS","Front Struts"],
+        ["pickup_differential_F","pickup_differential_F","Front Differential"],
+        //The case() is for backwards compatibility for old configs that use "trackwidth_F" variable.
+        //To change the base track width, edit the trackoffset_F offset in the expression.
+        ["pickup_hub_F","pickup_hub_F_6","Front Wheel Hubs", {"nodeOffset":{"x":"$=case($trackwidth_F == nil, $trackoffset_F+0.31, $trackwidth_F)", "y":-1.463, "z":0.46}}],
+        ["pickup_brake_F","pickup_brake_F","Front Brakes"],
+        ["pickup_wheeldata_F","pickup_wheeldata_F", "Front Spindles",{"coreSlot":true}],
+        ["pickup_swaybar_F","pickup_swaybar_F","Front Sway Bar"],
+        ["pickup_steering","pickup_steering","Steering"],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$camber_FR", "range", "", "Wheel Alignment", 1, 0.95, 1.05, "Camber Adjust", "Adjusts the wheel camber angle", {"subCategory":"Front"}]
+        ["$caster_FR", "range", "", "Wheel Alignment", 1, 1.015, 0.985, "Caster Adjust", "Adjusts forward rake of the steering axis", {"subCategory":"Front"}],
+        ["$trackoffset_F", "range", "+m", "Wheels", 0.0, -0.02, 0.05, "Wheel Offset", "Spacing of the wheel from the hub", {"stepDis":0.001,"subCategory":"Front"}]
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //front running gear
+         ["pickup_subframe_IFS", ["pickup_framefront", "pickup_uppermounts", "pickup_lowermounts","pickup_steeringrack"]],
+         ["pickup_steeringbox", ["pickup_framefront", "pickup_lowermounts","pickup_steeringrack"]],
+         ["pickup_hub_FR", ["pickup_hub1_F", "pickup_hub4_F", "pickup_hub5_F", "pickup_lowerarm_F","pickup_upperarm_F"]],
+         ["pickup_hub_FL", ["pickup_hub1_F", "pickup_hub4_F", "pickup_hub5_F", "pickup_lowerarm_F","pickup_upperarm_F"]],
+         ["pickup_lowerarm", ["pickup_lowerarm_F", "pickup_shockbottom", "pickup_lowermounts"]],
+         ["pickup_upperarm", ["pickup_upperarm_F", "pickup_uppermounts"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"collision":true},
+         {"selfCollision":false},
+         //--FRONT INDEPENDENT SUSPENSION--
+         {"nodeWeight":12.5},
+         {"group":["pickup_framefront","pickup_uppermounts"]},
+         //redefine frame node positions for upper mounts
+         ["fr6r", -0.415, -1.67, 0.64],
+         ["fr6l", 0.415, -1.67, 0.64],
+         ["fr7r", -0.415, -1.35, 0.64],
+         ["fr7l", 0.415, -1.35, 0.64],
+         //lower
+         {"selfCollision":true},
+         {"group":"pickup_lowermounts"},
+         ["al1r", -0.26, -1.73, 0.38],
+         ["al1l", 0.26, -1.73, 0.38],
+         ["al2r", -0.26, -1.26, 0.38],
+         ["al2l", 0.26, -1.26, 0.38],
+         {"selfCollision":false},
+         //lower arm
+         {"nodeWeight":4.5},
+         {"group":"pickup_shockbottom"},
+         ["a1r", -0.595, -1.50, 0.423],
+         ["a1l", 0.595, -1.50, 0.423],
+         {"nodeWeight":7.0},
+         {"selfCollision":true},
+         {"group":"pickup_lowerarm_F"},
+         ["a4r", -0.73, -1.485, 0.35],
+         ["a4l", 0.73, -1.485, 0.35],
+         //steering rack
+         {"nodeWeight":7.0},
+         {"selfCollision":false},
+         {"group":"pickup_steeringrack"},
+         ["st1r", -0.11, -1.31, 0.4],
+         ["st1l", 0.11, -1.31, 0.4],
+         {"nodeWeight":7.0},
+         //upper arm
+         {"group":"pickup_upperarm_F"},
+         ["a5r", -0.67, -1.455, 0.65],
+         ["a5l", 0.67, -1.455, 0.65],
+         //shock hinge anti-pop
+         {"nodeWeight":4.5},
+         {"group":""},
+         //["a6r", -0.589, -1.50, 0.313],
+         //["a6l", 0.589, -1.50, 0.313],
+         //hub
+         {"nodeWeight":7.0},
+         {"group":"pickup_hub1_F"},
+         ["hu1r", -0.67, -1.305, 0.38],
+         ["hu1l", 0.67, -1.305, 0.38],
+         {"nodeWeight":5.0},
+         {"group":"pickup_hub4_F"},
+         ["hu4r", -0.82, -1.62, 0.46],
+         ["hu4l", 0.82, -1.62, 0.46],
+         {"group":"pickup_hub5_F"},
+         ["hu5r", -0.78, -1.31, 0.46],
+         ["hu5l", 0.78, -1.31, 0.46],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--FRONT INDEPENDENT SUSPENSION--
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+          {"beamSpring":8501000,"beamDamp":195},
+          {"beamDeform":60000,"beamStrength":"FLT_MAX"},
+          //front suspension axis points
+          //lower subframe
+          ["al1r","al1l"],
+          ["al2r","al2l"],
+          ["al1r","al2r"],
+          ["al1l","al2l"],
+          //cross
+          ["al1r","al2l"],
+          ["al1l","al2r"],
+          //attach to frame bottom
+          {"beamDeform":50000},
+          ["al2l","fr3l"],
+          ["al2r","fr3r"],
+          ["al1l","fr2l"],
+          ["al1r","fr2r"],
+          ["al2l","fr3"],
+          ["al2r","fr3"],
+          ["al1l","fr2"],
+          ["al1r","fr2"],
+          //attach to frame top
+          ["al1r","fr6r"],
+          ["al1l","fr6l"],
+          ["al2r","fr7r"],
+          ["al2l","fr7l"],
+          //cross
+          {"beamDeform":25000},
+          ["al2l","fr2l"],
+          ["al1l","fr3l"],
+          ["al1r","fr3r"],
+          ["al2r","fr2r"],
+          ["al2l","fr2"],
+          ["al2r","fr2"],
+          ["al1l","fr3"],
+          ["al1r","fr3"],
+
+          //front hub to wheel
+          {"beamSpring":8501000,"beamDamp":150},
+          {"beamDeform":150000,"beamStrength":325000},
+          {"breakGroup":"wheel_FR"},
+          {"optional":true},
+          ["hu5r","fw1rr", {"name":"axle_a_FR"}],
+          ["hu5r","fw1r"],
+          ["hu1r","fw1r"{"beamSpring":12001000,"beamDamp":50}],
+          ["fw1r","a5r"],
+          ["fw1r","a4r"],
+          ["fw1rr","a5r"],
+          ["fw1rr","a4r"],
+          ["fw1rr","hu1r"{"beamSpring":12001000,"beamDamp":50}],
+          ["hu4r","fw1r"],
+          ["hu4r","fw1rr"],
+
+          {"breakGroup":"wheel_FL"},
+          ["hu5l","fw1ll", {"name":"axle_a_FL"}],
+          ["hu5l","fw1l"],
+          ["hu1l","fw1l"{"beamSpring":12001000,"beamDamp":50}],
+          ["fw1l","a5l"],
+          ["fw1l","a4l"],
+          ["fw1ll","a5l"],
+          ["fw1ll","a4l"],
+          ["fw1ll","hu1l"{"beamSpring":12001000,"beamDamp":50}],
+          ["hu4l","fw1l"],
+          ["hu4l","fw1ll"],
+          {"optional":false},
+          {"breakGroup":""},
+
+          //front hub
+          {"beamSpring":8501000,"beamDamp":150},
+          {"beamDeform":150000,"beamStrength":325000},
+          ["a4r","a5r"],
+          ["a4l","a5l"],
+          ["hu1r","a5r"],
+          ["hu1l","a5l"],
+          ["hu1r","a4r"],
+          ["hu1l","a4l"],
+          ["hu4r","hu1r"],
+          ["hu4l","hu1l"],
+          ["hu4r","a4r"],
+          ["hu4l","a4l"],
+          ["hu4r","a5r"],
+          ["hu4l","a5l"],
+          ["hu4r","hu5r"],
+          ["hu4l","hu5l"],
+          ["hu1r","hu5r"],
+          ["hu1l","hu5l"],
+          ["a4r","hu5r"],
+          ["a4l","hu5l"],
+          ["a5r","hu5r"],
+          ["a5l","hu5l"],
+
+          //upper arm
+          {"beamSpring":15001000,"beamDamp":5000},
+          {"beamDeform":100000,"beamStrength":400000},
+          ["a5l","fr6l"{"beamPrecompression":"$camber_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["a5l","fr7l"{"beamPrecompression":"$camber_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["a5r","fr6r"{"beamPrecompression":"$camber_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["a5r","fr7r"{"beamPrecompression":"$camber_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+
+          //lower arm
+          {"beamSpring":20001000,"beamDamp":5000},
+          {"beamDeform":125000,"beamStrength":500000},
+          ["a4l","al1l"{"beamPrecompression":"$caster_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["a4r","al1r"{"beamPrecompression":"$caster_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["a4l","al2l"{"dampCutoffHz":500}],
+          ["a4r","al2r"{"dampCutoffHz":500}],
+
+          //shock bottom
+          {"beamSpring":8501000,"beamDamp":250},
+          {"beamDeform":75000,"beamStrength":600000},
+          ["a1l","al2l"],
+          ["a1r","al2r"],
+          ["a1r","al1r"],
+          ["a1l","al1l"],
+          ["a1l","a4l"],
+          ["a1r","a4r"],
+
+          //steering rack
+          {"beamSpring":10001000,"beamDamp":250},
+          {"beamDeform":135000,"beamStrength":"FLT_MAX"},
+          ["st1r", "st1l"],
+          {"beamDeform":37500},
+          ["st1r", "al2r"],
+          ["st1l", "al2l"],
+          ["st1l", "al1l"],
+          ["st1r", "al1r"],
+          ["st1r", "fr7r"],
+          ["st1l", "fr7l"],
+          ["st1r", "al2l"],
+          ["st1l", "al2r"],
+          ["st1l", "al1r"],
+          ["st1r", "al1l"],
+          ["st1l", "fr7r"],
+          ["st1r", "fr7l"],
+
+          //front limiters
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.12, "beamShortBound":0.15},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":750000,"beamStrength":1780000},
+          {"beamLimitSpring":8001000,"beamLimitDamp":500},
+          //["hu1r","fr2"],
+          //["hu1l","fr2"],
+          //["hu1r","fr6"],
+          //["hu1l","fr6"],
+          //wishbone anti-invert
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.3, "beamShortBound":0.10},
+          ["a5r","fr3"],
+          ["a5l","fr3"],
+          ["a1r","fr3"],
+          ["a1l","fr3"],
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.2, "beamShortBound":0.5},
+          //["hu1r","fr4r"],
+          //["hu1l","fr4l"],
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.3, "beamShortBound":0.18},
+          //["hu5r","fr3"],
+          //["hu5l","fr3"],
+          //["hu4r","fr3"],
+          //["hu4l","fr3"],
+          ["a5r","al1r"],
+          ["a5r","al2r"],
+          ["a5l","al1l"],
+          ["a5l","al2l"],
+
+          //front end collide
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.95, "beamShortBound":0.25},
+          {"beamLimitSpring":2001000,"beamLimitDamp":2500},
+          {"optional":true},
+          ["a4r","f7rr"],
+          ["a4l","f7ll"],
+          {"optional":false},
+          ["a4l","fr1l"],
+          ["a4r","fr1r"],
+          ["a4r","fr5r"],
+          ["a4l","fr5l"],
+
+          //firewall collide
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.35, "beamShortBound":0.4},
+          {"optional":true},
+          ["a4r","f8rr"],
+          ["a4l","f8ll"],
+          ["a5r","f8rr"],
+          ["a5l","f8ll"],
+          ["a4r","f6rr"],
+          ["a4l","f6ll"],
+          ["a5r","f6rr"],
+          ["a5l","f6ll"],
+          ["a4r","f6r"],
+          ["a4l","f6l"],
+          ["a5r","f6r"],
+          ["a5l","f6l"],
+          {"optional":false},
+
+          //wheel connections
+          {"optional":true},
+          {"breakGroupType":1},
+          //front end collide
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.95, "beamShortBound":0.25},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":750000,"beamStrength":2314000},
+          {"beamLimitSpring":2001000,"beamLimitDamp":500},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","f7rr"],
+          ["fw1r","fr1r"],
+          ["fw1r","fr5r"],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","f7ll"],
+          ["fw1l","fr1l"],
+          ["fw1l","fr5l"],
+          //firewall collide
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.35, "beamShortBound":0.4},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","f6rr"],
+          ["fw1r","f6r"],
+          ["fw1r","f8rr"],
+          ["fr8r","fw1r"],
+          ["fr4r","fw1r"],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","f6ll"],
+          ["fw1l","f6l"],
+          ["fw1l","f8ll"],
+          ["fr8l","fw1l"],
+          ["fr4l","fw1l"],
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.38, "beamShortBound":0.24},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":1500000,"beamStrength":5340000},
+          {"beamLimitSpring":12001000,"beamLimitDamp":100},
+          {"breakGroup":"wheel_FR"},
+          ["fw1rr","fr4r"],
+          {"breakGroup":"wheel_FL"},
+          ["fw1ll","fr4l"],
+          {"breakGroup":""},
+          {"breakGroupType":0},
+          {"optional":false},
+
+          //steering anti invert
+          {"beamPrecompression":1, "beamType":"|SUPPORT", "beamLongBound":1},
+          {"beamSpring":2501000,"beamDamp":500,"beamDeform":75000,"beamStrength":2314000},
+          {"beamPrecompression":0.82},
+          ["hu5r","al1r"],
+          ["hu5l","al1l"],
+          ["hu5r","fr6r"],
+          ["hu5l","fr6l"],
+          {"beamPrecompression":0.84},
+          ["hu4r","al2r"],
+          ["hu4l","al2l"],
+          ["hu4r","fr7r"],
+          ["hu4l","fr7l"],
+
+          //hard limit
+          {"beamSpring":5001000,"beamDamp":2500},
+          {"beamPrecompression":0.77, "beamType":"|SUPPORT", "beamLongBound":4},
+          ["a4l","sh1l"],
+          ["a4r","sh1r"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            {"groundModel":"metal"},
+            {"dragCoef":6},
+            {"group":"pickup_frontsuspmounts"},
+            ["fr2", "al1l", "fr2l"],
+            ["al1l", "al2l", "fr2l"],
+            ["al2l", "fr3l", "fr2l"],
+            ["fr3l", "al2l", "fr4l"],
+            ["fr4", "fr4l", "al2l"],
+
+            ["al1r", "fr2", "fr2r"],
+            ["al2r", "al1r", "fr2r"],
+            ["fr3r", "al2r", "fr2r"],
+            ["al2r", "fr3r", "fr4r"],
+            ["fr4r", "fr4", "al2r"],
+
+            ["al1r", "al1l", "fr2"],
+            ["al1r", "al2r", "al1l"],
+            ["al2r", "al2l", "al1l"],
+            ["al2r", "fr4", "al2l"],
+
+            //suspension shape
+            {"triangleType":"NONCOLLIDABLE"},
+            ["al1r", "a4r", "al2r"],
+            ["a4r", "al1r", "a1r"],
+            //["al1r", "al2r", "a1r"],
+            ["a4r", "a1r", "al2r"],
+            ["a5r", "fr6r", "fr7r"],
+            //["a4r", "hu1r", "a5r"],
+            ["hu5r", "a5r", "hu1r"],
+            ["hu4r", "a4r", "a5r"],
+            ["hu5r", "hu4r", "a5r"],
+            ["hu5r", "hu1r", "a4r"],
+            ["a4r", "hu4r", "hu5r"],
+
+            ["a4l", "al1l", "al2l"],
+            ["al1l", "a4l", "a1l"],
+            //["al2l","al1l", "a1l"],
+            ["a1l",  "a4l", "al2l"],
+            ["fr6l", "a5l", "fr7l"],
+            //["hu1l", "a4l", "a5l"],
+            ["a5l", "hu5l", "hu1l"],
+            ["a4l", "hu4l", "a5l"],
+            ["hu4l", "hu5l", "a5l"],
+            ["hu1l", "hu5l", "a4l"],
+            ["hu4l", "a4l",  "hu5l"],
+            {"triangleType":"NORMALTYPE"},
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //cancel out brake properties
+            {"brakeTorque":0},
+            {"parkingTorque":0},
+            {"enableBrakeThermals":false},
+            {"brakeDiameter":false},
+            {"brakeMass":false},
+            {"brakeType":false},
+            {"rotorMaterial":false},
+            {"brakeVentingCoef":false},
+    ],
+},
+"pickup_hub_F_5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"5-Lug Front Wheel Hubs",
+        "value":100,
+    },
+    "slotType" : "pickup_hub_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["wheel_F_5","steelwheel_01a_15x8_F","Front Wheels"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front left axle
+        ["shaft", "wheelaxleFL", "differential_F", 1, {"connectedWheel":"FL", "breakTriggerBeam":"axle_a_FL", "friction":2}]
+        //front right axle
+        ["shaft", "wheelaxleFR", "differential_F", 2, {"connectedWheel":"FR", "breakTriggerBeam":"axle_a_FR", "friction":2}]
+    ],
+}
+"pickup_hub_F_6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"6-Lug Front Wheel Hubs",
+        "value":150,
+    },
+    "slotType" : "pickup_hub_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["wheel_F_6","steelwheel_02a_16x8_F","Front Wheels"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front left axle
+        ["shaft", "wheelaxleFL", "differential_F", 1, {"connectedWheel":"FL", "breakTriggerBeam":"axle_a_FL", "friction":3}]
+        //front right axle
+        ["shaft", "wheelaxleFR", "differential_F", 2, {"connectedWheel":"FR", "breakTriggerBeam":"axle_a_FR", "friction":3}]
+    ],
+}
+"pickup_hub_F_6_locking": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"6-Lug Locking Front Wheel Hubs",
+        "value":150,
+    },
+    "slotType" : "pickup_hub_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["wheel_F_6","steelwheel_02a_16x8_F","Front Wheels"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front left axle
+        ["shaft", "wheelaxleFL", "differential_F", 1, {"canDisconnect":true, "connectedWheel":"FL", "breakTriggerBeam":"axle_a_FL", "friction":3}]
+        //front right axle
+        ["shaft", "wheelaxleFR", "differential_F", 2, {"canDisconnect":true, "connectedWheel":"FR", "breakTriggerBeam":"axle_a_FR", "friction":3}]
+    ],
+}
+"pickup_hub_F_8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"8-Lug Front Wheel Hubs",
+        "value":250,
+    },
+    "slotType" : "pickup_hub_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["wheel_F_8","steelwheel_04a_16x8_F","Front Wheels"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front left axle
+        ["shaft", "wheelaxleFL", "differential_F", 1, {"connectedWheel":"FL", "breakTriggerBeam":"axle_a_FL", "friction":3}]
+        //front right axle
+        ["shaft", "wheelaxleFR", "differential_F", 2, {"connectedWheel":"FR", "breakTriggerBeam":"axle_a_FR", "friction":3}]
+    ],
+}
+"pickup_hub_F_8_locking": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"8-Lug Locking Front Wheel Hubs",
+        "value":250,
+    },
+    "slotType" : "pickup_hub_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["wheel_F_8","steelwheel_04a_16x8_F","Front Wheels"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front left axle
+        ["shaft", "wheelaxleFL", "differential_F", 1, {"canDisconnect":true, "connectedWheel":"FL", "breakTriggerBeam":"axle_a_FL", "friction":3}]
+        //front right axle
+        ["shaft", "wheelaxleFR", "differential_F", 2, {"canDisconnect":true, "connectedWheel":"FR", "breakTriggerBeam":"axle_a_FR", "friction":3}]
+    ],
+}
+"pickup_wheeldata_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Spindles",
+        "value":0,
+    }
+    "slotType" : "pickup_wheeldata_F",
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //front
+        {"selfCollision":false}
+        {"collision":true}
+        {"hubcapBreakGroup":"hubcap_FL"},
+        {"hubcapGroup":"hubcap_FL"},
+        {"axleBeams":["axle_a_FL"]}
+        ["FL", "wheel_FL", "tire_FL", "fw1ll", "fw1l", 9999, "hu4l", -1, {"torqueCoupling:":"hu5l", "torqueArm:":"hu4l","steerAxisUp:":"a5l","steerAxisDown:":"a4l"}],
+        {"axleBeams":["axle_a_FR"]}
+        {"hubcapBreakGroup":"hubcap_FR"},
+        {"hubcapGroup":"hubcap_FR"},
+        ["FR", "wheel_FR", "tire_FR", "fw1rr", "fw1r", 9999, "hu4r", 1, {"torqueCoupling:":"hu5r", "torqueArm:":"hu4r","steerAxisUp:":"a5r","steerAxisDown:":"a4r"}],
+        {"selfCollision":true}
+        {"axleBeams":[]},{"disableMeshBreaking":false,"disableTriangleBreaking":false}
+        {"hubcapBreakGroup":""},
+        {"hubcapGroup":""},
+        {"enableHubcaps":false},
+        {"enableTireLbeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTireReinfBeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTirePeripheryReinfBeams":false},
+        {"loadSensitivitySlope":""},
+        {"noLoadCoef":""},
+        {"fullLoadCoef":""},
+        {"frictionCoef":""},
+        {"slidingFrictionCoef":""},
+        {"softnessCoef":0.5},
+        {"treadCoef":1.0},
+    ],
+},
+"pickup_coilover_IFS": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Struts",
+        "value":250,
+    },
+    "slotType" : "pickup_coilover_IFS",
+    "flexbodies": [
+    ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_coilover_F", ["pickup_shockbottom","pickup_shocktop"]],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //front springs and shocks
+          {"beamPrecompression":1.29, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":315000,"beamStrength":712000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":71000,"beamDamp":2500},
+          ["a4l","sh1l",{"beamDampRebound":6500,"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":1,"maxStress":12000}],
+          ["a4r","sh1r",{"beamDampRebound":6500,"soundFile":"art/sound/spring_compress3.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":10000}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":800000},
+          ["a4l","sh1l",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["a4r","sh1r",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.1},
+          {"beamDeform":315000,"beamStrength":712000},
+          {"beamLimitSpring":1501000,"beamLimitDamp":8000},
+          {"beamSpring":0,"beamDamp":0},
+          ["a4l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["a4r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_coilover_IFS_lifted": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lifted Front Struts",
+        "value":300,
+    },
+    "slotType" : "pickup_coilover_IFS",
+    "flexbodies": [
+    ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_coilover_F", ["pickup_shockbottom","pickup_shocktop"]],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //front springs and shocks
+          {"beamPrecompression":1.38, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":315000,"beamStrength":712000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":71000,"beamDamp":2500},
+          ["a4l","sh1l",{"beamDampRebound":6500,"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":1,"maxStress":12000}],
+          ["a4r","sh1r",{"beamDampRebound":6500,"soundFile":"art/sound/spring_compress3.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":10000}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":800000},
+          ["a4l","sh1l",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["a4r","sh1r",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.1},
+          {"beamDeform":315000,"beamStrength":712000},
+          {"beamLimitSpring":1501000,"beamLimitDamp":8000},
+          {"beamSpring":0,"beamDamp":0},
+          ["a4l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["a4r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_coilover_IFS_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Sport Front Struts",
+        "value":300,
+    },
+    "slotType" : "pickup_coilover_IFS",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_coilover_F", ["pickup_shockbottom","pickup_shocktop"]],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //front springs and shocks
+          {"beamPrecompression":1.17, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":315000,"beamStrength":712000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":114000,"beamDamp":10000},
+          ["a4l","sh1l",{"beamDampFast":3300,"beamDampRebound":20000,"beamDampReboundFast":6700,"beamDampVelocitySplit":0.1,"dampCutoffHz":500,"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":1,"maxStress":16000}],
+          ["a4r","sh1r",{"beamDampFast":3300,"beamDampRebound":20000,"beamDampReboundFast":6700,"beamDampVelocitySplit":0.1,"dampCutoffHz":500,"soundFile":"art/sound/spring_compress3.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":13000}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":800000},
+          ["a4l","sh1l",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["a4r","sh1r",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.15},
+          {"beamDeform":315000,"beamStrength":712000},
+          {"beamLimitSpring":1501000,"beamLimitDamp":8000},
+          {"beamSpring":0,"beamDamp":0},
+          ["a4l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["a4r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_coilover_IFS_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Front Struts",
+        "value":450,
+    },
+    "slotType" : "pickup_coilover_IFS",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_coilover_F", ["pickup_shockbottom","pickup_shocktop"]],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //front springs and shocks
+          {"beamPrecompression":1.25, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":150000,"beamStrength":356000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":146000,"beamDamp":3500},
+          ["a4l","sh1l",{"beamPrecompressionTime":0.1,"beamDampRebound":9000,"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":1,"maxStress":16000}],
+          ["a4r","sh1r",{"beamPrecompressionTime":0.1,"beamDampRebound":9000,"soundFile":"art/sound/spring_compress3.ogg","volumeFactor":2,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":13000}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":800000},
+          ["a4l","sh1l",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["a4r","sh1r",{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.1},
+          {"beamDeform":150000,"beamStrength":356000},
+          {"beamLimitSpring":1501000,"beamLimitDamp":8000},
+          {"beamSpring":0,"beamDamp":0},
+          ["a4l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["a4r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_swaybar_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Sway Bar",
+        "value":200,
+    },
+    "slotType" : "pickup_swaybar_F",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_swaybar_F", ["pickup_lowerarm_F","pickup_swaybar_F"], []]
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--ANTI-ROLL--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeWeight":2.8},
+         {"group":"pickup_swaybar_F"},
+         //front
+         ["arbf", 0.0, -1.45, 0.77],
+         ["arbfr", -0.59, -1.55, 0.65],
+         ["arbfl", 0.59, -1.55, 0.65],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          //--ANTI-ROLL--
+          //rigid beams
+          {"beamSpring":8001000,"beamDamp":100},
+          {"beamDeform":300000,"beamStrength":801000},
+          ["a1r","arbfr"],
+          ["a1l","arbfl"],
+          ["arbfr","fr7r"],
+          ["arbfl","fr7l"],
+          ["arbfr","fr7l"],
+          ["arbfl","fr7r"],
+          ["arbfr","arbfl"],
+          //front
+          {"beamSpring":2501000,"beamDamp":10},
+          ["arbf","arbfr"],
+          ["arbf","arbfl"],
+          ["arbf","fr7r"],
+          ["arbf","fr7l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_swaybar_F_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Sport Front Sway Bar",
+        "value":250,
+    },
+    "slotType" : "pickup_swaybar_F",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_swaybar_F", ["pickup_lowerarm_F","pickup_swaybar_F"], []]
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--ANTI-ROLL--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeWeight":2.8},
+         {"group":"pickup_swaybar_F"},
+         //front
+         ["arbf", 0.0, -1.45, 0.77],
+         ["arbfr", -0.59, -1.55, 0.65],
+         ["arbfl", 0.59, -1.55, 0.65],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          //--ANTI-ROLL--
+          //rigid beams
+          {"beamSpring":8001000,"beamDamp":100},
+          {"beamDeform":300000,"beamStrength":801000},
+          ["a1r","arbfr"],
+          ["a1l","arbfl"],
+          ["arbfr","fr7r"],
+          ["arbfl","fr7l"],
+          ["arbfr","fr7l"],
+          ["arbfl","fr7r"],
+          ["arbfr","arbfl"],
+          //front
+          {"beamSpring":3001000,"beamDamp":10},
+          ["arbf","arbfr"],
+          ["arbf","arbfl"],
+          ["arbf","fr7r"],
+          ["arbf","fr7l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_steering": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Steering",
+        "value":200,
+    },
+    "slotType" : "pickup_steering",
+	"slots": [
+        ["type", "default", "description"]
+        ["pickup_power_steering","", "Power Steering"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_tierod", ["pickup_tierod_F","pickup_hub1_F","pickup_lowermounts","pickup_steeringrack"]],
+    ],
+    "rails": {
+        "steeringrack":{
+            "links:":["fh6r", "fh6l"], "broken:":[], "looped":false, "capped":true
+        },
+    },
+    "slidenodes": [
+        ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
+        ["st1r", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+        ["st1l", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$toe_FR", "range", "", "Wheel Alignment", 1, 0.98, 1.02, "Toe Adjust", "Adjusts the wheel toe-in angle", {"subCategory":" Front"}]
+        ["$steer_center_F", "range", "", "Wheel Alignment", 0, -0.002, 0.002, "Toe Left/Right Trim", "Fine tunes the centerpoint of the steering", {"subCategory":" Front"}]
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--steering rod--
+         {"selfCollision":false},
+         {"collision":true},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_tierod_F"},
+         {"nodeWeight":6},
+         ["fh6r", -0.22, -1.31, 0.4],
+         ["fh6l", 0.22, -1.31, 0.4],
+         {"group":""},
+    ],
+    "beams": [
+            ["id1:","id2:"],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+            {"beamSpring":18001000,"beamDamp":250,"beamDeform":112500,"beamStrength":222500},
+            ["fh6r","fh6l"],
+            //
+            ["hu1r","fh6r"{"beamPrecompression":"$=$toe_FR-$steer_center_F","beamPrecompressionTime":0.5}],
+            ["hu1l","fh6l"{"beamPrecompression":"$=$toe_FR+$steer_center_F","beamPrecompressionTime":0.5}],
+            //steering damper
+            {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+            {"beamSpring":0,"beamDeform":84000,"beamStrength":149520},
+            {"beamLimitSpring":0,"beamLimitDamp":0},
+            ["hu5r","al1r",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            ["hu5l","al1l",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            ["hu4r","al2r",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            ["hu4l","al2l",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "hydros": [
+            ["id1:","id2:"],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+            {"beamSpring":6001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":151300},
+            ["fh6r","st1l",{"factor":-0.285,"steeringWheelLock":720,"inRate":1.25,"outRate":1.25}],
+            ["fh6l","st1r",{"factor":0.285,"steeringWheelLock":720,"inRate":1.25,"outRate":1.25}],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "input": {
+        "FFBcoef":4,
+    },
+},
+"pickup_steering_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Quick Ratio Steering",
+        "value":250,
+    },
+    "slotType" : "pickup_steering",
+	"slots": [
+        ["type", "default", "description"]
+        ["pickup_power_steering","", "Power Steering"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_tierod", ["pickup_tierod_F","pickup_hub1_F","pickup_lowermounts","pickup_steeringrack"]],
+    ],
+    "rails": {
+        "steeringrack":{
+            "links:":["fh6r", "fh6l"], "broken:":[], "looped":false, "capped":true
+        },
+    },
+    "slidenodes": [
+        ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
+        ["st1r", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+        ["st1l", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$toe_FR", "range", "", "Wheel Alignment", 1, 0.98, 1.02, "Toe Adjust", "Adjusts the wheel toe-in angle", {"subCategory":" Front"}]
+        ["$steer_center_F", "range", "", "Wheel Alignment", 0, -0.002, 0.002, "Toe Left/Right Trim", "Fine tunes the centerpoint of the steering", {"subCategory":" Front"}]
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--steering rod--
+         {"selfCollision":false},
+         {"collision":true},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_tierod_F"},
+         {"nodeWeight":6},
+         ["fh6r", -0.22, -1.31, 0.4],
+         ["fh6l", 0.22, -1.31, 0.4],
+         {"group":""},
+    ],
+    "beams": [
+            ["id1:","id2:"],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+            {"beamSpring":18001000,"beamDamp":250,"beamDeform":112500,"beamStrength":222500},
+            ["fh6r","fh6l"],
+            //
+            ["hu1r","fh6r"{"beamPrecompression":"$=$toe_FR-$steer_center_F","beamPrecompressionTime":0.5}],
+            ["hu1l","fh6l"{"beamPrecompression":"$=$toe_FR+$steer_center_F","beamPrecompressionTime":0.5}],
+            //steering damper
+            {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+            {"beamSpring":0,"beamDeform":84000,"beamStrength":149520},
+            {"beamLimitSpring":0,"beamLimitDamp":0},
+            ["hu5r","al1r",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            ["hu5l","al1l",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            ["hu4r","al2r",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            ["hu4l","al2l",{"beamDampVelocitySplit":0.1,"beamDampFast":800,"beamDampReboundFast":800,"beamDamp":100,"beamDampRebound":100}],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "hydros": [
+            ["id1:","id2:"],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+            {"beamSpring":6001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":151300},
+            ["fh6r","st1l",{"factor":-0.285,"steeringWheelLock":450,"inRate":1.25,"outRate":1.25}],
+            ["fh6l","st1r",{"factor":0.285,"steeringWheelLock":450,"inRate":1.25,"outRate":1.25}],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "input": {
+        "FFBcoef":3.75,
+    },
+},
+"pickup_steering_drift": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Quick Ratio Drift Steering",
+        "value":300,
+    },
+    "slotType" : "pickup_steering",
+	"slots": [
+        ["type", "default", "description"]
+        ["pickup_power_steering","", "Power Steering"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_tierod", ["pickup_tierod_F","pickup_hub1_F","pickup_lowermounts","pickup_steeringrack"]],
+    ],
+    "rails": {
+        "steeringrack":{
+            "links:":["fh6r", "fh6l"], "broken:":[], "looped":false, "capped":true
+        },
+    },
+    "slidenodes": [
+        ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
+        ["st1r", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+        ["st1l", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$toe_FR", "range", "", "Wheel Alignment", 1, 0.98, 1.02, "Toe Adjust", "Adjusts the wheel toe-in angle", {"subCategory":" Front"}]
+        ["$steer_center_F", "range", "", "Wheel Alignment", 0, -0.002, 0.002, "Toe Left/Right Trim", "Fine tunes the centerpoint of the steering", {"subCategory":" Front"}]
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--steering rod--
+         {"selfCollision":false},
+         {"collision":true},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_tierod_F"},
+         {"nodeWeight":6},
+         ["fh6r", -0.24, -1.31, 0.4],
+         ["fh6l", 0.24, -1.31, 0.4],
+         {"group":""},
+    ],
+    "beams": [
+            ["id1:","id2:"],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+            {"beamSpring":18001000,"beamDamp":250,"beamDeform":112500,"beamStrength":222500},
+            ["fh6r","fh6l"],
+            //
+            ["hu1r","fh6r"{"beamPrecompression":"$=$toe_FR-$steer_center_F","beamPrecompressionTime":0.5}],
+            ["hu1l","fh6l"{"beamPrecompression":"$=$toe_FR+$steer_center_F","beamPrecompressionTime":0.5}],
+            //steering damper
+            {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+            {"beamSpring":0,"beamDeform":84000,"beamStrength":149520},
+            {"beamLimitSpring":0,"beamLimitDamp":0},
+            ["hu5r","al1r",{"beamDampVelocitySplit":0.15,"beamDampFast":600,"beamDampReboundFast":600,"beamDamp":100,"beamDampRebound":100}],
+            ["hu5l","al1l",{"beamDampVelocitySplit":0.15,"beamDampFast":600,"beamDampReboundFast":600,"beamDamp":100,"beamDampRebound":100}],
+            ["hu4r","al2r",{"beamDampVelocitySplit":0.15,"beamDampFast":600,"beamDampReboundFast":600,"beamDamp":100,"beamDampRebound":100}],
+            ["hu4l","al2l",{"beamDampVelocitySplit":0.15,"beamDampFast":600,"beamDampReboundFast":600,"beamDamp":100,"beamDampRebound":100}],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "hydros": [
+            ["id1:","id2:"],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+            {"beamSpring":6001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":151300},
+            ["fh6r","st1l",{"factor":-0.31,"steeringWheelLock":360,"inRate":1.25,"outRate":1.25}],
+            ["fh6l","st1r",{"factor":0.31,"steeringWheelLock":360,"inRate":1.25,"outRate":1.25}],
+            {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "input": {
+        "FFBcoef":4.0,
+    },
+},
+"pickup_power_steering": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Power Steering",
+        "value":250,
+    }
+    "slotType" : "pickup_power_steering",
+    "controller": [
+        ["fileName"],
+        ["powerSteering", {"strengthFast":0.88, "strengthSlow": 0.09, "speedSlow": 2, "speedFast": 20, "constantOffset":-0.05}],
+    ],
+},
+"pickup_differential_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"3.55 Open Front Differential",
+        "value":350,
+    },
+    "slotType" : "pickup_differential_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_driveshaft_F","pickup_driveshaft_F","Front Driveshaft"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_diff_F", ["pickup_diff_F","pickup_shocktop", "pickup_transmission"]],
+         ["pickup_halfshaft", ["pickup_diff_F","pickup_uppermounts","pickup_lowermounts",  "pickup_upperarm_F", "pickup_lowerarm_F", "pickup_hub1_F","pickup_hub5_F","wheelhub_FL","wheelhub_FR"]],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front diff
+        ["torsionReactor", "torsionReactorF", "driveshaft_F", 1, {"gearRatio":3.55}]
+        ["differential", "differential_F", "torsionReactorF", 1, {"diffType":"open", "gearRatio":1, "friction":5, "uiName":"Front Differential","defaultVirtualInertia":0.5}]
+    ],
+    "torsionReactorF": {
+        "torqueReactionNodes:":["al2l","al2r","al1r"],
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_diff_F"},
+         {"nodeWeight":15},
+         ["fdiffl", 0.37, -1.463, 0.42],
+         ["fdiffr", -0.37, -1.463, 0.42],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":3001000,"beamDamp":250},
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          ["fdiffr","fdiffl"],
+          {"beamDeform":10000,"beamStrength":"FLT_MAX"},
+          ["fdiffl", "al1l"],
+          ["fdiffl", "al2l"],
+          ["fdiffl", "fr2l"],
+          ["fdiffl", "fr3l"],
+          ["fdiffl", "fr2"],
+          ["fdiffl", "fr3"],
+          ["fdiffl", "fr6l"],
+          ["fdiffl", "fr7l"],
+
+          ["fdiffr", "al1r"],
+          ["fdiffr", "al2r"],
+          ["fdiffr", "fr2r"],
+          ["fdiffr", "fr3r"],
+          ["fdiffr", "fr2"],
+          ["fdiffr", "fr3"],
+          ["fdiffr", "fr6r"],
+          ["fdiffr", "fr7r"],
+
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.1, "beamShortBound":0.1},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":2000,"beamStrength":4000},
+          {"beamLimitSpring":8001000,"beamLimitDamp":100},
+          {"breakGroupType":1},
+          {"optional":true},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","fdiffr", {"name":"axle_a_FR"}],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","fdiffl", {"name":"axle_a_FL"}],
+          {"optional":false},
+          {"breakGroupType":0},
+          {"breakGroup":""},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_differential_F_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"4.10 Open Front Differential",
+        "value":450,
+    },
+    "slotType" : "pickup_differential_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_driveshaft_F","pickup_driveshaft_F","Front Driveshaft"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_diff_F", ["pickup_diff_F","pickup_shocktop", "pickup_transmission"]],
+         ["pickup_halfshaft", ["pickup_diff_F","pickup_uppermounts","pickup_lowermounts",  "pickup_upperarm_F", "pickup_lowerarm_F", "pickup_hub1_F","pickup_hub5_F","wheelhub_FL","wheelhub_FR"]],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front diff
+        ["torsionReactor", "torsionReactorF", "driveshaft_F", 1, {"gearRatio":4.10}]
+        ["differential", "differential_F", "torsionReactorF", 1, {"diffType":"open", "gearRatio":1, "friction":5, "uiName":"Front Differential","defaultVirtualInertia":0.5}]
+    ],
+    "torsionReactorF": {
+        "torqueReactionNodes:":["al2l","al2r","al1r"],
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_diff_F"},
+         {"nodeWeight":15},
+         ["fdiffl", 0.37, -1.463, 0.42],
+         ["fdiffr", -0.37, -1.463, 0.42],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":3001000,"beamDamp":250},
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          ["fdiffr","fdiffl"],
+          {"beamDeform":10000,"beamStrength":"FLT_MAX"},
+          ["fdiffl", "al1l"],
+          ["fdiffl", "al2l"],
+          ["fdiffl", "fr2l"],
+          ["fdiffl", "fr3l"],
+          ["fdiffl", "fr2"],
+          ["fdiffl", "fr3"],
+          ["fdiffl", "fr6l"],
+          ["fdiffl", "fr7l"],
+
+          ["fdiffr", "al1r"],
+          ["fdiffr", "al2r"],
+          ["fdiffr", "fr2r"],
+          ["fdiffr", "fr3r"],
+          ["fdiffr", "fr2"],
+          ["fdiffr", "fr3"],
+          ["fdiffr", "fr6r"],
+          ["fdiffr", "fr7r"],
+
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.1, "beamShortBound":0.1},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":2000,"beamStrength":4000},
+          {"beamLimitSpring":8001000,"beamLimitDamp":100},
+          {"breakGroupType":1},
+          {"optional":true},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","fdiffr", {"name":"axle_a_FR"}],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","fdiffl", {"name":"axle_a_FL"}],
+          {"optional":false},
+          {"breakGroupType":0},
+          {"breakGroup":""},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_differential_F_LSD": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"3.55 Limited Slip Front Differential",
+        "value":550,
+    },
+    "slotType" : "pickup_differential_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_driveshaft_F","pickup_driveshaft_F","Front Driveshaft"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_diff_F", ["pickup_diff_F","pickup_shocktop", "pickup_transmission"]],
+         ["pickup_halfshaft", ["pickup_diff_F","pickup_uppermounts","pickup_lowermounts",  "pickup_upperarm_F", "pickup_lowerarm_F", "pickup_hub1_F","pickup_hub5_F","wheelhub_FL","wheelhub_FR"]],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front diff
+        ["torsionReactor", "torsionReactorF", "driveshaft_F", 1, {"gearRatio":3.55}]
+        ["differential", "differential_F", "torsionReactorF", 1, {"diffType":"lsd", "gearRatio":1, "lsdPreload":100, "lsdLockCoef":0.2, "lsdRevLockCoef":0.1, "friction":5, "uiName":"Front Differential","defaultVirtualInertia":0.5}]
+    ],
+    "torsionReactorF": {
+        "torqueReactionNodes:":["al2l","al2r","al1r"],
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_diff_F"},
+         {"nodeWeight":15},
+         ["fdiffl", 0.37, -1.463, 0.42],
+         ["fdiffr", -0.37, -1.463, 0.42],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":3001000,"beamDamp":250},
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          ["fdiffr","fdiffl"],
+          {"beamDeform":10000,"beamStrength":"FLT_MAX"},
+          ["fdiffl", "al1l"],
+          ["fdiffl", "al2l"],
+          ["fdiffl", "fr2l"],
+          ["fdiffl", "fr3l"],
+          ["fdiffl", "fr2"],
+          ["fdiffl", "fr3"],
+          ["fdiffl", "fr6l"],
+          ["fdiffl", "fr7l"],
+
+          ["fdiffr", "al1r"],
+          ["fdiffr", "al2r"],
+          ["fdiffr", "fr2r"],
+          ["fdiffr", "fr3r"],
+          ["fdiffr", "fr2"],
+          ["fdiffr", "fr3"],
+          ["fdiffr", "fr6r"],
+          ["fdiffr", "fr7r"],
+
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.1, "beamShortBound":0.1},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":2000,"beamStrength":4000},
+          {"beamLimitSpring":8001000,"beamLimitDamp":100},
+          {"breakGroupType":1},
+          {"optional":true},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","fdiffr", {"name":"axle_a_FR"}],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","fdiffl", {"name":"axle_a_FL"}],
+          {"optional":false},
+          {"breakGroupType":0},
+          {"breakGroup":""},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_differential_F_welded": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"4.10 Welded Front Differential",
+        "value":350,
+    },
+    "slotType" : "pickup_differential_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_driveshaft_F","pickup_driveshaft_F","Front Driveshaft"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_diff_F", ["pickup_diff_F","pickup_shocktop", "pickup_transmission"]],
+         ["pickup_halfshaft", ["pickup_diff_F","pickup_uppermounts","pickup_lowermounts",  "pickup_upperarm_F", "pickup_lowerarm_F", "pickup_hub1_F","pickup_hub5_F","wheelhub_FL","wheelhub_FR"]],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front diff
+        ["torsionReactor", "torsionReactorF", "driveshaft_F", 1, {"gearRatio":4.10}]
+        ["differential", "differential_F", "torsionReactorF", 1, {"diffType":"locked", "gearRatio":1, "lockTorque":20000, "friction":5, "uiName":"Front Differential","defaultVirtualInertia":0.5}]
+    ],
+    "torsionReactorF": {
+        "torqueReactionNodes:":["al2l","al2r","al1r"],
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_diff_F"},
+         {"nodeWeight":15},
+         ["fdiffl", 0.37, -1.463, 0.42],
+         ["fdiffr", -0.37, -1.463, 0.42],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":3001000,"beamDamp":250},
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          ["fdiffr","fdiffl"],
+          {"beamDeform":10000,"beamStrength":"FLT_MAX"},
+          ["fdiffl", "al1l"],
+          ["fdiffl", "al2l"],
+          ["fdiffl", "fr2l"],
+          ["fdiffl", "fr3l"],
+          ["fdiffl", "fr2"],
+          ["fdiffl", "fr3"],
+          ["fdiffl", "fr6l"],
+          ["fdiffl", "fr7l"],
+
+          ["fdiffr", "al1r"],
+          ["fdiffr", "al2r"],
+          ["fdiffr", "fr2r"],
+          ["fdiffr", "fr3r"],
+          ["fdiffr", "fr2"],
+          ["fdiffr", "fr3"],
+          ["fdiffr", "fr6r"],
+          ["fdiffr", "fr7r"],
+
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.1, "beamShortBound":0.1},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":2000,"beamStrength":4000},
+          {"beamLimitSpring":8001000,"beamLimitDamp":100},
+          {"breakGroupType":1},
+          {"optional":true},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","fdiffr", {"name":"axle_a_FR"}],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","fdiffl", {"name":"axle_a_FL"}],
+          {"optional":false},
+          {"breakGroupType":0},
+          {"breakGroup":""},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_differential_F_locking": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"4.10 Locking Front Differential",
+        "value":750,
+    },
+    "slotType" : "pickup_differential_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_driveshaft_F","pickup_driveshaft_F","Front Driveshaft"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_diff_F", ["pickup_diff_F","pickup_shocktop", "pickup_transmission"]],
+         ["pickup_halfshaft", ["pickup_diff_F","pickup_uppermounts","pickup_lowermounts",  "pickup_upperarm_F", "pickup_lowerarm_F", "pickup_hub1_F","pickup_hub5_F","wheelhub_FL","wheelhub_FR"]],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front diff
+        ["torsionReactor", "torsionReactorF", "driveshaft_F", 1, {"gearRatio":4.10}]
+        ["differential", "differential_F", "torsionReactorF", 1, {"diffType":["open","locked"], "gearRatio":1, "lockTorque":20000, "friction":5, "uiName":"Front Differential","defaultVirtualInertia":0.5}]
+    ],
+    "torsionReactorF": {
+        "torqueReactionNodes:":["al2l","al2r","al1r"],
+    },
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"pickup_diff_F"},
+         {"nodeWeight":15},
+         ["fdiffl", 0.37, -1.463, 0.42],
+         ["fdiffr", -0.37, -1.463, 0.42],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":3001000,"beamDamp":250},
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          ["fdiffr","fdiffl"],
+          {"beamDeform":10000,"beamStrength":"FLT_MAX"},
+          ["fdiffl", "al1l"],
+          ["fdiffl", "al2l"],
+          ["fdiffl", "fr2l"],
+          ["fdiffl", "fr3l"],
+          ["fdiffl", "fr2"],
+          ["fdiffl", "fr3"],
+          ["fdiffl", "fr6l"],
+          ["fdiffl", "fr7l"],
+
+          ["fdiffr", "al1r"],
+          ["fdiffr", "al2r"],
+          ["fdiffr", "fr2r"],
+          ["fdiffr", "fr3r"],
+          ["fdiffr", "fr2"],
+          ["fdiffr", "fr3"],
+          ["fdiffr", "fr6r"],
+          ["fdiffr", "fr7r"],
+
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.1, "beamShortBound":0.1},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":2000,"beamStrength":4000},
+          {"beamLimitSpring":8001000,"beamLimitDamp":100},
+          {"breakGroupType":1},
+          {"optional":true},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","fdiffr", {"name":"axle_a_FR"}],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","fdiffl", {"name":"axle_a_FL"}],
+          {"optional":false},
+          {"breakGroupType":0},
+          {"breakGroup":""},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+"pickup_driveshaft_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Driveshaft",
+        "value":150,
+    },
+    "slotType" : "pickup_driveshaft_F",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_frontshaft", ["pickup_framefront","pickup_framecab","pickup_lowermounts","pickup_uppermounts","pickup_shocktop"]],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //front driveshaft
+        ["shaft", "driveshaft_F", "transfercase_F", 1, {"breakTriggerBeam":"driveshaft_F", "uiName":"Front Driveshaft", "electricsName":"driveshaft_F", "friction":1}]
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //driveshaft
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":0.05, "beamShortBound":0.05},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":5050,"beamStrength":6570},
+          {"beamLimitSpring":10001000,"beamLimitDamp":1000},
+          ["fdiffl","tra1", {"name":"driveshaft_F","optional":true,"breakGroup":"driveshaft_F","deformGroup":"driveshaft_F"}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+},
+}

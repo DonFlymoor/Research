@@ -1,0 +1,186 @@
+{
+"bogie_airbag": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Air Bags",
+        "value":600,
+    }
+    "slotType" : "bogie_airbag",
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$rideheight", "range", "", "", 1.2, 1.0, 1.5, "Ride Height", "Percentage of adjustment range"]
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["bogie_airbag_F", ["bogie_airbag_F"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         ["bogie_airbag_R", ["bogie_airbag_R"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //airbags
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":3501000,"beamDamp":8000},
+          {"beamDeform":200000,"beamStrength":650000},
+          {"beamPrecompression":"$rideheight"},
+          ["bogax4r","bogab1r",{"beamPrecompressionTime":0.1,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":1,"decayMode":0,"decayFactor":2.5,"pitchFactor":1.0,"maxStress":46000}],
+          ["bogax4l","bogab1l",{"beamPrecompressionTime":0.1,"soundFile":"art/sound/spring_compress.ogg","volumeFactor":0.8,"decayMode":1,"decayFactor":4.5,"pitchFactor":0.4,"maxStress":44000}],
+          ["bogax14l","bogab2l",{"beamPrecompressionTime":0.1,"soundFile":"art/sound/spring_compress.ogg","volumeFactor":0.8,"decayMode":1,"decayFactor":4.5,"pitchFactor":0.8,"maxStress":44000}],
+          ["bogax14r","bogab2r",{"beamPrecompressionTime":0.1,"soundFile":"art/sound/spring_creak3.ogg","volumeFactor":1,"decayMode":0,"decayFactor":2.5,"pitchFactor":1,"maxStress":48000}],
+    ],
+}
+"bogie_leaf": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Leaf Springs",
+        "value":500,
+    }
+    "slotType" : "bogie_leaf",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["bogie_leaf_F", ["bogie_leaf_F"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         ["bogie_leaf_R", ["bogie_leaf_R"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //leaf spring main
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":15001000,"beamDamp":1000},
+          {"beamDeform":275000,"beamStrength":1035000},
+          ["bogax2r","boglf2r"],
+          ["bogax2l","boglf2l"],
+          ["bogax2r","boglf1r"],
+          ["bogax2l","boglf1l"],
+
+          ["bogax12r","boglf12r"],
+          ["bogax12l","boglf12l"],
+          ["bogax12r","boglf11r"],
+          ["bogax12l","boglf11l"],
+
+          //leaf lateral rigidity
+          {"beamDeform":125000,"beamStrength":575000},
+          {"beamSpring":2501000,"beamDamp":2500},
+          ["bogax2r","boglf2l"],
+          ["bogax2l","boglf2r"],
+          ["bogax2r","boglf1l"],
+          ["bogax2l","boglf1r"],
+
+          ["bogax12r","boglf12l"],
+          ["bogax12l","boglf12r"],
+          ["bogax12r","boglf11l"],
+          ["bogax12l","boglf11r"],
+
+          //leaf pack
+          {"beamType":"|LBEAM"},
+          {"beamSpring":3501000,"beamDamp":16000},
+          {"beamPrecompression":1.04},
+          ["bogax1r","boglf1r",{"id3:":"bogax2r","beamPrecompressionTime":0.1}],
+          ["bogax1l","boglf1l",{"id3:":"bogax2l","beamPrecompressionTime":0.1}],
+          ["bogax1r","boglf2r",{"id3:":"bogax2r","beamPrecompressionTime":0.1}],
+          ["bogax1l","boglf2l",{"id3:":"bogax2l","beamPrecompressionTime":0.1}],
+
+          ["bogax11r","boglf11r",{"id3:":"bogax12r"}],
+          ["bogax11l","boglf11l",{"id3:":"bogax12l"}],
+          ["bogax11r","boglf12r",{"id3:":"bogax12r"}],
+          ["bogax11l","boglf12l",{"id3:":"bogax12l"}],
+          {"beamPrecompression":1.0},
+          
+          //suspension friction
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":225000,"beamStrength":401000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":0,"beamDamp":500000},
+          ["bogax1l","bog3l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax1l", "bog2l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax2l", "bog2l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax2l", "bog3l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax1r", "bog3r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax1r", "bog2r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax2r", "bog2r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax2r", "bog3r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          
+          ["bogax11l", "bog1l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax11l", "bog2l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax12l", "bog2l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax12l", "bog1l"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax11r", "bog1r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax11r", "bog2r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax12r", "bog2r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          ["bogax12r", "bog1r"{"beamDampFast":0,"beamDampRebound":500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.001}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+}
+"bogie_wheeldata_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Spindles",
+        "value":0,
+    }
+    "slotType" : "bogie_wheeldata_F",
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //rear
+        {"selfCollision":false},
+        {"triangleCollision":false},
+        {"collision":true},
+        {"axleBeams":["bogie_axle_FR"]}
+        ["Trailer FR", "bogie_wheel_FR", "bogie_tire_FR", "bogw1rr", "bogw1r", 9999, "bogax3r", 1],
+        {"axleBeams":["bogie_axle_FL"]}
+        ["Trailer FL", "bogie_wheel_FL", "bogie_tire_FL", "bogw1ll", "bogw1l", 9999, "bogax3l", -1],
+        {"brakeTorque":0},
+        {"parkingTorque":0},
+        {"triangleCollision":false},
+        {"selfCollision":true},
+        {"axleBeams":[]},{"disableMeshBreaking":false,"disableTriangleBreaking":false},
+        {"enableHubcaps":false},
+        {"enableTireLbeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTireReinfBeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTirePeripheryReinfBeams":false},
+        {"loadSensitivitySlope":""},
+        {"noLoadCoef":""},
+        {"fullLoadCoef":""},
+        {"frictionCoef":""},
+        {"slidingFrictionCoef":""},
+        {"softnessCoef":0.5},
+        {"treadCoef":1.0},
+    ],
+},
+"bogie_wheeldata_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Spindles",
+        "value":0,
+    }
+    "slotType" : "bogie_wheeldata_R",
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //rear
+        {"selfCollision":false},
+        {"triangleCollision":false},
+        {"collision":true},
+        {"axleBeams":["bogie_axle_RR"]}
+        ["Trailer RR", "bogie_wheel_RR", "bogie_tire_RR", "bogw11rr", "bogw11r", 9999, "bogax13r", 1],
+        {"axleBeams":["bogie_axle_RL"]}
+        ["Trailer RL", "bogie_wheel_RL", "bogie_tire_RL", "bogw11ll", "bogw11l", 9999, "bogax13l", -1],
+        {"brakeTorque":0},
+        {"parkingTorque":0},
+        {"triangleCollision":false},
+        {"selfCollision":true},
+        {"axleBeams":[]},{"disableMeshBreaking":false,"disableTriangleBreaking":false},
+        {"enableHubcaps":false},
+        {"enableTireLbeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTireReinfBeams":false},
+        {"enableTreadReinfBeams":false},
+        {"enableTirePeripheryReinfBeams":false},
+        {"loadSensitivitySlope":""},
+        {"noLoadCoef":""},
+        {"fullLoadCoef":""},
+        {"frictionCoef":""},
+        {"slidingFrictionCoef":""},
+        {"softnessCoef":0.5},
+        {"treadCoef":1.0},
+    ],
+},
+}

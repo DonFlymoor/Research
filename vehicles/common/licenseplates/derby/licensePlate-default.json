@@ -1,0 +1,24 @@
+{
+      "name" : "derby-Default",
+        "version" : 1,
+        "data" : {
+            "size" : {"x" : 512, "y": 256},
+            "text" : { "x" : 0.5, "y" : 0.65, "scale" : 1, "color" : "rgb(5, 5, 5)", "limit" : 8},
+            "diffuse" : {
+                "spriteImg" : "vehicles/common/licenseplates/default/platefont_d.png",
+                "backgroundImg" : "vehicles/common/licenseplates/derby/licenseplate-default_d.png",
+                "fillStyle" : "black"
+            },
+
+            "bump" : {
+                "spriteImg" : "vehicles/common/licenseplates/default/platefont_n.png",
+                "backgroundImg" : "vehicles/common/licenseplates/default/licenseplate-default_n.png",
+                "fillStyle" : "rgb(0,0,255)"
+            },
+
+            "specular" : {
+                "spriteImg" : "vehicles/common/licenseplates/default/platefont_s.png",
+                "fillStyle" : "rgb(233,233,233)"
+            }
+        }
+  }

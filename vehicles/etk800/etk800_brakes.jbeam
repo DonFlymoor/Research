@@ -1,0 +1,235 @@
+{
+"etk800_brake_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Brakes",
+        "value":600,
+    }
+    "slotType" : "etk800_brake_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["brakepad_F","brakepad_F_sport", "Front Brake Pads"{"coreSlot":true}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //brake discs
+        ["etk800_brakedisc_FR", ["wheel_FR","wheelhub_FR"]],
+        ["etk800_brakedisc_FL", ["wheel_FL","wheelhub_FL"]],
+        ["etk800_caliper_F", ["etk800_hub_F"]],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+
+        {"brakeTorque":2900},
+        {"brakeInputSplit":1},
+        {"brakeSplitCoef":1},
+        {"parkingTorque":0},
+        {"brakeSpring":150},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.312},
+        {"brakeMass":8.5},
+        {"brakeType":"vented-disc"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":1.0},
+    ],
+},
+"etk800_brake_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Brakes",
+        "value":500,
+    }
+    "slotType" : "etk800_brake_R",
+    "slots": [
+        ["type", "default", "description"]
+        ["brakepad_R","brakepad_R_sport", "Rear Brake Pads"{"coreSlot":true}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //brake discs
+        ["etk800_brakedisc_RR", ["wheel_RR","wheelhub_RR"], []],
+        ["etk800_brakedisc_RL", ["wheel_RL","wheelhub_RL"], []],
+        ["etk800_caliper_R", ["etk800_hub_R"]],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+
+        {"brakeTorque":1900},
+        {"brakeInputSplit":0.5},
+        {"brakeSplitCoef":0.5},
+        {"parkingTorque":2000},
+        {"brakeSpring":150},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.300},
+        {"brakeMass":4.6},
+        {"brakeType":"vented-disc"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":0.8},
+    ],
+}
+"etk800_brake_F_tt": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ttSport Front Brakes",
+        "value":1200,
+    }
+    "slotType" : "etk800_brake_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["brakepad_F","brakepad_F_semi_race", "Front Brake Pads"{"coreSlot":true}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //brake discs
+        ["etk800_brakedisc_FR_sport", ["wheel_FR","wheelhub_FR"]],
+        ["etk800_brakedisc_FL_sport", ["wheel_FL","wheelhub_FL"]],
+        ["etk800_caliper_F_sport", ["etk800_hub_F"]],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+
+        {"brakeTorque":3100},
+        {"brakeInputSplit":1},
+        {"brakeSplitCoef":1},
+        {"parkingTorque":0},
+        {"brakeSpring":150},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.37},
+        {"brakeMass":10.5},
+        {"brakeType":"vented-disc"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":1.1},
+    ],
+},
+"etk800_brake_R_tt": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ttSport Rear Brakes",
+        "value":1100,
+    }
+    "slotType" : "etk800_brake_R",
+    "slots": [
+        ["type", "default", "description"]
+        ["brakepad_R","brakepad_R_semi_race", "Rear Brake Pads"{"coreSlot":true}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //brake discs
+        ["etk800_brakedisc_RR_sport", ["wheel_RR","wheelhub_RR"], []],
+        ["etk800_brakedisc_RL_sport", ["wheel_RL","wheelhub_RL"], []],
+        ["etk800_caliper_R_sport", ["etk800_hub_R"]],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+
+        {"brakeTorque":2000},
+        {"brakeInputSplit":0.5},
+        {"brakeSplitCoef":0.5},
+        {"parkingTorque":2000},
+        {"brakeSpring":150},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.345},
+        {"brakeMass":5.7},
+        {"brakeType":"vented-disc"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":0.85},
+    ],
+}
+"etk800_brake_F_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Race Front Brakes",
+        "value":1600,
+    }
+    "slotType" : "etk800_brake_F",
+    "slots": [
+        ["type", "default", "description"]
+        ["brakepad_F","brakepad_F_race", "Front Brake Pads"{"coreSlot":true}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        //["$braketorque_F", "range", "", "Brakes", 2400, 0, 4000, "Front Brake Torque", "Strength of the front brakes", {"minDis":0}]
+        ["$braketorque", "range", "", "Brakes", 5000, 2000, 6000, "Max Brake Torque", "Scales the overall brake torque", {"minDis":0}]
+        ["$brakebias", "range", "", "Brakes", 0.68, 0, 1, "Front/Rear Bias", "Percent of brake torque to the front wheels", {"minDis":0, "maxDis":100}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //brake discs
+        ["etk800_brakedisc_FR_sport", ["wheel_FR","wheelhub_FR"]],
+        ["etk800_brakedisc_FL_sport", ["wheel_FL","wheelhub_FL"]],
+        ["etk800_caliper_F_sport", ["etk800_hub_F"]],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+
+        {"brakeTorque":"$=$braketorque*$brakebias"},
+        {"brakeInputSplit":1},
+        {"brakeSplitCoef":1},
+        {"parkingTorque":0},
+        {"brakeSpring":150},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.37},
+        {"brakeMass":10.5},
+        {"brakeType":"vented-disc"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":1.2},
+    ],
+},
+"etk800_brake_R_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Race Rear Brakes",
+        "value":1500,
+    }
+    "slotType" : "etk800_brake_R",
+    "slots": [
+        ["type", "default", "description"]
+        ["brakepad_R","brakepad_R_race", "Rear Brake Pads"{"coreSlot":true}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        //["$braketorque_R", "range", "", "Brakes", 2000, 0, 4000, "Rear Brake Torque", "Strength of the rear brakes"{"minDis":0}]
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //brake discs
+        ["etk800_brakedisc_RR_sport", ["wheel_RR","wheelhub_RR"], []],
+        ["etk800_brakedisc_RL_sport", ["wheel_RL","wheelhub_RL"], []],
+        ["etk800_caliper_R_sport", ["etk800_hub_R"]],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+
+        //if no race front brake, use default value
+        {"brakeTorque":"$=case($braketorque == nil, 1500, $braketorque*(1-$brakebias))"},
+        {"brakeInputSplit":1},
+        {"brakeSplitCoef":1},
+        {"parkingTorque":2000},
+        {"brakeSpring":150},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.345},
+        {"brakeMass":5.7},
+        {"brakeType":"vented-disc"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":0.95},
+    ],
+}
+}

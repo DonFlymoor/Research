@@ -1,0 +1,332 @@
+{
+"bruckell_hubcap_01a_15_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Styler Front Hubcaps",
+        "value":100,
+    }
+    "slotType" : "hubcap_F_15_alt",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_01a_15", ["hubcap_FR"], [], {"pos":{"x":-0.63, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_01a_15", ["hubcap_FL"], [], {"pos":{"x": 0.63, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":-0.01},
+            {"hubcapWidth":-0.03},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_01a_15_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Styler Rear Hubcaps",
+        "value":100,
+    }
+    "slotType" : "hubcap_R_15_alt",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_01a_15", ["hubcap_RR"], [], {"pos":{"x":-0.63, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_01a_15", ["hubcap_RL"], [], {"pos":{"x": 0.63, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":-0.01},
+            {"hubcapWidth":-0.03},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_01b_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Styler Front Hubcaps",
+        "value":40,
+    }
+    "slotType" : "hubcap_F_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_01b_14", ["hubcap_FR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_01b_14", ["hubcap_FL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_01b_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Styler Rear Hubcaps",
+        "value":40,
+    }
+    "slotType" : "hubcap_R_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_01b_14", ["hubcap_RR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_01b_14", ["hubcap_RL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_02a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Gran Elegance Front Hubcaps",
+        "value":30,
+    }
+    "slotType" : "hubcap_F_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_02a_14", ["hubcap_FR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_02a_14", ["hubcap_FL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_02a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Gran Elegance Rear Hubcaps",
+        "value":30,
+    }
+    "slotType" : "hubcap_R_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_02a_14", ["hubcap_RR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_02a_14", ["hubcap_RL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_03a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Gran Sport Front Hubcaps",
+        "value":45,
+    }
+    "slotType" : "hubcap_F_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_03a_14", ["hubcap_FR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_03a_14", ["hubcap_FL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_03a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Gran Sport Rear Hubcaps",
+        "value":45,
+    }
+    "slotType" : "hubcap_R_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_03a_14", ["hubcap_RR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_03a_14", ["hubcap_RL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_04a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Gran Luxe Front Hubcaps",
+        "value":65,
+    }
+    "slotType" : "hubcap_F_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_04a_14", ["hubcap_FR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_04a_14", ["hubcap_FL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"bruckell_hubcap_04a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Bruckell Gran Luxe Rear Hubcaps",
+        "value":65,
+    }
+    "slotType" : "hubcap_R_14",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["bruckell_hubcap_04a_14", ["hubcap_RR"], [], {"pos":{"x":-0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["bruckell_hubcap_04a_14", ["hubcap_RL"], [], {"pos":{"x": 0.58, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":415830, "hubcapBeamDamp":10.08}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1197, "hubcapAttachBeamStrength":2822},
+            {"hubcapNodeWeight":0.145},
+            {"hubcapCenterNodeWeight":0.22},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+}

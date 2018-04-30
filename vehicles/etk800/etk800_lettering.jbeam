@@ -1,0 +1,139 @@
+{
+"etk800_lettering_tailgate_854tc": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"854tc Tailgate Lettering",
+        "value":45,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_854", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_c", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_854t": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"854t Tailgate Lettering",
+        "value":40,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_854", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_854tx": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"854tx Tailgate Lettering",
+        "value":45,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_854", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_x", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_856tc": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"856tc Tailgate Lettering",
+        "value":45,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_856", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_c", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_856t": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"856t Tailgate Lettering",
+        "value":40,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_856", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_854td": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"854td Tailgate Lettering",
+        "value":45,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_854", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_d", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_856td": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"856td Tailgate Lettering",
+        "value":45,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_856", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_d", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_856tx": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"856tx Tailgate Lettering",
+        "value":45,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_856", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_t", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_x", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_856_ttsport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"856ttSport Tailgate Lettering",
+        "value":55,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_856", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_ttsport", ["etk800_tailgate"]],
+    ],
+}
+"etk800_lettering_tailgate_856_ttsportplus": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"856ttSport+ Tailgate Lettering",
+        "value":60,
+    }
+    "slotType" : "etk800_lettering_tailgate",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_lettering_tailgate_856", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_ttsport", ["etk800_tailgate"]],
+         ["etk800_lettering_tailgate_plus", ["etk800_tailgate"]],
+    ],
+}
+}

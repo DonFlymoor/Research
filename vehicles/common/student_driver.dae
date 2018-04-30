@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.74.0 commit date:2015-03-31, commit time:13:39, hash:000dfc0</authoring_tool>
+    </contributor>
+    <created>2015-05-25T23:12:52</created>
+    <modified>2015-05-25T23:12:52</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_images/>
+  <library_effects>
+    <effect id="student_driver-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.64 0.64 0.64 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_materials>
+    <material id="student_driver-material" name="student_driver">
+      <instance_effect url="#student_driver-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="hatch_door_L_001-mesh" name="hatch_door_L.001">
+      <mesh>
+        <source id="hatch_door_L_001-mesh-positions">
+          <float_array id="hatch_door_L_001-mesh-positions-array" count="18">-0.8007282 0.008709311 0.7900149 -0.8010038 -0.4949997 0.7803741 -0.8235853 -0.4949997 0.613625 -0.818127 -0.4949997 0.7100322 -0.8194014 0.008709311 0.7168894 -0.8257924 0.008709311 0.6158813</float_array>
+          <technique_common>
+            <accessor source="#hatch_door_L_001-mesh-positions-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_door_L_001-mesh-normals">
+          <float_array id="hatch_door_L_001-mesh-normals-array" count="18">-0.9882809 -0.004455685 0.1523789 -0.988525 -0.004455685 0.1508835 -0.970214 -0.004913449 0.2420728 -0.9981689 -0.003967404 0.05990779 -0.9981689 -0.003967404 0.05990779 -0.970214 -0.004913449 0.2420728</float_array>
+          <technique_common>
+            <accessor source="#hatch_door_L_001-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_door_L_001-mesh-map-0">
+          <float_array id="hatch_door_L_001-mesh-map-0-array" count="24">0.001676082 0.5591019 0.9976513 0.5591022 0.9967185 0.9901548 0.003374814 5.8949e-5 0.9992694 5.93066e-5 0.9976513 0.5591022 7.07507e-4 0.9901545 0.001676082 0.5591019 0.9967185 0.9901548 0.001676082 0.5591019 0.003374814 5.8949e-5 0.9976513 0.5591022</float_array>
+          <technique_common>
+            <accessor source="#hatch_door_L_001-mesh-map-0-array" count="12" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="hatch_door_L_001-mesh-vertices">
+          <input semantic="POSITION" source="#hatch_door_L_001-mesh-positions"/>
+        </vertices>
+        <polylist material="student_driver-material" count="4">
+          <input semantic="VERTEX" source="#hatch_door_L_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#hatch_door_L_001-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#hatch_door_L_001-mesh-map-0" offset="2" set="0"/>
+          <vcount>3 3 3 3 </vcount>
+          <p>4 0 0 3 1 1 1 2 2 5 3 3 2 4 4 3 1 5 0 5 6 4 0 7 1 2 8 4 0 9 5 3 10 3 1 11</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="hatch_body_001-mesh" name="hatch_body.001">
+      <mesh>
+        <source id="hatch_body_001-mesh-positions">
+          <float_array id="hatch_body_001-mesh-positions-array" count="36">0.402108 0.3609064 1.348186 -0.4121137 0.3609064 1.348186 0.402108 0.4620582 1.543408 -0.4121137 0.4620582 1.543408 0.402108 0.5585061 1.348259 -0.4121137 0.5585061 1.348259 0.402108 0.3529977 1.343391 -0.4121137 0.3529977 1.343391 0.402108 0.4621443 1.552656 -0.4121137 0.4621443 1.552656 0.402108 0.5663697 1.343391 -0.4121137 0.5663697 1.343391</float_array>
+          <technique_common>
+            <accessor source="#hatch_body_001-mesh-positions-array" count="12" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_body_001-mesh-normals">
+          <float_array id="hatch_body_001-mesh-normals-array" count="72">0 0.8878929 -0.4600503 0 -0.8964874 -0.4430692 0 -3.72228e-4 0.9999999 0 -0.886646 0.4624488 0 0.8951228 0.4458196 0 0 -1 1 0 0 -1 0 0 1 0 0 -1 0 0 1 0 0 -1 0 0 0 0.8878929 -0.4600503 0 -0.8964874 -0.4430692 0 -3.72228e-4 0.9999999 0 -0.886646 0.4624488 0 0.8951228 0.4458196 0 0 -1 1 0 0 -1 0 0 1 0 0 -1 0 0 1 0 0 -1 0 0</float_array>
+          <technique_common>
+            <accessor source="#hatch_body_001-mesh-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_body_001-mesh-map-0">
+          <float_array id="hatch_body_001-mesh-map-0-array" count="144">0.5301656 0.8499026 0.5248076 0.8499026 0.5248076 0.7685629 0.5355236 0.8499026 0.532394 0.8499026 0.532394 0.7685629 0.5301656 0.7685629 0.532394 0.7685629 0.532394 0.8499026 0 0.9999998 0 -2.38419e-7 1 1.78814e-7 1 0 1 1 0 1 0.4999638 0.5569339 0.4975717 0.5569339 0.4975717 0.4755942 0.5058211 0.6086252 0.5059235 0.6077151 0.5059235 0.6337807 0.5012109 0.6328708 0.5011964 0.6085886 0.5013132 0.6077151 0.5058211 0.6086252 0.501538 0.6228082 0.5013132 0.6228833 0.5012109 0.6328708 0.5013132 0.6337807 0.496703 0.6186125 0.5058066 0.6329074 0.5059235 0.6337807 0.5013132 0.6228833 0.5011964 0.6085886 0.4969277 0.6186876 0.496703 0.6186125 0.5301656 0.7685629 0.5301656 0.8499026 0.5248076 0.7685629 0.5355236 0.7685629 0.5355236 0.8499026 0.532394 0.7685629 0.5301656 0.8499026 0.5301656 0.7685629 0.532394 0.8499026 1 1 0 0.9999998 1 1.78814e-7 0 0 1 0 0 1 0.4999638 0.4755942 0.4999638 0.5569339 0.4975717 0.4755942 0.5058066 0.6329074 0.5058211 0.6086252 0.5059235 0.6337807 0.5013132 0.6337807 0.5012109 0.6328708 0.5013132 0.6077151 0.5059235 0.6077151 0.5058211 0.6086252 0.5013132 0.6228833 0.4969277 0.6186876 0.5012109 0.6328708 0.496703 0.6186125 0.501538 0.6228082 0.5058066 0.6329074 0.5013132 0.6228833 0.5013132 0.6077151 0.5011964 0.6085886 0.496703 0.6186125</float_array>
+          <technique_common>
+            <accessor source="#hatch_body_001-mesh-map-0-array" count="72" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="hatch_body_001-mesh-vertices">
+          <input semantic="POSITION" source="#hatch_body_001-mesh-positions"/>
+        </vertices>
+        <polylist material="student_driver-material" count="24">
+          <input semantic="VERTEX" source="#hatch_body_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#hatch_body_001-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#hatch_body_001-mesh-map-0" offset="2" set="0"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>1 0 0 3 0 1 2 0 2 3 1 3 5 1 4 4 1 5 0 2 6 4 2 7 5 2 8 9 3 9 7 3 10 6 3 11 11 4 12 9 4 13 8 4 14 10 5 15 6 5 16 7 5 17 2 6 18 8 6 19 6 6 20 3 7 21 1 7 22 7 7 23 2 8 24 4 8 25 10 8 26 3 9 27 9 9 28 11 9 29 0 10 30 6 10 31 10 10 32 1 11 33 5 11 34 11 11 35 0 12 36 1 12 37 2 12 38 2 13 39 3 13 40 4 13 41 1 14 42 0 14 43 5 14 44 8 15 45 9 15 46 6 15 47 10 16 48 11 16 49 8 16 50 11 17 51 10 17 52 7 17 53 0 18 54 2 18 55 6 18 56 9 19 57 3 19 58 7 19 59 8 20 60 2 20 61 10 20 62 5 21 63 3 21 64 11 21 65 4 22 66 0 22 67 10 22 68 7 23 69 1 23 70 11 23 71</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="hatch_door_L_002-mesh" name="hatch_door_L.002">
+      <mesh>
+        <source id="hatch_door_L_002-mesh-positions">
+          <float_array id="hatch_door_L_002-mesh-positions-array" count="18">0.8257924 0.008709311 0.6158813 0.8194014 0.008709311 0.7168894 0.818127 -0.4949997 0.7100322 0.8235853 -0.4949997 0.613625 0.8010038 -0.4949997 0.7803741 0.8007282 0.008709311 0.7900149</float_array>
+          <technique_common>
+            <accessor source="#hatch_door_L_002-mesh-positions-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_door_L_002-mesh-normals">
+          <float_array id="hatch_door_L_002-mesh-normals-array" count="18">0.988525 -0.004455685 0.1508835 0.9981689 -0.003967404 0.05990779 0.9981689 -0.003967404 0.05990779 0.970214 -0.004913449 0.2420728 0.9882809 -0.004455685 0.1523789 0.970214 -0.004913449 0.2420728</float_array>
+          <technique_common>
+            <accessor source="#hatch_door_L_002-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_door_L_002-mesh-map-0">
+          <float_array id="hatch_door_L_002-mesh-map-0-array" count="24">0.002325475 0.6061117 0.003258407 5.91276e-5 0.9992694 5.91276e-5 7.07537e-4 0.9901546 0.002325475 0.6061117 0.9983008 0.6061117 0.9983008 0.6061117 0.002325475 0.6061117 0.9992694 5.91276e-5 0.9966021 0.9901546 7.07537e-4 0.9901546 0.9983008 0.6061117</float_array>
+          <technique_common>
+            <accessor source="#hatch_door_L_002-mesh-map-0-array" count="12" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="hatch_door_L_002-mesh-vertices">
+          <input semantic="POSITION" source="#hatch_door_L_002-mesh-positions"/>
+        </vertices>
+        <polylist material="student_driver-material" count="4">
+          <input semantic="VERTEX" source="#hatch_door_L_002-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#hatch_door_L_002-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#hatch_door_L_002-mesh-map-0" offset="2" set="0"/>
+          <vcount>3 3 3 3 </vcount>
+          <p>2 0 0 3 1 1 0 2 2 4 3 3 2 0 4 1 4 5 1 4 6 2 0 7 0 2 8 5 5 9 4 3 10 1 4 11</p>
+        </polylist>
+      </mesh>
+    </geometry>
+    <geometry id="hatch_body_002-mesh" name="hatch_body.002">
+      <mesh>
+        <source id="hatch_body_002-mesh-positions">
+          <float_array id="hatch_body_002-mesh-positions-array" count="48">0.3547288 0.4447533 1.356416 0.2314997 0.4447533 1.356416 0.3547288 0.4746592 1.356427 0.2314997 0.4746592 1.356427 -0.2477502 0.4447533 1.356416 -0.3709793 0.4447533 1.356416 -0.2477502 0.4746592 1.356427 -0.3709793 0.4746592 1.356427 0.3547288 0.4447647 1.327705 0.2314997 0.4447647 1.327705 0.3547288 0.4746706 1.327716 0.2314997 0.4746706 1.327716 -0.2477502 0.4447647 1.327705 -0.3709793 0.4447647 1.327705 -0.2477502 0.4746706 1.327716 -0.3709793 0.4746706 1.327716</float_array>
+          <technique_common>
+            <accessor source="#hatch_body_002-mesh-positions-array" count="16" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_body_002-mesh-normals">
+          <float_array id="hatch_body_002-mesh-normals-array" count="72">0 -3.74698e-4 1 0 -3.74698e-4 1 0 3.74698e-4 -1 0 3.74698e-4 -1 -1 0 0 1 0 0 0 1 3.97549e-4 0 -1 -3.97549e-4 -1 0 0 1 0 0 0 1 3.97549e-4 0 -1 -3.97549e-4 0 -3.74698e-4 1 0 -3.74698e-4 1 0 3.74698e-4 -1 0 3.74698e-4 -1 -1 0 0 1 0 0 0 1 3.97549e-4 0 -1 -3.97549e-4 -1 0 0 1 0 0 0 1 3.97549e-4 0 -1 -3.97549e-4</float_array>
+          <technique_common>
+            <accessor source="#hatch_body_002-mesh-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="hatch_body_002-mesh-map-0">
+          <float_array id="hatch_body_002-mesh-map-0-array" count="144">0.4989156 0.5615317 0.501144 0.5615317 0.501144 0.6428714 0.4989156 0.5615317 0.501144 0.5615317 0.501144 0.6428714 0.501144 0.6428714 0.501144 0.5615317 0.4989156 0.5615317 0.501144 0.6428714 0.501144 0.5615317 0.4989156 0.5615317 0.501144 0.6428714 0.501144 0.6428714 0.4989156 0.6428714 0.501144 0.5615317 0.4989156 0.5615317 0.4989156 0.5615317 0.501144 0.5615317 0.501144 0.5615317 0.501144 0.6428714 0.4989156 0.6428714 0.4989156 0.6428714 0.4989156 0.5615317 0.501144 0.6428714 0.501144 0.6428714 0.4989156 0.6428714 0.501144 0.5615317 0.4989156 0.5615317 0.4989156 0.5615317 0.501144 0.5615317 0.501144 0.5615317 0.501144 0.6428714 0.4989156 0.6428714 0.4989156 0.6428714 0.4989156 0.5615317 0.4989156 0.6428714 0.4989156 0.5615317 0.501144 0.6428714 0.4989156 0.6428714 0.4989156 0.5615317 0.501144 0.6428714 0.4989156 0.6428714 0.501144 0.6428714 0.4989156 0.5615317 0.4989156 0.6428714 0.501144 0.6428714 0.4989156 0.5615317 0.4989156 0.6428714 0.501144 0.6428714 0.4989156 0.6428714 0.501144 0.5615317 0.501144 0.5615317 0.4989156 0.5615317 0.501144 0.6428714 0.501144 0.5615317 0.501144 0.6428714 0.4989156 0.5615317 0.4989156 0.6428714 0.4989156 0.5615317 0.4989156 0.6428714 0.501144 0.6428714 0.4989156 0.6428714 0.501144 0.5615317 0.501144 0.5615317 0.4989156 0.5615317 0.501144 0.6428714 0.501144 0.5615317 0.501144 0.6428714 0.4989156 0.5615317 0.4989156 0.6428714 0.4989156 0.5615317</float_array>
+          <technique_common>
+            <accessor source="#hatch_body_002-mesh-map-0-array" count="72" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="hatch_body_002-mesh-vertices">
+          <input semantic="POSITION" source="#hatch_body_002-mesh-positions"/>
+        </vertices>
+        <polylist material="student_driver-material" count="24">
+          <input semantic="VERTEX" source="#hatch_body_002-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#hatch_body_002-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#hatch_body_002-mesh-map-0" offset="2" set="0"/>
+          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
+          <p>0 0 0 2 0 1 3 0 2 4 1 3 6 1 4 7 1 5 11 2 6 10 2 7 8 2 8 15 3 9 14 3 10 12 3 11 7 4 12 15 4 13 13 4 14 6 5 15 4 5 16 12 5 17 6 6 18 14 6 19 15 6 20 5 7 21 13 7 22 12 7 23 3 8 24 11 8 25 9 8 26 2 9 27 0 9 28 8 9 29 2 10 30 10 10 31 11 10 32 1 11 33 9 11 34 8 11 35 1 12 36 0 12 37 3 12 38 5 13 39 4 13 40 7 13 41 9 14 42 11 14 43 8 14 44 13 15 45 15 15 46 12 15 47 5 16 48 7 16 49 13 16 50 14 17 51 6 17 52 12 17 53 7 18 54 6 18 55 15 18 56 4 19 57 5 19 58 12 19 59 1 20 60 3 20 61 9 20 62 10 21 63 2 21 64 8 21 65 3 22 66 2 22 67 11 22 68 0 23 69 1 23 70 8 23 71</p>
+        </polylist>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_controllers/>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="hatch_studentdriver_R" name="hatch_studentdriver_R" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#hatch_door_L_001-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="student_driver-material" target="#student_driver-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="hatch_studentdriver_topa" name="hatch_studentdriver_topa" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#hatch_body_001-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="student_driver-material" target="#student_driver-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="hatch_studentdriver_L" name="hatch_studentdriver_L" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#hatch_door_L_002-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="student_driver-material" target="#student_driver-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="hatch_studentdriver_topb" name="hatch_studentdriver_topb" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#hatch_body_002-mesh">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="student_driver-material" target="#student_driver-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>

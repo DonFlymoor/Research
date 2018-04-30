@@ -1,0 +1,343 @@
+{
+"pickup_axle2_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"3-Link Off-Road Live Axle Rear Suspension",
+    },
+    "slotType" : "pickup_suspension_R",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_brake_R","pickup_brake_R","Rear Brakes"],
+        //The case() is for backwards compatibility for old configs that use "trackwidth_R" variable.
+        //To change the base track width, edit the trackoffset_R offset in the expression.
+        ["pickup_hub_R","pickup_hub_R_6","Rear Wheel Hubs", {"nodeOffset":{"x":"$=case($trackwidth_R == nil, $trackoffset_R+0.31, $trackwidth_R)", "y":1.487, "z":0.4101}}],
+        ["pickup_wheeldata_R","pickup_wheeldata_R", "Rear Spindles"{"coreSlot":true}],
+        ["pickup_coilover_R","pickup_coilover_R","Rear Coilovers"],
+        ["pickup_differential_R","pickup_differential_R","Rear Differential"{"coreSlot":true}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$trackoffset_R", "range", "+m", "Wheels", 0.0,-0.02, 0.05, "Wheel Offset", "Spacing of the wheel from the hub", {"stepDis":0.001,"subCategory":"Rear"}]
+        ["$trackbar_R2", "range", "m", "Wheel Alignment", -0.015, -0.04, 0.04, "Track Bar Adjust", "Adjust the axle lateral position", {"stepDis":0.001,"subCategory":"Rear"}]
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //rear axle
+         ["pickup_sus2_mounts", ["pickup_framefront", "pickup_framecab", "pickup_rearshocktop", "pickup_framebed", "pickup_lowermounts", "pickup_uppermounts", "pickup_shocktop", "pickup_leaftop"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["pickup_hub_R", ["wheelhub_RR", "wheelhub_RL", "pickup_axle_R", "pickup_rearshockbottom"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["pickup_sus2_panhard_rod", ["pickup_panhard_rod"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["pickup_sus2_links", ["pickup_axle_links", "pickup_frame_links", "pickup_axle_linktop"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["pickup_sus2_axle_R", ["pickup_axle_R", "pickup_axle_links", "pickup_engine","pickup_transmission"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["pickup_sus2_panhard_axlejoint", ["pickup_axle_R", "pickup_axle_links", "pickup_engine","pickup_transmission"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["pickup_sus2_axlemounts", ["pickup_axle_R", "pickup_axle_links", "pickup_engine","pickup_transmission"], [],{"pos":{"x":0,"y":0,"z":0}}],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--REAR LIVE AXLE SUSPENSION--
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"nodeWeight":6.5},
+         {"collision":true}
+         {"group":"pickup_axle_R"},
+         {"selfCollision":false}
+         ["ax2r", -0.75, 1.48, 0.59],
+         ["ax2l", 0.75, 1.48, 0.59],
+         {"selfCollision":true}
+         ["ax3r", -0.75, 1.31, 0.26],
+         ["ax3l", 0.75, 1.31, 0.26],
+         //extra axle nodes
+         ["ax4r", -0.75, 1.61, 0.26],
+         ["ax4l", 0.75, 1.61, 0.26],
+         {"collision":true}
+         {"nodeWeight":16},
+         {"group":"pickup_axle_R"},
+         ["ax1", 0.0, 1.58, 0.31],
+         ["ax3", 0.0, 1.14, 0.43{"selfCollision":false}],
+         {"nodeWeight":12},
+         {"selfCollision":false}
+         ["ax2", 0.0, 1.53, 0.56{"group":["pickup_axle_R","pickup_axle_linktop"]}],
+         {"selfCollision":true}
+         {"nodeWeight":6.5},
+         {"group":"pickup_axle_links"},
+         ["axshr", -0.65, 1.428, 0.348],
+         ["axshl", 0.65, 1.428, 0.348],
+         {"nodeWeight":10.5},
+         {"group":["pickup_frame_links","pickup_framebed"]},
+         {"selfCollision":true}
+         //relocate frame nodes for link mounts
+         ["fr13", 0.0, 1.11, 0.55],
+         {"group":["pickup_frame_links","pickup_framecab"]},
+         ["fr10r", -0.48, 0.62, 0.33],
+         ["fr10l", 0.48, 0.62, 0.33],
+         {"selfCollision":true}
+         {"group":["pickup_framebed","pickup_rearshocktop2"]}
+         ["fr17r", -0.48, 1.43, 0.628],
+         ["fr17l", 0.48, 1.43, 0.628],
+         {"nodeWeight":5.0},
+         {"group":"pickup_panhard_rod"},
+         {"selfCollision":false}
+         ["phr_R", -0.51, 1.60, 0.36],
+         ["phr_FR", -0.51, 1.50, 0.36],
+         ["phr_L", 0.518, 1.54, 0.55],
+         ["phr_FL", 0.518, 1.44, 0.55],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+          {"beamSpring":6001000,"beamDamp":250},
+          {"beamDeform":42500,"beamStrength":"FLT_MAX"},
+          //Panhard rod mounts
+          //frame side
+          ["phr_R","fr14r"],
+          ["phr_R","fr17r"],
+          ["phr_R","fr14"],
+          ["phr_R","fr17"],
+
+          ["phr_R","fr15r"],
+          ["phr_R","fr18r"],
+          ["phr_R","fr15"],
+          ["phr_R","fr18"],
+
+          ["phr_FR","phr_R"],
+
+          ["phr_FR","fr14r"],
+          ["phr_FR","fr17r"],
+          ["phr_FR","fr14"],
+          ["phr_FR","fr17"],
+
+          ["phr_FR","fr15r"],
+          ["phr_FR","fr18r"],
+          ["phr_FR","fr15"],
+          ["phr_FR","fr18"],
+          {"beamSpring":3001000,"beamDamp":250},
+          //axle side
+          ["phr_L","ax2l"],
+          ["phr_L","ax3l"],
+          ["phr_L","ax4l"],
+          ["phr_L","ax1"],
+          ["phr_L","ax2"],
+          ["phr_L","ax3"],
+
+          ["phr_FL","phr_L"],
+
+          ["phr_FL","ax2l"],
+          ["phr_FL","ax3l"],
+          ["phr_FL","ax4l"],
+          ["phr_FL","ax1"],
+          ["phr_FL","ax2"],
+          ["phr_FL","ax3"],
+
+          //Rear Axle
+          {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+          {"beamSpring":13001000,"beamDamp":250},
+          {"beamDeform":60000,"beamStrength":"FLT_MAX"},
+          ["ax2r","ax2"],
+          ["ax2","ax2l"],
+          ["ax3r","ax3"],
+          ["ax3","ax3l"],
+          //
+          ["ax2l","ax3l"],
+          ["ax1","ax2"],
+          ["ax1","ax3"],
+          ["ax2","ax3"],
+          ["ax2r","ax3r"],
+
+          //crossing
+          ["ax2r","ax1"],
+          ["ax2l","ax1"],
+          ["ax3r","ax1"],
+          ["ax3l","ax1"],
+
+          ["ax3r","ax2"],
+          ["ax3l","ax2"],
+
+          ["ax2r","ax3"],
+          ["ax2l","ax3"],
+
+          //extra
+          ["ax4r","ax2r"],
+          ["ax4r","ax3r"],
+          ["ax4l","ax2l"],
+          ["ax4l","ax3l"],
+          ["ax4r","ax1"],
+          ["ax4r","ax2"],
+          ["ax4r","ax3"],
+          ["ax4l","ax1"],
+          ["ax4l","ax2"],
+          ["ax4l","ax3"],
+
+          {"beamSpring":8001000,"beamDamp":250},
+          ["ax2l","ax2r"],
+          ["ax3l","ax3r"],
+          ["ax4l","ax4r"],
+
+          {"beamSpring":12001000,"beamDamp":250},
+          {"beamDeform":60000,"beamStrength":"FLT_MAX"},
+          //shock mounts
+          ["axshr","ax2r"],
+          ["axshr","ax3r"],
+          ["axshr","ax4r"],
+          ["axshr","ax1"],
+          ["axshr","ax2"],
+          ["axshr","ax3"],
+
+          ["axshl","ax2l"],
+          ["axshl","ax3l"],
+          ["axshl","ax4l"],
+          ["axshl","ax1"],
+          ["axshl","ax2"],
+          ["axshl","ax3"],
+
+          //--REAR WHEELS--
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+          {"beamSpring":6001000,"beamDamp":150},
+          {"beamDeform":280000,"beamStrength":450000},
+          //to axle body
+          {"breakGroup":"wheel_RR"},
+          ["rw1rr","ax2r"],
+          ["rw1rr","ax3r"],
+          ["rw1rr","ax4r"],
+          ["rw1r","ax3"],
+          ["rw1r","ax2"],
+          ["rw1r","ax1", {"name":"axle_RR"}],
+          ["rw1r","ax2r"],
+          ["rw1r","ax3r"],
+          ["rw1r","ax4r"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1ll","ax2l"],
+          ["rw1ll","ax3l"],
+          ["rw1ll","ax4l"],
+          ["rw1l","ax3"],
+          ["rw1l","ax2"],
+          ["rw1l","ax1", {"name":"axle_RL"}],
+          ["rw1l","ax2l"],
+          ["rw1l","ax3l"],
+          ["rw1l","ax4l"],
+          //to shock mounts
+          {"breakGroup":"wheel_RR"},
+          ["rw1rr","axshr"],
+          ["rw1r","axshr"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1ll","axshl"],
+          ["rw1l","axshl"],
+          {"breakGroup":""},
+
+          //main links
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+          {"beamSpring":25001000,"beamDamp":4000},
+          {"beamDeform":157500,"beamStrength":251000},
+          ["fr13","ax2"{"dampCutoffHz":500}],
+          ["fr10l","axshl"{"dampCutoffHz":500}],
+          ["fr10r","axshr"{"dampCutoffHz":500}],
+
+          //extra damping
+          {"beamSpring":0,"beamDamp":1000},
+          {"beamDeform":25000,"beamStrength":45000},
+          ["fr13r","ax2"{"dampCutoffHz":500}],
+          ["fr13l","ax2"{"dampCutoffHz":500}],
+          ["fr10l","axshr"{"dampCutoffHz":500}],
+          ["fr10r","axshl"{"dampCutoffHz":500}],
+
+          //Panhard rod
+          {"beamSpring":2501000,"beamDamp":4000},
+          {"beamDeform":30000,"beamStrength":191000},
+          ["phr_FL","phr_FR"{"precompressionRange":"$trackbar_R2","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["phr_L","phr_R"{"precompressionRange":"$trackbar_R2","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["phr_L","phr_FR"{"precompressionRange":"$trackbar_R2","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          ["phr_FL","phr_R"{"precompressionRange":"$trackbar_R2","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
+          {"breakGroup":""},
+
+          //pinion damper
+          {"beamSpring":0,"beamDamp":2500},
+          {"beamDeform":25000,"beamStrength":35000},
+          ["ax1","fr10"{"dampCutoffHz":500}],
+          ["ax2","fr10"{"dampCutoffHz":500}],
+          //["ax3","fr13"],
+          {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //axle shape
+            {"triangleType":"NONCOLLIDABLE"},
+            ["ax1", "ax3", "axshr"],
+            ["ax4r", "ax1", "axshr"],
+            ["ax3", "ax3r", "axshr"],
+            ["ax4r", "ax3r", "ax2r"],
+            ["ax3r", "ax4r", "axshr"],
+
+            ["ax3", "ax1", "axshl"],
+            ["ax1", "ax4l", "axshl"],
+            ["ax3l", "ax3", "axshl"],
+            ["ax3l", "ax4l", "ax2l"],
+            ["ax4l", "ax3l", "axshl"],
+            {"triangleType":"NORMALTYPE"},
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //cancel out brake properties
+            {"brakeTorque":0},
+            {"parkingTorque":0},
+            {"enableBrakeThermals":false},
+            {"brakeDiameter":false},
+            {"brakeMass":false},
+            {"brakeType":false},
+            {"rotorMaterial":false},
+            {"brakeVentingCoef":false},
+    ],
+},
+"pickup_coilover_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Off-Road Rear Coilovers",
+    },
+    "slotType" : "pickup_coilover_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_sus2_coilover_R", ["pickup_axle_links", "pickup_rearshocktop2"], [],{"pos":{"x":0,"y":0,"z":0}}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$springheight_R", "range", "+m", "Suspension", 0, -0.1, 0.1, "Spring Height", "Raise or lower the suspension height", {"stepDis":0.005, "subCategory":"Rear"}]
+        ["$spring_R", "range", "N/m", "Suspension", 40000, 10000, 90000, "Spring Rate", "Spring stiffness", {"stepDis":500, "subCategory":"Rear"}]
+        ["$damp_bump_R", "range", "N/m/s", "Suspension", 4000, 500, 10000, "Bump Damping", "Damper rate in slow compression", {"stepDis":100, "subCategory":"Rear"}]
+        ["$damp_bump_R_fast", "range", "N/m/s", "Suspension", 9000, 500, 15000, "Fast Bump Damping", "Damper rate in fast compression", {"stepDis":100, "subCategory":"Rear"}]
+        ["$damp_rebound_R", "range", "N/m/s", "Suspension", 4000, 500, 10000, "Rebound Damping", "Damper rate in extension", {"stepDis":100, "subCategory":"Rear"}]
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--REAR SPRING--
+          {"beamType":"|NORMAL"},
+          {"beamDeform":270000,"beamStrength":462800},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":"$spring_R","beamDamp":0},
+          //IMPORTANT: if precompressionRange is ~= nil then it supersedes beamPrecompression.
+          //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
+          //To change the base ride height, edit the springheight_F offset in the expression.
+          ["axshr","fr17r",{"beamPrecompression":"$=$rideheight_R", "precompressionRange":"$=case($rideheight_R == nil, ($springheight_R + 0.21), '')","beamPrecompressionTime":0.1,
+              "soundFile":"art/sound/spring_compress2.ogg","volumeFactor":3,"decayMode":1,"decayFactor":6,"pitchFactor":2,"maxStress":15000}],
+          ["axshl","fr17l",{"beamPrecompression":"$=$rideheight_R", "precompressionRange":"$=case($rideheight_R == nil, ($springheight_R + 0.21), '')","beamPrecompressionTime":0.1,
+              "soundFile":"art/sound/spring_compress3.ogg","volumeFactor":3,"decayMode":1,"decayFactor":6,"pitchFactor":1,"maxStress":15000}],
+
+          //--REAR SHOCKS--
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":270000,"beamStrength":462800},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":0,"beamDamp":"$damp_bump_R"},
+          ["axshr","fr17r",{"beamDampRebound":"$damp_rebound_R","beamDampVelocitySplit":0.75,"beamDampFast":"$damp_bump_R_fast","beamDampReboundFast":"$damp_rebound_R","dampCutoffHz":500}],
+          ["axshl","fr17l",{"beamDampRebound":"$damp_rebound_R","beamDampVelocitySplit":0.75,"beamDampFast":"$damp_bump_R_fast","beamDampReboundFast":"$damp_rebound_R","dampCutoffHz":500}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":800000},
+          ["axshr","fr17r"{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["axshl","fr17l"{"beamDampFast":0,"beamDampRebound":800000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.1},
+          {"beamDeform":270000,"beamStrength":462800},
+          {"beamLimitSpring":10001000,"beamLimitDamp":4500},
+          {"beamSpring":500,"beamDamp":0},
+          ["axshr","fr17r"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          ["axshl","fr17l"{"beamLimitDampRebound":0,"dampCutoffHz":500}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+}

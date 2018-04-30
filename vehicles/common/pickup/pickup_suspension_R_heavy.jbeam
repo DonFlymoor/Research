@@ -1,0 +1,915 @@
+{
+"pickup_axle_R_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Live Axle Rear Suspension",
+        "value":600,
+    },
+    "slotType" : "pickup_suspension_R",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_brake_R_heavy","pickup_brake_R_heavy_alt", "Rear Brakes"],
+        //The case() is for backwards compatibility for old configs that use "trackwidth_R" variable.
+        //To change the base track width, edit the trackoffset_R offset in the expression.
+        ["wheel_R_8","steelwheel_04a_16x8_R_dually","Rear Wheels", {"nodeOffset":{"x":"$=case($trackwidth_R == nil, $trackoffset_R+0.31, $trackwidth_R)", "y":1.487, "z":0.4101}}],
+        ["pickup_wheeldata_R","pickup_wheeldata_R", "Rear Spindles"{"coreSlot":true}],
+        ["pickup_spring_R","pickup_spring_R_heavy", "Rear Springs"],
+        ["pickup_shock_R","pickup_shock_R_heavy", "Rear Shocks"],
+        ["pickup_differential_R","pickup_differential_R_heavy", "Rear Differential"{"coreSlot":true}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$trackoffset_R", "range", "+m", "Wheels", 0.0,-0.02, 0.05, "Wheel Offset", "Spacing of the wheel from the hub", {"stepDis":0.001,"subCategory":"Rear"}]
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //rear axle
+         ["pickup_hub_R", ["wheelhub_RR", "wheelhub_RL", "pickup_axle_R", "pickup_rearshockbottom"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         ["pickup_axle_R", ["pickup_axle_R", "pickup_rearshockbottom", "pickup_engine","pickup_transmission"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--REAR LIVE AXLE SUSPENSION--
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"nodeWeight":9.0},
+         {"collision":true},
+         {"selfCollision":false},
+         {"group":"pickup_axle_R"},
+         ["ax2r", -0.66, 1.49, 0.56{"group":["pickup_axle_R","pickup_leafbottom"]}],
+         ["ax2l", 0.66, 1.49, 0.56{"group":["pickup_axle_R","pickup_leafbottom"]}],
+         {"selfCollision":true}
+         ["ax3r", -0.74, 1.30, 0.31],
+         ["ax3l", 0.74, 1.30, 0.31],
+         ["ax4r", -0.74, 1.66, 0.31],
+         ["ax4l", 0.74, 1.66, 0.31],
+         ["ax1", 0.0, 1.6, 0.30{"nodeWeight":22}],
+         ["ax3", 0.0, 1.13, 0.39{"nodeWeight":22,"selfCollision":false}],
+         ["ax2", 0.0, 1.54, 0.55{"nodeWeight":14,"selfCollision":false}],
+         {"nodeWeight":9.0},
+         ["axsr", -0.66, 1.49, 0.37{"group":["pickup_axle_R","pickup_leafbottom"]}],
+         ["axsl", 0.66, 1.49, 0.37{"group":["pickup_axle_R","pickup_leafbottom"]}],
+         {"group":"pickup_rearshockbottom"},
+         {"nodeWeight":6.0},
+         //shock mounting nodes
+         ["axshr", -0.45, 1.56, 0.29],
+         ["axshl", 0.45, 1.56, 0.29],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //live axle suspension
+          {"beamSpring":18001000,"beamDamp":250},
+          {"beamDeform":110000,"beamStrength":560000},
+          ["ax2","ax2r"],
+          ["ax2","ax2l"],
+          ["ax3","ax3r"],
+          ["ax3","ax3l"],
+          ["ax1","ax4r"],
+          ["ax1","ax4l"],
+          //
+          ["ax2l","ax3l"],
+          ["ax2r","ax3r"],
+          ["ax4l","ax3l"],
+          ["ax4r","ax3r"],
+          ["ax4l","ax2l"],
+          ["ax4r","ax2r"],
+          ["ax1","ax2"],
+          ["ax1","ax3"],
+          ["ax2","ax3"],
+
+          //crossing
+          ["ax2r","ax1"],
+          ["ax2l","ax1"],
+          ["ax3r","ax1"],
+          ["ax3l","ax1"],
+          ["ax3r","ax2"],
+          ["ax3l","ax2"],
+          ["ax4r","ax2"],
+          ["ax4l","ax2"],
+          ["ax2r","ax3"],
+          ["ax2l","ax3"],
+          ["ax4r","ax3"],
+          ["ax4l","ax3"],
+
+          ["ax2l","ax2r"],
+          ["ax3l","ax3r"],
+          ["ax4l","ax4r"],
+
+          //wheel to axle
+          {"optional":true},
+          {"beamSpring":14001000,"beamDamp":150},
+          {"beamDeform":260000,"beamStrength":621000},
+          {"breakGroup":"wheel_RR"},
+          ["rw1rr","ax2r"],
+          ["rw1rr","ax3r"],
+          ["rw1rr","ax4r"],
+          ["rw1r","ax3"],
+          ["rw1r","ax2"],
+          ["rw1r","ax1", {"name":"axle_RR"}],
+          ["rw1r","ax2r"],
+          ["rw1r","ax3r"],
+          ["rw1r","ax4r"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1ll","ax2l"],
+          ["rw1ll","ax3l"],
+          ["rw1ll","ax4l"],
+          ["rw1l","ax3"],
+          ["rw1l","ax2"],
+          ["rw1l","ax1", {"name":"axle_RL"}],
+          ["rw1l","ax2l"],
+          ["rw1l","ax3l"],
+          ["rw1l","ax4l"],
+          {"optional":false},
+          //shock mounts
+          {"breakGroup":""},
+          {"beamSpring":6001000,"beamDamp":150},
+          {"beamDeform":110000,"beamStrength":"FLT_MAX"},
+          ["axshr","ax2r"],
+          ["axshr","ax3r"],
+          ["axshr","ax4r"],
+          ["axshr","ax1"],
+          ["axshr","ax2"],
+          ["axshr","ax3"],
+          ["axshl","ax2l"],
+          ["axshl","ax3l"],
+          ["axshl","ax4l"],
+          ["axshl","ax1"],
+          ["axshl","ax2"],
+          ["axshl","ax3"],
+          //spring mounts
+          {"beamSpring":12001000,"beamDamp":150},
+          ["axsl","ax2l"],
+          ["axsl","ax3l"],
+          ["axsl","ax4l"],
+          ["axsl","ax1"],
+          ["axsl","ax2"],
+          ["axsl","ax3"],
+
+          ["axsr","ax2r"],
+          ["axsr","ax3r"],
+          ["axsr","ax4r"],
+          ["axsr","ax1"],
+          ["axsr","ax2"],
+          ["axsr","ax3"],
+
+          //rear limiters
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.45, "beamShortBound":0.45},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":75000,"beamStrength":231000},
+          {"beamLimitSpring":5001000,"beamLimitDamp":2500},
+          //["ax1","fr17"],
+          {"breakGroupType":1}
+          {"optional":true},
+          {"beamLongBound":0.145, "beamShortBound":0.145},
+          {"breakGroup":"wheel_RR"},
+          ["rw1r","fr17"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","fr17"],
+          {"breakGroup":""},
+          {"beamLongBound":0.4, "beamShortBound":0.2},
+          {"breakGroup":"wheel_RR"},
+          ["rw1r","fr14l"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","fr14r"],
+          {"breakGroup":""},
+          {"optional":false},
+          ["ax2r","fr14l"],
+          ["ax2l","fr14r"],
+          //bed
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.48, "beamShortBound":0.28},
+          {"breakGroup":"wheel_RR"},
+          {"optional":true}
+          ["rw1rr","b14rr"],
+          ["rw1rr","b10rr"],
+          ["rw1r","b14rr"],
+          ["rw1r","b10rr"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","b14ll"],
+          ["rw1l","b10ll"],
+          ["rw1ll","b14ll"],
+          ["rw1ll","b10ll"],
+          {"optional":false}
+          {"breakGroup":""},
+          {"breakGroupType":0}
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.48, "beamShortBound":0.28},
+          //rear limiters
+          {"beamLongBound":0.35, "beamShortBound":0.15},
+          ["axshr","fr17"],
+          ["axshl","fr17"],
+          //["ax1","fr17"],
+          {"beamLongBound":0.145, "beamShortBound":0.145},
+          ["ax2r","fr17"],
+          ["ax2l","fr17"],
+          ["ax2","fr17r"],
+          ["ax2","fr17l"],
+          {"beamLongBound":0.4, "beamShortBound":0.2},
+          ["ax2r","fr14l"],
+          ["ax2l","fr14r"],
+          //rear limiters
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.48, "beamShortBound":0.28},
+          ["ax1","fr19r"],
+          ["ax1","fr20r"],
+          ["ax1","fr19l"],
+          ["ax1","fr20l"],
+          ["ax2","fr19r"],
+          ["ax2","fr20r"],
+          ["ax2","fr19l"],
+          ["ax2","fr20l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":0,"beamDamp":3500},
+          {"beamDeform":30000,"beamStrength":50000},
+          //pinion damper
+          ["ax2","tra1"],
+          ["ax1","tra1"],
+          //hard limit
+          {"beamSpring":2001000,"beamDamp":2000,"beamDeform":86750,"beamStrength":126330},
+          {"beamPrecompression":0.65, "beamType":"|SUPPORT", "beamLongBound":4},
+          ["axsr","fr17r"],
+          ["axsl","fr17l"],
+          {"breakGroupType":0},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //axle shape
+            {"triangleType":"NONCOLLIDABLE"},
+            ["ax1", "ax3", "axshr"],
+            ["axshr", "ax3r", "axsr"],
+            ["axsr", "ax4r", "axshr"],
+            ["ax4r", "ax1", "axshr"],
+            ["ax3", "ax3r", "axshr"],
+            ["ax3r", "ax4r", "axsr"],
+            ["ax4r", "ax3r", "ax2r"],
+
+            ["ax3", "ax1", "axshl"],
+            ["ax3l","axshl", "axsl"],
+            ["ax4l", "axsl", "axshl"],
+            ["ax1", "ax4l", "axshl"],
+            ["ax3l", "ax3", "axshl"],
+            ["ax4l", "ax3l", "axsl"],
+            ["ax3l", "ax4l", "ax2l"],
+            {"triangleType":"NORMALTYPE"},
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //cancel out brake properties
+            {"brakeTorque":0},
+            {"parkingTorque":0},
+            {"enableBrakeThermals":false},
+            {"brakeDiameter":false},
+            {"brakeMass":false},
+            {"brakeType":false},
+            {"rotorMaterial":false},
+            {"brakeVentingCoef":false},
+    ],
+}
+"pickup_axle_R_ext_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Live Axle Rear Suspension",
+        "value":600,
+    },
+    "slotType" : "pickup_suspension_R_ext",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_brake_R_heavy","pickup_brake_R_heavy_alt", "Rear Brakes", {"nodeOffset":{"x":0.0,"y":0.613,"z":0}}],
+        //The case() is for backwards compatibility for old configs that use "trackwidth_R" variable.
+        //To change the base track width, edit the trackoffset_R offset in the expression.
+        ["wheel_R_8","steelwheel_04a_16x8_R_dually","Rear Wheels", {"nodeOffset":{"x":"$=case($trackwidth_R == nil, $trackoffset_R+0.31, $trackwidth_R)", "y":2.1, "z":0.4101}}],
+        ["pickup_wheeldata_R","pickup_wheeldata_R", "Rear Spindles", {"nodeOffset":{"x":0.0, "y":0.613, "z":0.0}}],
+        ["pickup_spring_R","pickup_spring_R_heavy", "Rear Springs", {"nodeOffset":{"x":0.0,"y":0.613,"z":0}}],
+        ["pickup_shock_R","pickup_shock_R_heavy", "Rear Shocks", {"nodeOffset":{"x":0.0,"y":0.613,"z":0}}],
+        ["pickup_differential_R","pickup_differential_R_heavy", "Rear Differential", {"nodeOffset":{"x":0.0,"y":0.613,"z":0}"coreSlot":true}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$trackoffset_R", "range", "+m", "Wheels", 0.0,-0.02, 0.05, "Wheel Offset", "Spacing of the wheel from the hub", {"stepDis":0.001,"subCategory":"Rear"}]
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //rear axle
+         ["pickup_hub_R", ["wheelhub_RR", "wheelhub_RL", "pickup_axle_R", "pickup_rearshockbottom"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         ["pickup_axle_R", ["pickup_axle_R", "pickup_rearshockbottom", "pickup_engine"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--REAR LIVE AXLE SUSPENSION--
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"nodeWeight":9.0},
+         {"collision":true},
+         {"selfCollision":false},
+         {"group":"pickup_axle_R"},
+         ["ax2r", -0.66, 1.49, 0.58],
+         ["ax2l", 0.66, 1.49, 0.58],
+         {"selfCollision":true},
+         ["ax3r", -0.74, 1.30, 0.31],
+         ["ax3l", 0.74, 1.30, 0.31],
+         ["ax4r", -0.74, 1.66, 0.31],
+         ["ax4l", 0.74, 1.66, 0.31],
+         ["ax1", 0.0, 1.6, 0.30{"nodeWeight":24}],
+         ["ax3", 0.0, 1.13, 0.39{"nodeWeight":24,"selfCollision":false}],
+         ["ax2", 0.0, 1.54, 0.55{"nodeWeight":14,"selfCollision":false}],
+         {"nodeWeight":9.0},
+         ["axsr", -0.66, 1.49, 0.37{"group":["pickup_axle_R","pickup_leafbottom"]}],
+         ["axsl", 0.66, 1.49, 0.37{"group":["pickup_axle_R","pickup_leafbottom"]}],
+         {"group":"pickup_rearshockbottom"},
+         {"nodeWeight":6.0},
+         //shock mounting nodes
+         ["axshr", -0.45, 1.56, 0.29],
+         ["axshl", 0.45, 1.56, 0.29],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //live axle suspension
+          {"beamSpring":18001000,"beamDamp":250},
+          {"beamDeform":110000,"beamStrength":560000},
+          ["ax2","ax2r"],
+          ["ax2","ax2l"],
+          ["ax3","ax3r"],
+          ["ax3","ax3l"],
+          ["ax1","ax4r"],
+          ["ax1","ax4l"],
+          //
+          ["ax2l","ax3l"],
+          ["ax2r","ax3r"],
+          ["ax4l","ax3l"],
+          ["ax4r","ax3r"],
+          ["ax4l","ax2l"],
+          ["ax4r","ax2r"],
+          ["ax1","ax2"],
+          ["ax1","ax3"],
+          ["ax2","ax3"],
+
+          //crossing
+          ["ax2r","ax1"],
+          ["ax2l","ax1"],
+          ["ax3r","ax1"],
+          ["ax3l","ax1"],
+          ["ax3r","ax2"],
+          ["ax3l","ax2"],
+          ["ax4r","ax2"],
+          ["ax4l","ax2"],
+          ["ax2r","ax3"],
+          ["ax2l","ax3"],
+          ["ax4r","ax3"],
+          ["ax4l","ax3"],
+
+          ["ax2l","ax2r"],
+          ["ax3l","ax3r"],
+          ["ax4l","ax4r"],
+
+          //wheel to axle
+          {"optional":true},
+          {"beamSpring":14001000,"beamDamp":150},
+          {"beamDeform":260000,"beamStrength":621000},
+          {"breakGroup":"wheel_RR"},
+          ["rw1rr","ax2r"],
+          ["rw1rr","ax3r"],
+          ["rw1rr","ax4r"],
+          ["rw1r","ax3"],
+          ["rw1r","ax2"],
+          ["rw1r","ax1", {"name":"axle_RR"}],
+          ["rw1r","ax2r"],
+          ["rw1r","ax3r"],
+          ["rw1r","ax4r"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1ll","ax2l"],
+          ["rw1ll","ax3l"],
+          ["rw1ll","ax4l"],
+          ["rw1l","ax3"],
+          ["rw1l","ax2"],
+          ["rw1l","ax1", {"name":"axle_RL"}],
+          ["rw1l","ax2l"],
+          ["rw1l","ax3l"],
+          ["rw1l","ax4l"],
+          {"optional":false},
+          //shock mounts
+          {"breakGroup":""},
+          {"beamSpring":6001000,"beamDamp":150},
+          {"beamDeform":110000,"beamStrength":"FLT_MAX"},
+          ["axshr","ax2r"],
+          ["axshr","ax3r"],
+          ["axshr","ax4r"],
+          ["axshr","ax1"],
+          ["axshr","ax2"],
+          ["axshr","ax3"],
+          ["axshl","ax2l"],
+          ["axshl","ax3l"],
+          ["axshl","ax4l"],
+          ["axshl","ax1"],
+          ["axshl","ax2"],
+          ["axshl","ax3"],
+          //spring mounts
+          {"beamSpring":12001000,"beamDamp":150},
+          ["axsl","ax2l"],
+          ["axsl","ax3l"],
+          ["axsl","ax4l"],
+          ["axsl","ax1"],
+          ["axsl","ax2"],
+          ["axsl","ax3"],
+
+          ["axsr","ax2r"],
+          ["axsr","ax3r"],
+          ["axsr","ax4r"],
+          ["axsr","ax1"],
+          ["axsr","ax2"],
+          ["axsr","ax3"],
+
+          //rear limiters
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.45, "beamShortBound":0.45},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":75000,"beamStrength":231000},
+          {"beamLimitSpring":5001000,"beamLimitDamp":2500},
+          //["ax1","fr17"],
+          {"beamLongBound":0.145, "beamShortBound":0.145},
+          {"breakGroup":"wheel_RR"},
+          ["rw1r","fr17"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","fr17"],
+          {"breakGroup":""},
+          {"beamLongBound":0.4, "beamShortBound":0.2},
+          {"breakGroup":"wheel_RR"},
+          ["rw1r","fr14l"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","fr14r"],
+          {"breakGroup":""},
+          ["ax2r","fr14l"],
+          ["ax2l","fr14r"],
+          //bed
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.48, "beamShortBound":0.28},
+          {"breakGroup":"wheel_RR"},
+          {"optional":true}
+          ["rw1rr","b14rr"],
+          ["rw1rr","b10rr"],
+          ["rw1r","b14rr"],
+          ["rw1r","b10rr"],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","b14ll"],
+          ["rw1l","b10ll"],
+          ["rw1ll","b14ll"],
+          ["rw1ll","b10ll"],
+          {"breakGroup":""},
+          {"optional":false}
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.48, "beamShortBound":0.28},
+          //rear limiters
+          {"beamLongBound":0.35, "beamShortBound":0.15},
+          ["axshr","fr17"],
+          ["axshl","fr17"],
+          //["ax1","fr17"],
+          {"beamLongBound":0.145, "beamShortBound":0.145},
+          ["ax2r","fr17"],
+          ["ax2l","fr17"],
+          ["ax2","fr17r"],
+          ["ax2","fr17l"],
+          {"beamLongBound":0.4, "beamShortBound":0.2},
+          ["ax2r","fr14l"],
+          ["ax2l","fr14r"],
+          //rear limiters
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.48, "beamShortBound":0.28},
+          ["ax1","fr19r"],
+          ["ax1","fr20r"],
+          ["ax1","fr19l"],
+          ["ax1","fr20l"],
+          ["ax2","fr19r"],
+          ["ax2","fr20r"],
+          ["ax2","fr19l"],
+          ["ax2","fr20l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":0,"beamDamp":3500},
+          {"beamDeform":30000,"beamStrength":50000},
+          //pinion damper
+          ["ax2","tra1"],
+          ["ax1","tra1"],
+          //hard limit
+          {"beamSpring":2001000,"beamDamp":2000,"beamDeform":86750,"beamStrength":126330},
+          {"beamPrecompression":0.65, "beamType":"|SUPPORT", "beamLongBound":4},
+          ["axsr","fr17r"],
+          ["axsl","fr17l"],
+          {"breakGroupType":0},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //axle shape
+            {"triangleType":"NONCOLLIDABLE"},
+            ["ax1", "ax3", "axshr"],
+            ["axshr", "ax3r", "axsr"],
+            ["axsr", "ax4r", "axshr"],
+            ["ax4r", "ax1", "axshr"],
+            ["ax3", "ax3r", "axshr"],
+            ["ax3r", "ax4r", "axsr"],
+            ["ax4r", "ax3r", "ax2r"],
+
+            ["ax3", "ax1", "axshl"],
+            ["ax3l","axshl", "axsl"],
+            ["ax4l", "axsl", "axshl"],
+            ["ax1", "ax4l", "axshl"],
+            ["ax3l", "ax3", "axshl"],
+            ["ax4l", "ax3l", "axsl"],
+            ["ax3l", "ax4l", "ax2l"],
+            {"triangleType":"NORMALTYPE"},
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //cancel out brake properties
+            {"brakeTorque":0},
+            {"parkingTorque":0},
+            {"enableBrakeThermals":false},
+            {"brakeDiameter":false},
+            {"brakeMass":false},
+            {"brakeType":false},
+            {"rotorMaterial":false},
+            {"brakeVentingCoef":false},
+    ],
+}
+"pickup_spring_R_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Rear Leaf Springs",
+        "value":300,
+    },
+    "slotType" : "pickup_spring_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_leaf_R", ["pickup_leaftop","pickup_leafbottom"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         ["pickup_leafbracket_R", ["pickup_axle_R", "pickup_rearshockbottom"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "rails": {
+        "leaf_RL":{
+            "links:":["axsl","lf3l"], "broken:":[], "looped":false, "capped":true
+        },
+        "leaf_RR":{
+            "links:":["axsr","lf3r"], "broken:":[], "looped":false, "capped":true
+        },
+    },
+    "slidenodes": [
+        ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
+        ["ax2l", "leaf_RL", true, true, 0.0, 601000, "FLT_MAX", "FLT_MAX"],
+        ["ax2r", "leaf_RR", true, true, 0.0, 601000, "FLT_MAX", "FLT_MAX"],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"selfCollision":true}
+         {"collision":true}
+         {"nodeWeight":8},
+         {"group":"pickup_leafbottom"},
+         //shackle nodes
+         {"selfCollision":false}
+         ["lf1r",-0.64, 2.08, 0.44],
+         ["lf1l", 0.64, 2.08, 0.44],
+         {"group":"pickup_leaftop"},
+         //leaf top flexbody nodes
+         ["le1r", -0.64, 0.9, 0.36],
+         ["le1l", 0.64, 0.9, 0.36],
+         ["le2r", -0.64, 2.06, 0.52],
+         ["le2l", 0.64, 2.06, 0.52],
+         //anti wrap node
+         {"nodeWeight":2.0},
+         {"group":""},
+         {"collision":false},
+         ["lf3r",-0.66, 1.49, 0.65],
+         ["lf3l", 0.66, 1.49, 0.65],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":20001000,"beamDamp":150},
+          {"beamDeform":125000,"beamStrength":375000},
+          //leaf front
+          ["axsr","le1r"],
+          ["axsl","le1l"],
+          //leaf rear
+          ["lf1r","axsr"],
+          ["lf1l","axsl"],
+
+          //anti axle wrap node
+          {"beamSpring":5001000,"beamDamp":150},
+          ["lf3r","le1r"],
+          ["lf3l","le1l"],
+          ["lf3r","lf1r"],
+          ["lf3l","lf1l"],
+
+          //leaf spring
+          {"beamType":"|LBEAM"},
+          {"beamSpring":801000,"beamDamp":3000},
+          {"beamPrecompression":0.94},
+          ["ax2r","le1r",{"id3:":"axsr","beamPrecompressionTime":0.1}],
+          ["ax2l","le1l",{"id3:":"axsl","beamPrecompressionTime":0.1}],
+          ["ax2r","lf1r",{"id3:":"axsr","beamPrecompressionTime":0.1}],
+          ["ax2l","lf1l",{"id3:":"axsl","beamPrecompressionTime":0.1}],
+          {"beamPrecompression":1},
+
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":75000,"beamStrength":180000},
+          {"beamSpring":1201000,"beamDamp":2000},
+          //lateral location
+          ["axsr","le1l"],
+          ["axsl","le1r"],
+          ["axsr","lf1l"],
+          ["axsl","lf1r"],
+
+          //shackle
+          {"beamPrecompression":1.0},
+          {"beamSpring":8001000,"beamDamp":250},
+          {"beamDeform":125000,"beamStrength":225000},
+          ["lf1r","le2r"],
+          ["lf1l","le2l"],
+          ["lf1r","fr15"],
+          ["lf1l","fr15"],
+
+          //leaf mounts
+          {"beamSpring":5001000,"beamDamp":150},
+          {"beamDeform":35000,"beamStrength":"FLT_MAX"},
+          ["le1r","fr13r"],
+          ["le1r","fr16r"],
+          ["le1l","fr13l"],
+          ["le1l","fr16l"],
+          //
+          ["le2r","fr15r"],
+          ["le2r","fr18r"],
+          ["le2l","fr15l"],
+          ["le2l","fr18l"],
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          //weak
+          ["le1r","fr14r"],
+          ["le1r","fr17r"],
+          ["le1l","fr14l"],
+          ["le1l","fr17l"],
+
+          ["le2r","fr14r"],
+          ["le2r","fr17r"],
+          ["le2l","fr14l"],
+          ["le2l","fr17l"],
+          {"beamDeform":15000,"beamStrength":"FLT_MAX"},
+          //extra
+          ["le1r","fr10r"{"beamSpring":20001000}],
+          ["le1r","fr12r"],
+
+          ["le1l","fr10l"{"beamSpring":20001000}],
+          ["le1l","fr12l"],
+
+          ["le1r","fr13"],
+          ["le1l","fr13"],
+
+          //damping help
+          {"beamDeform":15000,"beamStrength":45000},
+          {"beamSpring":0,"beamDamp":5000},
+          ["ax3l","fr12l"],
+          ["ax3r","fr12r"],
+          ["ax4l","fr19l"],
+          ["ax4r","fr19r"],
+
+          //shackle anti invert
+          {"beamPrecompression":1, "beamType":"|SUPPORT", "beamLongBound":1},
+          {"beamSpring":2501000,"beamDamp":500,"beamDeform":75000,"beamStrength":2314000},
+          {"beamPrecompression":0.9},
+          ["lf1r","fr18r"],
+          ["lf1l","fr18l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            {"group":"pickup_rearaxle"},
+            {"triangleType":"NONCOLLIDABLE"},
+            //leaf spring
+            ["ax4r","ax2r","lf1r"],
+            ["ax2r","ax3r","le1r"],
+            ["ax2l","ax4l","lf1l"],
+            ["ax3l","ax2l","le1l"],
+            {"triangleType":"NORMALTYPE"},
+    ],
+},
+"pickup_shock_R_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Rear Shocks",
+        "value":400,
+    },
+    "slotType" : "pickup_shock_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_shock_R", ["pickup_rearshockbottom", "pickup_rearshocktop"],[],{"pos":{"x":0.0, "y":0.0, "z":-0.01}}],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--REAR SHOCKS--
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":150000,"beamStrength":356000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":500,"beamDamp":7500},
+          ["axshr","fr17r"{"beamDampRebound":10500,"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":80,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":3500}],
+          ["axshl","fr17l"{"beamDampRebound":10500,"soundFile":"art/sound/spring_compress3.ogg","volumeFactor":80,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":3500}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":1500000},
+          ["axshr","fr17r"{"beamDampFast":0,"beamDampRebound":1500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["axshl","fr17l"{"beamDampFast":0,"beamDampRebound":1500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.2},
+          {"beamDeform":150000,"beamStrength":356000},
+          {"beamLimitSpring":5001000,"beamLimitDamp":8000},
+          {"beamSpring":500,"beamDamp":0},
+          ["axshr","fr17r"{"beamLimitDampRebound":0,"soundFile":"art/sound/spring_creak.ogg", "volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1000}],
+          ["axshl","fr17l"{"beamLimitDampRebound":0,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":1,"maxStress":1000}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+
+"pickup_spring_R_super": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Super Heavy Duty Rear Leaf Springs",
+        "value":450,
+    },
+    "slotType" : "pickup_spring_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_leaf_R", ["pickup_leaftop","pickup_leafbottom"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         ["pickup_leafbracket_R", ["pickup_axle_R", "pickup_rearshockbottom"],[],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "rails": {
+        "leaf_RL":{
+            "links:":["axsl","lf3l"], "broken:":[], "looped":false, "capped":true
+        },
+        "leaf_RR":{
+            "links:":["axsr","lf3r"], "broken:":[], "looped":false, "capped":true
+        },
+    },
+    "slidenodes": [
+        ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
+        ["ax2l", "leaf_RL", true, true, 0.0, 601000, "FLT_MAX", "FLT_MAX"],
+        ["ax2r", "leaf_RR", true, true, 0.0, 601000, "FLT_MAX", "FLT_MAX"],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"selfCollision":true}
+         {"collision":true}
+         {"nodeWeight":8},
+         {"group":"pickup_leafbottom"},
+         //shackle nodes
+         {"selfCollision":false}
+         ["lf1r",-0.64, 2.08, 0.44],
+         ["lf1l", 0.64, 2.08, 0.44],
+         {"group":"pickup_leaftop"},
+         //leaf top flexbody nodes
+         ["le1r", -0.64, 0.9, 0.36],
+         ["le1l", 0.64, 0.9, 0.36],
+         ["le2r", -0.64, 2.06, 0.52],
+         ["le2l", 0.64, 2.06, 0.52],
+         //anti wrap node
+         {"nodeWeight":2.0},
+         {"group":""},
+         {"collision":false},
+         ["lf3r",-0.66, 1.49, 0.65],
+         ["lf3l", 0.66, 1.49, 0.65],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":20001000,"beamDamp":150},
+          {"beamDeform":125000,"beamStrength":375000},
+          //leaf front
+          ["axsr","le1r"],
+          ["axsl","le1l"],
+          //leaf rear
+          ["lf1r","axsr"],
+          ["lf1l","axsl"],
+
+          //anti axle wrap node
+          {"beamSpring":5001000,"beamDamp":150},
+          ["lf3r","le1r"],
+          ["lf3l","le1l"],
+          ["lf3r","lf1r"],
+          ["lf3l","lf1l"],
+
+          //leaf spring
+          {"beamType":"|LBEAM"},
+          {"beamSpring":1601000,"beamDamp":3000},
+          {"beamPrecompression":0.94},
+          ["ax2r","le1r",{"id3:":"axsr","beamPrecompressionTime":0.1}],
+          ["ax2l","le1l",{"id3:":"axsl","beamPrecompressionTime":0.1}],
+          ["ax2r","lf1r",{"id3:":"axsr","beamPrecompressionTime":0.1}],
+          ["ax2l","lf1l",{"id3:":"axsl","beamPrecompressionTime":0.1}],
+          {"beamPrecompression":1},
+
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":75000,"beamStrength":180000},
+          {"beamSpring":1201000,"beamDamp":2000},
+          //lateral location
+          ["axsr","le1l"],
+          ["axsl","le1r"],
+          ["axsr","lf1l"],
+          ["axsl","lf1r"],
+
+          //shackle
+          {"beamPrecompression":1.0},
+          {"beamSpring":8001000,"beamDamp":250},
+          {"beamDeform":125000,"beamStrength":225000},
+          ["lf1r","le2r"],
+          ["lf1l","le2l"],
+          ["lf1r","fr15"],
+          ["lf1l","fr15"],
+
+          //leaf mounts
+          {"beamSpring":5001000,"beamDamp":150},
+          {"beamDeform":35000,"beamStrength":"FLT_MAX"},
+          ["le1r","fr13r"],
+          ["le1r","fr16r"],
+          ["le1l","fr13l"],
+          ["le1l","fr16l"],
+          //
+          ["le2r","fr15r"],
+          ["le2r","fr18r"],
+          ["le2l","fr15l"],
+          ["le2l","fr18l"],
+          {"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          //weak
+          ["le1r","fr14r"],
+          ["le1r","fr17r"],
+          ["le1l","fr14l"],
+          ["le1l","fr17l"],
+
+          ["le2r","fr14r"],
+          ["le2r","fr17r"],
+          ["le2l","fr14l"],
+          ["le2l","fr17l"],
+          {"beamDeform":15000,"beamStrength":"FLT_MAX"},
+          //extra
+          ["le1r","fr10r"{"beamSpring":20001000}],
+          ["le1r","fr12r"],
+
+          ["le1l","fr10l"{"beamSpring":20001000}],
+          ["le1l","fr12l"],
+
+          ["le1r","fr13"],
+          ["le1l","fr13"],
+
+          //damping help
+          {"beamDeform":15000,"beamStrength":45000},
+          {"beamSpring":0,"beamDamp":5000},
+          ["ax3l","fr12l"],
+          ["ax3r","fr12r"],
+          ["ax4l","fr19l"],
+          ["ax4r","fr19r"],
+
+          //shackle anti invert
+          {"beamPrecompression":1, "beamType":"|SUPPORT", "beamLongBound":1},
+          {"beamSpring":2501000,"beamDamp":500,"beamDeform":75000,"beamStrength":2314000},
+          {"beamPrecompression":0.9},
+          ["lf1r","fr18r"],
+          ["lf1l","fr18l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            {"group":"pickup_rearaxle"},
+            {"triangleType":"NONCOLLIDABLE"},
+            //leaf spring
+            ["ax4r","ax2r","lf1r"],
+            ["ax2r","ax3r","le1r"],
+            ["ax2l","ax4l","lf1l"],
+            ["ax3l","ax2l","le1l"],
+            {"triangleType":"NORMALTYPE"},
+    ],
+},
+"pickup_shock_R_super": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Super Heavy Duty Rear Shocks",
+        "value":500,
+    },
+    "slotType" : "pickup_shock_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["pickup_shock_R", ["pickup_rearshockbottom", "pickup_rearshocktop"],[],{"pos":{"x":0.0, "y":0.0, "z":-0.01}}],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //--REAR SHOCKS--
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamDeform":225000,"beamStrength":401000},
+          {"beamLimitSpring":0,"beamLimitDamp":0},
+          {"beamSpring":500,"beamDamp":8000},
+          ["axshr","fr17r"{"beamDampRebound":11000,"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":80,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":3500}],
+          ["axshl","fr17l"{"beamDampRebound":11000,"soundFile":"art/sound/spring_compress3.ogg","volumeFactor":80,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":3500}],
+          //shock and suspension friction
+          {"beamSpring":0,"beamDamp":1500000},
+          ["axshr","fr17r"{"beamDampFast":0,"beamDampRebound":1500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["axshl","fr17l"{"beamDampFast":0,"beamDampRebound":1500000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          //bumpstops
+          {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.0},
+          {"beamDeform":150000,"beamStrength":356000},
+          {"beamLimitSpring":10001000,"beamLimitDamp":5000},
+          {"beamSpring":2000,"beamDamp":0},
+          ["axshr","fr17r"{"beamLimitDampRebound":0,"soundFile":"art/sound/spring_creak.ogg", "volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1000}],
+          ["axshl","fr17l"{"beamLimitDampRebound":0,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":1,"maxStress":1000}],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
+    ],
+},
+}

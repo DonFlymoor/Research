@@ -1,0 +1,66 @@
+{
+"bogie_brake_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Brakes",
+        "value":900,
+    }
+    "slotType" : "bogie_brake_F",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["bogie_brake_F", ["bogie_axle_F"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         //brake drums
+         ["bogie_drum_F", ["bogie_wheel_FR","bogie_wheel_FL"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+        {"brakeTorque":10000},
+        {"parkingTorque":10000},
+        {"brakeSpring":250},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.42},
+        {"brakeMass":40.0},
+        {"brakeType":"drum"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":1.0},
+    ],
+    "engine":{
+        "brakePressureDelay":0.6,
+    },
+}
+"bogie_brake_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Rear Brakes",
+        "value":900,
+    }
+    "slotType" : "bogie_brake_R",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["bogie_brake_R", ["bogie_axle_R"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+         //brake drums
+         ["bogie_drum_R", ["bogie_wheel_RR","bogie_wheel_RL"], [],{"pos":{"x":0.0, "y":0.0, "z":0.0}}],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        //brakes
+        {"brakeTorque":10000},
+        {"parkingTorque":10000},
+        {"brakeSpring":250},
+
+        //brake thermals
+        {"enableBrakeThermals":true},
+        {"brakeDiameter":0.42},
+        {"brakeMass":40.0},
+        {"brakeType":"drum"},
+        {"rotorMaterial":"steel"},
+        {"brakeVentingCoef":1.0},
+    ],
+    "engine":{
+        "brakePressureDelay":0.6,
+    },
+}
+}

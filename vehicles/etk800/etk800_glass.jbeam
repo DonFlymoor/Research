@@ -1,0 +1,108 @@
+{
+"etk800_glass_wagon": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Glass",
+        "value":2000,
+    }
+    "slotType" : "etk800_glass_wagon",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //glass
+         {"deformGroup":"windshield_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_windshield_dmg"}
+         ["etk800_windshield", ["etk800_windshield"],[]{"deformSound":"GlassBreakSound1", "deformVolume":0.7}],
+         {"deformGroup":"windshield_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_int"}
+         ["etk800_windshield_int", ["etk800_windshield"]],
+
+         {"deformGroup":"windshield_break", "deformMaterialBase":"glass_invisible", "deformMaterialDamaged":"glass_mirror"}
+         ["etk800_windshield_dmg", ["etk800_windshield"]],
+
+         {"deformGroup":"sideglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_sideglass_R", ["etk800_body"],[]{"deformSound":"GlassBreakSound5", "deformVolume":0.7}],
+         {"deformGroup":"sideglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_sideglass_L", ["etk800_body"],[]{"deformSound":"GlassBreakSound6", "deformVolume":0.7}],
+
+         {"deformGroup":"sideglass_R_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_sideglass_R_int", ["etk800_body"]],
+         {"deformGroup":"sideglass_L_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
+         ["etk800_sideglass_L_int", ["etk800_body"]],
+
+         {"deformGroup":""}
+         ["etk800_wipers", ["etk800_body", "etk800_engine_bay"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"selfCollision":true}
+         {"collision":true},
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_GLASS"},
+         {"nodeWeight":3.33},
+         {"group":"etk800_windshield"},
+         ["wi1", 0, -0.56, 1.22{"group":["etk800_windshield","gps"]}],
+         {"group":""},
+
+    ],
+
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamSpring":1470600,"beamDamp":120},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          //weak windshield beams
+          {"disableMeshBreaking":true,"disableTriangleBreaking":true},
+          {"beamDeform":10500,"beamStrength":"FLT_MAX"},
+          {"deformGroup":"windshield_break","deformationTriggerRatio":0.02},
+
+          ["rf1","wi1"],
+          ["rf1r","wi1"],
+          ["rf1l","wi1"],
+          ["wi1","f6r"],
+          ["wi1","f6l"],
+          ["wi1","p1r"],
+          ["wi1","p1l"],
+          ["wi1","f6rr"],
+          ["wi1","f6ll"],
+
+          ["wi1","p2rr"],
+          ["wi1","p2ll"],
+
+          {"beamDeform":7500,"beamStrength":17500},
+          ["rf1","f6r"],
+          ["rf1","f6l"],
+
+          ["p1r","p1l"],
+
+          ["rf1r","f6r"],
+          ["rf1l","f6l"],
+
+          //brittle glass beams
+          {"beamSpring":1350600,"beamDamp":60},
+          //side glass
+          {"disableMeshBreaking":true,"disableTriangleBreaking":true},
+          {"beamDeform":4800,"beamStrength":8800},
+          {"deformGroup":"sideglass_R_break", "deformationTriggerRatio":0.03},
+          {"breakGroup":"sideglass_R"},
+
+          ["rf5r","q2r"],
+          ["rf5r","q1r"],
+          ["q1r","p11r"],
+          ["p11r","p10r"],
+          ["p11r","rf4r"],
+          ["rf6r","q1r"],
+
+          {"deformGroup":"sideglass_L_break", "deformationTriggerRatio":0.03},
+          {"breakGroup":"sideglass_L"},
+          ["rf5l","q2l"],
+          ["rf5l","q1l"],
+          ["q1l","p11l"],
+          ["p11l","p10l"],
+          ["p11l","rf4l"],
+          ["rf6l","q1l"],
+
+          {"breakGroup":""},
+          {"disableMeshBreaking":false,"disableTriangleBreaking":false},
+          {"deformGroup":""}
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+
+    ],
+}
+}

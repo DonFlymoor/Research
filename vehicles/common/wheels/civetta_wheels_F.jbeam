@@ -1,0 +1,274 @@
+{
+"super_wheel_15x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Civetta Veloce 15x9 Front Wheels",
+        "value":650,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x9_alt","tire_F_225_55_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //wheels
+         ["super_wheel_15x8", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.50, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["super_wheel_15x8", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.50, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //front wheel
+         {"nodeWeight":5.0},
+         {"selfCollision":true},
+         {"collision":true},
+         {"frictionCoef":0.5},
+         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+         {"nodeMaterial":"|NM_METAL"},
+         {"group":"wheelhub_FR"},
+         ["fw1r",-0.33,-0.0,0.0],
+         {"group":"wheelhub_FR"},
+         ["fw1rr",-0.60,-0.0,0.0],
+         {"group":"wheelhub_FL"},
+         ["fw1l",0.33,-0.0,0.0],
+         {"group":"wheelhub_FL"},
+         ["fw1ll",0.60,-0.0,0.0],
+         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":801000,"beamDamp":6},
+		  {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+          //front wheel
+          ["fw1r","fw1rr"],
+          ["fw1l","fw1ll"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.205},
+        {"wheelOffset":-0.035},
+        {"hubWidth":0.225},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1401000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.42},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"wheel_08a_15x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Civetta Competizione 15x9 Front Wheels (Gray)",
+        "value":900,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x9_altb","tire_F_205_65_15_race", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //wheels
+         ["wheel_08a_15x10", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.93, "y":1, "z":1}}],
+         ["wheel_08a_15x10", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.93, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheel
+        {"nodeWeight":5.0},
+        {"selfCollision":true},
+        {"collision":true},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r",-0.33,-0.0,0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr",-0.60,-0.0,0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l",0.33,-0.0,0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll",0.60,-0.0,0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamSpring":801000,"beamDamp":6},
+		{"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.205},
+        {"wheelOffset":-0.055},
+        {"hubWidth":0.230},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1401000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.42},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"wheel_08b_15x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Civetta Competizione 15x9 Front Wheels (Black)",
+        "value":900,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x9_altb","tire_F_205_65_15_race", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //wheels
+         ["wheel_08b_15x10", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.93, "y":1, "z":1}}],
+         ["wheel_08b_15x10", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.93, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheel
+        {"nodeWeight":5.0},
+        {"selfCollision":true},
+        {"collision":true},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r",-0.33,-0.0,0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr",-0.60,-0.0,0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l",0.33,-0.0,0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll",0.60,-0.0,0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamSpring":801000,"beamDamp":6},
+		{"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.205},
+        {"wheelOffset":-0.055},
+        {"hubWidth":0.230},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1401000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.42},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"wheel_08c_15x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Civetta Competizione 15x9 Front Wheels (White)",
+        "value":900,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x9_altb","tire_F_205_65_15_race", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //wheels
+         ["wheel_08c_15x10", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.93, "y":1, "z":1}}],
+         ["wheel_08c_15x10", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.93, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheel
+        {"nodeWeight":5.0},
+        {"selfCollision":true},
+        {"collision":true},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r",-0.33,-0.0,0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr",-0.60,-0.0,0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l",0.33,-0.0,0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll",0.60,-0.0,0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamSpring":801000,"beamDamp":6},
+		{"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.205},
+        {"wheelOffset":-0.055},
+        {"hubWidth":0.230},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1401000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.42},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+}
