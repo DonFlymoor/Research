@@ -1,0 +1,17 @@
+{
+  "domElement": "<APPTEMPLATE></APPTEMPLATE>",
+  "name": "APPTEMPLATE",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Insert Description Here",
+  "css": {
+    "height": "200px",
+    "width": "200px",
+    "min-width": "120px",
+    "min-height": "120px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "APPTEMPLATE"
+}

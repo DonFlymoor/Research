@@ -1,0 +1,19 @@
+{
+  "domElement": "<simple-brake-thermals></simple-brake-thermals>",
+  "name": "ui.apps.simple_brake_thermals.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Simplified brake thermals and efficiency display",
+  "css": {
+    "left": "0px",
+    "width": "120px",
+    "height": "150px",
+    "min-width": "120px",
+    "min-height": "150px",
+    "top": "0px"
+  },
+  "author": "Vaasik",
+  "version": "0.2",
+  "directive": "simpleBrakeThermals"
+}

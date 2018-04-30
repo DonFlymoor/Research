@@ -1,0 +1,19 @@
+{
+  "domElement": "<ai-control></ai-control>",
+  "name": "ui.apps.aicontrol.name",
+  "types": [
+    "ui.apps.categories.vehicle_control"
+  ],
+  "css": {
+    "min-width": "500px",
+    "height": "160px",
+    "width": "520px",
+    "left": "200px",
+    "min-height": "160px",
+    "bottom": "0px"
+  },
+  "description": "An app to help debugging the AI",
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "aiControl"
+}

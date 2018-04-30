@@ -1,0 +1,38 @@
+<div style="height:100%; width:100%;" class="bngApp">
+  <table style="width: 100%">
+    <tr>
+      <td>Money</td>
+      <td layout="row">
+        <input style="width: 40%" type="number" min="0" step="100" ng-model="money">
+        <button style="width: 25%" ng-click="addFunds(money)" type="button">Add</button>
+        <button style="width: 25%" ng-click="removeFunds(money)" type="button">Subtract</button>
+      </td>
+    </tr>
+    <tr>
+      <td>Teleportation</td>
+      <td layout="row" >
+        <button style="width: 25%" ng-click="toggleTeleportation(0)" type="button">On</button>
+        <button style="width: 25%" ng-click="toggleTeleportation(1)" type="button">Off</button>
+      </td>
+    </tr>
+    <tr>
+      <td>End Mission</td>
+      <td layout="row" >
+        <button style="width: 25%" ng-click="completeScenario('fail')" type="button">Fail</button>
+        <button style="width: 25%" ng-click="completeScenario('success','bronze')" type="button">Bronze</button>
+        <button style="width: 25%" ng-click="completeScenario('success','silver')" type="button">Silver</button>
+        <button style="width: 25%" ng-click="completeScenario('success','gold')" type="button">Gold</button>
+      </td>
+    </tr>
+    <tr>
+      <td>Vehicle</td>
+      <td layout="row">
+        <select style="width: 30%" ng-model="model" ng-options="model as model.key for model in data"></select>
+        <select style="width: 30%" ng-model="config" ng-options="config as config.key for config in data[model.key].configs"></select>
+        <button style="width: 50%" ng-click="addVehicle('spawn', model, config)" type="button">Spawn</button>
+        <button style="width: 50%" ng-click="addVehicle('garage', model, config)" type="button">Add to Garage</button>
+        <button style="width: 50%" ng-click="addVehicle('dealer', model, config)" type="button">Add to Dealer</button>
+      </td>
+    </tr>
+  </table>
+</div>

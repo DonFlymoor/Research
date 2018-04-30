@@ -1,0 +1,17 @@
+{
+  "domElement": "<forced-induction></forced-induction>",
+  "name": "ui.apps.forcedinduction.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "smth",
+  "css": {
+    "bottom": "350px",
+    "height": "150px",
+    "width": "150px",
+    "right": "30px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "forcedInduction"
+}

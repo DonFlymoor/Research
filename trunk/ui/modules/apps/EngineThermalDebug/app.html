@@ -1,0 +1,19 @@
+<div style="height:100%; width:100%; overflow: auto;" ng-if="data" class="bngApp md-padding">
+  <style>
+  .warning {
+    background-color:#aaaa55;
+    color:#444411;
+  }
+  .error {
+    background-color: #ff5555;
+    color:#440000;
+  }
+  </style>
+
+  <div ng-repeat="set in data" layout="row">
+    <div flex>{{set.name}}</div>
+    <div flex="33" ng-class="{'warning': set.warn, 'error': set.error}">
+      {{set.str}}
+    </div>
+  </div>
+</div>

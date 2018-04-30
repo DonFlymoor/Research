@@ -1,0 +1,17 @@
+{
+  "domElement": "<forced-induction-debug></forced-induction-debug>",
+  "name": "ui.apps.forced_induction_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows a few turbocharger statistics",
+  "css": {
+    "left": "0px",
+    "height": "auto",
+    "top": "0px",
+    "width": "300px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "forcedInductionDebug"
+}

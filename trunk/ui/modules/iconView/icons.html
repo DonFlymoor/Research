@@ -1,0 +1,60 @@
+
+<md-content flex style="height: 100%; background-color: rgba(0, 0, 0, 0.7);" layout="row">
+  <!-- build:css -->
+  <style>
+  .iconsDemo .gridItem {
+    width: calc(8% - 2 * 1.4rem);
+    margin: 0 1.4rem 2.8rem 1.4rem;
+    overflow: hidden;
+    position: relative;
+  }
+  .iconsDemo .gridItem:hover {
+    overflow: visible;
+  }
+  .iconsDemo .gridItem:hover .text {
+    background-color: #000000;
+    padding: 5px;
+    z-index: 200;
+  }
+  .iconsDemo .gridItem .text {
+    text-align: center;
+  }
+
+  .box {
+  position: relative;
+  width: inherit;
+}
+.box1_1:before {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+
+
+
+</style>
+  <!-- endbuild -->
+
+  <!-- Search bar -->
+  <div layout="column" style="margin: 0 16px;">
+    <div layout="row" layout-align="start center">
+      <input ng-model="iconCtrl.config.query" ng-change="iconCtrl.sort()" nav-item value="Search" style="width: 100%;"></input>
+    </div>
+  </div>
+
+  <!-- Icon select -->
+  <div layout flex style="position: relative;" class="iconsDemo">
+    <div flex bng-v-list class="container" bng-v-repeat="item in iconCtrl.list" bng-fade-out-scroll="150" fade-child>
+      <div class="gridItem">
+         <bng-box1x1>
+           <div class="container" ng-class="{'color-white': !active, 'color-primary': active}" layout="column" layout-align="center center" ng-focus="active = true;" ng-blur="active = false;" nav-item nav-item-enter-focus="{{ :: 0 === $index }}" nav-item-remember>
+              <div style="position: relative; width: 50%; height: 50%;">
+                <bng-icon src="item.src" type="{{:: item.type}}" class="container"></bng-icon>
+              </div>
+              <div class="text">{{:: item.src}}</div>
+           </div>
+         </bng-box1x1>
+      </div>
+    </div>
+  </div>
+</md-content>

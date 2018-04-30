@@ -1,0 +1,19 @@
+{
+  "domElement": "<odometer></odometer>",
+  "name": "ui.apps.odometer.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Measures the distance travelled.",
+  "css": {
+    "min-width": "110px",
+    "height": "80px",
+    "width": "150px",
+    "right": "0px",
+    "min-height": "60px",
+    "top": "0px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "odometer"
+}

@@ -1,0 +1,41 @@
+ <div style="max-height:100%; width:100%; background:rgba(255,255,255,0.9);" layout="column" layout-align="center center" >  
+    <div layout="row" style="width:100%" layout-align="center center" layout-wrap> 
+        <div style="margin:5px;">
+        	<form ng-submit="find()">
+        		<div layout="row">
+            		<input flex type="text" ng-model="position" placeholder="location or lat,lon" ng-mouseenter="enter" onclick="enter" >
+            		<button type="submit" >find</button>
+         		</div>
+         	</form>
+         </div>
+    </div>
+
+    <div flex style="width:100%; overflow-y:auto" layout-wrap ng-show="places.length > 0"> 
+      <table style="width:100%; height:100%;">
+      	<thead>
+	      	<tr>
+	      		<th>Place</th>
+	      		<th>load</th>
+      		</tr>
+      	</thead>
+      	<tbody style="text-align:left;"> 
+	      	<tr ng-repeat="row in places"> 
+	      	 	<td >
+					<div style="margin-top: 0.7em;">
+		      	 	 {{row.display_name}}</br>
+		      	 	<b>Lat</b>: {{row.lat}} </br>
+		      	 	<b>Lon</b>: {{row.lon}} 	
+		      	 	<div style="width:100%; margin-top:1em; height: 1px; background-color: black;"></div>
+	      	 	</div>
+
+	      	 	</td>
+	      	 	<td><button ng-click="loadMap(row)" ng-disabled="disabled">load</button></td>
+	      	</tr>
+	   	</tbody>
+      </table> 
+    </div> 
+    <div flex style="width:100%; text-align: center; " layout-wrap ng-show="places.length == 0"> 
+    No Results
+    </div>
+
+</div>

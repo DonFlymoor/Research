@@ -1,0 +1,19 @@
+{
+  "domElement": "<simple-speedo></simple-speedo>",
+  "name": "ui.apps.speedometer.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays speed from wheels if avaliable, falls back to airspeed.",
+  "css": {
+    "left": "200px",
+    "height": "100px",
+    "width": "300px",
+    "min-width": "300px",
+    "min-height": "60px",
+    "top": "200px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.2",
+  "directive": "simpleSpeedo"
+}

@@ -1,0 +1,20 @@
+{
+  "domElement": "<simple-pitch></simple-pitch>",
+  "name": "ui.apps.pitch.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays the current pitch of the vehicle. Click the app to swap which side the scale is on.",
+  "css": {
+    "left": "200px",
+    "height": "200px",
+    "width": "200px",
+    "min-width": "120px",
+    "min-height": "120px",
+    "top": "200px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "simplePitch"
+}

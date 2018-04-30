@@ -1,0 +1,38 @@
+.garage .transparentIndicatorSquared {
+  background-image:
+    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #CCCCCC), color-stop(.25, transparent)), 
+    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #CCCCCC), color-stop(.25, transparent)),
+    -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #CCCCCC)),
+    -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #CCCCCC));
+  -webkit-background-size: 16px 16px;  
+  background-position:0 0, 40px 0, 40px -40px, 0 40px;
+}
+
+
+.garage .colorWidgetShadow {
+  background-image: url('color-shadow.png');    
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.garage .colorWidgetContainer {
+  margin: 5%;
+}
+
+.garage .colorWidgetContainer .title {
+  text-align: center; 
+  margin-bottom: 40px;
+}
+
+.garage .colorWidgetContainer:focus {
+  color: #FF6700;
+}
+
+.garage .colorWidgetContainer .circle {
+  height: 125px;
+  width: 125px;
+}
+
+.garage .colorWidgetContainer .circle:focus {
+  color: #FF6700;
+}

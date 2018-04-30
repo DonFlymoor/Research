@@ -1,0 +1,19 @@
+{
+  "domElement": "<shift-point-debug></shift-point-debug>",
+  "name": "ui.apps.shift_point_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "App which shows graph to indicate points at which gears should change.",
+  "css": {
+    "left": "100px",
+    "height": "200px",
+    "width": "200px",
+    "min-width": "500px",
+    "min-height": "150px",
+    "top": "100px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "shiftPointDebug"
+}

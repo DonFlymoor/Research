@@ -1,0 +1,12 @@
+{
+
+"super_SKINTEMPLATE": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"super_SKINTEMPLATE",
+        "value":600,
+    },
+    "slotType" : "paint_design",
+    "globalSkin" : "super_SKINTEMPLATE",
+  },
+}

@@ -1,0 +1,40 @@
+<link type="text/css" rel="stylesheet" href="modules/garageNew/garage.css">
+
+<div class="garage container blurContainterMock" layout="column">
+  <div class="container" layout="row">
+    <gp-panel class="infoPanelLeft" style="width: 500px; min-height: 100px; position: absolute; top: 30%; left: calc(50% - 250px);" navigatable="false" no-padding="true">
+      <gp-panel-tab>
+        <gp-panel-tab-header>
+          {{:: 'ui.garage.tabs.save' | translate}}
+        </gp-panel-tab-header>
+
+        <div class="filler" layout="column" layout-align="start end" style="padding: 15px 0;">
+          <div style="width: 100%;" layout="column" layout-align="start start">
+            <gp-list-input style=" width: 100%;" btn-name="OK" btn-size="50px" btn-click="gpSave.save()" btn-disabled="gpSave.disableBtn"  bng-nav-item active="gpSave.activeElement === 'setFile'" ng-focus="gpSave.activeElement = 'setFile'"  ng-blur="gpSave.activeElement = undefined">
+              <md-input-container flex style="color: white; padding: 0;">
+                <label style="color: white;" class="font1">{{::'ui.common.filename' | translate}}</label>
+                <input ng-model="gpSave.filename" style="color: white; border-color: transparent;" ng-change="gpSave.shouldBtnDisable()">
+              </md-input-container>
+            </gp-list-input>
+            <div style="padding: 0 30px;" class="color4">
+              <div ng-if="gpSave.fileExists">{{::'ui.garage.save.overwrite' | translate}}</div>
+              <div ng-if="gpSave.filename.length < 1">{{::'ui.garage.save.enterName' | translate}}</div>
+            </div>
+          </div>
+
+          <div style="width: 100%; cursor: pointer" layout="row" bng-nav-item ng-focus="gpSave.activeElement = 'setDef'" ng-blur="gpSave.activeElement = undefined" ng-click="gpSave.setAsDefault()">
+            <div flex ng-style="{'background-color': gpSave.activeElement === 'setDef' ? 'rgba(255, 103, 0, 0.3)' : 'transparent'}"></div>
+            <gp-list-input btn-name="OK" btn-size="50px" btn-action="gpSave.setAsDefault" active="gpSave.activeElement === 'setDef'">
+              <div class="color1 font1" style="margin: 4px 15px 4px 4px; font-size: 1.2em; text-align: right;">{{::'ui.garage.save.setDef' | translate}}</div>
+            </gp-list-input>
+          </div>
+        </div>
+
+        <gp-panel-tab-footer layout="row" layout-align="end center" flex>
+          <gp-btn icon="'undo'" default-focus="true" title="ui.garage.save.back" class="gpBtn" style="margin: 5px;" btn-click="gpSave.back()"></gp-btn>
+          <gp-btn icon="'#garage_exit'" title="ui.garage.save.continue" class="gpBtn" style="margin: 5px;" btn-click="gpSave.unloadGarage()"></gp-btn>
+        </gp-panel-tab-footer>
+      </gp-panel-tab>
+    </gp-panel>
+  </div>
+</div>

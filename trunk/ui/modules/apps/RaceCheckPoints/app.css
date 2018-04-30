@@ -1,0 +1,17 @@
+.app .RaceCheckPoints {
+    text-align:center;
+    vertical-align:middle;
+    padding-top: 5px;
+}
+
+@font-face {
+    font-family: Squada One;
+    src: url(../../fonts/SquadaOne-Regular.ttf) format(truetype);
+}
+
+.app .RaceCheckPoints .TextDiv {
+    color: white;
+    font-size:25pt;
+    height:30px;
+    font-family: Squada One; 
+}

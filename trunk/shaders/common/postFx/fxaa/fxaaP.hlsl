@@ -1,0 +1,120 @@
+
+#define FXAA_PC 1
+#if BGE_SM >= 40
+#define FXAA_HLSL_4 1
+#else
+#define FXAA_HLSL_3 1
+#endif
+#define FXAA_QUALITY__PRESET 39
+#define FXAA_GREEN_AS_LUMA 1
+
+#include "Fxaa3_11.h"
+#include "../postFx.hlsl"
+
+struct VertToPix
+{
+   float4 hpos       : SV_Position;
+   float2 uv0        : TEXCOORD0;
+};
+
+uniform_sampler2D( colorTex, 0 );
+
+uniform float2 oneOverTargetSize;
+
+
+float4 main( VertToPix IN ) : SV_Target
+{
+   FxaaTex inTex;
+#if BGE_SM >= 40
+   
+   inTex.smpl = colorTex._filter;
+   inTex.tex = colorTex._texture;
+#else
+   inTex = colorTex;
+#endif
+
+   return FxaaPixelShader(
+
+    IN.uv0, // vertex position
+
+    0, // Unused... console stuff
+
+    inTex, // The color back buffer
+
+    inTex, // Used for 360 optimization
+
+    inTex, // Used for 360 optimization
+
+    oneOverTargetSize,
+
+    0, // Unused... console stuff
+
+    0, // Unused... console stuff
+
+    0, // Unused... console stuff
+
+    //
+    // Only used on FXAA Quality.
+    // This used to be the FXAA_QUALITY__SUBPIX define.
+    // It is here now to allow easier tuning.
+    // Choose the amount of sub-pixel aliasing removal.
+    // This can effect sharpness.
+    //   1.00 - upper limit (softer)
+    //   0.75 - default amount of filtering
+    //   0.50 - lower limit (sharper, less sub-pixel aliasing removal)
+    //   0.25 - almost off
+    //   0.00 - completely off
+    0.90,
+
+    //
+    // Only used on FXAA Quality.
+    // This used to be the FXAA_QUALITY__EDGE_THRESHOLD define.
+    // It is here now to allow easier tuning.
+    // The minimum amount of local contrast required to apply algorithm.
+    //   0.333 - too little (faster)
+    //   0.250 - low quality
+    //   0.166 - default
+    //   0.125 - high quality 
+    //   0.063 - overkill (slower)
+    0.063,
+
+    //
+    // Only used on FXAA Quality.
+    // This used to be the FXAA_QUALITY__EDGE_THRESHOLD_MIN define.
+    // It is here now to allow easier tuning.
+    // Trims the algorithm from processing darks.
+    //   0.0833 - upper limit (default, the start of visible unfiltered edges)
+    //   0.0625 - high quality (faster)
+    //   0.0312 - visible limit (slower)
+    // Special notes when using FXAA_GREEN_AS_LUMA,
+    //   Likely want to set this to zero.
+    //   As colors that are mostly not-green
+    //   will appear very dark in the green channel!
+    //   Tune by looking at mostly non-green content,
+    //   then start at zero and increase until aliasing is a problem.
+    0,
+
+    // 
+    // Only used on FXAA Console.
+    // This used to be the FXAA_CONSOLE__EDGE_SHARPNESS define.
+    // It is here now to allow easier tuning.
+    // This does not effect PS3, as this needs to be compiled in.
+    //   Use FXAA_CONSOLE__PS3_EDGE_SHARPNESS for PS3.
+    //   Due to the PS3 being ALU bound,
+    //   there are only three safe values here: 2 and 4 and 8.
+    //   These options use the shaders ability to a free *|/ by 2|4|8.
+    // For all other platforms can be a non-power of two.
+    //   8.0 is sharper (default!!!)
+    //   4.0 is softer
+    //   2.0 is really soft (good only for vector graphics inputs)
+    8,
+
+    0, // Unused... console stuff
+
+    0, // Unused... console stuff
+
+    0 // Unused... console stuff
+
+   );
+}
+

@@ -1,0 +1,19 @@
+{
+  "domElement": "<race-time-comparison></race-time-comparison>",
+  "name": "ui.apps.race_time_comparison.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Compare the time with last Lap",
+  "css": {
+    "min-width": "100px",
+    "height": "80px",
+    "width": "150px",
+    "right": "150px",
+    "min-height": "40px",
+    "top": "80px"
+  },
+  "author": "BeamNG",
+  "version": "0.2",
+  "directive": "raceTimeComparison"
+}

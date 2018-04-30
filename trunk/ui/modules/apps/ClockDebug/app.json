@@ -1,0 +1,17 @@
+{
+  "domElement": "<clock-debug></clock-debug>",
+  "name": "ui.apps.clock_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "This app can be used to profile lua execution",
+  "css": {
+    "left": "0px",
+    "height": "160px",
+    "top": "0px",
+    "width": "450px"
+  },
+  "author": "stenyak",
+  "version": "0.1",
+  "directive": "clockDebug"
+}

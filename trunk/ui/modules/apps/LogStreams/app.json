@@ -1,0 +1,18 @@
+{
+  "domElement": "<log-streams></log-streams>",
+  "name": "ui.apps.log_all_available_streams.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "css": {
+    "left": "0px",
+    "height": "240px",
+    "width": "400px",
+    "min-width": "180px",
+    "min-height": "60px",
+    "top": "0px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "logStreams"
+}

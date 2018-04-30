@@ -1,0 +1,18 @@
+{
+  "domElement": "<compass-precise></compass-precise>",
+  "name": "ui.apps.precision_compass.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Shows your current heading in a more precise way.",
+  "css": {
+    "width": "270px",
+    "min-width": "100px",
+    "height": "56px",
+    "top": "0px",
+    "left": "0px"
+  },
+  "author": "CarlosAir",
+  "version": "0.1",
+  "directive": "compassPrecise"
+}

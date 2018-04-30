@@ -1,0 +1,22 @@
+{
+  "domElement": "<bus-line></bus-line>",
+  "name": "Bus Line",
+  "types": [
+    "ui.apps.categories.vehicle_control"
+  ],
+  "css": {
+    "left": "0",
+    "top": "0",
+    "width": "260px",
+    "min-width": "260px",
+    "max-width": "530",
+    "height": "230px",
+    "min-height": "230px",
+    "max-height": "480"
+  },
+  "description": "An app to display bus line information",
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "busLine"
+}

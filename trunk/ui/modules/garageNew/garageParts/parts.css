@@ -1,0 +1,36 @@
+.garage .parts .indicator::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border: solid currentColor;
+  border-width: 2px 2px 0 0;
+  transform: rotate(45deg);
+  position: relative;
+  left: -3px;
+  top: -1px;
+  margin: 4px 4px 0 0; 
+}
+
+
+.garage .breadCrumbPoint {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  border: 4px solid currentColor;
+  background-color: rgba(0, 0, 0, 0.001);
+  margin: 10px 0;
+}
+
+.garage .breadCrumbPoint.filled {
+  background-color: currentColor;
+}
+
+.garage .breadCrumbPoint.clickable {
+  cursor: pointer;
+}
+
+.garage .breadCrumpConnector {
+  width: 25px;
+  height: 0;
+  border: 2px solid currentColor;
+}

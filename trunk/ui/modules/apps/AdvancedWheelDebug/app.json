@@ -1,0 +1,19 @@
+{
+  "domElement": "<advanced-wheels-debug></advanced-wheels-debug>",
+  "name": "ui.apps.advanced_wheels_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "App to display advance wheel information.",
+  "css": {
+    "left": "0px",
+    "width": "400px",
+    "height": "170px",
+    "min-width": "270px",
+    "min-height": "160px",
+    "top": "0px"
+  },
+  "author": "Vaasik",
+  "version": "0.1",
+  "directive": "advancedWheelsDebug"
+}

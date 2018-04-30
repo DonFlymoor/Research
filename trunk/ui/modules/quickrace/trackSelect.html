@@ -1,0 +1,136 @@
+<md-content flex="70" style="max-width:1200px; height:100%;" layout="column">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button md-no-ink class="md-icon-button md-default" aria-label="Back" ui-sref="^.quickraceOverview">
+        <md-icon class="material-icons">arrow_back</md-icon>
+      </md-button>
+
+      <span flex>{{ :: 'ui.quickrace.quickraceTracks' | translate }}</span>
+    </div>
+  </md-toolbar>
+
+  <div flex layout-padding style="overflow-y: auto">
+    <md-grid-list
+          md-cols-sm="2" md-cols-md="2" md-cols-gt-md="3"
+          md-row-height-gt-md="16:9" md-row-height="16:9"
+          md-gutter="4px" md-gutter-gt-sm="4px"
+          class="gridMarkSelected">
+      <md-grid-tile ng-repeat="track in filtered"
+                      ng-class="(track === selected) ? 'selectedGridItem' : ''"
+                      style="overflow: hidden;"
+                      bng-all-clicks-no-nav single="selectTrack(track, app.gameState)" double="startTrack(track, app.gameState, true)"
+                      >
+        <imageslider imageurls="track.previews" style="height: 100%; width: 100%"></imageslider>
+        
+        <md-grid-tile-footer>
+          <div layout="row" layout-align="start center" class="md-padding">
+            <div ng-if=":: track.official"  layout="row" layout-align="center center">
+              <img src="images/beamng_logo_50x50.png" height="22px" style="-webkit-filter: brightness(0) invert(1);" />
+              <md-tooltip md-direction="top">
+                Official
+              </md-tooltip>
+            </div>
+            <div flex>
+              <h3>{{::track.name | translate}}</h3>
+            </div>
+            <md-icon ng-if="::track.maxPlayers > 1" class="material-icons" style="color:white; font-size: 1.5em; margin: 5px;">filter_{{::track.maxPlayers}}</md-icon>
+          </div>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+    </md-grid-list>
+  </div>
+</md-content>
+
+<md-content flex="30" ng-show="selected" layout="column" style="max-width: 400px; height: 100%">
+  <md-toolbar class="md-primary md-hue-1">
+    <div class="md-toolbar-tools">
+      <span flex>{{ selected.name  | translate }}</span>
+    </div>
+  </md-toolbar>
+
+  <img ng-src="{{selected.preview}}" style="width: 100%;">
+  <p layout-padding>{{ selected.description | translate}}</p>
+  <md-divider></md-divider>
+
+  <div flex class="md-padding" style="overflow: auto">
+    <md-list>
+    <!--
+      <md-list-item class="md-2-line">
+         <md-icon class="material-icons" style="font-size: 2em">refresh</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.layoutType' | translate }}</h3>
+          <p>{{ (selected.layoutType | translate) || 'Unknown' }}</p>
+        </div>
+      </md-list-item>
+-->
+
+      <md-list-item class="md-2-line" ng-if="selected.reversible" >
+         <md-icon class="material-icons" style="font-size: 2em">swap_horiz</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.reversible' | translate }}</h3>
+        </div>
+      </md-list-item>
+
+     <md-list-item class="md-2-line" ng-if="selected.allowRollingStart" >
+         <md-icon class="material-icons" style="font-size: 2em">fast_forward</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.allowRollingStart' | translate }}</h3>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" >
+         <md-icon class="material-icons" style="font-size: 2em">flag</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.laps' | translate }}</h3>
+          <p ng-if="selected.uniqueLapCountString"> {{selected.uniqueLapCountString}}</p>
+          <p ng-if="!selected.uniqueLapCountString">{{ selected.lapCount || 'Unknown' }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-if="selected.closed" >
+         <md-icon class="material-icons" style="font-size: 2em">loop</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.lapsChangeable' | translate }}</h3>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line">
+         <md-icon class="material-icons" style="font-size: 2em">account_circle</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.common.property.authors' | translate }}</h3>
+          <p>{{ selected.authors || 'Unknown' }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line">
+        <md-icon class="material-icons" style="font-size: 2em">event</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.common.property.createdAt' | translate }}</h3>
+          <p>{{ selected.date * 1000 | date: 'dd MMMM yyyy' }}</p>
+        </div>
+      </md-list-item>
+
+
+       <md-list-item class="md-2-line" ng-if="selected.procedural" >
+         <md-icon class="material-icons" style="font-size: 2em">shuffle</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.procedural' | translate }}</h3>
+          <p>{{ :: 'ui.quickrace.tracks.proceduralInfo' | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-if="selected.length" >
+         <md-icon class="material-icons" style="font-size: 2em">swap_calls</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ :: 'ui.quickrace.tracks.length' | translate }}</h3>
+          <p>{{ selected.length }} m</p>
+        </div>
+      </md-list-item>
+
+    </md-list>
+  </div>
+
+  <div layout="row" class="md-padding">
+    <button layout-fill class="md-button md-primary md-raised" ng-click="startTrack(selected, app.gameState, false)"><b>{{ :: 'ui.quickrace.select' | translate }}</b></button>
+  </div>
+</md-content>

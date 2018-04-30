@@ -1,0 +1,33 @@
+<div class="container downloading" layout="column">
+  <div ng-repeat="item in modDwlCtrl.list | orderBy:'-order' track by $index" ui-sref="menu.mods.local" layout="column" class="entry md-padding">
+    <div class="topReserved"></div>
+    <div layout="row">
+      <div flex="50">{{:: item.filename}}</div>
+      <div flex>
+        <div ng-if="item.state === 'working'" style="position: relative;" layout="row" layout-align="start center">
+          <div style="position: absolute; bottom: 100%; text-align: left;" class="smallText" layout="row">
+            Downloaded {{ item.dlnow | bytes}} of
+            {{ item.dltotal | bytes}}
+            with {{ item.dlspeed | bytes}}/s 
+          </div>
+          <md-progress-linear md-mode="determinate" value="{{ item.dlnow / item.dltotal * 100}}"></md-progress-linear>
+        </div>
+        <div ng-if="item.state !== 'working'" layout="row" layout-align="end center">
+          Download complete
+          <md-icon style="color: inherit; font-size: 1.5em; margin: 0 5px;">check_circle</md-icon>
+        </div>
+      </div>
+    </div>
+    <div layout="row" layout-align="space-between end" class="smallText">
+      <div flex>
+        URI:<a>{{:: item.uri}}</a>
+      </div>
+      <div>
+        Time: {{ item.time}} sec
+      </div>
+    </div>
+  </div>
+  <div ng-if="modDwlCtrl.list.length === 0" layout="row" layout-align="center center" class="md-padding" >
+    Currently there are no mods downloading, but you can change this here: <a ui-sref="menu.mods.repository" style="cursor: pointer; color: blue;">Go to Repository</a>
+  </div>
+</div>

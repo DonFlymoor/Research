@@ -1,0 +1,19 @@
+{
+  "domElement": "<brake-thermal-debug></brake-thermal-debug>",
+  "name": "ui.apps.brake_thermal_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows some brake thermal statistics",
+  "css": {
+    "left": "0px",
+    "height": "350px",
+    "width": "430px",
+    "min-width": "320px",
+    "min-height": "200px",
+    "top": "0px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "brakeThermalDebug"
+}

@@ -1,0 +1,51 @@
+<account-info id='account-info' class="loadingHint"></account-info>
+<release-info ng-if="!shipping" id="shippinginfo" release-date="nextReleaseDate"></release-info>
+
+<div ng-if="!shipping" style="font-weight: bold;width:100%;position:fixed;top:0;left:0;font-size:60px;font-family:Roboto;margin:0;">QA / INTERNAL</div>
+
+<version-info id="versioninfo" class="loadingHint"></version-info>
+
+
+<center class="mainmenu" bng-nav-root>
+
+
+ <md-grid-list
+  class="grid"
+  md-cols="6"
+  md-row-height="13:12"
+  md-gutter="2vh">
+
+  <md-grid-tile class="title" md-colspan="6">
+    <!--
+    <object data="images/drive.svg" style="max-width: 90%; max-height: 75%; pointer-events: none;"></object>
+    -->
+    <logo src="::product"></logo>
+  </md-grid-tile>
+
+
+  <md-grid-tile  md-rowspan="2" md-colspan="3" class="tile play other" ng-click="startResearch();" bng-nav-item bng-nav-default-focus="true">
+    <div>
+      <span><md-icon class="material-icons mainmenuItems">play_arrow</md-icon>Automatic</span>
+    </div>
+  </md-grid-tile>
+
+  <md-grid-tile  md-rowspan="2" md-colspan="3" class="tile other" ui-sref="menu.levels" bng-nav-item >
+    <div>
+      <span><md-icon class="material-icons mainmenuItems">perm_identity</md-icon>Manual</span>
+    </div>
+  </md-grid-tile>
+
+  <md-grid-tile  md-rowspan="2" md-colspan="3" class="tile other" ui-sref="menu.scenarios" bng-nav-item >
+    <div>
+      <span><md-icon class="material-icons mainmenuItems">movie</md-icon>Scenarios</span>
+    </div>
+  </md-grid-tile>
+
+  <md-grid-tile md-rowspan="2" md-colspan="3" class="other tile" ng-click="quit();" bng-nav-item>
+    <div>
+      <span><md-icon class="material-icons mainmenuItems">power_settings_new</md-icon>{{ 'ui.mainmenu.exit' | translate}}</span>
+    </div>
+  </md-grid-tile>
+
+</md-grid-list>
+</center>

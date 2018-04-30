@@ -1,0 +1,70 @@
+<div class="photo-mode-container" ng-show="photo.showControls">
+  <div style="position: absolute; top:0; right: 0; bottom: 0; left:0;" layout="column" ng-show="photo.settings.showGrid">
+    <div layout-align="row" ng-repeat="num in [1,2,3]" layout="row" flex>
+      <div ng-repeat="num in [1,2,3]" flex style="border:rgba(0, 0, 0, 0.3) 1px solid;"></div>
+    </div>
+  </div>
+  <div class="tl" layout layout-align="center center">
+    <md-button class="md-fab" ng-click="photo.takePic()" bng-sound="{click: 'event:>UI>Photo Trigger'}">
+      <md-icon class="material-icons">photo_camera</md-icon>
+      <md-tooltip md-direction="bottom">{{ 'ui.photomode.takeScreen' | translate}}</md-tooltip>
+    </md-button>
+    <md-button class="md-fab" ng-click="photo.doBigScreenShot()" ng-if="!photo.shipping && photo.devMode" bng-sound="{click: 'event:>UI>Photo Trigger'}">
+      <md-icon class="material-icons">aspect_ratio</md-icon>
+      <md-tooltip md-direction="bottom">{{ 'ui.photomode.takebigScreen' | translate}}</md-tooltip>
+    </md-button>
+  </div>
+
+  <div class="tr" layout layout-align="center center">
+    <md-button md-no-ink class="md-fab" ng-click="photo.sharePic()" bng-sound="{click: 'event:>UI>Photo Upload Steam'}">
+      <md-icon class="material-icons">share</md-icon>
+      <md-tooltip md-direction="left">{{ 'ui.photomode.uploadScreen' | translate}}</md-tooltip>
+    </md-button>
+    <md-button ng-if="photo.steamAvailable" md-no-ink class="md-fab" ng-click="photo.steamPic()" bng-sound="{click: 'event:>UI>Photo Upload BeamNG'}">
+      <md-icon  md-svg-src="modules/photomode/steam-logo.svg"></md-icon>
+      <md-tooltip>Upload to Steam</md-tooltip>
+    </md-button>
+  </div>
+
+  <div class="bl" layout layout-align="center center">
+    <md-button md-no-ink class="md-fab" ui-sref="menu">
+      <md-icon class="material-icons">close</md-icon>
+      <md-tooltip md-direction="right">{{ 'ui.photomode.quitPhotoMode' | translate}}</md-tooltip>
+    </md-button>
+  </div>
+
+  <div class="br" layout layout-align="center center">
+    <md-button md-no-ink class="md-fab" ng-click="photo.openPostFXManager()"  ng-if="!photo.shipping && photo.devMode">
+      <md-icon class="material-icons">photo_filter</md-icon> <!-- ng-click="photo.togglePostfx()" -->
+      <md-tooltip md-direction="top">{{ 'ui.photomode.postfx' | translate}}</md-tooltip>
+    </md-button>
+    <md-button md-no-ink class="md-fab" ng-click="photo.toggleSettings()">
+      <md-icon class="material-icons">more_vert</md-icon>
+      <md-tooltip md-direction="top">{{ 'ui.photomode.advancedImgSettings' | translate}}</md-tooltip>
+    </md-button>
+  </div>
+
+  <md-content ng-if="photo.settings.visible && !photo.postfx.visible" style="position: absolute; bottom: 30px; right: 200px; width: 400px; height: 200px; overflow-x:hidden;">
+    <md-list-item layout>
+      <p flex="40">{{ 'ui.photomode.fov' | translate}}</p>
+      <md-slider flex ng-model="photo.settings.fov" min="5" max="120" step="0.5" aria-label="_"></md-slider>
+      <div ng-if="photo.devMode">{{photo.settings.fov.toFixed(1)}}</div>
+    </md-list-item>
+
+    <md-list-item layout>
+      <p flex="40">{{ 'ui.photomode.cameraSpeed' | translate}}</p>
+      <md-slider flex ng-model="photo.settings.cameraSpeed" min="2" max="100" step="0.5" aria-label="_"></md-slider>
+      <div ng-if="photo.devMode">{{photo.settings.cameraSpeed.toFixed(1)}}</div>
+    </md-list-item>
+
+    <md-list-item layout>
+      <p flex="40">{{ 'ui.photomode.roll' | translate}}</p>
+      <md-slider flex ng-model="photo.settings.roll" min="-200" max="200" step="1" aria-label="_"></md-slider>
+      <div ng-if="photo.devMode">{{photo.settings.roll}}</div>
+    </md-list-item>
+    <md-list-item layout flex md-no-ink>
+      <p flex>{{ 'ui.photomode.showGrid' | translate}}</p>
+      <md-checkbox ng-model="photo.settings.showGrid" aria-label="_" md-no-ink></md-checkbox>
+    </md-list-item>
+  </md-content>
+</div>

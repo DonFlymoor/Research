@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="svg2"
+   viewBox="0 0 699.99997 150"
+   height="150"
+   width="700"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="simple-tacho.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     id="namedview24"
+     showgrid="false"
+     showguides="false"
+     inkscape:zoom="2.6679761"
+     inkscape:cx="424.46981"
+     inkscape:cy="67.464672"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     units="px" />
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(1235.2858,-336.96766)"
+     id="layer1">
+    <text
+       id="speedlabel"
+       y="440.63254"
+       x="-997.10413"
+       style="font-style:normal;font-weight:normal;font-size:30.53098297px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"
+       sodipodi:linespacing="125%"
+       transform="scale(0.99112586,1.0089536)"
+       inkscape:label="#text4146"><tspan
+         y="440.63254"
+         x="-997.10413"
+         id="tspan8">Engine RPM</tspan></text>
+    <g
+       id="g4160"
+       transform="matrix(0,0.98536152,-1.0488823,0,-544.71362,1109.2334)">
+      <rect
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="container3"
+         width="55.658279"
+         height="609.42181"
+         x="-767.11438"
+         y="19.035789" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:21.47856712px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="-656.11096"
+         y="-646.81329"
+         sodipodi:linespacing="125%"
+         transform="matrix(0,-0.96923549,1.031741,0,0,0)"
+         sodipodi:insensitive="true"
+         id="text12"><tspan
+           sodipodi:role="line"
+           x="-656.11096"
+           y="-646.81329"
+           id="text0">0</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:21.47882271px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         x="-40.138725"
+         y="-646.82098"
+         sodipodi:linespacing="125%"
+         transform="matrix(0,-0.96924695,1.0317288,0,0,0)"
+         sodipodi:insensitive="true"
+         id="text15"><tspan
+           sodipodi:role="line"
+           id="text1"
+           x="-40.138725"
+           y="-646.82098">160</tspan></text>
+    </g>
+    <rect
+       style="fill:#2a6bac;opacity:0.5;"
+       id="filler"
+       width="93.822357"
+       height="52.782001"
+       x="-1202.9238"
+       y="354.37967" />
+    <path
+       style="opacity:0;fill:#2a6bac;fill-opacity:1"
+       d="m 30.306653,43.735095 0,-28.358735 21.732862,0 21.732862,0 0,28.358735 0,28.358734 -21.732862,0 -21.732862,0 0,-28.358734 z"
+       id="path4173"
+       inkscape:connector-curvature="0"
+       transform="translate(-1235.2858,336.96766)" />
+    <text
+       id="drivenspeed"
+       y="404.64804"
+       x="-934.15552"
+       style="font-style:normal;font-weight:normal;font-size:57.23258209px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       xml:space="preserve"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0079947,0.99206871)"
+       inkscape:label="#text4146"
+       sodipodi:insensitive="true"><tspan
+         y="404.64804"
+         x="-934.15552"
+         id="rpm">120</tspan></text>
+  </g>
+</svg>

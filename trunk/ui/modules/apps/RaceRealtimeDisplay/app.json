@@ -1,0 +1,17 @@
+{
+  "domElement": "<race-realtime-display></race-realtime-display>",
+  "name": "ui.apps.race_realtime_display.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Realtime display",
+  "css": {
+    "left": "0px",
+    "height": "160px",
+    "top": "240px",
+    "width": "690px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "raceRealtimeDisplay"
+}

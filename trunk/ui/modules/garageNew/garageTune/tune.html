@@ -1,0 +1,63 @@
+<div style="position: absolute; left: 0; right: 0; left: 0; max-height: 750px; height: 80%">
+  <div style="width: 400px; color: currentColor; position: absolute; top: 15%; left: 5%; bottom: 0;" ng-if="gpTune.categories.length > 0">
+    <gp-panel rotated="true" icon-fallback="true" disable-selectcorner="true" active="true" open-tab="gpTune.openTab" no-padding="true" default-active="true">
+      <gp-panel-tab icon="#garage_{{category | lowercase}}" rotated="true" title="{{category}}" ng-repeat="category in gpTune.categories" layout="column" bng-nav-root>
+        <gp-panel-tab-header>
+          {{gpTune.categories[gpTune.openTab] || 'ui.garage.tuning' | translate}}
+        </gp-panel-tab-header>
+
+        <div class="container" layout="column">
+          <div style="overflow: auto; direction: rtl;" flex>
+            <div ng-repeat="variable in gpTune.data[category] | orderBy: 'subCategory' track by $index" style="direction: ltr;" layout="column">
+              <h5 class="md-title" ng-if="gpTune.addSpacer(variable.subCategory)" style="margin-bottom: 0; margin-left: 24px;" class="color2 font2">{{ variable.subCategory}}</h5>
+              <gp-input-list-item style="height: 81px;" title="{{variable.title | translate}}" val="variable.valDis" fixed="3" unit="{{variable.unit}}" flex root-active="{{$index === 0}}">
+                <bng-slider flex min="{{::variable.minDis}}" max="{{::variable.maxDis}}" step="{{::variable.stepDis || 1}}" ng-model="variable.valDis" aria-label="_" bng-sound="{focus: 'event:>UI>Garage>Tuning', blur: 'event:>UI>Garage>Tuning'}" ng-change="gpTune.tuningVariablesChanged()"></bng-slider>
+              </gp-input-list-item>
+            </div>
+          </div>
+          <md-list-item layout md-no-ink style="direction: ltr; max-height: 42px; padding: 0 24px;" bng-nav-item ng-focus="selectFocused = true" ng-blur="selectFocused = false" ng-class="{color1: selectFocused}">
+            <p flex>{{:: 'ui.garage.tune.live' | translate}}</p>
+            <bng-select class="bng-select-checkbox" ng-model="gpTune.liveVariablesUpdate" loop options="[{l: 'On', v: true}, {l: 'Off', v: false}]" config="{label: (x) => x.l, value: (x) => x.v}"></bng-select>
+          </md-list-item>
+        </div>
+
+        <gp-panel-tab-footer layout="row">
+          <gp-btn icon="'refresh'" title="ui.common.reset" primary="true" class="gpBtn" style="margin: 5px;" btn-click="gpTune.resetVars()"></gp-btn>
+          <gp-btn icon="'check'" title="ui.common.save" class="gpBtn" style="margin: 5px;" btn-click="gpTune.writeVars()" disabled="gpTune.liveVariablesUpdate"></gp-btn>
+        </gp-panel-tab-footer>
+      </gp-panel-tab>
+    </gp-panel>
+  </div>
+
+  <div style="height: 250px; width: 450px; color: currentColor; position: absolute; bottom: 0; right: 5%;">
+    <gp-panel navigatable="false">
+      <gp-panel-tab>
+        <gp-panel-tab-header>
+          {{:: 'ui.garage.tune.advWheel' | translate}}
+        </gp-panel-tab-header>
+        <div class="container">
+          <table class="filler" style="padding: 24px;">
+            <thead>
+              <tr>
+                <th style="width: 20%;">{{:: 'ui.garage.tune.name' | translate}}</th>
+                <th style="width: 20%;">{{:: 'ui.garage.tune.camber' | translate}}</th>
+                <th style="width: 20%;">{{:: 'ui.garage.tune.toe' | translate}}</th>
+                <th style="width: 20%;">{{:: 'ui.garage.tune.caster' | translate}}</th>
+                <th style="width: 20%;">{{:: 'ui.garage.tune.sai' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="wheel in gpTune.advancedWheelDebugData | orderBy: 'name' track by $index">
+                <td>{{ wheel.name }}</td>
+                <td>{{ wheel.camber | number: 3 }}</td>
+                <td>{{ wheel.toe | number: 3 }}</td>
+                <td>{{ wheel.caster | number: 3 }}</td>
+                <td>{{ wheel.sai | number: 3 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </gp-panel-tab>
+    </gp-panel>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+
+  <div flex layout-padding style="overflow:auto">
+    <md-list>
+        <div ng-if="modSchCtrl.modConfilct">{{modSchCtrl.modConfilct}}</div>
+
+
+      <md-list-item  ng-repeat="conflict in modSchCtrl.selectedConflict" ng-if="modSchCtrl.selectedConflict.length > 0" class="md-2-line">
+            <div>{{ conflict.file}}
+                <div class="smallText">{{ conflict.path}}</div>
+            </div>
+      </md-list-item>
+        <md-list-item ng-if="modSchCtrl.selectedConflict.length === 0 || modSchCtrl.selectedConflict.length == undefined" layout="row" layout-align="center center" class="md-padding" >
+            {{ 'ui.repository.scheduled_no_conflict' | translate}}
+        </md-list-item>
+    </md-list>
+

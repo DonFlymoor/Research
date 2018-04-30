@@ -1,0 +1,16 @@
+.app .RaceLaps {
+    text-align:center;
+    vertical-align:middle;
+}
+
+@font-face {
+    font-family: Squada One;
+    src: url(../../fonts/SquadaOne-Regular.ttf) format(truetype);
+}
+
+.app .RaceLaps .TextDiv {
+    color: white;
+    font-size:20pt;
+    height:20px;
+    font-family: Squada One; 
+}

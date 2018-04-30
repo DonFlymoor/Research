@@ -1,0 +1,19 @@
+{
+  "domElement": "<engine-debug></engine-debug>",
+  "name": "ui.apps.engineinfo.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows some engine statistics",
+  "css": {
+    "left": "0px",
+    "height": "auto",
+    "width": "270px",
+    "min-width": "200px",
+    "min-height": "90px",
+    "top": "0px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "engineDebug"
+}

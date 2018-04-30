@@ -1,0 +1,82 @@
+<md-content style="min-width:500px;max-width:500px">
+
+  <md-subheader class="md-no-sticky">{{:: 'ui.options.general' | translate }}</md-subheader>
+
+  <md-list-item md-no-ink>
+    <p>{{:: 'ui.options.gameplay.controlOnBlur' | translate }}</p>
+    <md-checkbox ng-model="options.data.values.unfocusedInput" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-list-item md-no-ink>
+    <md-tooltip md-direction="right">This option is useful for steering wheel users to avoid having a duplicate wheel</md-tooltip>
+    <p>{{:: 'ui.options.gameplay.noSteer' | translate }}</p>
+    <md-checkbox ng-model="options.data.values.disableSteeringwheel" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-divider></md-divider>
+  <md-subheader class="md-no-sticky">Replay</md-subheader>
+
+  <md-list-item md-no-ink>
+    <p>Interpolate vehicle position</p>
+    <md-checkbox ng-model="options.data.values.interpolatePosition" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-list-item ng-if="options.data.values.devMode" md-no-ink>
+    <p>^ use alt</p>
+    <md-checkbox ng-model="options.data.values.interpolateAlternative" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-list-item ng-if="options.data.values.devMode" md-no-ink>
+    <p>Interpolate all alt</p>
+    <md-checkbox ng-model="options.data.values.interpolateFull" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-list-item ng-if="options.data.values.devMode" md-no-ink>
+    <p>Misc lua</p>
+    <md-checkbox ng-model="options.data.values.interpolateLua" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0">
+    <p flex="30">Compression level</p>
+    <md-slider flex
+      ng-model="options.data.values.replayLevel" min="-1" max="22" step="1" aria-label="_"
+      ng-mouseup="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.replayLevel }}</span>
+  </md-list-item>
+
+  <md-list-item md-no-ink>
+    <p>Enable full vehicle transparency playback</p>
+    <md-checkbox ng-model="options.data.values.replayAlpha" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
+  <md-divider></md-divider>
+  <md-subheader class="md-no-sticky">{{:: 'ui.options.utilities' | translate }}</md-subheader>
+
+  <md-list-item md-no-ink>
+    <p>{{:: 'ui.options.utilities.outgaugeSupport' | translate }}</p>
+    <md-checkbox ng-model="options.data.values.outgaugeEnabled" ng-change="options.applyState()"></md-checkbox>
+    <md-tooltip md-direction="right">OutGauge is a special protocol to drive external utilities. Please reload your vehicle if you change any of the OutGauge options.</md-tooltip>
+  </md-list-item>
+  <md-list-item md-no-ink ng-show="options.data.values.outgaugeEnabled">
+    <md-tooltip md-direction="right">Please reload your vehicle if you change any of the OutGauge options.</md-tooltip>
+    <md-input-container>
+      <label>IP</label>
+      <input flex type="text" ng-model="options.data.values.outgaugeIP" ng-change="options.applyState()">
+    </md-input-container>
+    <md-input-container>
+      <label>Port</label>
+      <input flex type="text" ng-model="options.data.values.outgaugePort" ng-change="options.applyState()">
+    </md-input-container>
+  </md-list-item>
+
+  <md-list-item md-no-ink ng-show="false"> <!-- hidden from view until logitech fix their drivers -->
+    <p>{{:: 'ui.options.utilities.g27ShiftLed' | translate }}</p>
+    <md-checkbox ng-model="options.data.values.rpmLedsEnabled" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+  <div class="md-padding" ng-if="options.data.values.rpmLedsEnabled" layout="column" layout-align="center center" ng-show="false"> <!-- hidden from view until logitech fix their drivers -->
+      <strong style="color:#dd3333">WARNING:</strong>
+      <span>Steering angle and force feedback may behave unpredictably in conjunction with LEDs. Use at your own risk.</span>
+  </div>
+
+</md-content>

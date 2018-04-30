@@ -1,0 +1,36 @@
+<div style="max-height:100%; max-width: 100%; overflow:auto;">
+  <div layout="row" layout-align="end start">
+    <div layout="row" layout-align="center" ng-click="toggleSmall()" ng-if="bindings[show].length > 0" ng-switch="small" style="padding: 2%;" class="bngApp">
+      <div ng-switch-when="true" style="width: 100px;">
+        <md-icon class="material-icons" style="color:#FFF">keyboard_arrow_left</md-icon>
+        <span>Controls</span>
+      </div>
+
+      <div ng-switch-default>
+        <md-icon class="material-icons" style="color:#FFF">keyboard_arrow_right</md-icon>
+      </div>
+    </div>
+    <div style="color: white; padding: 0px;" ng-if="players.length > 1 || bindings[show].length > 0" class="bngApp">
+
+      <md-divider ng-if="!small && (players.length > 1 || bindings[show].length > 0)"></md-divider>
+
+      <div ng-if="!small && players.length > 1" layout="row" layout-align="center center">
+        <md-button ng-if="bindings.length > 1" md-no-ink ng-click="backward()">
+          < </md-button>
+            <span>Player {{show}}</span>
+            <md-button ng-if="bindings.length > 1" md-no-ink ng-click="forward()"> > </md-button>
+      </div>
+      <div ng-if="bindings[show].length > 0 && !small" style="min-height:38px; padding: 0 10px 0 10px">
+        <div ng-repeat="entry in bindings[show]" layout="row" layout-align="space-between center">
+          <div>
+            {{entry.action}}
+          </div>
+          <div layout="row" layout-align="end center" layout-wrap>
+            <binding ng-repeat="b in entry.control" style="margin: 5px; cursor: pointer" key="b.c" device="b.d" ng-click="goToBindings(entry, b)"></binding>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

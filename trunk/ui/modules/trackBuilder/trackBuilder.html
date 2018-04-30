@@ -1,0 +1,442 @@
+
+<md-content style="overflow-x: hidden; width: 100%; max-width: 450px; height: 100%" layout="column">
+    <style>
+
+
+      md-tooltip.tt-multiline .md-content {
+          height: auto !important;
+          max-width: 200px !important;
+          font-size: 13px !important;
+      }
+
+
+  </style>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex>{{::'ui.trackBuilder.title' | translate}}</span>
+    </div>
+  </md-toolbar>
+
+  <bng-accordion flex class="vAccordion--default" multiple>
+<!--
+<bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Selection</span>
+        <md-icon class="material-icons">{{ ::category.icon }}</md-icon>
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+      </bng-pane-header>
+
+      <bng-pane-body>
+        <md-input-container flex layout="column" layout-align="start start">
+
+          <div layout="row" layout-align="center center" >
+
+          </div>
+
+          <div layout="row">
+            <md-button ng-click="insert(true)" md-no-ink class="md-raised md-primary" aria-label="Settings"  style="min-width: 10px;">
+              <md-tooltip>{{:: 'ui.trackBuilder.insertBefore' | translate }}</md-tooltip>
+              <md-icon class="material-icons">add_box</md-icon>
+              <md-icon class="material-icons">chevron_right</md-icon>
+            </md-button>
+
+            <md-button ng-click="removeSelected()" md-no-ink class="md-raised md-primary" aria-label="Settings"  style="min-width: 10px;">
+              <md-tooltip>{{:: 'ui.trackBuilder.removeSelected' | translate }}</md-tooltip>
+              <md-icon class="material-icons">chevron_right</md-icon>
+              <md-icon class="material-icons">delete</md-icon>
+              <md-icon class="material-icons">chevron_left</md-icon>
+            </md-button>
+          </div>
+        </md-input-container>
+      </bng-pane-body>
+
+    </bng-accordion-pane>-->
+
+    <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Build</span>
+        <!-- <md-icon class="material-icons">build</md-icon> -->
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+      </bng-pane-header>
+    <bng-pane-body>
+      <div layout="column">
+
+        <md-subheader class="md-no-sticky">Selection</md-subheader>
+
+        <div layout="row" layout-align="center center">
+          <md-button ng-click="select(-100000)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.selectFirst' | translate }}</md-tooltip>
+              <md-icon class="material-icons">first_page</md-icon>
+            </md-button>
+
+            <md-button ng-click="select(-1)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.selectPrevious' | translate }}</md-tooltip>
+              <md-icon class="material-icons">chevron_left</md-icon>
+            </md-button>
+
+            <md-button ng-click="select(1)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.selectNext' | translate }}</md-tooltip>
+              <md-icon class="material-icons">chevron_right</md-icon>
+            </md-button>
+
+            <md-button ng-click="select(100000)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.selectLast' | translate }}</md-tooltip>
+              <md-icon class="material-icons">last_page</md-icon>
+            </md-button>
+        </div>
+
+
+        <md-subheader class="md-no-sticky">Piece</md-subheader>
+
+        <div layout="row" layout-align="center center">
+          <md-button style="min-width: 40px;"ng-repeat="piece in pieceParameters" ng-click="selectPiece($index)" md-no-ink class="md-raised md-primary" ng-class="$index == selectedBuildPieceIndex ? 'md-accent' : ''" aria-label="Settings" ng-disabled="clearedTrack">
+            <md-tooltip >{{:: piece.tooltip | translate }}</md-tooltip>
+            <div class="container" layout="column" layout-align="center center">
+              <div style="position: relative; width: 80%; height: 80%;">
+                <bng-icon src="piece.icon" type="sprite" class="container"></bng-icon>
+              </div>
+            </div>
+          </md-button>
+        </div>
+
+        <md-divider></md-divider>
+
+        <md-subheader class="md-no-sticky">Placement</md-subheader>
+
+        <div layout="row" layout-align="center center">
+          <md-button ng-click="insert(false)" md-no-ink class="md-raised md-primary" aria-label="Settings"  style="min-width: 40px;" ng-disabled="clearedTrack">
+            <md-tooltip>{{:: 'ui.trackBuilder.insertAfter' | translate }}</md-tooltip>
+            <div class="container" layout="column" layout-align="center center">
+              <div style="position: relative; width: 80%; height: 80%;">
+                <bng-icon src="'trackgenerator_insert_after_selection'" type="sprite" class="container"></bng-icon>
+              </div>
+            </div>
+          </md-button>
+
+          <md-button ng-click="build()" md-no-ink class="md-raised md-accent" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+            <md-tooltip>{{:: 'ui.trackBuilder.build' | translate }}</md-tooltip>
+            <div class="container" layout="column" layout-align="center center">
+              <div style="position: relative; width: 80%; height: 80%;">
+                <bng-icon src="'trackgenerator_insert_end'" type="sprite" class="container"></bng-icon>
+              </div>
+            </div>
+          </md-button>
+
+          <md-button ng-click="removeSelected()" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+            <md-tooltip class="tt-multiline">{{:: 'ui.trackBuilder.delete' | translate }}</md-tooltip>
+            <md-icon class="material-icons">delete</md-icon>
+          </md-button>
+        </div>
+
+          <md-divider></md-divider>
+
+          <md-subheader class="md-no-sticky">Parameters</md-subheader>
+          <div layout="column" layout-align="center start">
+            <div layout="column" layout-align="center start" ng-repeat="param in pieceParameters[selectedBuildPieceIndex].parameters | filter: {show: true}">
+              <md-subheader class="md-no-sticky">{{param.name}}</md-subheader>
+              <div layout="row" >
+                <md-input-container>
+                  <input ng-if="param.type == 'number'" type="number" ng-mouseup="parameterChanged($index)" ng-model="param.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+                  <md-checkbox md-no-ink ng-if="param.type == 'checkbox'" ng-change="parameterChanged($index)" ng-model="param.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+
+                </md-input-container>
+                <md-button ng-show="param.reset != null"  ng-click="parameterReset($index)" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+                    <md-tooltip>{{:: 'ui.trackBuilder.reset' | translate }}</md-tooltip>
+                    <md-icon class="material-icons">replay</md-icon>
+                </md-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </bng-pane-body>
+    </bng-accordion-pane>
+
+
+
+    <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Modify</span>
+        <!-- <md-icon class="material-icons">edit_location</md-icon> -->
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+      </bng-pane-header>
+
+      <bng-pane-body>
+        <md-list-item layout="column" layout-align="start start"style="padding:0;">
+          <md-subheader class="md-no-sticky">
+            Bank
+            <!--
+            <md-icon class="material-icons">info_outline
+             <md-tooltip class="tt-multiline" >{{:: 'ui.trackBuilder.bank_info' | translate }}</md-tooltip>
+          </md-icon>
+        -->
+          </md-subheader>
+           <md-slider-container layout="row" >
+            <!-- <md-slider ng-change="modify('bank', modifierValues.bank)" ng-init="bankAmount = 0" ng-model="modifierValues.bank" min="-90" max="90" style="width: 150px"></md-slider> -->
+              <md-button ng-click="modify('bank', -45)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-45°</md-button>
+              <md-button ng-click="modify('bank', -15)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-15°</md-button>
+              <md-button ng-click="modify('bank', 15)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">15°</md-button>
+              <md-button ng-click="modify('bank', 45)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">45°</md-button>
+            <md-input-container flex="10">
+              <input  ng-change="modify('bank', modifierValues.bank)" type="number" ng-model="modifierValues.bank" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+            </md-input-container>
+
+            <md-button ng-click="modify('bank', modifierValues.bank)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.addMarker' | translate }}</md-tooltip>
+              <md-icon class="material-icons">adjust</md-icon>
+            </md-button>
+            <md-button ng-click="modify('bank', 0)" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.reset' | translate }}</md-tooltip>
+              <md-icon class="material-icons">replay</md-icon>
+            </md-button>
+            <md-button ng-click="modify('bank', null)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.clear' | translate }}</md-tooltip>
+              <md-icon class="material-icons">clear</md-icon>
+            </md-button>
+          </md-slider-container>
+
+          <!--<div layout="row">
+            <md-input-container>
+              <input type="number" ng-mouseup="modify('bank', modifierValues.bank)" ng-model="modifierValues.bank" aria-label="red" aria-controls="red-slider">
+            </md-input-container>
+
+            <md-button ng-click="modify('bank', 0)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings">
+              <md-icon class="material-icons">replay</md-icon>
+            </md-button>
+          </div>-->
+        </md-list-item>
+
+        <md-divider></md-divider>
+
+        <md-list-item layout="column" layout-align="start start"style="padding:0;">
+          <md-subheader class="md-no-sticky">Height</md-subheader>
+          <div layout="row">
+            <md-button ng-click="modify('elevate', (modifierValues.elevate - 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-10</md-button>
+            <md-button ng-click="modify('elevate', (modifierValues.elevate - 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-5</md-button>
+            <md-button ng-click="modify('elevate', (modifierValues.elevate + 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+5</md-button>
+            <md-button ng-click="modify('elevate', (modifierValues.elevate + 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+10</md-button>
+            <md-input-container  flex="10">
+              <input type="number" ng-mouseup="modify('elevate', modifierValues.elevate)" ng-model="modifierValues.elevate" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+            </md-input-container>
+
+            <md-button ng-click="modify('elevate', modifierValues.elevate)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.addMarker' | translate }}</md-tooltip>
+              <md-icon class="material-icons">adjust</md-icon>
+            </md-button>
+            <md-button ng-click="modify('elevate', 0)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.reset' | translate }}</md-tooltip>
+              <md-icon class="material-icons">replay</md-icon>
+            </md-button>
+            <md-button ng-click="modify('elevate', null)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.clear' | translate }}</md-tooltip>
+              <md-icon class="material-icons">clear</md-icon>
+            </md-button>
+
+          </div>
+        </md-list-item>
+
+        <md-divider></md-divider>
+
+        <md-list-item layout="column" layout-align="start start"style="padding:0;">
+          <md-subheader class="md-no-sticky">Width</md-subheader>
+          <div layout="row">
+            <md-button ng-click="modify('width', 5)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">5</md-button>
+            <md-button ng-click="modify('width', 10)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">10</md-button>
+            <md-button ng-click="modify('width', 15)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">15</md-button>
+            <md-button ng-click="modify('width', 20)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">20</md-button>
+
+            <md-input-container  flex="10">
+              <input type="number" ng-mouseup="modify('width', modifierValues.width)" ng-model="modifierValues.width" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+            </md-input-container>
+
+            <md-button ng-click="modify('width', modifierValues.width)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.addMarker' | translate }}</md-tooltip>
+              <md-icon class="material-icons">adjust</md-icon>
+            </md-button>
+            <md-button ng-click="modify('width', 10)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.reset' | translate }}</md-tooltip>
+              <md-icon class="material-icons">replay</md-icon>
+            </md-button>
+            <md-button ng-click="modify('width', null)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.clear' | translate }}</md-tooltip>
+              <md-icon class="material-icons">clear</md-icon>
+            </md-button>
+          </div>
+        </md-list-item>
+
+
+
+      </bng-pane-body>
+    </bng-accordion-pane>
+
+
+
+    <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Stack</span>
+        <!-- <md-icon class="material-icons">list</md-icon> -->
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+
+      </bng-pane-header>
+
+      <bng-pane-body>
+          <div style="padding: 2%; min-width: 80px">Stack Size: {{stackCount}}</div>
+
+          <div layout="row" layout-align="center center">
+            <md-button ng-click="stackToCursor()" md-no-ink class="md-raised md-accent" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.stackToCursor' | translate }}</md-tooltip>
+              <div class="container" layout="column" layout-align="center center">
+                <div style="position: relative; width: 80%; height: 80%;">
+                  <bng-icon src="'trackgenerator_stack_until_selection'" type="sprite" class="container"></bng-icon>
+                </div>
+              </div>
+            </md-button>
+
+            <md-button ng-click="stack(1)" md-no-ink class="md-raised md-accent" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.stackOne' | translate }}</md-tooltip>
+              <div class="container" layout="column" layout-align="center center">
+                <div style="position: relative; width: 80%; height: 80%;">
+                  <bng-icon src="'trackgenerator_stack_one'" type="sprite" class="container"></bng-icon>
+                </div>
+              </div>
+            </md-button>
+          </div>
+
+          <div layout="row" layout-align="center center">
+            <md-button ng-click="stack(-1)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.stackApplyOne' | translate }}</md-tooltip>
+              <div class="container" layout="column" layout-align="center center">
+                <div style="position: relative; width: 80%; height: 80%;">
+                  <bng-icon src="'trackgenerator_apply_one'" type="sprite" class="container"></bng-icon>
+                </div>
+              </div>
+            </md-button>
+
+            <md-button ng-click="stackApplyAll(false)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.stackApplyAll' | translate }}</md-tooltip>
+              <div class="container" layout="column" layout-align="center center">
+                <div style="position: relative; width: 80%; height: 80%;">
+                  <bng-icon src="'trackgenerator_apply'" type="sprite" class="container"></bng-icon>
+                </div>
+              </div>
+            </md-button>
+          </div>
+
+          <div layout="row" layout-align="center center">
+            <md-button ng-click="stackApplyAll(true)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.stackApplyAllAndKeep' | translate }}</md-tooltip>
+              <div class="container" layout="column" layout-align="center center">
+                <div style="position: relative; width: 80%; height: 80%;">
+                  <bng-icon src="'trackgenerator_apply_keep_stack'" type="sprite" class="container"></bng-icon>
+                </div>
+              </div>
+            </md-button>
+
+            <md-button ng-click="clearStack()" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.clearStack' | translate }}</md-tooltip>
+              <md-icon class="material-icons">clear</md-icon>
+            </md-button>
+          </div>
+
+      </bng-pane-body>
+
+    </bng-accordion-pane>
+
+    <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Settings</span>
+        <!-- <md-icon class="material-icons">settings</md-icon> -->
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+      </bng-pane-header>
+
+      <bng-pane-body>
+        <md-input-container flex layout="column" layout-align="start start">
+          <md-checkbox class="md-primary" md-no-ink ng-click="showMarkers()" ng-model="displayMarkers.value" aria-label="Finished?" ng-disabled="clearedTrack">
+            <span>Show Markers</span>
+          </md-checkbox>
+
+          <md-checkbox class="md-primary" md-no-ink ng-click="toggleQuality()" ng-model="quality.value" aria-label="Finished?" ng-disabled="clearedTrack">
+            <span>High Quality Track</span>
+          </md-checkbox>
+
+        </md-input-container>
+
+        <md-subheader class="md-no-sticky">Track Positioning</md-subheader>
+        <div layout="column">
+          <div layout="row" flex>
+            <span style="padding-right: 10px; padding-top: 5px;" >X</span>
+            <md-input-container flex>
+              <input type="number" ng-model="trackPosition.x" aria-label="red" aria-controls="red-slider"  ng-disabled="clearedTrack">
+            </md-input-container>
+            <span style="padding-right: 10px; padding-left: 10px; padding-top: 5px;" >Y</span>
+            <md-input-container flex>
+              <input type="number" ng-model="trackPosition.y" aria-label="red" aria-controls="red-slider"  ng-disabled="clearedTrack">
+            </md-input-container>
+            <span style="padding-right: 10px; padding-left: 10px; padding-top: 5px;" >Z</span>
+            <md-input-container flex>
+              <input type="number" ng-model="trackPosition.z" aria-label="red" aria-controls="red-slider"  ng-disabled="clearedTrack">
+            </md-input-container>
+          </div>
+          <div layout="row">
+            <span style="padding-right: 10px; padding-top: 5px;" >Direction</span>
+            <md-input-container flex>
+              <input type="number" ng-model="trackPosition.hdg" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+            </md-input-container>
+            <md-button ng-click="setTrackPosition()" layout-align="end end" md-no-ink class="md-raised" aria-label="Settings" flex ng-disabled="clearedTrack">
+              {{:: 'ui.trackBuilder.set' | translate }}
+            </md-button>
+          </div>
+        </div>
+
+        <md-subheader class="md-no-sticky">Drive</md-subheader>
+        <div layout="row">
+          <md-button ng-click="drive()" layout-align="end end" md-no-ink class="md-raised md-primary md-accent" aria-label="Settings" flex ng-disabled="clearedTrack">
+            {{:: 'ui.trackBuilder.drive' | translate }}
+          </md-button>
+        </div>
+
+      </bng-pane-body>
+    </bng-accordion-pane>
+
+    <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Save/Load</span>
+        <!-- <md-icon class="material-icons">save</md-icon> -->
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+      </bng-pane-header>
+
+      <bng-pane-body>
+        <div class="md-padding">
+          <div layout="row" layout-align="center center">
+            <md-input-container flex>
+              <label>{{ ::'ui.vehicleconfig.filename' | translate }}</label>
+              <input ng-model="saveName" ng-model-options="{debounce: 50}" ng-disabled="clearedTrack">
+            </md-input-container>
+            <div><md-button ng-disabled="!saveName" ng-click="save(saveName)" ng-class="{'md-warn': tracks.indexOf(saveName) !== -1, 'md-primary': tracks.indexOf(saveName) === -1}" class="md-raised" md-no-ink ng-disabled="clearedTrack">
+              {{ tracks.indexOf(saveName) === -1 ? 'save' : 'overwrite' | translate}}
+            </md-button></div>
+          </div>
+        </div>
+        <p>{{ :: 'ui.trackBuilder.howToDrive' | translate}}</p>
+
+        <md-list layout="column" style="overflow: auto;">
+          <div ng-repeat="track in tracks" layout="row" layout-align="center center" style="padding: 5px 15px; outline:none; cursor: pointer; min-height: 50px;" ng-click="saveName = track" class="markEveryOddChild">
+            <div flex>{{track}}</div>
+            <md-button md-no-ink ng-click="load(track)" class="md-raised md-primary" flex="20" ng-disabled="clearedTrack">{{ :: 'ui.vehicleconfig.load' | translate}}</md-button>
+          </div>
+        </md-list>
+
+      <md-subheader class="md-no-sticky">Clear</md-subheader>
+        <div layout="row">
+          <md-button ng-click="clearTrack()" layout-align="end end" md-no-ink class="md-raised md-primary" aria-label="Settings" flex ng-disabled="clearedTrack">
+            <md-tooltip>{{:: 'ui.trackBuilder.removeTrackTooltip' | translate }}</md-tooltip>
+             {{ :: 'ui.trackBuilder.removeTrack' | translate}}
+          </md-button>
+        </div>
+
+      </bng-pane-body>
+    </bng-accordion-pane>
+
+  </bng-accordion>
+
+</md-content>

@@ -1,0 +1,244 @@
+<style>
+  .md-select-menu-container.md-active md-select-menu { transition: none!important; }
+  .md-select-menu-container.md-active md-select-menu > * { opacity: 1; transition: none!important; }
+  .md-select-menu-container.md-leave { opacity: 0; transition: none!important; }
+
+  md-select.bng-select-fullwidth  .md-select-label { width: 100%; }
+  md-select.bng-select-fullwidth {margin-right: 0;}
+  .bng-short-select-item { height: 32px; }
+</style>
+
+<md-content style="width: 400px; height: 100%" layout="column">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex>{{ ::'ui.debug' | translate }}</span>
+    </div>
+  </md-toolbar>
+
+  <div flex layout-padding style="overflow-y: auto">
+    <md-list>
+      <md-subheader>{{ ::'ui.debug.vehicle' | translate }}</md-subheader>
+
+      <md-list-item md-no-ink ng-repeat="toggle in ::debug.controls.vehicle.toggleGroup_1">
+        <p>{{ ::toggle.label | translate }}</p>
+        <md-checkbox ng-model="debug.service.state[toggle.key]"
+                      ng-change="toggle.onChange()"
+                      aria-label="_" >
+        </md-checkbox>
+      </md-list-item>
+
+      <md-list-item layout layout-wrap>
+        <div layout="row" layout-align="center start" layout-wrap>
+          <md-button ng-repeat="btn in debug.controls.vehicle.buttonGroup_1" ng-click="btn.action()"
+                      ng-disabled="debug.disableVehicleButtons"
+                      class="md-primary md-raised" flex="45" md-no-ink>
+            {{ ::btn.label | translate }}
+          </md-button>
+        </div>
+      </md-list-item>
+
+      <md-divider></md-divider>
+      <md-subheader>{{ ::'ui.debug.vehicle' | translate }}</md-subheader>
+
+      <!-- Beam Visualization Mode select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.vehicle.beamVis' | translate }}</p>
+        <md-select ng-model="debug.service.state.vehicle.beamVis"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.state.vehicle.beamVis_modes">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <!-- Beam Transparency slider -->
+      <md-list-item layout>
+        <p flex>{{ ::'ui.debug.vehicle.beamTransparency' | translate }}</p>
+        <md-slider ng-model="debug.service.state.vehicle.beamVisAlpha" min="0" max="1" step="0.01"
+                   ng-change="debug.service.applyState()"
+                   ng-disabled="debug.service.state.vehicle.beamVis === 'off'"
+                   aria-label="_" style="margin: 0 15px" flex >
+        </md-slider>
+      </md-list-item>
+
+      <!-- Node Text select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.vehicle.nodeText' | translate }}</p>
+        <md-select ng-model="debug.service.state.vehicle.nodeText"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.state.vehicle.nodeText_modes">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <!-- Node Visualization select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.vehicle.nodeVis' | translate }}</p>
+        <md-select ng-model="debug.service.state.vehicle.nodeVis"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.state.vehicle.nodeVis_modes">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <!-- Center of Gravity select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.vehicle.centerOfGravity' | translate }}</p>
+        <md-select ng-model="debug.service.state.vehicle.cog"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.state.vehicle.cog_modes" ng-value="$index + 1">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <!-- Collision Triangles checkbox -->
+      <md-list-item md-no-ink>
+        <p>{{ ::'ui.debug.vehicle.collisionTriangle' | translate }}</p>
+        <md-checkbox ng-model="debug.service.state.vehicle.collisionTriangle"
+                     ng-change="debug.service.applyState()">
+        </md-checkbox>
+      </md-list-item>
+
+      <!-- Flexmesh debug Mode select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.vehicle.flexmeshdebug' | translate }}</p>
+        <md-select ng-model="debug.service.state.vehicle.flexmeshdebug"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.state.vehicle.flexmeshdebug_modes">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <!-- Aerodynamics Mode select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.vehicle.aerodynamics' | translate }}</p>
+        <md-select ng-model="debug.service.state.vehicle.aero"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.state.vehicle.aero_modes">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <!-- Aero scale slider -->
+      <md-list-item layout>
+        <p flex>{{ ::'ui.debug.vehicle.aerodynamicsScale' | translate }}</p>
+        <md-slider ng-model="debug.service.state.vehicle.aerodynamicsScale" min="0" max="0.2" step="0.01"
+                   ng-change="debug.service.applyState()"
+                   ng-disabled="debug.service.state.vehicle.aero === 'off'"
+                   aria-label="_" style="margin: 0 15px" flex >
+        </md-slider>
+      </md-list-item>
+
+      <!-- Tire forces checkbox -->
+      <md-list-item md-no-ink>
+        <p>{{ ::'ui.debug.vehicle.tireContactPoint' | translate }}</p>
+        <md-checkbox ng-model="debug.service.state.vehicle.tireContactPoint"
+                     ng-change="debug.service.applyState()">
+        </md-checkbox>
+      </md-list-item>
+
+      <!-- Mesh Visibility slider -->
+      <md-list-item layout>
+        <p flex="40">{{ ::'ui.debug.vehicle.meshVisibility' | translate }}</p>
+        <md-slider ng-model="debug.service.state.vehicle.meshVisibility"
+                   ng-change="debug.service.applyState()"
+                   aria-label="_" style="margin: 0 15px" flex>
+        </md-slider>
+        <input ng-model="debug.service.state.vehicle.meshVisibility" type="number"
+               ng-change="debug.service.applyState()"
+               style="width: 60px" min="0" max="100">
+      </md-list-item>
+
+      <md-divider></md-divider>
+      <md-subheader>{{ ::'ui.debug.terrain' | translate }}</md-subheader>
+
+      <md-list-item md-no-ink ng-repeat="toggle in ::debug.controls.terrain.toggleGroup_1">
+        <p>{{ ::toggle.label | translate }}</p>
+        <md-checkbox ng-model="debug.service.state.terrain[toggle.key]" ng-change="toggle.onChange()">
+        </md-checkbox>
+      </md-list-item>
+
+      <div ng-if="debug.service.groundModelInfo && (debug.service.state.terrain['staticCollision'] || debug.service.state.terrain['groundmodel'])">
+        <md-divider></md-divider>
+        <md-subheader>Ground Model Information</md-subheader>
+        <table border="0" style="margin-left: 20px; margin-bottom: 5px">
+          <tr ng-repeat="g in debug.service.groundModelInfo">
+            <td valign="middle">
+              <div style="border:1px solid black;width:2em;height:1em;background-color:rgba({{ ::g.color.r }},{{ ::g.color.g }},{{ ::g.color.b }},{{ ::(g.color.a/255) }})">&nbsp;</div>
+            </td>
+            <td valign="middle">{{ ::g.name}} (id: {{ ::g.id }})</td>
+          </tr>
+        </table>
+      </div>
+
+      <md-divider></md-divider>
+      <md-subheader>{{ ::'ui.debug.renderer' | translate }}</md-subheader>
+
+      <md-list-item md-no-ink ng-repeat="toggle in ::debug.controls.renderer.toggleGroup_1">
+        <p>{{ ::toggle.label | translate }}</p>
+        <md-checkbox ng-model="debug.service.state.renderer[toggle.key]" ng-change="toggle.onChange()">
+        </md-checkbox>
+      </md-list-item>
+
+      <!-- Renderer Visualization select -->
+      <md-list-item class="bng-short-select-item" layout>
+        <p flex>{{ ::'ui.debug.renderer.visualization' | translate }}</p>
+        <md-select ng-model="debug.service.state.renderer.visualization"
+                   ng-change="debug.service.setVisualizationMode()"
+                   aria-label="_" class="bng-select-fullwidth" flex="45">
+          <md-option ng-repeat="mode in ::debug.service.visualizationModes">{{ ::mode }}</md-option>
+        </md-select>
+      </md-list-item>
+
+      <md-list-item layout>
+        <md-button ng-repeat="btn in ::debug.controls.renderer.buttonGroup_1"
+                   ng-click="btn.action()"
+                   class="md-primary md-raised" flex md-no-ink>
+          {{ ::btn.label | translate }}
+        </md-button>
+      </md-list-item>
+
+      <md-divider></md-divider>
+      <md-subheader>{{ ::'ui.debug.effects' | translate }}</md-subheader>
+
+      <md-list-item>
+        <p flex="40">{{ 'ui.photomode.cameraSpeed' | translate}}</p>
+        <md-slider ng-model="debug.service.cameraSpeed"
+                   ng-change="debug.service.setCameraSpeed()"
+                   style="margin: 0 15px" min="2" max="100" step="0.5" aria-label="_" flex>
+        </md-slider>
+        <input ng-model="debug.service.cameraSpeed" type="number"
+               ng-change="debug.service.setCameraSpeed()"
+               style="width: 60px" min="2" max="100" step="0.5">
+      </md-list-item>
+
+      <md-list-item>
+        <small>{{ ::'ui.debug.effects.msg.fovOnlyInFreeMode' | translate }}</small>
+      </md-list-item>
+
+      <md-list-item layout>
+        <p flex="40">{{ ::'ui.debug.effects.fov' | translate }}</p>
+        <md-slider ng-model="debug.service.state.fov"
+                   ng-change="debug.service.setFOV()"
+                   aria-label="_" style="margin: 0 15px" flex>
+        </md-slider>
+        <input type="number" ng-model="debug.service.state.fov" ng-change="debug.service.setFOV()" style="width: 60px"  min="0" max="100">
+      </md-list-item>
+
+
+      <md-list-item layout>
+        <md-button ng-repeat="btn in ::debug.controls.effects.buttonGroup_1" ng-click="btn.action()" class="md-primary md-raised" flex md-no-ink>
+          {{ ::btn.label | translate }}
+        </md-button>
+      </md-list-item>
+
+
+      <!-- <md-divider></md-divider>
+      <md-subheader>{{ ::'ui.debug.userInterface' | translate }}</md-subheader> -->
+
+      <!-- <md-list-item md-no-ink>
+        <p>{{ ::'ui.debug.userInterface.enable' | translate }}</p>
+        <md-checkbox aria-label="_" ng-model="debug.service.jsLogging.enabled" ng-change="debug.service.toggleJSLogging()"></md-checkbox>
+      </md-list-item> -->
+    </md-list>
+  </div>
+</md-content>

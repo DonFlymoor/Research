@@ -1,0 +1,137 @@
+<link rel="stylesheet" type="text/css" href="modules/repository/repository.css" />
+
+<div flex layout="row" ng-if="modLoclCtrl.list.length === 0 && !modLoclCtrl.doneList[0] && !modLoclCtrl.updateList[0]" layout-align="center center" class="md-padding" style="width: 100%;">
+  Currently there are no mods installed. You can change this&nbsp;
+  <a ui-sref="menu.mods.repository" style="cursor: pointer; color: blue;">here</a>.
+</div>
+
+<md-content bng-nav-root flex layout="column" ng-if="modLoclCtrl.list.length > 0 || modLoclCtrl.doneList.length > 0 || modLoclCtrl.updateList.length > 0">
+  <div flex style="overflow-y: auto">
+
+    <div ng-if="modLoclCtrl.updateList.length > 0">
+      <div layout="row" layout-align="center center">
+        <md-subheader style="font-size: 1.5em" class="md-primary">{{ ::'ui.modmanager.downloading' | translate }}</md-subheader>
+      </div>
+      <md-divider style="margin-bottom:10px;"></md-divider>
+      <md-grid-list flex md-cols-sm="2" md-cols-md="1" md-cols-gt-md="2" md-row-height-gt-md="128px" md-row-height="128px" md-gutter="4px"
+        md-gutter-gt-sm="4px" class="gridMarkSelected">
+
+        <md-grid-tile bng-nav-item nav-item-enter-focus="{{ :: 0 === $index }}" ng-repeat="mod in modLoclCtrl.updateList" style="background:#EEE;overflow:hidden"
+          ng-click="modLoclCtrl.goToDetails(mod)">
+
+          <img ng-src="https://api.beamng.com/s1/v4/download/mods/{{mod.id}}/{{mod.ver}}/icon.jpg" style="height: 100%; width:128px; min-width:128px;"></img>
+          <div layout="column" layout-fill layout-padding layout-align="space-between start">
+            <div layout="row">
+              <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.6em">
+                <!-- <span style="font-size: 1em; margin-right: 5px; padding:0px 4px;background:#880000; color: white" ng-if="!mod.active">Deactivated</span> -->
+                <span>{{ mod.title ? mod.title : mod.modname }}</span>
+              </div>
+            </div>
+            <div flex style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ mod.tag_line ? mod.tag_line : "Description unavailable." }}</div>
+            <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath }}</div>
+
+            <div layout="row" layout-align="end end" class="subButton">
+              <div style="cursor: default; position: absolute; top: 4px; left:4px;" ng-if="!mod.progress">
+                <md-progress-circular md-mode="indeterminate" class=" md-accent" md-diameter="32"></md-progress-circular>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.modDownloading' | translate }}</md-tooltip>
+              </div>
+
+              <div style="cursor: default; position: absolute; top: 4px; left:4px;" ng-if="mod.progress > 0">
+                <md-progress-circular md-mode="determinate" value="{{mod.progress}}" class=" md-accent" md-diameter="32"></md-progress-circular>
+                <h4 style="font-size: 0.7em; margin: 0; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -55%)">{{mod.progress}}%</h4>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.modDownloading' | translate }}</md-tooltip>
+              </div>
+            </div>
+          </div>
+
+        </md-grid-tile>
+      </md-grid-list>
+
+      <md-divider style="margin-top: 10px;"></md-divider>
+
+    </div>
+
+    <div ng-if="modLoclCtrl.doneList.length > 0">
+        <div layout="row" layout-align="center center">
+          <md-subheader style="font-size: 1.5em"  class="md-primary">{{ ::'ui.modmanager.downloaded' | translate }}</md-subheader>
+        </div>
+        <md-divider style="margin-bottom:10px;"></md-divider>
+        <md-grid-list flex md-cols-sm="2" md-cols-md="1" md-cols-gt-md="2" md-row-height-gt-md="128px" md-row-height="128px" md-gutter="4px"
+          md-gutter-gt-sm="4px" class="gridMarkSelected">
+
+          <md-grid-tile bng-nav-item nav-item-enter-focus="{{ :: 0 === $index }}" ng-repeat="mod in modLoclCtrl.doneList" style="background:#EEE;overflow:hidden"
+            ng-click="modLoclCtrl.goToDetails(mod)">
+
+            <img ng-src="https://api.beamng.com/s1/v4/download/mods/{{mod.id}}/{{mod.ver}}/icon.jpg" style="height: 100%; width:128px; min-width:128px;"></img>
+            <div layout="column" layout-fill layout-padding layout-align="space-between start">
+              <div layout="row">
+                <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.6em">
+                  <!-- <span style="font-size: 1em; margin-right: 5px; padding:0px 4px;background:#880000; color: white" ng-if="!mod.active">Deactivated</span> -->
+                  <span>{{ mod.title ? mod.title : mod.modname }}</span>
+                </div>
+              </div>
+              <div flex style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ mod.tag_line ? mod.tag_line : "Description unavailable." }}</div>
+              <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath }}</div>
+
+              <div layout="row" layout-align="end end" class="subButton">
+                <div>
+                  <md-icon class="material-icons md-default-theme" style="color:#008800;opacity: 1;background-color: #EEE;font-size: 2.5em;">check_circle</md-icon>
+                  <md-tooltip md-direction="left">{{ ::'ui.repository.modDownloaded' | translate }}</md-tooltip>
+                </div>
+              </div>
+            </div>
+
+          </md-grid-tile>
+        </md-grid-list>
+
+        <md-divider style="margin-top: 10px;"></md-divider>
+
+      </div>
+
+    <div ng-if="modLoclCtrl.list.length > 0">
+
+      <div layout="row" layout-align="center center">
+        <md-subheader style="font-size: 1.5em"  class="md-primary">{{ ::'ui.modmanager.installed' | translate }}</md-subheader>
+      </div>
+
+      <md-divider style="margin-bottom:10px;"></md-divider>
+
+      <md-grid-list flex md-cols-sm="2" md-cols-md="1" md-cols-gt-md="2" md-row-height-gt-md="128px" md-row-height="128px" md-gutter="4px"
+        md-gutter-gt-sm="4px" class="gridMarkSelected">
+        <md-grid-tile bng-nav-item nav-item-enter-focus="{{ :: 0 === $index }}" ng-repeat="mod in modLoclCtrl.list | orderBy : [modLoclCtrl.filter.orderby, 'title'] | filter : modLoclCtrl.filter.customFilter : strict"
+          style="background:#EEE;overflow:hidden" ng-click="modLoclCtrl.goToDetails(mod)">
+
+          <img ng-src="{{(mod.icon && mod.active) ? mod.icon : '/ui/images/modIcon.jpg'}}" onError="src='/ui/images/modIcon.jpg'" style="height: 100%; width:128px; min-width:128px;"></img>
+          <div layout="column" layout-fill layout-padding layout-align="space-between start">
+            <div layout="row">
+              <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.6em">
+                <span>{{ ::mod.modData.title ? mod.modData.title : mod.modname}}</span>
+              </div>
+              <div>
+                <span style="font-size: 1em; margin-right: 5px; padding:0px 4px;background:#880000; color: white" ng-if="!mod.active">Deactivated</span>
+              </div>
+            </div>
+            <div flex style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ mod.modData.tag_line ? mod.modData.tag_line : "Description unavailable."}}</div>
+            <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath }}</div>
+            <div layout="row" layout-align="end end" class="subButton">
+              <!--Have to use css classes to switch between icons on hover because ng-mouseleave does not always trigger correctly -->
+              <div style="cursor: default;" ng-if="!mod.packed">
+                <md-icon class="material-icons md-default-theme unpacked" style="font-size: 2.5em; color:#777;">unarchive</md-icon>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.modUnpacked' | translate }}</md-tooltip>
+              </div>
+
+              <div ng-if="mod.packed">
+                <md-icon  ng-click="subscribe($event, mod, $index)" class="material-icons md-default-theme cancelCircle" style="opacity: 1; color:#880000;">cancel</md-icon>
+                <md-tooltip md-direction="left">{{ ::'ui.modmanager.removeAndUnsub' | translate }}</md-tooltip>
+              </div>
+            </div>
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
+
+      <md-divider style="margin-top: 10px;"></md-divider>
+
+    </div>
+
+  </div>
+</md-content>

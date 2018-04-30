@@ -1,0 +1,34 @@
+<div style="height:100%; width:100%; overflow: auto;"  class="bngApp md-padding">
+  <style>
+  .warning {
+    background-color:#aaaa55;
+    color:#444411;
+  }
+  .error {
+    background-color: #ff5555;
+    color:#440000;
+  }
+  </style>
+
+  <label layout="row" layout-align="start center">
+    <span flex style="margin-right: 10px">Select Wheels</span>
+    <select flex="20" ng-model="displayWheel1">
+      <option ng-repeat="w in wheels" ng-value="w">{{ ::w }}</option>
+    </select>
+    <select flex="20" ng-model="displayWheel2">
+      <option ng-repeat="w in wheels | orderBy:'-toString()'" ng-value="w">{{ ::w }}</option>
+    </select>
+  </label>
+  <hr>
+
+
+  <div ng-repeat="set in data" layout="row">
+    <div flex>{{set.name}}</div>
+    <div flex="20" ng-class="{'warning': set.warn1, 'error': set.error1}">
+      {{set.str1}}
+    </div>
+    <div flex="20" ng-class="{'warning': set.warn2, 'error': set.error2}">
+      {{set.str2}}
+    </div>
+  </div>
+</div>

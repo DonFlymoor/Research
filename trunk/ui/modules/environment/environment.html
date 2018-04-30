@@ -1,0 +1,123 @@
+<md-content style="width: 400px; height: 100%" layout="column">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex>{{::'ui.environment.environment' | translate}}</span>
+    </div>
+  </md-toolbar>
+
+  <time-settings></time-settings>
+
+  <div flex layout-padding style="overflow-y: auto">
+    <md-subheader><b>{{::'ui.environment.timeOfDay' | translate}}</b></md-subheader>
+    <md-list>
+      <md-list-item md-no-ink>
+        <p>{{::'ui.environment.play' | translate}}</p>
+        <md-checkbox ng-model="environment.service.state.play" 
+                     ng-change="environment.service.submitState()" 
+                     ng-disabled="environment.service.state.time < 0" 
+                     class="md-secondary" aria-label="_">
+        </md-checkbox>
+      </md-list-item>
+
+      <md-list-item layout>
+        <div flex="30">{{::'ui.environment.time' | translate}}</div>
+        <md-slider ng-model="environment.service.state.time" min="0" max="1" step="0.001" 
+                   ng-change="environment.service.submitState()" 
+                   ng-disabled="environment.service.state.time < 0" 
+                   flex aria-label="_">
+          </md-slider>
+      </md-list-item>
+
+      <md-list-item layout>
+        <div flex="30">{{::'ui.environment.day' | translate}}{{::'ui.environment.scale' | translate}}</div>
+        <md-slider ng-model="environment.service.state.dayScale" min="0.01" max="10" step="0.01" 
+                   ng-change="environment.service.submitState()"  
+                   ng-disabled="!environment.service.state.play" 
+                   flex aria-label="_">
+        </md-slider>
+      </md-list-item>
+
+      <md-list-item layout>
+        <div flex="30">{{::'ui.environment.night' | translate}}{{::'ui.environment.scale' | translate}}</div>
+        <md-slider ng-model="environment.service.state.nightScale" min="0.01" max="10" step="0.01" 
+                   ng-change="environment.service.submitState()" 
+                   ng-disabled="!environment.service.state.play" 
+                   flex aria-label="_">
+        </md-slider>
+      </md-list-item>
+    </md-list>
+
+    <md-divider></md-divider>
+
+    <md-subheader><b>{{::'ui.environment.weather' | translate}}</b></md-subheader>
+    <md-list>
+      <md-list-item layout>
+        <div flex="30">{{::'ui.environment.windSpeed' | translate}}</div>
+        <md-slider ng-model="environment.service.state.windSpeed" min="0" max="10" step="0.1"
+                   ng-change="environment.service.submitState()"
+                   ng-disabled="environment.service.state.windSpeed === undefined"
+                   flex aria-label="_"></md-slider>
+      </md-list-item>
+
+      <md-list-item layout>
+        <div flex="30">{{::'ui.environment.cloudCover' | translate}}</div>
+        <md-slider  ng-model="environment.service.state.cloudCover" min="0" max="5" step="0.1" 
+                    ng-change="environment.service.submitState()"
+                    ng-disabled="environment.service.state.cloudCover === undefined"
+                    flex aria-label="_">
+          </md-slider>
+      </md-list-item>
+
+      <md-list-item layout>
+        <div flex="30">{{::'ui.environment.fogDensity' | translate}}</div>
+        <md-slider ng-model="environment.service.state.fogDensity" min="0" max="0.2" step="0.001" 
+                   ng-change="environment.service.submitState()"
+                   ng-disabled="environment.service.state.fogDensity === undefined"
+                   flex aria-label="_">
+        </md-slider>
+      </md-list-item>
+    </md-list>
+
+    <md-divider></md-divider>
+
+    <md-subheader><b>{{::'ui.environment.gravity' | translate}}</b></md-subheader>
+    <md-list>
+      <md-list-item layout>
+        <md-slider ng-model="environment.service.state.gravity" min="-280" max="10" step="0.5" 
+                   ng-change="environment.service.submitState()"
+                   flex aria-label="_">
+        </md-slider>
+        <span style="text-align: right" flex="20">{{ environment.service.state.gravity.toFixed(2) }}</span>
+      </md-list-item>
+
+      <md-list-item layout layout-wrap>
+        <md-button ng-repeat="preset in ::environment.presets.gravity" 
+                   ng-click="environment.service.submitState({gravity: preset.value})"
+                   class="md-primary md-raised" flex="30" style="margin: 5px; font-size: 12px;">
+          {{ ::preset.title | translate}}
+        </md-button>
+      </md-list-item>
+
+    </md-list>
+    <md-divider></md-divider>
+
+    <md-subheader><b>{{::'ui.environment.simulationSpeed' | translate}}</b></md-subheader>
+    <md-list>
+      <md-list-item layout>
+        <md-slider ng-model="environment.service.simSpeed" min="1" max="100" 
+                   ng-change="environment.service.setSimSpeed()" 
+                   flex aria-label="_">
+        </md-slider>
+        <span style="text-align: right" flex="20">{{ environment.service.simSpeed }}</span>
+      </md-list-item>
+
+      <md-list-item layout layout-wrap>
+        <md-button ng-repeat="preset in ::environment.presets.simSpeed"
+                   ng-click="environment.service.setSimSpeed(1/preset.value)"
+                   class="md-primary md-raised" flex="30" style="margin: 4px; font-size: 12px;">
+          {{ ::preset.title | translate}}
+        </md-button>
+      </md-list-item>
+    </md-list>
+  </div>
+</md-content>

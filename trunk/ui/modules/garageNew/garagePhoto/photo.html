@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="filler" style="position: relative; margin: 0 5%; width: 90%; height: 100%;">
+
+    <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -10;">
+      <gp-square style="position: absolute; top: 0; left: 0; width: 75px;"><gp-edge class="color3 filler" top="true" left="true"></gp-edge></gp-square>
+      <gp-square style="position: absolute; top: 0; right: 0; width: 75px;"><gp-edge class="color3 filler" top="true" right="true"></gp-edge></gp-square>
+      <gp-square style="position: absolute; bottom: 0; left: 0; width: 75px;"><gp-edge class="color3 filler" bottom="true" left="true"></gp-edge></gp-square>
+      <gp-square style="position: absolute; bottom: 0; right: 0; width: 75px;"><gp-edge class="color3 filler" bottom="true" right="true"></gp-edge></gp-square>
+
+      <div class="container" layout="column" style="position: fixed;" ng-show="gpPhoto.settings.showGrid">
+        <div layout-align="row" ng-repeat="num in [1,2,3]" layout="row" flex>
+          <div ng-repeat="num in [1,2,3]" flex style="border:rgba(0, 0, 0, 0.3) 1px solid;"></div>
+        </div>
+      </div>
+    </div>
+  
+    <gp-panel class="infoPanelLeft" rotated="true" style="width: 300px; position: absolute; top: 25%; left: 5%;" no-padding="true" default-active="true">
+      <gp-panel-tab icon="photo_camera" title="{{:: 'ui.garage.photo.camera' | translate}}" style="direction: ltr;" bng-nav-root>
+        <div style="min-height: 150px;">
+          <gp-input-list-item title="ui.photomode.fov" val="gpPhoto.settings.fov" fixed="1" flex root-active="true">
+            <bng-slider flex ng-model="gpPhoto.settings.fov" min="5" max="120" step="0.5" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+
+          <gp-input-list-item title="ui.photomode.roll" val="gpPhoto.settings.roll" fixed="0" flex>
+            <bng-slider flex ng-model="gpPhoto.settings.roll" min="-200" max="200" step="1" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+        
+          <gp-input-list-item title="ui.photomode.cameraSpeed" val="gpPhoto.settings.cameraSpeed" fixed="1" flex>
+            <bng-slider flex ng-model="gpPhoto.settings.cameraSpeed" min="2" max="100" step="0.5" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+
+          <md-list-item layout flex md-no-ink bng-nav-item ng-focus="selectFocused = true" ng-blur="selectFocused = false" ng-class="{color1: selectFocused}">
+            <p flex>{{ 'ui.photomode.showGrid' | translate}}</p>
+            <bng-select class="bng-select-checkbox" ng-model="gpPhoto.settings.showGrid" loop options="[{l: 'On', v: true}, {l: 'Off', v: false}]" config="{label: (x) => x.l, value: (x) => x.v}"></bng-select>
+          </md-list-item>
+        </div>
+      </gp-panel-tab>
+
+
+      <gp-panel-tab icon="cloud_queue" title="{{:: 'ui.environment.environment' | translate}}" style="direction: ltr;" bng-nav-root>
+        <div style="min-height: 150px;">
+          <md-list-item layout flex md-no-ink bng-nav-item root-active-focus="true" ng-focus="selectFocused = true" ng-blur="selectFocused = false" ng-class="{color1: selectFocused}">
+            <p flex>{{ 'ui.environment.play' | translate}}</p>
+            <bng-select class="bng-select-checkbox" ng-model="gpPhoto.environment.state.play" ng-change="gpPhoto.environment.submitState()" loop options="[{l: 'On', v: true}, {l: 'Off', v: false}]" config="{label: (x) => x.l, value: (x) => x.v}"></bng-select>
+          </md-list-item>
+
+          <gp-input-list-item title="ui.environment.time" flex>
+            <bng-slider flex ng-model="gpPhoto.environment.state.time" ng-change="gpPhoto.environment.submitState()" min="0" max="1" step="0.001" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+
+          <gp-input-list-item title="ui.environment.day" flex>
+            <bng-slider flex ng-model="gpPhoto.environment.state.dayScale" ng-change="gpPhoto.environment.submitState()" min="0" max="1" step="0.001" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+
+          <gp-input-list-item title="ui.environment.night" flex>
+            <bng-slider flex ng-model="gpPhoto.environment.state.nightScale" ng-change="gpPhoto.environment.submitState()" min="0" max="1" step="0.001" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+
+          <gp-input-list-item title="ui.environment.fogDensity" flex>
+            <bng-slider flex ng-model="gpPhoto.environment.state.fogDensity" ng-change="gpPhoto.environment.submitState()" min="0" max="0.2" step="0.001" aria-label="_"></bng-slider>
+          </gp-input-list-item>
+        </div>
+      </gp-panel-tab>
+
+      <!-- Extra hidden features! whoa! -->
+      <!-- but no gamepad nav for this atm -->
+      <gp-panel-tab icon="add" title="{{:: 'ui.garage.photo.special' | translate}}" ng-if="!gpPhoto.shipping && gpPhoto.devMode" style="direction: ltr;" bng-nav-root>
+        <div style="min-height: 250px; width: 100%;" layout="column">
+          <md-button md-no-ink ng-click="gpPhoto.openPostFXManager()" class="md-raised">
+            {{ 'ui.photomode.postfx' | translate}}
+          </md-button>
+          <md-button md-no-ink ng-click="gpPhoto.doBigScreenShot()" class="md-raised">
+            {{ 'ui.photomode.takebigScreen' | translate}}
+          </md-button>
+        </div>
+      </gp-panel-tab>
+    </gp-panel>
+
+    <div style="position: absolute; bottom: 5%; left: 0; right: 0;" layout="row" layout-align="center center">
+      <div layout="row">
+        <gp-round-btn bng-sound="{click: 'event:>UI>Photo Trigger'}" icon="'camera_alt'" title="{{:: 'ui.garage.photo.screenshot' | translate}}" class="menuItem" ng-click="gpPhoto.takePic()"></gp-round-btn>
+        <gp-round-btn bng-sound="{click: 'event:>UI>Photo Upload Steam'}" icon="'share'" title="{{:: 'ui.garage.photo.uploadToSteam' | translate}}" class="menuItem" ng-click="gpPhoto.steamPic()"></gp-round-btn>
+        <gp-round-btn bng-sound="{click: 'event:>UI>Photo Upload BeamNG'}" icon="'file_upload'" title="{{:: 'ui.garage.photo.uploadToBeamng' | translate}}" class="menuItem" ng-click="gpPhoto.sharePic()"></gp-round-btn>
+      </div>
+    </div>
+  </div>
+</div>

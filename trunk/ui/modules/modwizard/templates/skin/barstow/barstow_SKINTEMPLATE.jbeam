@@ -1,0 +1,12 @@
+{
+
+"barstow_SKINTEMPLATE": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"barstow_SKINTEMPLATE",
+        "value":600,
+    },
+    "slotType" : "paint_design",
+    "globalSkin" : "barstow_SKINTEMPLATE",
+  },
+}

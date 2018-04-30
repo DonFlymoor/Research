@@ -1,0 +1,17 @@
+{
+  "domElement": "<turbo-activity-graph></turbo-activity-graph>",
+  "name": "ui.apps.turbo_activity_graph.name",
+  "types": [
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "This app shows a graphical representation of the inner turbo workings",
+  "css": {
+    "left": "0px",
+    "height": "150px",
+    "width": "450px",
+    "bottom": "0px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "turboActivityGraph"
+}

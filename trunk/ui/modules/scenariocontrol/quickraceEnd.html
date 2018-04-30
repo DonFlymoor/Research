@@ -1,0 +1,214 @@
+
+<style>
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  
+  .fade-in {
+    opacity:0;  
+    -webkit-animation:fadeIn linear 1;  
+    animation:fadeIn linear 1;
+    animation-fill-mode:forwards;
+    animation-duration:0.3s;
+  }
+
+  @keyframes slideIn { from { left: -100%; } to { left:0; } }
+
+  .slide-in {
+    left: -100%;
+    -webkit-animation: slideIn linear 2s forwards;
+    -webkit-animation-delay: 1.5s;
+  }
+
+  @keyframes currentR {
+    0% {
+      background-color: rgba(200, 200, 200, 0.5);
+    }
+    33% {
+      background-color: rgba(200, 200, 200, 0.5);
+    }
+
+    100% {
+      background-color: rgba(000, 000, 00, 0.5);
+    } 
+  }
+
+  .currentRecord {
+      background-color: rgba(200, 200, 200, 0.5);
+     -webkit-animation: currentR 3s infinite;
+  }
+
+  .endpanel {
+    
+    /*background-color: rgba(0, 0, 0, 0.8);*/
+    /*border: solid 1px white;*/
+    /*background-color: rgba(255, 255, 255, 0.9);*/
+    width: 550px;
+    text-transform: uppercase; 
+    /*flex:  auto;*/
+    margin: 10px;
+    /*color: white;*/
+    font-family: Open Sans;
+  }
+
+  .panel {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+  }
+
+  .actionbutton {
+    padding: 10px;
+    font-size: 1.4em;
+    border: solid 2px white;
+    text-transform: uppercase;
+    background: none;
+    font-family: Open Sans Bold;
+    color: orange;
+    margin: 10px;
+    min-width: 100px;
+  }
+
+  .actionbutton:focus {
+    background: orange;
+    color: white;
+    border-color: orange;
+  }
+
+  .actionbutton:hover {
+    background: orange;
+    color: white;
+    border-color: orange;
+  }
+
+  .gold {
+    color: rgb(242,215,50);
+    box-shadow: 0 0 20px 1px rgba(242,215,50,1);
+  }
+
+  .silver {
+    color: rgb(160,160,160);
+    box-shadow: 0 0 20px 1px rgb(160,160,160);
+  }
+
+  .bronze {
+    color: rgb(223,182,103);
+    box-shadow: 0 0 20px 1px rgb(223,182,103);
+  }
+
+  .success { color: rgb(0, 200, 0); }
+  .neutral { color: orange }
+  .fail    { color: rgb(200, 0, 0); }
+
+
+</style>
+
+<div class="fade-in" bng-nav-root style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); padding: 20px; display: flex; flex-direction: column; overflow: auto;">
+  <div style="position: relative; font-size: 2em; font-family: Open Sans Bold; display: flex; flex-direction: column; align-items: center; justify-content: center; text-transform: uppercase; width: 100%; margin-top: 20px;" 
+       ng-class="{true: 'fail', false: 'success'}[data.overall.failed]">
+    <div style="color: white">
+      <span ng-if="::data.campaigntitle">{{ ::data.campaigntitle | translate }}:</span>
+      <span>{{ ::data.title | translate }}</span>
+    </div>
+
+    <div style="font-size: 2em; margin-top: 10px;" ng-if="scenario.highscores.place == 1">New local best time!</div>
+    <div style="font-size: 1.5em; margin-top: 10px;" ng-if="scenario.highscores.place != -1 && scenario.highscores.place != 1">Place {{scenario.highscores.place}}</div>
+
+    <div style="font-size: 2.5em; margin-bottom=20px;">{{data.time}}</div>
+    
+    
+  </div>
+
+
+  <div style="align-self: center; display: flex; flex-direction: column; flex-grow:1; justify-content: center; width: 1000px;" show-in-order>
+
+    <div style="align-self: center; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; overflow-y: auto; height: 450px; width: 100%; overflow-y:hidden;" show-at-position="1" show-after-ms="3000">
+
+      <div class="fade-in endpanel panel" style="width: calc(60% - 20px); height: calc(100% - 20px); overflow-y: scroll;">
+        <div flex style="width:100%; overflow-y:auto" layout-wrap> 
+          <table style="width:100%; ">
+            <thead><tr>
+
+              <th><i ng-click="toggleDetail()" class="material-icons" style="cursor: pointer; cursor: hand;">query_builder</i></th>
+              <th><b>Lap</b></th>
+              <th><b>Duration</b></th>
+              <th><b>Vs prev. best</b></th> 
+              <th><b>Total</b></th> 
+            </tr></thead>
+            <tbody style="text-align:center" ng-show="detailed"> 
+              <tr ng-repeat="row in scenario.detailedTimes.detail.slice().reverse()">
+                <td></td>
+                <td>{{::row.lap      }} </td>
+                <td style="{{row.durationStyle}}">{{::row.duration }}</td>
+                <td style="color:{{::row.diffColor}}">{{::row.diff     }} </td>
+                <td>{{::row.total }} </td>
+              </tr>
+            </tbody>
+            <tbody style="text-align:center" ng-show="!detailed"> 
+            <tr ng-repeat="row in scenario.detailedTimes.normal.slice().reverse()">
+              <td></td>
+              <td>{{::row.lap      }} </td>
+              <td style="{{row.durationStyle}}">{{::row.duration }}</td>
+              <td style="color:{{::row.diffColor}}">{{::row.diff     }} </td>
+              <td>{{::row.total }} </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div layout="column"  style="align-self: center; width: calc(40% - 20px); height: calc(100% - 20px); display: flex; margin: 10px; position: relative;">
+        <div layout="column" class="fade-in panel" style="width: 100%; height: calc(80%); display: flex;">
+          <bng-select layout-align="space-between center" ng-model="scenario.viewDetailed" loop options="[{l: 'Total Time', v: 0}, {l: 'Single Lap', v: 1}]"  config="{label: (x) => x.l, value: (x) => x.v}"></bng-select>
+          <div style="overflow-y: scroll; height:100%; width:100%">
+            <table style="width:100%" ng-show="scenario.viewDetailed == 0">
+              <tr>
+                <th style="text-align:left">#</th>
+                <th style="text-align:left">Name</th>
+                <th style="text-align:right">Time</th>
+              </tr>
+              <tr ng-repeat="record in scenario.highscores.scores" ng-mouseover="showRecord($index, true)" >
+                <td ng-class="record.current ? 'currentRecord' : ''" >{{record.place}}</td>
+                <td ng-class="record.current ? 'currentRecord' : ''" style="text-align:left">{{record.playerName}}</td>
+                <td ng-class="record.current ? 'currentRecord' : ''" style="text-align:right" >{{record.formattedTime}}</td>
+              </tr>
+            </table>
+
+            <table style="width:100%" ng-show="scenario.viewDetailed == 1">
+              <tr>
+                <th style="text-align:left">#</th>
+                <th style="text-align:left">Name</th>
+                <th style="text-align:right">Time</th>
+              </tr>
+              <tr ng-repeat="record in scenario.highscores.singleScores"  ng-mouseover="showRecord($index, false)" >
+                <td ng-class="record.current ? 'currentRecord' : ''" >{{record.place}}</td>
+                <td ng-class="record.current ? 'currentRecord' : ''" style="text-align:left">{{record.playerName}}</td>
+                <td ng-class="record.current ? 'currentRecord' : ''" style="text-align:right" >{{record.formattedTime}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+       <div layout="column" class="fade-in panel" style="width: 100%; height: calc(20% - 10px); display: flex; margin-top: 10px;">
+         <table style="width:100%">
+              <tr>
+                <th style="text-align:left"># {{detailedRecord.place}}</th>
+                <th style="text-align:center">{{detailedRecord.playerName}}</th>
+                <th style="text-align:right">{{detailedRecord.formattedTime}}</th>
+              </tr>
+          </table>
+          <table style="width:100%">
+              <tr>
+                <th style="text-align:left">{{detailedRecord.vehicleBrand}}</th>
+                <th style="text-align:center">{{detailedRecord.vehicleName}}</th>
+                <th style="text-align:right">{{detailedRecord.formattedTimestamp}}</th>
+              </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 100px; display: flex; justify-content: flex-end; align-items: center;">
+    <button bng-nav-item  bng-nav-default-focus="$index === activeButton" class="actionbutton" ng-repeat="button in data.buttons track by $index" ng-click="executeCmd(button.cmd, button.showLoadingScreen);" bng-sound="{click: 'event:>UI>Main Select'}">
+        {{ ::button.label | translate }}
+    </button>
+  </div>
+
+
+</div>

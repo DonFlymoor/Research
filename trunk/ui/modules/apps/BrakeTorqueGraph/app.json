@@ -1,0 +1,17 @@
+{
+  "domElement": "<brake-torque-graph></brake-torque-graph>",
+  "name": "ui.apps.brake_torque_graph.name",
+  "types": [
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "This app shows a graphical representation of the wheels' Brake Torque at any time",
+  "css": {
+    "left": "0px",
+    "height": "80px",
+    "top": "0px",
+    "width": "400px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "brakeTorqueGraph"
+}

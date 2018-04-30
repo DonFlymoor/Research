@@ -1,0 +1,267 @@
+<style>
+  .mapview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20, 20, 20, 0.6);
+    z-index: 15;
+  }
+
+  .mapview .left-pane {
+    position: absolute;
+    padding-top: 156px;
+    padding-left: 72px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    /*z-index: 20;*/
+    /*background-color: rgba(20, 20, 20, 0.3);*/
+  }
+
+
+
+  .mission-status {
+    font-family: Play;
+    /*font-size: 24px;*/
+    font-size: 1.5em;
+    color: white;
+    margin-bottom: 20px;
+    width: 180px;
+  }
+
+  .mission-status .title {
+    padding: 10px 0;
+
+    border-bottom: solid 2px white;
+  }
+
+  .mission-status .status {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    /*text-align: right;*/
+  }
+
+  .mission-details {
+    width: 100%;
+    font-family: Play;
+    font-size: 18px;
+    color: white;
+  }
+
+  .mission-details .header {
+    background-color: rgba(255, 103, 1, 0.65);
+    font-size: 1.3em;
+    padding: 15px 20px;
+  }
+
+  .mission-details .header .title {
+    font-size: 1.2em;
+  }
+
+  .mission-details .header .subtitle {
+    text-transform: capitalize;
+  }
+
+  .mission-details .body {
+    background-color: rgba(90, 37, 1, 0.45);
+    padding: 20px;
+    font-family: News Cycle;
+    font-size: 1.1em;
+  }
+
+  .missions-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .missions-map img {
+     max-width: 100%;
+     max-height: 100%;
+     object-fit: contain;
+  }
+
+  .missions-map .arrow {
+    border: none;
+    fill: rgba(0, 255, 255, 0.9);
+    z-index: 13;
+    -webkit-filter: drop-shadow(3px 2px 2px black);
+  }
+
+  .map-poi {
+    z-index: 10;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 3px;
+    box-sizing: border-box;
+    /*border: solid 1px transparent;*/
+  }
+
+/*  .map-poi.ready {
+    background-color: rgba(245, 245, 245, 0.9);
+  }
+
+  .map-poi.locked {
+    background-color: darkgrey;
+    fill: white;
+  }*/
+
+  .map-poi:focus {
+    /*fill: yellow;*/
+    /*background-color: rgba(250, 250, 250, 0.9);*/
+    /*fill: #DA8D00;*/
+    z-index: 12;
+    /*box-shadow: 0 0 10px 5px orange;*/
+    box-shadow: 0 0 15px 12px white
+  }
+
+  #target-cross {
+    z-index: 9;
+    position: absolute;
+    stroke: yellow;
+    fill: yellow;
+    display: none;
+  }
+
+
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  #target-halo {
+    position: absolute;
+    display: none;
+    animation: spin 10s infinite linear;
+
+
+  }
+
+  #target-halo circle {
+    fill: none;
+    stroke: #FF6700;
+    stroke-width: 5px;
+    stroke-dasharray: 10, 4;
+  }
+
+
+  .mapview .legend {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(20, 20, 20, 0.6);
+  }
+
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .legend-tip {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 5px;
+  }
+
+  .legend-label {
+    color: white;
+    font-family: Roboto;
+  }
+
+  .ready {
+    background-color: #fbaf5d;
+    fill: #6d3a02;
+  }
+
+  .failed {
+    background-color: #f26d7d;
+    fill: #79363e;
+  }
+
+  .locked {
+    background-color: #cccccc;
+    fill: #666666;
+  }
+
+  .succeed {
+    background-color: #82ca9c;
+    fill: #3a5945;
+  }
+
+  .mission-log md-tabs-wrapper {
+    background-color: rgba(255, 103, 1, 0.65);
+
+  }
+
+  .mission-log .md-tab span {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .mission-log .md-tab.md-active span {
+    color: white;
+  }
+
+  .mission-log md-ink-bar {
+    background-color:white;
+  }
+
+  .mission-log .body {
+    background-color: rgba(90, 37, 1, 0.45);
+    color: white;
+    padding: 8px;
+    min-height: 200px;
+  }
+
+
+
+</style>
+
+<div class="mapview" bng-blur layout="row">
+  <div layout="column" flex="25" style="padding: 2.5%; overflow: auto;">
+    <mission-status title="mapview.data.level" cash="mapview.data.money"></mission-status>
+    <!-- <mission-details mission="mapview.selectedMission"></mission-details> -->
+    <mission-log points="mapview.data.points" select-point="select(point)"></mission-log>
+  </div>
+
+  <div flex layout="column" layout-align="center center" style="overflow: auto;">
+    <div style="position:relative;" class="filler">
+      <bng-box1x1>
+        <missions-map mission="mapview.data.selectedMission" base-img="mapview.data.baseImg" poi="mapview.data.points" player="mapview.data.player"></missions-map>
+      </bng-box1x1>
+    </div>
+  </div>
+
+  <div flex="25" style="padding: 2.5%; overflow: auto;">
+    <div class="legend-item">
+      <svg style="fill: rgb(0, 255, 255); border-radius: 0" class="legend-tip"><use xlink:href="#map_vehicle_marker"></svg>
+      <div class="legend-label">Your Position</div>
+    </div>
+
+
+    <div ng-repeat="(name, group) in filter" style="color: white;" ng-if="hasEntries(group)">
+      <md-divider style="border-top-color: white;"></md-divider>
+      <span>{{ "ui.mapview.labels." + name  | translate }}</span>
+      <div class="legend-item md-padding" ng-repeat="(key, val) in group">
+        <md-checkbox ng-model="val.enabled" ng-change="applyFilter()">
+          <svg style="background-color: {{val.color || 'white'}}; height: 20px; width: 20px; border-radius: 50%; vertical-align: middle;" class="legend-tip"><use xlink:href="{{val.icon}}"></svg>
+          <span>{{ "ui.mapview.labels." + key | translate }}</span>
+        </md-checkbox>
+        <!-- <span class="legend-tip {{ ::item.status }}"></span> -->
+        <!-- <span class="legend-label">{{ ::item.label }}</span> -->
+      </div>
+    </div>
+  </div>
+
+</div>

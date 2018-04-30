@@ -1,0 +1,20 @@
+{
+  "domElement": "<messages></messages>",
+  "name": "ui.apps.messages.name",
+  "types": [
+    "ui.apps.categories.vehicle_info",
+    "ui.apps.categories.info"
+  ],
+  "description": "This App shows ingame Messages",
+  "css": {
+    "left": "0",
+    "height": "300px",
+    "width": "350px",
+    "min-width": "350px",
+    "min-height": "250px",
+    "top": "150px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.2",
+  "directive": "messages"
+}

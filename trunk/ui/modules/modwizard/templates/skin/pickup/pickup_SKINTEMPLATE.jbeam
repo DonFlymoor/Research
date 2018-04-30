@@ -1,0 +1,12 @@
+{
+
+"pickup_SKINTEMPLATE": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"pickup_SKINTEMPLATE",
+        "value":600,
+    },
+    "slotType" : "paint_design",
+    "globalSkin" : "pickup_SKINTEMPLATE",
+  },
+}

@@ -1,0 +1,20 @@
+{
+  "domElement": "<annotation-info></annotation-info>",
+  "name": "AnnotationInfo",
+  "hidden": true,
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows information about the annotation progress",
+  "css": {
+    "left": "0px",
+    "height": "auto",
+    "width": "300px",
+    "min-width": "300px",
+    "min-height": "200px",
+    "top": "0px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "annotationInfo"
+}

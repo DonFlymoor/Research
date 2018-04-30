@@ -1,0 +1,86 @@
+<link type="text/css" rel="stylesheet" href="modules/garageNew/garagePaint/paint.css">
+
+<div style="max-height: 570px; height: 50%; width: 400px; color: currentColor; position: absolute; top: 15%; left: 5%;">
+  <gp-panel rotated="true" open-tab="gpPaint.currentPalette" default-active="true">
+    <gp-panel-tab icon="{{::$index === 0 ? '#garage_spray_can_color' : '#garage_spray_can_' + $index }}" ng-repeat="i in gpPaint.color track by $index" ng-init="paletteIndex = $index" bng-nav-root rotated="true">
+      <gp-panel-tab-header>
+        <span translate="ui.garage.paint.base" ng-if=":: $index === 0"></span>
+        <span translate="ui.garage.paint.decals" translate-values="{id: $index}" ng-if=":: $index !== 0"></span>
+      </gp-panel-tab-header>
+
+      <div style="direction: ltr;">
+        <span class="font2" style="font-size: 18pt;">{{:: 'ui.color.factory' | translate}}</span>
+        <div layout="row" layout-wrap  layout-align="start start">
+          <div flex="20" ng-focus="gpPaint.activePreset = [$index, 'factory', paletteIndex]" root-active-focus="{{$index === 0}}" bng-nav-item ng-repeat="(key, val) in gpPaint.presets.car track by $index" ng-click="gpPaint.setColor(val, 'factory', key)" bng-sound="{click: 'event:>UI>Garage>Painting'}">
+            <color-preset flex color="val" active="$index === gpPaint.activePreset[0] && gpPaint.activePreset[1] === 'factory' && gpPaint.activePreset[2] === paletteIndex" key="key" style="cursor: pointer;" highlight="gpPaint.isActive('factory', key)"></color-preset>
+          </div>
+        </div>
+        <span class="font2" style="font-size: 18pt;">{{:: 'ui.color.user' | translate}}</span>
+        <div layout="row" layout-wrap layout-align="start start">
+          <div flex="20" ng-focus="gpPaint.activePreset = [$index, 'user', paletteIndex]" bng-nav-item ng-repeat="val in gpPaint.presets.user track by $index" ng-click="gpPaint.setColor(val, 'user', $index)" bng-sound="{click: 'event:>UI>Garage>Painting'}">
+            <color-preset flex color="val" active="$index === gpPaint.activePreset[0] && gpPaint.activePreset[1] === 'user' && gpPaint.activePreset[2] === paletteIndex" style="cursor: pointer;" highlight="gpPaint.isActive('user', $index)"></color-preset>
+          </div>
+        </div>
+      </div>
+    </gp-panel-tab>
+  </gp-panel>
+</div>
+
+<div style="height: 570px; width: 400px; color: currentColor; position: absolute; top: 15%; right: 5%;">
+  <gp-panel open-tab="gpPaint.currentDetails">
+
+    <gp-panel-tab icon="#garage_color_drop" bng-nav-root>
+      <gp-panel-tab-header>
+        {{:: 'ui.garage.paint.customize' | translate}}
+      </gp-panel-tab-header>
+
+      <div layout="row" layout-align="space-around start" layout-wrap class="filler" style="height: 500px; position: relative;">
+        <div bng-nav-item ng-blur="gpPaint.reset()" root-active-focus="true" flex="35" class="colorWidgetContainer" layout="column" layout-align="start center">
+          <div class="title font1" style="font-size: 18pt;">{{:: 'ui.color.hue' | translate}}</div>
+          <div class="circle" bng-nav-root>
+            <color-circle bng-nav-item class="circle" ng-model="gpPaint.color[gpPaint.currentPalette][0]" ng-change="gpPaint.updateColor()" type="hue"></color-circle>
+          </div>
+        </div>
+        <div bng-nav-item ng-blur="gpPaint.reset()" flex="35" class="colorWidgetContainer" layout="column" layout-align="start center">
+          <div class="title font1" style="font-size: 18pt;">{{:: 'ui.color.saturation' | translate}}</div>
+          <div class="circle" bng-nav-root>
+            <color-circle bng-nav-item class="circle" ng-model="gpPaint.color[gpPaint.currentPalette][1]" ng-change="gpPaint.updateColor()" type="saturation" bg-color="gpPaint.getSatBg()"></color-circle>
+          </div>
+        </div>
+        <div bng-nav-item ng-blur="gpPaint.reset()" flex="35" class="colorWidgetContainer" layout="column" layout-align="start center">
+          <div class="title font1" style="font-size: 18pt;">{{:: 'ui.color.brightness' | translate}}</div>
+          <div class="circle" bng-nav-root>
+            <color-circle bng-nav-item class="circle" ng-model="gpPaint.color[gpPaint.currentPalette][2]" ng-change="gpPaint.updateColor()" type="brightness" bg-color="gpPaint.getLumBg()"></color-circle>
+          </div>
+        </div>
+        <div bng-nav-item ng-blur="gpPaint.reset()" flex="35" class="colorWidgetContainer" layout="column" layout-align="start center">
+          <div class="title font1" style="font-size: 18pt;">{{:: 'ui.color.chrominess' | translate}}</div>
+          <div class="circle" bng-nav-root>
+            <color-circle bng-nav-item class="circle" ng-model="gpPaint.color[gpPaint.currentPalette][3]" ng-change="gpPaint.updateColor()" type="alpha" bg-color="gpPaint.getAlphaBg()"></color-circle>
+          </div>
+        </div>
+      </div>
+
+      <gp-panel-tab-footer layout="row" layout-align="end center">
+        <gp-btn bng-nav-item icon="'save'" title="ui.common.save" active="true" class="gpBtn" style="margin: 5px;" btn-click="gpPaint.addColor();"></gp-btn>
+        <gp-btn bng-nav-item icon="'delete'" title="ui.common.delete" class="gpBtn" style="margin: 5px;" btn-click="gpPaint.removeColor();" disabled="gpPaint.active[gpPaint.currentPalette].list === 'user'"></gp-btn>
+      </gp-panel-tab-footer>
+    </gp-panel-tab>
+
+    <gp-panel-tab icon="#garage_plate" bng-nav-root>
+      <gp-panel-tab-header>
+        {{:: 'ui.garage.paint.licensePlate' | translate}}
+      </gp-panel-tab-header>
+
+      <div layout="row" layout-align="space-around start" layout-wrap class="filler" style="height: 175px;">
+        <md-input-container flex style="color: white;">
+          <label style="color: white;">{{ :: 'ui.vehicleconfig.licensePlate' | translate}}</label>
+          <input ng-model="gpPaint.licensePlate" style="color: white; border-color: white;">
+        </md-input-container>
+        <md-button class="md-icon-button" md-no-ink ng-click="gpPaint.updateLicensePlate()" aria-label="_">
+          <md-icon class="material-icons" style="color: white;">check</md-icon>
+        </md-button>
+      </div>
+    </gp-panel-tab>
+  </gp-panel>
+</div>

@@ -1,0 +1,19 @@
+{
+  "domElement": "<proctrack></proctrack>",
+  "name": "procTrackUtil",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Utility for ProcTrack.",
+  "css": {
+    "left": "200px",
+    "height": "50px",
+    "width": "300px",
+    "min-width": "300px",
+    "min-height": "50px",
+    "top": "200px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "proctrack"
+}

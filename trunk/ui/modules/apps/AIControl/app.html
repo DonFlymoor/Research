@@ -1,0 +1,83 @@
+<div style="height: 100%;" class="bngApp aicontrol">
+  <style>
+    .aicontrol .action-needed {
+        background-color: #c30000;
+    }
+
+    .aicontrol .disabled-option {
+      opacity: 0.8;
+      pointer-events: none;
+      background-color: inherit;
+    }
+  </style>
+
+  <table style="width: 100%">
+     <tr>
+      <td>AI Mode</td>
+      <td>
+        <select style="width: 100%" ng-model="ai.mode.value"
+          ng-options="opt.val as opt.txt for opt in ai.mode.options" ng-change="ai.changeMode()">
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Parameters</td>
+      <td layout="row">
+        <span style="padding: 2px 14px 0px 0px">Risk:</span>
+        <input flex type="number" min="0.3" max="2" step="0.01" value="1" ng-model="ai.aggression.value" ng-change="ai.changeAggression()">
+        <span style="padding: 2px 6px 3px 5px">In Lane:</span>
+        <select flex ng-model="ai.driveInLaneFlag.value"
+          ng-options="opt.val as opt.txt for opt in ai.driveInLaneFlag.options" ng-change="ai.changeLaneDriving()">
+        </select>
+        <span style="padding: 2px 6px 3px 5px">C/O Drivability:</span>
+        <input flex type="number" min="0" max="0.9" step="0.1" value="0" ng-model="ai.drivability.value" ng-change="ai.changeCutOffDrivability()">
+      </td>
+    </tr>
+
+    <tr>
+      <td>Route Speed</td>
+      <td layout="row">
+        <span style="padding: 2px 6px 0px 0px">{{ ai.distanceUnits.label }}:</span>
+        <input flex type="number" min="0" ng-model="ai.routeSpeed.value" ng-change="ai.changeSpeed()">
+        <span style="padding: 2px 8px 0px 26px">Mode:</span>
+        <select flex ng-model="ai.speedMode.value"
+          ng-options="opt.val as opt.txt for opt in ai.speedMode.options" ng-change="ai.changeSpeedMode()">
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Target</td>
+      <td layout="row">
+        <span ng-class="{ 'disabled-option': ['flee', 'manual'].indexOf(ai.mode.value) < 0,
+                          'action-needed': (ai.mode.value == 'manual') && ai.mapNodes.options.indexOf(ai.mapNodes.value) < 0 }"
+                          style="padding: 2px 12px 0px 0px">Map:</span>
+        <select ng-class="{ 'disabled-option': ['flee', 'manual'].indexOf(ai.mode.value) < 0}" flex ng-model="ai.mapNodes.value"
+          ng-options="opt for opt in ai.mapNodes.options" ng-change="ai.changeMapNode()">
+        </select>
+        <span ng-class="{ 'disabled-option': ['flee', 'chase'].indexOf(ai.mode.value) < 0  || ai.targetObjects.options.length < 2,
+                          'action-needed':   (ai.targetObjects.options.length >= 2) && (ai.targetObjects.value < 0) }"
+                          style="padding: 2px 8px 0px 15px">Vehicle:</span>
+        <select ng-class="{ 'disabled-option': ['flee', 'chase'].indexOf(ai.mode.value) < 0  || ai.targetObjects.options.length < 2}" flex ng-model="ai.targetObjects.value"
+          ng-options="opt.id as opt.txt for opt in ai.targetObjects.options" ng-change="ai.changeTargetObject()">
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Debug Mode</td>
+      <td layout="row">
+        <span style="padding: 2px 12px 0px 0px">Map:</span>
+        <select flex ng-model="ai.engineDebugMode.value"
+          ng-options="opt.val as opt.txt for opt in ai.engineDebugMode.options" ng-change="ai.changeEngineDebugMode()">
+        </select>
+        <span style="padding: 2px 8px 0px 15px">Vehicle:</span>
+        <select flex ng-model="ai.vehicleDebugMode.value"
+          ng-options="opt.val as opt.txt for opt in ai.vehicleDebugMode.options" ng-change="ai.changeVehicleDebugMode()" >
+        </select>
+      </td>
+    </tr>
+
+  </table>
+ </div>

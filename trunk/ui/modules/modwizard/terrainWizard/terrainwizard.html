@@ -1,0 +1,168 @@
+<link type="text/css" rel="stylesheet" href="modules/modwizard/modwizard.css">
+
+<center class="mainmenu" bng-nav-root style="top: 0%;"> 
+  <md-tabs style="pointer-events:none" md-dynamic-height flex md-selected="terrWzrdCtrl.index" md-stretch-height="true" md-stretch-tabs="always"> <!--vehicleWizard.index-->
+    <!-- pointer-events: none to disable tab clicking -->
+    <md-tab style="pointer-events:auto" label="Step 1" >
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Terrain Wizard</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="3" md-colspan="6" class="other" style="background-color: transparent">
+            <img src="modules/modwizard/images/terrain/terrainWizard.jpg" style="width:100%;height:auto;">
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="6" class="other">
+          <div layout-padding>
+            <p>
+              Welcome to the terrain creation wizard.
+            </p>
+            <p> 
+              The wizard will give you an overview on how to make a terrain for 
+              BeamNG.Drive as well as generate a template terrain.
+            </p>
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 2">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Map Creation Overview</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="other">
+          <div layout-padding>
+            <p >
+              Terrains consist mainly of a heightmaps and assets (trees, buildings etc.).
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="4" class="other">
+          <div layout-padding>
+            <h1 class="md-title" style="font-size: 3vh">Heightmaps</h1>
+            <p>
+             The heightmap will be the foundation for your terrain, we recommend using a procedural generator like World Machine 2, L3DT or Geo Control 2. 
+             This takes some time to get right (and if you use a generator like World Machine it is important to get it right before
+             moving to manual editing) but is very important for the final terrain.
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="2" class="other">
+          <div layout-padding>
+            <img src="modules/modwizard/images/terrain/terrainHeightmap.jpg" style="width:80%;height:100%">
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="3" class="other">
+          <div layout-padding>
+            <h1 class="md-title" style="font-size: 3vh">Assets</h1>
+            <p>
+             It is very important to have an asset list before jumping into level building. 
+             This will enable you to work your way through them one by one and help to unify the look of your level.
+             Assets consist of texture files and meshes. These can be created with the image and 3D editor of your choice.
+             (Blender3D, Paint.Net etc.)
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="3" class="other">
+          <div layout-padding>
+            <img src="modules/modwizard/images/terrain/terrainAssets.jpg" style="width:100%;height:90%;">
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 3">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px; pointer-events:auto"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Terrain File Generation</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="6" class="other">
+          <form name="terrWzrdCtrl.modnameform" class="simple-form">
+            <md-input-container layout-align="center center" style="width: 100%;">
+              <span class="md-headline">Please choose a name for your Terrain</span>
+              <label>Terrain Name</label>
+              <input required="true" type="text" ng-model="terrWzrdCtrl.modName"></input>
+            </md-input-container>
+          </form>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 4">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px; pointer-events:auto"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">How to Edit Terrain Files</h1>
+          </div>
+        </md-grid-tile>
+        <md-grid-tile md-rowspan="1" md-colspan="4" class="other">
+          <span class="md-headline">Terrain files have been generated.</span>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="1" md-colspan="2" class="other tile" ng-click="terrWzrdCtrl.openMod()" bng-nav-item bng-sound="{focus: 'event:>UI>Main Mouse Over', click: 'event:>UI>Main Select'}">
+          <span class="md-headline">Click here to open folder</span>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="2" class="other">
+          <div layout-padding>
+            <p>
+              To begin creating your terrain simply load up the map ingame and use F11 to get to the editor menu.
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="4" class="other">
+          <img src="modules/modwizard/images/terrain/terrainLocation.jpg" style="width:100%;height:auto;">
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+  </md-tabs>
+
+  <div class="navigation">
+    <md-button md-no-ink class="navbtn" ng-click="terrWzrdCtrl.back()" style="float: left;">
+      <md-icon class="material-icons">keyboard_arrow_left</md-icon>
+      Back
+    </md-button>
+    <md-button class="md-noink navbtn" ng-click="terrWzrdCtrl.next()" style="float: right;">
+      Next
+      <md-icon class="material-icons">keyboard_arrow_right</md-icon>
+    </md-button>
+  </div>
+</center>

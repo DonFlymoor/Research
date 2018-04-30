@@ -1,0 +1,60 @@
+<link type="text/css" rel="stylesheet" href="modules/garageNew/garageParts/parts.css">
+
+<div class="container parts">
+  <!-- bottom is a hack to hide the panel body when nothing is to be shown -->
+  <div style="width: 380px; color: currentColor; position: absolute; top: 15%; left: 5%; bottom: 0; max-height: 570px;" class="font2">
+    <gp-panel rotated="true" focused="gpParts.panelFocus" default-active="true" stripped="true" no-padding="true" style="max-height: 500px;" no-background="true">
+      <gp-panel-tab icon="directions_car" layout="column" bng-nav-root root-nav-actions="gpParts.getFun()" stripped="true">
+        <gp-panel-tab-header>
+          <gp-bread-crumb location="view.location" back="gpParts.back"></gp-bread-crumb>
+        </gp-panel-tab-header>
+        
+        <!-- not nice but if the heading isn't rotated life's far easier -->
+        <div class="container" layout="column" style="direction: ltr;">
+          <div style="height: 80px; width: 50vw; min-width: 450px; max-width: 1500px; position: relative; font-size: 13pt;">
+            <div bng-nav-item ng-focus="gpParts.slotsActive = true" ng-mousedown="gpParts.preventBlurAction()" ng-blur="gpParts.blur()" root-active-focus="true" style="max-width: 100%; position: relative; left: -10px; display: inline-block;">
+              <gp-text-list active="gpParts.slotsActive" select-part="gpParts.selectPart" view="view" enter="gpParts.enter"></gp-text-list>
+            </div>
+          </div>
+          <div style="position: relative; background-color: rgba(0, 0, 0, 0.4);" flex bng-blur ng-if="view.data[view.active].options !== undefined">
+            <div class="container" style="direction: rtl">
+              <div class="container" style="overflow: auto;">
+                <div class="filler" layout="column" style="direction: ltr;">
+                  <div ng-click="gpParts.changePart($index, option.active)" ng-repeat="option in view.data[view.active].options track by $index" gp-parts-specialty allow-up="$index !== 0" layout="row" layout-align="start center" bng-nav-item ng-focus="gpParts.activeTreeElem = $index" ng-blur="gpParts.activeTreeElem = undefined" style="min-height: 50px; padding-left: 24px;" ng-style="{'background-color': gpParts.activeTreeElem === $index ? 'rgba(255, 103, 0, 0.35)' : '', cursor: option.active && view.data[view.active].coreSlot ? 'not-allowed' : 'pointer'}">
+                    <div flex="10" layout="row" layout-align="start center"> <!-- ng-if="!view.data[view.active].coreSlot" -->
+                      <div layout="row" layout-align="start center" ng-if="option.active && gpParts.activeTreeElem === $index && !view.data[view.active].coreSlot">
+                        <svg class="material-icons" style="fill: currentColor;"><use xlink:href="#gp-icons-remove"/></svg>
+                      </div>
+                      <div layout="row" layout-align="start center" ng-if="!option.active && gpParts.activeTreeElem === $index">
+                        <svg class="material-icons" style="fill: currentColor;"><use xlink:href="#gp-icons-add"/></svg>
+                      </div>
+                    </div>
+                    <div flex style="padding: 12px 24px 12px 0;" class="font1">{{option.name}}</div>
+                    <div style="width: 4px; min-height: 50px; background-color: currentColor;" ng-if="option.active" class="color3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </gp-panel-tab>
+    </gp-panel>
+  </div>
+
+  <div style="width: 400px; color: currentColor; position: absolute; top: 15%; right: 5%; bottom: 0; max-height: 570px;">
+    <gp-panel active="true" no-padding="true" style="max-height: 500px;">
+      <gp-panel-tab icon="directions_car" layout="column" bng-nav-root class="font1">
+        <gp-panel-tab-header>
+          {{ 'ui.garage.parts.extras' | translate}}
+        </gp-panel-tab-header>
+        
+        <div class="filler" style="padding: 10px 0;">
+          <md-list-item ng-repeat="item in onOff track by $index" layout md-no-ink bng-nav-item root-active-focus="$index === 0" ng-focus="selectFocused = $index; gpParts.selectPart(item.partName);" ng-blur="selectFocused = undefined;" ng-class="{color1: selectFocused}" style="padding: 8px 24px;">
+            <p flex>{{ item.description | translate}}</p>
+            <bng-select class="bng-select-checkbox" ng-change="changeParts()" ng-model="item.active" loop options="[{l: 'On', v: true}, {l: 'Off', v: false}]" config="{label: (x) => x.l, value: (x) => x.v}"></bng-select>
+          </md-list-item>
+        </div>
+      </gp-panel-tab>
+    </gp-panel>
+  </div>
+</div>

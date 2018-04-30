@@ -1,0 +1,102 @@
+<style>
+    .valueField {
+        text-align: center;
+    }
+
+    .greyBackground {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .redBackground {
+        background: rgba(202, 23, 25, 0.6);
+    }
+
+    .checkmark svg {
+        height: 100%;
+        width: auto;
+    }
+
+    .standardWidth {
+        width: 120px;
+    }
+
+    .standardHeigth {
+        height: 40px;
+    }
+
+    .lighterTable td {
+        padding-bottom: 5px;
+    }
+</style>
+
+<!-- TODO: Rewrite this, this is a horrible mess -->
+
+<md-content style="padding-top: 3%; height: 100%; width: 100%; background: transparent" layout="row">
+    <div style="width: 600px; margin-left: calc(50% - 600px / 2); max-height: 100%;" layout="column">
+        <center style="background:rgba(0, 0, 0, 0.7); color: white; margin-bottom: 20px;" ng-if=" :: data.title">
+            <h1>{{ ::data.title | translate }}</h1>
+        </center>
+
+        <div style="background:rgba(0, 0, 0, 0.7); color: white; margin-bottom: 20px; padding: 0.4em; display: block;" ng-if="::data.summaryHeading" >
+            <h4>{{ ::data.summaryHeading | translate }}</h4>
+            {{ ::data.summaryMessage | translate }}
+        </div>
+
+        <div layout="column" style="margin-bottom: 20px; overflow: auto">
+            <div style="background:rgba(0, 0, 0, 0.7); color: white; margin-right: 5px;" ng-if="data.stats.length > 0">
+                <div flex style="background:rgba(255, 255, 255, 0.43); font-size: 1.3em; padding: 0.1em 0.4em;">
+                    {{ ::'ui.campaigns.end.missions' | translate }}
+                </div>
+                <table style="width: calc(100% - 16px); margin: 8px;" cellspacing="3" class="lighterTable">
+                    <tr style="text-align:center">
+                        <td></td>
+                        <td></td>
+                        <td flex>{{ ::'ui.scenarios.end.passFailRatio' | translate }}</td>
+                        <td>{{ ::'ui.scenarios.end.points' | translate }}</td>
+                    </tr>
+                    <tr ng-repeat="mission in data.stats">
+                        <td>
+                            {{ ::mission.label | translate }}
+                        </td>
+                        <td class="checkmark standardHeigth" style="width: 100px;">
+                            <checkmark show-label="true" correct="!mission.failed" style="height: 40px; display: block;"></checkmark>
+                        </td>
+                        <td>
+                            <filled-bar-indicator ng-if=" :: mission.player !== undefined" flex bar="mission.player" reference="mission.community"  primary="rgba(142, 199, 112, 0.6)" secondary="rgba(202, 23, 25, 0.6)" class="standardHeigth"></filled-bar-indicator>
+                        </td>
+                        <td class="standardWidth">
+                            <div ng-class="{'greyBackground': !(mission.points < 0), 'redBackground': mission.points < 0}" class="valueField standardHeigth" layout="row" layout-align="center center">
+                                <points points=":: mission.points" max-points=":: mission.maxPoints"></points>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div style="background:rgba(0, 0, 0, 0.7); color: white; padding-bottom: 20px;">
+            <div flex style="background:rgba(255, 255, 255, 0.43); font-size: 1.7em; padding: 0.3em 0.5em;">
+                {{ ::'ui.scenarios.end.result' | translate }}
+            </div>
+            <table style="width: calc(100% - 16px); margin: 8px;">
+                <tr style="text-align:center">
+                    <td class="checkmark" style="width: 150px; height: 60px;">
+                    <checkmark show-label="true" correct="!data.overall.failed" style="display: block; width: 150px; height: 60px;"></checkmark>
+                    </td>
+                    <td flex colspan="2" style="padding: 5px;">
+                        <filled-bar-indicator ng-if=" :: data.overall.player !==undefined" flex bar="data.overall.player" reference="data.overall.community" primary="#e89241" secondary="rgba(255, 255, 255, 0.3)" label="Average" height="60px" width="10px"></filled-bar-indicator>
+                    </td>
+                    <td class="standardWidth">
+                        <div ng-class="{'greyBackground': !(data.overall.points < 0), 'redBackground': data.overall.points < 0}" class="valueField" style="height: 60px;" layout="row" layout-align="center center">
+                            <points points=":: data.overall.points" max-points=":: data.overall.maxPoints"></points>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="background:rgba(0, 0, 0, 0.7); color: white; margin-bottom: 20px;" layout="row" layout-align="end center">
+            <md-button ng-repeat="button in data.buttons" ng-click="executeCmd(button.cmd, button.showLoadingScreen);" style="background-color: rgba(255, 255, 255, 0.9); color: rgb(62, 62, 62); border-radius: 0;"><h2 style="margin: 0;">{{ ::button.label | translate }}</h2></md-button>
+        </div>
+    </div>
+</md-content>

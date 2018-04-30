@@ -1,0 +1,168 @@
+<link rel="stylesheet" type="text/css" href="modules/vehicleconfig/vehicleconfig.css">
+
+<style>
+  md-tab-content, md-tab-content > div {
+    height:100%;
+    box-sizing: border-box;
+    overflow:hidden;
+  }
+
+  .contentNavVehicleconfig {
+    min-width:500px;
+    max-width:700px;
+    width: 27%;
+    height: 100%
+  }
+</style>
+
+<md-content layout="column" class="contentNavVehicleconfig" style="width: 600px;">
+  <md-toolbar class="md-primary">
+    <h1 class="md-toolbar-tools">
+      <span flex>{{ ::'ui.vehicleconfig.vehicleconfig' | translate }}</span>
+    <md-button md-no-ink class="md-icon-button md-default" aria-label="Download mods!" ng-click="vehicleconfig.openRepo()">
+      <md-tooltip>Download mods!</md-tooltip>
+      <md-icon class="material-icons">add_to_photos</md-icon>
+    </md-button>
+    </h1>
+  </md-toolbar>
+  <md-tabs md-dynamic-height="false" style="bottom:auto" flex layout="column" class="md-primary" md-no-ink md-stretch-tabs="always" md-no-pagination="false">
+    <md-tab label="{{::'ui.vehicleconfig.parts' | translate}}" md-on-deselect="vehicleconfig.deselectPart(false)">
+      <md-content style="height:100%; overflow:hidden; box-sizing:border-box"; layout="column">
+        <div flex class="md-padding" style="overflow-y:auto" ng-mouseleave="vehicleconfig.deselectPart(vehicleconfig.stickyPartSelection)">
+          <div ng-repeat="entry in vehicleconfig.d.data track by entry.slot" ng-include="'vehicle-config-tree'" >
+          </div>
+        </div>
+
+        <div layout="flex" layout-align="start center">
+          <md-input-container flex>
+            <label>{{ :: 'ui.vehicleconfig.licensePlate' | translate}}</label>
+            <input ng-model="vehicleconfig.licensePlate">
+          </md-input-container>
+          <md-button class="md-icon-button" md-no-ink ng-click="vehicleconfig.updateLicensePlate()" aria-label="_">
+            <md-icon class="material-icons">check</md-icon>
+          </md-button>
+        </div>
+
+        <div layout="row" layout-align="start center" class="md-whiteframe-z3">
+          <md-checkbox ng-model="vehicleconfig.selectSubParts" md-no-ink flex>
+            {{ :: 'ui.vehicleconfig.subparts' | translate}}
+          </md-checkbox>
+          <md-checkbox ng-model="vehicleconfig.simple" ng-change="vehicleconfig.recalcTree();" md-no-ink flex>
+            {{ :: 'ui.vehicleconfig.simpleTree' | translate}}
+          </md-checkbox>
+          <md-button ng-click="vehicleconfig.reset()" md-no-ink class="md-raised md-warn">
+             {{ :: 'ui.common.reset' | translate}}
+          </md-button>
+        </div>
+      </md-content>
+    </md-tab>
+
+    <md-tab label="{{::'ui.vehicleconfig.tuning' | translate}}" md-on-select="vehicleconfig.toggleAdvancedWheelDebug(true)" md-on-deselect="vehicleconfig.toggleAdvancedWheelDebug(false)">
+      <md-content style="height:100%; overflow:hidden; box-sizing:border-box"; layout="column">
+        <div class="md-padding" flex style="overflow-y:auto">
+          <div ng-repeat="category in vehicleconfig.d.variable_categories | orderBy">
+            <h3 class="md-title">{{ category }}</h3>
+            <div ng-repeat="var in vehicleconfig.d.variables | filter: {category: category} | orderBy: 'subCategory' track by var.name" style="padding: 0;">
+
+              <h5 class="md-subhead" ng-if="vehicleconfig.addSpacer(var.subCategory)" style="margin-bottom: 0;">{{ var.subCategory}}</h5>
+              <md-list-item layout="row" layout-align="space-between center">
+                <md-tooltip ng-if="var.description">{{ var.description}}</md-tooltip>
+                <p class="md-body-2" flex="30">{{var.title}}</p>
+                <div flex layout="row" layout-align="space-between center">
+                  <md-slider ng-model="var.valDis" ng-change="vehicleconfig.tuningVariablesChanged()"
+                             min="{{ var.minDis }}" max="{{ var.maxDis }}" step="{{ var.stepDis }}"
+                             aria-label="_" flex style="padding: 0 10px 0 10px;">
+                  </md-slider>
+                  <md-input-container style="padding:0; padding-left:5px; width: 70px;">
+                    <input ng-model="var.valDis" ng-change="vehicleconfig.tuningVariablesChanged()"
+                           class="md-body-1" type="number" flex style="text-align: right"
+                           min="{{ var.minDis }}" max="{{ var.maxDis }}" step="{{ var.stepDis }}" aria-label="_" >
+                  </md-input-container>
+                  <span class="md-body-1" style="padding-left:5px">{{ var.unit }}</span>
+                </div>
+              </md-list-item>
+            </div>
+
+            <md-divider></md-divider>
+          </div>
+
+          <div ng-if="vehicleconfig.d.advancedWheelDebugData">
+            <h3 class="md-title">Advanced Wheel Debug Data</h3>
+            <div class="md-padding">
+              <table class="simple-table" style="width:100%">
+                <thead>
+                  <tr class="md-subhead">
+                    <th style="width: 20%">Name</th><th style="width: 20%">Camber</th><th style="width: 20%">Toe</th><th style="width: 20%">Caster</th><th style="width: 20%">SAI</th><th style="width: 20%">Pressure</th>
+                  </tr>
+                </thead>
+                <tr ng-repeat="w in vehicleconfig.d.advancedWheelDebugData | orderBy: 'name' track by $index">
+                  <td class="md-body-2">{{ w.name }}</td>
+                  <td class="md-body-1">{{ w.camber | number: 3 }}</td>
+                  <td class="md-body-1">{{ w.toe | number: 3 }}</td>
+                  <td class="md-body-1">{{ w.caster | number: 3 }}</td>
+                  <td class="md-body-1">{{ w.sai | number: 3 }}</td>
+                  <td class="md-body-1">{{ w.pressure | number: 2 }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div layout="row" layout-align="start center" class="md-whiteframe-z3">
+          <md-checkbox flex ng-model="vehicleconfig.liveVariablesUpdate">
+            <md-tooltip md-direction="right">
+              Automatically applies changes when moving the sliders
+            </md-tooltip md-no-ink>
+            Live Updates
+          </md-checkbox>
+          <md-button ng-click="vehicleconfig.resetVars()" class="md-raised md-warn" md-no-ink >
+            {{ :: 'ui.common.reset' | translate}}
+          </md-button>
+
+          <md-button ng-click="vehicleconfig.write()" ng-disabled="vehicleconfig.liveVariablesUpdate"
+                     class="md-raised md-primary" md-no-ink >
+            {{ :: 'ui.common.apply' | translate}}
+          </md-button>
+        </div>
+      </md-content>
+    </md-tab>
+
+    <md-tab label="{{ ::'ui.vehicleconfig.color' | translate }}">
+      <md-content class="md-padding" style="height:100%; overflow:auto; box-sizing:border-box"; layout="row" layout-wrap layout-align="space-around start">
+      <div ng-repeat="c in vehicleconfig.color track by $index" style="width: 48%">
+        <ng-color ng-model="c" ng-change="vehicleconfig.updateColor($index, c)"
+                  presets-editable="true" show-preview="false" pre-col="{{ vehicleconfig.carColorPresets }}">
+        </ng-color>
+        <br />
+        <md-divider></md-divider>
+        <br /><br />
+      </div>
+      <div ng-if="vehicleconfig.color.length % 2 === 1" style="width: 48%"></div>
+    </md-tab>
+
+    <md-tab label="{{ ::'ui.vehicleconfig.save' | translate }} & {{ ::'ui.vehicleconfig.load' | translate }}">
+      <md-content style="box-sizing:border-box; height: 100%;" layout="column">
+        <div class="md-padding">
+          <h3 class="md-title">{{ ::'ui.vehicleconfig.save' | translate }}</h3>
+          <div layout="row" layout-align="center center">
+            <md-input-container flex>
+              <label>{{ ::'ui.vehicleconfig.filename' | translate }}</label>
+              <input ng-model="vehicleconfig.saveName" ng-model-options="{debounce: 50}">
+            </md-input-container>
+            <div><md-button ng-disabled="!vehicleconfig.saveName" ng-click="vehicleconfig.save(vehicleconfig.saveName)" ng-class="{'md-warn': vehicleconfig.configList.indexOf(vehicleconfig.saveName) !== -1, 'md-primary': vehicleconfig.configList.indexOf(vehicleconfig.saveName) === -1}" class="md-raised" md-no-ink>
+              {{ vehicleconfig.configList.indexOf(vehicleconfig.saveName) === -1 ? 'save' : 'overwrite' | translate}}
+            </md-button></div>
+          </div>
+          <small>({{::'ui.vehicleconfig.mouseOverUi' | translate}})</small>
+        </div>
+
+        <md-list layout="column" style="overflow: auto;">
+          <div ng-repeat="item in vehicleconfig.configList | filter : vehicleconfig.saveName" layout="row" layout-align="center center" style="padding: 5px 15px; outline:none; cursor: pointer; min-height: 50px;" ng-click="vehicleconfig.saveName = item" class="markEveryOddChild">
+            <div flex>{{item}}</div>
+            <md-button md-no-ink ng-click="vehicleconfig.load($event, item)" class="md-raised md-primary" flex="20">{{ :: 'ui.vehicleconfig.load' | translate}}</md-button>
+          </div>
+        </md-list>
+      </md-content>
+    </md-tab>
+  </md-tabs>
+</md-content>

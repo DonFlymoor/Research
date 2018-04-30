@@ -1,0 +1,21 @@
+{
+  "domElement": "<powertrain-app></powertrain-app>",
+  "name": "ui.apps.powertrain_debug.name",
+  "types": [
+    "ui.apps.categories.vehicle_info",
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "",
+  "css": {
+    "left": "0px",
+    "height": "420px",
+    "width": "420px",
+    "min-width": "60px",
+    "min-height": "60px",
+    "top": "0px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "powertrainApp"
+}

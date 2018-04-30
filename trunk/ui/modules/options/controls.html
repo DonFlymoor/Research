@@ -1,0 +1,14 @@
+ <md-content layout="column" style="width:510px; overflow-y:hidden">
+  <md-tabs class="md-primary" md-stretch-tabs="always" md-no-ink>
+    <md-tab label="{{:: 'ui.controls.bindings' | translate}}" ui-sref="menu.options.controls.bindings"></md-tab>
+    <md-tab label="{{:: 'ui.controls.filters' | translate}}" ui-sref="menu.options.controls.filters"></md-tab>
+    <md-tab label="{{:: 'ui.controls.ffb' | translate}}" ui-sref="menu.options.controls.ffb"></md-tab>
+    <md-tab label="{{:: 'ui.controls.hardware' | translate}}" ui-sref="menu.options.controls.hardware"></md-tab>
+  </md-tabs>
+
+  <div ui-view flex style="overflow-y:scroll; overflow-x:hidden"></div>
+</md-content>
+
+<div ui-view="edit" flex style="box-sizing: border-box; overflow-y: hidden!important" layout="column"></div>
+<!-- <div ui-view="edit" layout="column" style="width: 400px; height: 100%; border: solid; overflow: hidden"></div> -->
+

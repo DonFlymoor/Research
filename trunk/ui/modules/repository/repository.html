@@ -1,0 +1,120 @@
+<link rel="stylesheet" type="text/css" href="modules/repository/repository.css" />
+
+<div ng-if="online === 'disable'" layout="row" layout-align="center center" class="md-padding" style="width: 100%;">
+  Online features are currently disabled. You can change this&nbsp;
+  <a ui-sref="menu.options.userInterface" style="cursor: pointer; color: blue;">here</a>.
+</div>
+
+
+<md-content bng-nav-root flex layout="column">
+
+  <div layout="row" ng-show="repo.metered" layout-align="center center" class="md-padding" style="color: white; background-color: #880000">
+    {{ 'ui.repository.repo_network_limit' | translate }}
+  </div>
+
+  <div layout="column" ng-show="!repo.onlineState || repo.loadingPage" layout-align="center center" class="md-padding" style="font-size: 30px;">
+    {{ 'ui.repository.loading' | translate }}
+    <div class="md-padding" ng-show="repo.loadTimeout === true" style="font-size: 0.5em">
+      {{ 'ui.repository.loadingTimedOut' | translate }}<a ui-sref="menu.help">{{ "ui.repository.support" | translate }}</a>.
+    </div>
+  </div>
+
+  <div ng-if="repo.repoMsg.msg || !repo.loadingPage"class="special-event" >
+    <div ng-bind-html="repo.repoMsg.msg"></div>
+    <div layout="row" layout-align="end end"></div>
+  </div>
+
+  <div flex layout-padding style="overflow-y: auto;">
+    <md-grid-list flex md-cols-sm="2" md-cols-md="1" md-cols-gt-md="2" md-row-height-gt-md="128px" md-row-height="128px" md-gutter="4px"
+      md-gutter-gt-sm="4px" class="gridMarkSelected">
+      <style>
+        .repo-star .button .material-icons {
+          font-size: 15px;
+        }
+      </style>
+      <md-grid-tile bng-nav-item nav-item-enter-focus="{{ :: 0 === $index }}" ng-repeat="mod in repo.modData" style="background:#EEE;overflow:hidden"
+        ng-click="repo.select(mod, $index, false)">
+        <img ng-src="{{mod.icon}}" style="height: 100%; width:128px; min-width:128px;"></img>
+        <div layout="column" layout-fill layout-padding>
+          <div layout="row">
+            <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.5em;max-width: 80%">
+              <span>{{ ::mod.title }}</span>
+            </div>
+
+            <div layout="column" layout-align="end end" style="padding: 1%; font-size:12px; position: absolute; right: 0; top: 0;">
+                <div style="font-size:1em;padding:2px;font-weight:bold;overflow:hidden; background:#F80" ng-if="mod.prefix_title!=''">
+                  {{ ::mod.prefix_title }}
+                  <md-tooltip md-direction="below">{{mod.prefix_title}}</md-tooltip>
+                </div>
+                <div layout-align="end end">
+                  {{ ::mod.filesize | bytes }}
+                </div>
+                <div layout-align="end end" style="text-align: right">
+                  <span>{{ ::mod.downTxt }}</span>
+                  <md-icon class="material-icons md-default-theme" style="color:#777;font-size:1.2em;">file_download</md-icon>
+                </div>
+              </div>
+          </div>
+
+          <div flex style="font-size:1em;max-height:4.2em; padding: 0; max-width: 80%; overflow:hidden;">{{ ::mod.tag_line }}</div>
+
+          <div layout="column" layout-align="end start">
+            <jk-rating-stars class="repo-star" max-rating="5" rating="::mod.rating_avg" read-only="true"></jk-rating-stars>
+          </div>
+
+          <div layout="row" layout-align="end end" class="subButton">
+            <div ng-switch on="mod.downState">
+              <div style="cursor: default; position: absolute; top: 4px; left:4px;" ng-switch-when="updating">
+                <md-progress-circular md-mode="indeterminate" class=" md-accent" md-diameter="32"></md-progress-circular>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.modDownloading' | translate }}</md-tooltip>
+              </div>
+
+              <div style="cursor: default; position: absolute; top: 4px; left:4px;" ng-switch-when="downloading">
+                <md-progress-circular md-mode="determinate" value="{{mod.progress}}" class=" md-accent" md-diameter="32"></md-progress-circular>
+                <h4 style="font-size: 0.7em; margin: 0; position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -55%)">{{mod.progress}}%</h4>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.modDownloading' | translate }}</md-tooltip>
+              </div>
+            </div>
+
+
+            <!-- <div ng-if="mod.downState === false && mod.sub === true && mod.pending === false">
+              <md-icon ng-click="updateOneMod($event, mod, $index)" class="material-icons md-default-theme" style="color:#4178BB;font-size:2.5em;">update</md-icon>
+              <md-tooltip md-direction="left">{{ ::'ui.repository.updateMod' | translate }}</md-tooltip>
+            </div> -->
+
+            <div ng-switch on="mod.sub" ng-if="!mod.pending && !mod.unpacked || mod.downState === 'done'">
+              <div ng-switch-when="false">
+                <md-icon ng-click="subscribe($event, mod, $index)" class="material-icons md-default-theme" style="color:#4178BB;font-size:2.5em;">add_circle</md-icon>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.subToMod' | translate }}</md-tooltip>
+              </div>
+              <div ng-switch-when="true">
+                <!--Have to use css classes to switch between icons on hover because ng-mouseleave does not always trigger correctly, no clue why... -->
+                <md-icon ng-click="subscribe($event, mod, $index)" class="material-icons md-default-theme checkCircle" style="color:#008800">check_circle</md-icon>
+                <md-icon ng-click="subscribe($event, mod, $index)" class="material-icons md-default-theme cancelCircle" style="color:#880000;">cancel</md-icon>
+                <md-tooltip md-direction="left">{{ ::'ui.repository.unSubMod' | translate }}</md-tooltip>
+              </div>
+            </div>
+
+            <div style="cursor: default;" ng-if="mod.unpacked">
+              <md-icon class="material-icons md-default-theme unpacked" style="font-size: 2.5em; color:#777;">unarchive</md-icon>
+              <md-tooltip md-direction="left">{{ ::'ui.repository.modUnpacked' | translate }}</md-tooltip>
+            </div>
+          </div>
+
+        </div>
+
+      </md-grid-tile>
+  </div>
+  </md-grid-list>
+  </div>
+
+  <div ng-show="nOfPages == 0 && !repo.metered" flex style="font-size:120px;color:#eee;width:80%;height:100%;text-align: center;vertical-align:middle; display: table-cell;">
+    {{ 'ui.repository.no_mods_found' | translate }}
+  </div>
+
+
+
+  <wan-material-paging layout="row" layout-align="center center" ng-show="nOfPages > 0" wmp-total="nOfPages" goto-page="repo.gotoPage()" current-page="repo.currentPage"
+    step="6"></wan-material-paging>
+
+</md-content>

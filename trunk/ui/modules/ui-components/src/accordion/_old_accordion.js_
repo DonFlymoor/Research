@@ -1,0 +1,85 @@
+angular.module('beamng.components')
+
+.directive('bngAccordion', function () {
+  scope: true,
+  controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
+    var config = {
+      allowMultiple: ('multiple' in $attrs) && ($scope.$eval($attrs.multiple) !== false),
+      children: []
+    };
+
+    var ctrl = this;
+
+    ctrl.addPane = function (paneScope) { 
+      config.children.push(paneScope);
+      return config.children.length - 1;
+    };
+
+    ctrl.paneOpened = function (paneIndex) {
+      if (!config.allowMultiple)
+        config.children[paneIndex].bngPane.closeBody();
+    };
+  }],
+  controllerAs: 'bngAccordion'
+})
+
+.directive('bngAccordionPane', function () {
+  return {
+    template: '<div ng-transclude></div>',
+    transclude: true,
+    replace: true,
+    scope: {
+      isOpen: '=?'
+    },
+    require: '^bngAccordion',
+    
+    controller: ['$scope', function ($scope) {
+      var ctrl = this;
+      $scope.paneIndex = -1;
+
+      ctrl.openBody = function () {
+        $scope.$evalAsync(function () {
+          $scope.isOpen = true;
+          $scope.$parent.bngAccordion.paneOpened($scope.paneIndex);
+        });
+      };
+
+      ctrl.closeBody = function () {
+        $scope.$evalAsync(function () {
+          $socpe.isOpen = false;
+        });
+      };
+
+      ctrl.toggleBody = function () {
+        if ($scope.isOpen) ctrl.closeBody();
+        else ctrl.openBody();
+      };
+    }],
+
+    link: function (scope, element, attrs, bngAccordionCtrl) {
+      scope.paneIndex = bngAccordionCtrl.addPane(scope);
+    },
+
+    controllerAs: 'bngPane'
+  }
+})
+
+.directive('bngAccordionPaneHeader', function () {
+  return {
+    template: '<div ng-transclude ng-click="$parent.bngPane.toggleBody()"></div>',
+    transclude: true,
+    replace: true,
+    require: '^bngAccordionPane',
+    scope: false
+  };
+})
+
+.directive('bngAccordionPaneBody', function () {
+  return {
+    template: '<div ng-transclude ng-show="$parent.isOpen"></div>',
+    replace: true,
+    require: '^bngAccordionPane',
+    transclude: true,
+    scope: false
+  };
+});

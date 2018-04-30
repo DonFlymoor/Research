@@ -1,0 +1,17 @@
+{
+  "domElement": "<race-position></race-position>",
+  "name": "ui.apps.racing_position.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Show current position in a race",
+  "css": {
+    "left": "20px",
+    "height": "70px",
+    "top": "10px",
+    "width": "130px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "racePosition"
+}

@@ -1,0 +1,20 @@
+{
+  "domElement": "<damage-app></damage-app>",
+  "name": "ui.apps.vehicle_damage_app.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "TODO",
+  "css": {
+    "left": "0px",
+    "height": "320px",
+    "width": "180px",
+    "min-width": "45px",
+    "min-height": "80px",
+    "top": "0px"
+  },
+  "preserveAspectRatio": true,
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "damageApp"
+}

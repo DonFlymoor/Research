@@ -1,0 +1,261 @@
+// DOT NOT EDIT THIS FILE.
+// it binds the actions names to what they do
+// the bindings file contains the actions to keys, etc mapping
+
+// this is lazy json (comments, missing commas). It does not evaluate against strict json
+// the available contexts:
+// "ctx": "ui"   - user interface javascript
+// "ctx": "vlua" - active vehicle lua
+// "ctx": "elua" - engine lua (async)
+// "ctx": "tlua" - engine lua (sync)
+
+// "isCentered":true has two consequences:
+// first it transforms the values from 0..1 range, to -1..+1 range
+// the binding settings (linearity, deadzone) are then applied on the new -1..+1 range (that is, they are applied on the center of axes values)
+
+// "actionMap":"xxx" makes sure the binding is sent to an specific action map:
+//    'Global' (highest priority): overrides lower priority bindings and CEF forwarding, no matter what (highest priority)
+//    'Menu'    (medium priority): overrides lower priority bindings and CEF forwarding, if the dashboard is active (medium priority)
+//    'Normal'  (lowest priority): rest of bindings
+
+// "cat" is crossreferenced with input_categories.lua
+
+// possible action triggers:
+// "onDown"/"onUp": so far, only possible with buttons and keys
+// "onChange": any change of value axes/buttons/keys
+// "onRelative": relative mouse movement while holding right mouse button (with autocentering of mouse cursor)
+{
+//menu
+
+
+"toggleMenues"            :{"cat":"menu",          "order":  1, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'toggleMenues')", "isBasic":true, "actionMap": "Global", "title": "Toggle Menus", "desc": "Toggles the sidebar and radial menus" },
+"toggle_help"             :{"cat":"menu",          "order":  2, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuOpenModule','help')", "actionMap": "Normal", "title": "Help", "desc": "Toggles the help menu" },
+"options"                 :{"cat":"menu",          "order":  3, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuOpenModule', 'options')", "actionMap": "Normal", "title": "Options", "desc": "Opens the options menu" },
+"vehicle_selector"        :{"cat":"menu",          "order":  4, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuOpenModule','vehicleselect')", "actionMap": "Normal", "title": "Vehicle Selector", "desc": "Opens the vehicle selection screen" },
+"parts_selector"          :{"cat":"menu",          "order":  5, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuOpenModule', 'vehicleconfig')", "actionMap": "Normal", "title": "Parts Selector", "desc": "Opens the vehicle configuration screen" },
+"appedit"                 :{"cat":"menu",          "order":  5, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuOpenModule', 'appedit')", "actionMap": "Normal", "title": "Edit UI Apps Selector", "desc": "Switches to UI app editing mode" },
+"menu_item_up"            :{"cat":"menu",          "order": 10, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'up')", "isBasic":true, "title": "Menu up", "desc": "Navigates to the closet menu element roughly on top of current one" },
+"menu_item_down"          :{"cat":"menu",          "order": 11, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'down')", "isBasic":true, "title": "Menu down", "desc": "Navigates to the closet menu element roughly below the current one" },
+"menu_item_left"          :{"cat":"menu",          "order": 12, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'left')", "isBasic":true, "title": "Menu left", "desc": "Navigates to the closet menu element roughly to the left of current one" },
+"menu_item_right"         :{"cat":"menu",          "order": 13, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'right')", "isBasic":true, "title": "Menu right", "desc": "Navigates to the closet menu element roughly to the right of current one" },
+"menu_item_radial_x"      :{"cat":"menu",          "order": 14, "ctx": "ui", "onChange":"HookManager.trigger('MenuItemNavigation', 'radial-x', VALUE)", "actionMap": "VehicleCommon", "isCentered":true, "isBasic":true, "title": "Radial menu (horizontal)", "desc": "Moves the radial menu selector (in horizontal axis)" },
+"menu_item_radial_y"      :{"cat":"menu",          "order": 15, "ctx": "ui", "onChange":"HookManager.trigger('MenuItemNavigation', 'radial-y', VALUE)", "actionMap": "VehicleCommon", "isCentered":true, "isBasic":true, "title": "Radial menu (vertical)", "desc": "Moves the radial menu selector (in vertical axis)" },
+"menu_item_radial_right_x":{"cat":"menu",          "order": 16, "ctx": "ui", "onChange":"HookManager.trigger('MenuItemNavigation', 'radial-right-x', VALUE)", "actionMap": "VehicleCommon", "isCentered":true, "isBasic":true, "title": "Menu scroll (horizontal)", "desc": "Scrolls side elements (in horizontal axis)" },
+"menu_item_radial_right_y":{"cat":"menu",          "order": 17, "ctx": "ui", "onChange":"HookManager.trigger('MenuItemNavigation', 'radial-right-y', VALUE)", "actionMap": "VehicleCommon", "isCentered":true, "isBasic":true, "title": "Menu scroll (vertical)", "desc": "Scrolls side elements (in vertical axis)" },
+"menu_tab_right"          :{"cat":"menu",          "order": 18, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'trigger-right')", "isBasic":true, "title": "Switch Tab on the right", "desc": "" },
+"menu_tab_left"           :{"cat":"menu",          "order": 19, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'trigger-left')", "isBasic":true, "title": "Switch Tab on the left", "desc": "" },
+"menu_item_select"        :{"cat":"menu",          "order": 21, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'confirm')", "isBasic":true, "title": "Confirm / Activate selected item", "desc": "Performs a click on the currently selected menu item" },
+//"menu_item_confirm"     :{"cat":"menu",          "order": 20, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'confirm')","isBasic":true, "title": "Menu confirm", "desc": "Executes action associated with currently selected menu item" },
+"menu_item_back"          :{"cat":"menu",          "order": 22, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'back')", "isBasic":true, "title": "Cancel/Back", "desc": "Performs a click on the currently selected menu item" },
+//"menu_item_dashboard"   :{"cat":"menu",          "order": 21, "ctx": "ui", "onDown"  :"HookManager.trigger('MenuItemNavigation', 'dashboard')","isBasic":true, "title": "Dashboard", "desc": "Back to Dashboard, no matter where you are" },
+
+//vehicle
+"accelerate"              :{"cat":"vehicle",       "order":  1, "ctx": "vlua", "onChange":"input.event('throttle', VALUE, FILTERTYPE)", "isBasic":true, "title": "Throttle", "desc": "Presses the throttle" },
+"brake"                   :{"cat":"vehicle",       "order":  2, "ctx": "vlua", "onChange":"input.event('brake', VALUE, FILTERTYPE)", "isBasic":true, "title": "Brake", "desc": "Presses the brake (and reverse in Arcade gearbox)" },
+"accelerate_brake"        :{"cat":"vehicle",       "order":  3, "ctx": "vlua", "onChange":"input.padAccelerateBrake(VALUE, FILTERTYPE)", "isCentered":true, "isBasic":true, "title": "Combined Throttle&Brake", "desc": "Use only with gamepads, joysticks, and steering wheels with combined pedals" },
+"steer_left"              :{"cat":"vehicle",       "order":  4, "ctx": "vlua", "onChange":"input.kbdSteer(false, VALUE, FILTERTYPE)", "isBasic":true, "title": "Steer Left Button", "desc": "Steers left" },
+"steer_right"             :{"cat":"vehicle",       "order":  5, "ctx": "vlua", "onChange":"input.kbdSteer(true,  VALUE, FILTERTYPE)", "isBasic":true, "title": "Steer Right Button", "desc": "Steers right" },
+"steering"                :{"cat":"vehicle",       "order":  6, "ctx": "vlua", "onChange":"input.event('steering', VALUE, FILTERTYPE, ANGLE)", "isCentered":true, "isBasic":true, "title": "Steering Axis", "desc": "Steers the vehicle with an axis (steering wheels, joysticks, etc)" },
+"clutch"                  :{"cat":"vehicle",       "order":  7, "ctx": "vlua", "onChange":"input.event('clutch', VALUE, FILTERTYPE)", "isBasic":true, "title": "Clutch", "desc": "Presses the clutch" },
+
+"parkingbrake"            :{"cat":"vehicle",       "order":8.0, "ctx": "vlua", "onChange":"input.smartParkingBrake(VALUE, FILTERTYPE)", "isBasic":true, "title": "Parking Brake", "desc": "Smartly activates parking brake (usable when drifting and also when parking)" },
+"parkingbrake_temporary"  :{"cat":"vehicle",       "order":8.1, "ctx": "vlua", "onChange":"input.event('parkingbrake', VALUE, FILTERTYPE)", "isBasic":false, "title": "Parking Brake (temporary)", "desc": "Activates parking brake momentarily" },
+"parkingbrake_toggle"     :{"cat":"vehicle",       "order":8.2, "ctx": "vlua", "onDown"  :"input.toggleEvent('parkingbrake')", "isBasic":false, "title": "Parking Brake (permanent)", "desc": "Activates/deactivates parking brake permanently" },
+
+"shiftUp"                 :{"cat":"vehicle",       "order": 10, "ctx": "vlua", "onDown"  :"controller.mainController.shiftUp()", "isBasic":true, "title": "Shift Up", "desc": "Shifts up one gear" },
+"shiftDown"               :{"cat":"vehicle",       "order": 11, "ctx": "vlua", "onDown"  :"controller.mainController.shiftDown()", "isBasic":true, "title": "Shift Down", "desc": "Shifts down one gear" },
+"gearR"                   :{"cat":"vehicle",       "order": 12, "ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex(-1)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "Reverse gear", "desc": "Selects reverse gear" },
+"gear1"                   :{"cat":"vehicle",       "order":13.1,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 1)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "1st gear", "desc": "Selects first gear" },
+"gear2"                   :{"cat":"vehicle",       "order":13.2,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 2)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "2nd gear", "desc": "Selects second gear" },
+"gear3"                   :{"cat":"vehicle",       "order":13.3,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 3)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "3rd gear", "desc": "Selects third gear" },
+"gear4"                   :{"cat":"vehicle",       "order":13.4,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 4)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "4th gear", "desc": "Selects fourth gear" },
+"gear5"                   :{"cat":"vehicle",       "order":13.5,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 5)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "5th gear", "desc": "Selects fifth gear" },
+"gear6"                   :{"cat":"vehicle",       "order":13.6,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 6)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "6th gear", "desc": "Selects sixth gear" },
+"gear7"                   :{"cat":"vehicle",       "order":13.7,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 7)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "7th gear", "desc": "Selects seventh gear" },
+"gear8"                   :{"cat":"vehicle",       "order":13.8,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 8)", "onUp": "controller.mainController.shiftToGearIndex(0)", "title": "8th gear", "desc": "Selects seventh gear" },
+"gearN"                   :{"cat":"vehicle",       "order":13.9,"ctx": "vlua", "onDown"  :"controller.mainController.shiftToGearIndex( 0)", "title": "Neutral position", "desc": "Deselects the current gear" },
+"toggleShifterMode"       :{"cat":"vehicle",       "order": 14, "ctx": "vlua", "onDown"  :"controller.mainController.cycleGearboxModes()", "title": "Toggle Gearbox Mode", "desc": "Toggles gearbox modes" },
+
+"activateStarterMotor"    :{"cat":"vehicle",       "order": 20, "ctx": "vlua", "onDown"  :"controller.mainController.setStarter(true)", "onUp"  :"controller.mainController.setStarter(false)", "title": "Engine Starter Motor", "desc": "Activates the engine starter motor" },
+
+// vehicle functions
+"toggleESCMode"           :{"cat":"vehicle",       "order": 21, "ctx": "vlua", "onDown"  :"controller.getControllerSafe('esc').toggleESCMode()", "title": "Toggle ESC Mode", "desc": "Toggles ESC modes" },
+"toggle_headlights"       :{"cat":"vehicle",       "order": 22, "ctx": "vlua", "onDown"  :"electrics.toggle_lights()", "title": "Headlights", "desc": "Toggles headlights" },
+"toggle_foglights"        :{"cat":"vehicle",       "order": 23, "ctx": "vlua", "onDown"  :"electrics.toggle_fog_lights()", "title": "Foglights", "desc": "Toggles foglights" },
+"toggle_left_signal"      :{"cat":"vehicle",       "order": 24, "ctx": "vlua", "onDown"  :"electrics.toggle_left_signal()", "title": "Left Signal", "desc": "Toggles left turn signal" },
+"toggle_right_signal"     :{"cat":"vehicle",       "order": 25, "ctx": "vlua", "onDown"  :"electrics.toggle_right_signal()", "title": "Right Signal", "desc": "Toggles right turn signal" },
+"toggle_hazard_signal"    :{"cat":"vehicle",       "order": 26, "ctx": "vlua", "onDown"  :"electrics.toggle_warn_signal()", "title": "Hazard Lights", "desc": "Toggles hazard lights" },
+"toggle_lightbar_signal"  :{"cat":"vehicle",       "order": 27, "ctx": "vlua", "onDown"  :"electrics.toggle_lightbar_signal()", "title": "Lightbar Lights", "desc": "Toggles lightbar lights" },
+"horn"                    :{"cat":"vehicle",       "order": 22, "ctx": "vlua", "onDown"  :"electrics.horn(true)", "onUp"  :"electrics.horn(false)", "title": "Horn", "desc": "Horn" },
+
+"toggleDiffMode"          :{"cat":"vehicle",       "order": 28, "ctx": "vlua", "onDown"  :"powertrain.toggleDefaultDiffs()", "title": "Toggle Differential Mode", "desc": "Toggles through available differential modes" },
+"toggle4WDStatus"         :{"cat":"vehicle",       "order": 29, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('4wd')) do v.toggle4WD() end", "title": "Toggle 4WD Status", "desc": "Disconnects/Connects toggleable shafts, go switch between 4WD and RWD for example" },
+"toggleRangeStatus"       :{"cat":"vehicle",       "order": 30, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('4wd')) do v.toggleRange() end", "title": "Toggle Range Status", "desc": "Switches between low and high ranges" },
+
+"toggleTransbrake"        :{"cat":"vehicle",       "order": 31, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('transbrake')) do v.toggleTransbrake() end", "title": "Toggle transbrake", "desc": "Switches between engaged and disengaged transmission brake" },
+"toggleLineLock"          :{"cat":"vehicle",       "order": 32, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('lineLock')) do v.toggleLineLock() end", "title": "Toggle line lock", "desc": "Switches between engaged and disengaged brake line lock" },
+
+"overrideNitrousOxide"    :{"cat":"vehicle",       "order": 33, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('nitrousOxideInjection')) do v.setOverride(true) end", "onUp"  :"for _,v in pairs(controller.getControllersByType('nitrousOxideInjection')) do v.setOverride(false) end", "title": "Activate Nitrous Oxide Injection", "desc": "Hold to use the Nitrous Oxide Injection system at any time" },
+"toggleNitrousOxide"      :{"cat":"vehicle",       "order": 34, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('nitrousOxideInjection')) do v.toggleActive() end", "title": "Toggle Nitrous Oxide Injection", "desc": "Toggle the Nitrous Oxide Injection system and automatically use it under the matching circumstances" },
+
+
+
+//vehicle extensions
+//Cruise Control
+"set_cc_speed"            :{"cat":"vehicle",       "order": 50, "ctx": "vlua", "onDown"  :"extensions.use('cruiseControl').holdCurrentSpeed()", "title": "Set Cruise Control Speed", "desc": "Sets the current vehicle speed as the target speed for the cruise control" },
+"reset_cc_speed"          :{"cat":"vehicle",       "order": 51, "ctx": "vlua", "onDown"  :"extensions.use('cruiseControl').setEnabled(true)", "title": "Reset Cruise Control Speed", "desc": "Resets the previous speed as the target speed for the cruise control" },
+"increase_cc_speed"       :{"cat":"vehicle",       "order": 52, "ctx": "vlua", "onDown"  :"extensions.use('cruiseControl').changeSpeed( 1/3.6)", "title": "Increase Cruise Control Speed", "desc": "Increases the cruise control target speed by 1 m/s" },
+"decrease_cc_speed"       :{"cat":"vehicle",       "order": 53, "ctx": "vlua", "onDown"  :"extensions.use('cruiseControl').changeSpeed(-1/3.6)", "title": "Decrease Cruise Control Speed", "desc": "Decreases the cruise control target speed by 1 m/s" },
+"disable_cc"              :{"cat":"vehicle",       "order": 54, "ctx": "vlua", "onDown"  :"extensions.use('cruiseControl').setEnabled(false)", "title": "Disable Cruise Control", "desc": "Disables the cruise control" },
+
+// deprecated keys
+"key_q"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.Q = true", "onUp": "input.keys.Q = false", "title": "Q-function", "desc": "'Q' key function (to be deprecated)" },
+"key_e"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.E = true", "onUp": "input.keys.E = false", "title": "E-function", "desc": "'E' key function (to be deprecated)" },
+"key_w"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.W = true", "onUp": "input.keys.W = false", "title": "W-function", "desc": "'W' key function (to be deprecated)" },
+"key_s"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.S = true", "onUp": "input.keys.S = false", "title": "S-function", "desc": "'S' key function (to be deprecated)" },
+"key_a"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.A = true", "onUp": "input.keys.A = false", "title": "A-function", "desc": "'A' key function (to be deprecated)" },
+"key_d"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.D = true", "onUp": "input.keys.D = false", "title": "D-function", "desc": "'D' key function (to be deprecated)" },
+"key_t"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.T = true", "onUp": "input.keys.T = false", "title": "T-function", "desc": "'T' key function (to be deprecated)" },
+"key_f"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.F = true", "onUp": "input.keys.F = false", "title": "F-function", "desc": "'F' key function (to be deprecated)" },
+"key_g"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.G = true", "onUp": "input.keys.G = false", "title": "G-function", "desc": "'G' key function (to be deprecated)" },
+"key_h"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.H = true", "onUp": "input.keys.H = false", "title": "H-function", "desc": "'H' key function (to be deprecated)" },
+"key_r"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.R = true", "onUp": "input.keys.R = false", "title": "R-function", "desc": "'R' key function (to be deprecated)" },
+"key_y"                   :{"cat":"vehicle",       "order":100, "ctx": "vlua", "onDown"  :"input.keys.Y = true", "onUp": "input.keys.Y = false", "title": "Y-function", "desc": "'Y' key function (to be deprecated)" },
+
+
+// gameplay speed
+"realtime_motion"         :{"cat":"slowmotion",    "order":  1, "ctx": "tlua", "onDown"  :"bullettime.selectPreset('^')", "title": "Real Time", "desc": "Resets to real time" },
+"slow_motion"             :{"cat":"slowmotion",    "order":  2, "ctx": "tlua", "onDown"  :"bullettime.selectPreset('v')", "title": "Slow Motion", "desc": "Jumps to a predefined slow motion speed" },
+"slower_motion"           :{"cat":"slowmotion",    "order":  3, "ctx": "tlua", "onDown"  :"bullettime.selectPreset('<')", "title": "Slower motion", "desc": "Slows down time" },
+"faster_motion"           :{"cat":"slowmotion",    "order":  4, "ctx": "tlua", "onDown"  :"bullettime.selectPreset('>')", "title": "Faster motion", "desc": "Speeds up time" },
+"jumpAhead"               :{"cat":"slowmotion",    "order":  5, "ctx": "tlua", "onDown"  :"core_replay.jump(  1)", "actionMap": "ReplayPlayback", "title": "Short seek ahead", "desc": "Seeks replay forward in time" },
+"jumpBack"                :{"cat":"slowmotion",    "order":  6, "ctx": "tlua", "onDown"  :"core_replay.jump( -1)", "actionMap": "ReplayPlayback", "title": "Short seek back", "desc": "Seeks replay back in time" },
+"jumpFarAhead"            :{"cat":"slowmotion",    "order":  7, "ctx": "tlua", "onDown"  :"core_replay.jump( 15)", "actionMap": "ReplayPlayback", "title": "Long seek ahead", "desc": "Seeks replay far forward in time" },
+"jumpFarBack"             :{"cat":"slowmotion",    "order":  8, "ctx": "tlua", "onDown"  :"core_replay.jump(-15)", "actionMap": "ReplayPlayback", "title": "Long seek back", "desc": "Seeks replay far back in time" },
+
+
+// vehicle camera related things
+"switch_camera_next"      :{"cat":"camera",  "order":  1, "ctx": "tlua", "onDown"  :"core_camera.switchCamera(PLAYER, 1)", "isBasic":true, "title": "Next camera", "desc": "Switches the next camera" },
+"switch_camera_prev"      :{"cat":"camera",  "order":  1, "ctx": "tlua", "onDown"  :"core_camera.switchCamera(PLAYER, -1)", "isBasic":true, "title": "Previous camera", "desc": "Switches the previous camera" },
+"center_camera"           :{"cat":"camera",  "order":  2, "ctx": "tlua", "onDown"  :"core_camera.resetCamera(PLAYER)", "title": "Center Camera", "desc": "Centers the camera" },
+"look_back"               :{"cat":"camera",  "order":  3, "ctx": "tlua", "onDown"  :"core_camera.lookBack(PLAYER)", "isBasic":true, "title": "Look Back", "desc": "Point the camera backwards" },
+"movefast"                :{"cat":"camera",  "order":  4, "ctx": "ts",   "onDown"  :"$Camera::movementSpeed *= 3", "onUp":"$Camera::movementSpeed /= 3", "title": "Move Faster", "desc": "Moves the camera faster (if camera supports it)" },
+"changeCameraSpeed"       :{"cat":"camera",  "order":  5, "ctx": "tlua", "onChange":"commands.changeCameraSpeed(VALUE)", "isCentered": true, "title": "Change speed", "desc": "Increases/decreases the camera speed" },
+
+// camera rotation
+"rotate_camera_left"      :{"cat":"camera",  "order": 10, "ctx": "ts",   "onChange":"rotate_camera_horizontal(-1 * VALUE)", "title": "Rotate Camera Left",  "desc": "Rotates the camera left" },
+"rotate_camera_right"     :{"cat":"camera",  "order": 11, "ctx": "ts",   "onChange":"rotate_camera_horizontal(     VALUE)", "title": "Rotate Camera Right", "desc": "Rotates the camera right" },
+"rotate_camera_horizontal":{"cat":"camera",  "order": 12, "ctx": "ts",   "onChange":"rotate_camera_horizontal(     VALUE)", "isCentered": true, "title": "Rotate Camera Horizontally", "desc": "Rotate camera left/right" },
+"rotate_camera_hz_mouse"  :{"cat":"camera",  "order": 13, "ctx": "ts",   "onRelative":"camXChange(VALUE)", "isCentered": true, "title": "Rotate Camera Horizontally (RMB)", "desc": "Rotate camera left/right (holding right mouse button)" },
+"rotate_camera_down"      :{"cat":"camera",  "order": 14, "ctx": "ts",   "onChange":"rotate_camera_vertical(-1 * VALUE)", "title": "Rotate Camera Down",  "desc": "Rotates the camera down" },
+"rotate_camera_up"        :{"cat":"camera",  "order": 15, "ctx": "ts",   "onChange":"rotate_camera_vertical(     VALUE)", "title": "Rotate Camera Up",    "desc": "Rotates the camera up" },
+"rotate_camera_vertical"  :{"cat":"camera",  "order": 16, "ctx": "ts",   "onChange":"rotate_camera_vertical(     VALUE)", "isCentered": true, "title": "Rotate Camera Vertically", "desc": "Rotate camera up/down" },
+"rotate_camera_vt_mouse"  :{"cat":"camera",  "order": 17, "ctx": "ts",   "onRelative":"camYChange(VALUE)", "isCentered": true, "title": "Rotate Camera Vertically (RMB)", "desc": "Rotate camera up/down (holding right mouse button)" },
+
+// camera zoom
+"increase_zoom"   :{"cat":"camera",  "order": 20, "ctx": "ts",   "onChange":"cameraZoom(-0.1 * VALUE)", "title": "Zoom In",  "desc": "Zooms camera in" },
+"decrease_zoom"   :{"cat":"camera",  "order": 21, "ctx": "ts",   "onChange":"cameraZoom( 0.1 * VALUE)", "title": "Zoom Out", "desc": "Zooms camera out" },
+
+// flying camera movement
+"toggleCamera"            :{"cat":"camera",  "order": 30, "ctx": "tlua", "onDown"  :"commands.toggleCamera(PLAYER)", "title": "Toggle Flying Camera", "desc": "Toggles from regular cameras to flying camera" },
+"moveforward"             :{"cat":"camera",  "order": 31, "ctx": "ts",   "onChange":"moveforward(VALUE)", "title": "Move Forward", "desc": "Moves the flying camera forwards" },
+"movebackward"            :{"cat":"camera",  "order": 32, "ctx": "ts",   "onChange":"movebackward(VALUE)", "title": "Move Backward", "desc": "Moves the flying camera backwards" },
+"moveleft"                :{"cat":"camera",  "order": 33, "ctx": "ts",   "onChange":"moveleft(VALUE)", "title": "Move Left", "desc": "Moves the flying camera to the left" },
+"moveright"               :{"cat":"camera",  "order": 34, "ctx": "ts",   "onChange":"moveright(VALUE)", "title": "Move Right", "desc": "Moves the flying camera to the right" },
+"moveup"                  :{"cat":"camera",  "order": 35, "ctx": "ts",   "onChange":"moveup(VALUE)", "title": "Move Up", "desc": "Moves the flying camera up" },
+"movedown"                :{"cat":"camera",  "order": 36, "ctx": "ts",   "onChange":"movedown(VALUE)", "title": "Move Down", "desc": "Moves the flying camera down" },
+
+// other modes
+"toggleFirstPerson"       :{"cat":"camera",  "order": 40, "ctx": "tlua",   "onDown"  :"commands.toggleFirstPerson()", "title": "Toggle First Person", "desc": "Toggles first person" },
+
+// space mouse
+"xAxisAbs"                :{"cat":"camera",  "order": 50, "ctx": "ts",   "onChange":"xAxisAbs(VALUE)", "isCentered": true, "title": "xAxisAbs" ,"desc": "3d Space Mouse lateral position" },
+"yAxisAbs"                :{"cat":"camera",  "order": 51, "ctx": "ts",   "onChange":"yAxisAbs(VALUE)", "isCentered": true, "title": "yAxisAbs", "desc": "3d Space Mouse forward/backward position" },
+"zAxisAbs"                :{"cat":"camera",  "order": 52, "ctx": "ts",   "onChange":"zAxisAbs(VALUE)", "isCentered": true, "title": "zAxisAbs", "desc": "3d Space Mouse vertical position" },
+"pitchAbs"                :{"cat":"camera",  "order": 53, "ctx": "ts",   "onChange":"pitchAbs(VALUE)", "isCentered": true, "title": "pitchAbs", "desc": "3d Space Mouse pitch rotation" },
+"rollAbs"                 :{"cat":"camera",  "order": 54, "ctx": "ts",   "onChange":"rollAbs (VALUE)", "isCentered": true, "title": "rollAb",   "desc": "3d Space Mouse roll rotation" },
+"yawAbs"                  :{"cat":"camera",  "order": 55, "ctx": "ts",   "onChange":"yawAbs  (VALUE)", "isCentered": true, "title": "yawAbs",   "desc": "3d Space Mouse yaw rotation" },
+
+// camera hotkeys
+"camera_1"         :{"cat":"camera",  "order":101, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 1)", "title": "Camera 1", "desc": "Switch to camera 1" },
+"camera_2"         :{"cat":"camera",  "order":102, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 2)", "title": "Camera 2", "desc": "Switch to camera 2" },
+"camera_3"         :{"cat":"camera",  "order":103, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 3)", "title": "Camera 3", "desc": "Switch to camera 3" },
+"camera_4"         :{"cat":"camera",  "order":104, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 4)", "title": "Camera 4", "desc": "Switch to camera 4" },
+"camera_5"         :{"cat":"camera",  "order":105, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 5)", "title": "Camera 5", "desc": "Switch to camera 5" },
+"camera_6"         :{"cat":"camera",  "order":116, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 6)", "title": "Camera 6", "desc": "Switch to camera 6" },
+"camera_7"         :{"cat":"camera",  "order":117, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 7)", "title": "Camera 7", "desc": "Switch to camera 7" },
+"camera_8"         :{"cat":"camera",  "order":118, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 8)", "title": "Camera 8", "desc": "Switch to camera 8" },
+"camera_9"         :{"cat":"camera",  "order":119, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 9)", "title": "Camera 9", "desc": "Switch to camera 9" },
+"camera_10"        :{"cat":"camera",  "order":120, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER,10)", "title": "Camera 10","desc": "Switch to camera 10"},
+
+// gameplay
+"reset_physics"           :{"cat":"gameplay", "order":  1, "ctx": "tlua", "onDown"  :"be:resetVehicle(PLAYER)", "isBasic":true, "title": "Retry Scenario", "desc": "Restarts the current scenario" },
+"recover_vehicle"         :{"cat":"gameplay", "order":  2, "ctx": "vlua", "onDown"  :"recovery.startRecovering()", "onUp": "recovery.stopRecovering()", "isBasic":true, "title": "Recover Vehicle", "desc": "Rewinds vehicle position" },
+
+"switch_previous_vehicle" :{"cat":"gameplay", "order": 10, "ctx": "tlua", "onDown"  :"be:enterNextVehicle(PLAYER, -1)", "title": "Switch to Previous Vehicle", "desc": "Switches focus to previous vehicle" },
+"switch_next_vehicle"     :{"cat":"gameplay", "order": 11, "ctx": "tlua", "onDown"  :"be:enterNextVehicle(PLAYER,  1)","title": "Switch to Next Vehicle", "desc": "Switches focus to next vehicle" },
+
+"accept"                  :{"cat":"gameplay", "order": 12, "ctx": "tlua", "onDown"  :"campaign_exploration:accept()",           "actionMap": "ExplorationMissionUI",    "title": "Mission accept action",  "desc": "Accept the current mission" },
+"decline"                 :{"cat":"gameplay", "order": 13, "ctx": "tlua", "onDown"  :"campaign_exploration:decline()",          "actionMap": "ExplorationMissionUI",    "title": "Mission decline action", "desc": "Decline the current mission" },
+"set_checkpoint"          :{"cat":"gameplay", "order": 14, "ctx": "tlua", "onDown"  :"core_checkpoints.setCheckpoint(PLAYER)",  "actionMap": "ExplorationCheckpoints",  "title": "Save a checkpoint",      "desc": "Save a checkpoint to return to at any time" },
+"goto_checkpoint"         :{"cat":"gameplay", "order": 15, "ctx": "tlua", "onDown"  :"if core_checkpoints then core_checkpoints.teleportToCheckpoint(PLAYER) end",      "title": "Teleport to checkpoint", "desc": "Teleport to a saved checkpoint" },
+"toggle_minimap"          :{"cat":"gameplay", "order": 16, "ctx": "tlua", "onDown"  :"campaign_exploration:toggleMinimap()",    "actionMap": "ExplorationGeneral",      "title": "Toggle minimap",         "desc": "Toggles the minimap of the level" },
+
+// node grabing
+"nodegrabberRender"       :{"cat":"gameplay", "order": 20, "ctx": "tlua", "onChange":"be.nodeGrabber:renderNodes(VALUE ~= 0)", "title": "Show nodegrabber nodes", "desc": "Displays nodes that can be grabbed", "isBasic":true },
+"nodegrabberGrab"         :{"cat":"gameplay", "order": 21, "ctx": "tlua", "onChange":"be.nodeGrabber:onMouseButton(VALUE ~= 0)", "title": "Grab focused node", "desc": "Start/stop moving the currently focused node", "isBasic":true },
+"nodegrabberStrength"     :{"cat":"gameplay", "order": 22, "ctx": "tlua", "onChange":"be.nodeGrabber:addStrength(VALUE*5)", "isCentered":true, "title": "Change nodegrabber strength", "desc": "Change the strength with which nodes are grabbed", "isBasic":true },
+"nodegrabberAction"       :{"cat":"gameplay", "order": 23, "ctx": "tlua", "onDown"  :"be.nodeGrabber:fixCurrentNode()", "title": "Hang/couple/decouple node", "desc": "Hangs the node in the air, or couples it with another node", "isBasic":true },
+
+// couplers
+"couplersToggle"          :{"cat":"gameplay", "order": 30, "ctx": "vlua",   "onDown":"beamstate.toggleCouplers()", "title": "Couplers: Toggle", "desc": "lock / unlock couplers", "isBasic":true },
+"couplersLock"            :{"cat":"gameplay", "order": 31, "ctx": "vlua",   "onDown":"beamstate.attachCouplers()", "title": "Couplers: Lock all", "desc": "locks all couplers", "isBasic":false },
+"couplersUnlock"          :{"cat":"gameplay", "order": 32, "ctx": "vlua",   "onDown":"beamstate.detachCouplers()", "title": "Couplers: Unlock all", "desc": "unlocks all couplers", "isBasic":false },
+
+// other functions
+"saveHome"                :{"cat":"gameplay", "order": 40, "ctx": "vlua", "onDown"  :"recovery.saveHome()", "title": "Set home position", "desc": "Stores current vehicle position for quick access" },
+"loadHome"                :{"cat":"gameplay", "order": 41, "ctx": "vlua", "onDown"  :"recovery.loadHome()", "title": "Load home position", "desc": "Moves the vehicle to its home position" },
+"dropCameraAtPlayer"      :{"cat":"gameplay", "order": 42, "ctx": "tlua",   "onDown"  :"commands.dropCameraAtPlayer()", "title": "Drop Camera at Player", "desc": "Puts the camera at the player" },
+"dropPlayerAtCamera"      :{"cat":"gameplay", "order": 43, "ctx": "tlua",   "onDown"  :"commands.dropPlayerAtCamera()", "title": "Drop Player at Camera", "desc": "Puts the player at the camera" },
+"toggleReplayRecording"   :{"cat":"gameplay", "order": 44, "ctx": "tlua", "onDown"  :"core_replay.toggleRecording()", "isBasic":true, "title": "Record replay", "desc": "Start or stop recording a replay" },
+"cancelReplayRecording"   :{"cat":"gameplay", "order": 44, "ctx": "tlua", "onDown"  :"core_replay.cancelRecording()", "isBasic":true, "title": "Cancel replay recording", "desc": "Stops and discards current replay recording" },
+
+// debug (general)
+"cycle_metrics_fwd"       :{"cat":"debug", "order":  1, "ctx": "ts",   "onDown"  :"cycleMetrics(true)", "title": "Show FPS metrics", "desc": "Cycle through various debug metrics"},
+"cycle_metrics_back"      :{"cat":"debug", "order":  2, "ctx": "ts",   "onDown"  :"cycleMetrics(false)", "title": "Show FPS metrics", "desc": "Cycle through various debug metrics"},
+"toggleEditor"            :{"cat":"debug", "order": 10, "ctx": "ts",   "onDown"  :"toggleEditorDynamic()", "actionMap": "Global", "title": "Editor", "desc": "Opens the terrain editor" },
+"toggleConsole"           :{"cat":"debug", "order": 11, "ctx": "ts",   "onDown"  :"ToggleConsole()", "actionMap": "Global", "title": "Toggle System Console", "desc": "Toggles the console" },
+"toggleRawDt"             :{"cat":"debug", "order": 11, "ctx": "tlua", "onDown"  :"be:setClockType( (1+be:getClockType()) % 3 )", "title": "Toggle Raw DT", "desc": "Toggles Raw DT physics" },
+"clear_console"           :{"cat":"debug", "order": 12, "ctx": "ts",   "onDown"  :"cls()", "actionMap": "Global", "title": "Clear System Console", "desc": "Clears the system console" },
+
+"lua_reload"              :{"cat":"debug", "order": 20, "ctx": "tlua", "onDown"  :"Lua:requestReload(); ui_message('engine.lua.reloaded', 2, 'lua', 'refresh')", "actionMap": "Global", "title": "Reload Lua", "desc": "Reloads vehicle lua" },
+"cefdev_console_toggle"   :{"cat":"debug", "order": 22, "ctx": "ts",   "onDown"  :"toggleCEFDevConsole()", "actionMap": "Global", "title": "Toggle UI Console", "desc": "Toggles the Chromium Embedded (CEF) Console" },
+"flexmeshDebugSelectionToggle" :{"cat":"debug", "order": 22, "ctx": "tlua",   "onChange"  :"be:setFlexMeshDebugSelection(PLAYER, VALUE ~= 0)", "actionMap": "FlexmeshDebug", "title": "Flexmesh Debug", "desc": "Toggles the selection state in Flexmesh Debug" },
+
+// debug (vehicle)
+"reload_vehicle"          :{"cat":"vehicle_debug", "order":  1, "ctx": "tlua", "onDown"  :"be:reloadVehicle(PLAYER)", "isBasic":true, "title": "Reload Vehicle", "desc": "Reloads vehicle files from disk" },
+"debugmode_reset"         :{"cat":"vehicle_debug", "order":  2, "ctx": "vlua", "onDown"  :"bdebug.resetModes()","title": "Clear Debug Modes", "desc": "Removes as many debug visualizations as possible" },
+"debugmode_toggle"        :{"cat":"vehicle_debug", "order":  3, "ctx": "vlua", "onDown"  :"bdebug.toggleEnabled()","title": "Toggle Debug Mode", "desc": "Toggles debug mode" },
+
+"debugmode_skeleton_fwd"  :{"cat":"vehicle_debug", "order": 10, "ctx": "vlua", "onDown"  :"bdebug.skeletonModeChange(1)","title": "Cycle Physics Skeleton", "desc": "Cycles through skeleton debug modes" },
+"debugmode_skeleton_back" :{"cat":"vehicle_debug", "order": 11, "ctx": "vlua", "onDown"  :"bdebug.skeletonModeChange(-1)","title": "Cycle Physics Skeleton (Reverse)", "desc": "Cycles through skeleton debug modes" },
+"debugmode_nodetext_fwd"  :{"cat":"vehicle_debug", "order": 12, "ctx": "vlua", "onDown"  :"bdebug.nodetextModeChange(1)","title": "Cycle Node Information", "desc": "Cycles through node debug modes" },
+"debugmode_nodetext_back" :{"cat":"vehicle_debug", "order": 13, "ctx": "vlua", "onDown"  :"bdebug.nodetextModeChange(-1)","title": "Cycle Node Information (Reverse)", "desc": "Cycles through node debug modes" },
+"debugmode_nodevis_fwd"   :{"cat":"vehicle_debug", "order": 14, "ctx": "vlua", "onDown"  :"bdebug.nodevisModeChange(1)","title": "Cycle Node Visibility", "desc": "Cycles node visibility" },
+"debugmode_nodevis_back"  :{"cat":"vehicle_debug", "order": 15, "ctx": "vlua", "onDown"  :"bdebug.nodevisModeChange(-1)","title": "Cycle Node Visibility (Reverse)", "desc": "Cycles node visibility" },
+"debugmode_meshvis_incr"  :{"cat":"vehicle_debug", "order": 16, "ctx": "vlua", "onDown"  :"bdebug.meshVisChange(0.1)","title": "Increase Mesh Visibility", "desc": "Increases mesh visibility" },
+"debugmode_meshvis_decr"  :{"cat":"vehicle_debug", "order": 17, "ctx": "vlua", "onDown"  :"bdebug.meshVisChange(-0.1)","title": "Decrease Mesh Visibility", "desc": "Decreases mesh visibility" },
+"debugmode_toggle_coltris":{"cat":"vehicle_debug", "order": 18, "ctx": "vlua", "onDown"  :"bdebug.toggleColTris()","title": "Toggle Collision Triangle Debug", "desc": "Shows collision triangle debug" },
+"debugmode_cog_fwd"       :{"cat":"vehicle_debug", "order": 19, "ctx": "vlua", "onDown"  :"bdebug.cogChange(1)","title": "Toggle Center of Gravity Debug", "desc": "Shows center of gravity debug" },
+"debugmode_cog_decr"      :{"cat":"vehicle_debug", "order": 20, "ctx": "vlua", "onDown"  :"bdebug.cogChange(-1)","title": "Toggle Center of Gravity Debug (Reverse)", "desc": "Shows center of gravity debug" },
+
+// game engine general
+"pause"          :{"cat":"general", "order":  1, "ctx": "tlua", "onDown"  :"bullettime.togglePause()", "isBasic":true, "title": "Pause", "desc": "Pauses the game or replay" },
+"quit"                    :{"cat":"general", "order":  2, "ctx": "ts",   "onDown"  :"quit()", "actionMap": "Global", "title": "Quit", "desc": "Quits the game" },
+"toggle_fullscreen"       :{"cat":"general", "order":  3, "ctx": "ts",   "onDown"  :"Canvas.attemptFullscreenToggle()", "actionMap": "Global", "title": "Toggle Fullscreen", "desc": "Toggles fullscreen" },
+"photomode"               :{"cat":"general", "order": 10, "ctx": "ui",   "onDown"  :"HookManager.trigger('MenuOpenModule', 'photomode')", "title": "Enter Photo Mode", "desc": "Pauses Physics and enters a mode to take pictures" },
+"hide_ui"                 :{"cat":"general", "order": 11, "ctx": "ui",   "onDown"  :"HookManager.trigger('hide_ui')", "actionMap": "Global", "title": "Hide UI", "desc": "Shows or hides the complete User Interface" },
+"doScreenShot"            :{"cat":"general", "order": 12, "ctx": "ts",   "onDown"  :"doScreenShot()", "actionMap": "Global", "title": "Take Screenshot", "desc": "Takes and saves a screenshot" },
+"doBigScreenShot"         :{"cat":"general", "order": 13, "ctx": "ts",   "onDown"  :"doBigScreenShot()", "actionMap": "Global", "title": "Take Big Screenshot", "desc": "Takes and saves a large screenshot" },
+"publishScreenShot"       :{"cat":"general", "order": 14, "ctx": "elua", "onDown"  :"screenshot.publish()", "actionMap": "Global", "isBasic":true, "title": "Publish Screenshot", "desc": "Publishes screenshot" },
+}

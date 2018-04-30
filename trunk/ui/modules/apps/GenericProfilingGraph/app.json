@@ -1,0 +1,17 @@
+{
+  "domElement": "<generic-profiling-graph></generic-profiling-graph>",
+  "name": "ui.apps.generic_profiling_graph.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "This app can be used to profile lua execution",
+  "css": {
+    "left": "0px",
+    "height": "160px",
+    "top": "0px",
+    "width": "450px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "genericProfilingGraph"
+}

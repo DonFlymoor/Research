@@ -1,0 +1,119 @@
+#include "shaders/common/hlsl.h"
+
+#include "./postFx.hlsl"
+#include "shaders/common/bge.hlsl"
+
+//-----------------------------------------------------------------------------
+// Defines                                                                  
+//-----------------------------------------------------------------------------
+
+// oceanFogData
+#define FOG_DENSITY        waterFogData[0]
+#define FOG_DENSITY_OFFSET waterFogData[1]
+#define WET_DEPTH          waterFogData[2]
+#define WET_DARKENING      waterFogData[3]
+
+//-----------------------------------------------------------------------------
+// Uniforms                                                                  
+//-----------------------------------------------------------------------------
+
+uniform_sampler2D( prepassTex, 0);
+uniform_sampler2D( prepassDepthTex, 1);
+uniform_sampler2D( backbuffer, 2);
+uniform_sampler1D( waterDepthGradMap, 3);
+
+uniform float3    eyePosWorld;
+uniform float3    ambientColor;     
+uniform float4    waterColor;       
+uniform float4    waterFogData;    
+uniform float4    waterFogPlane;    
+uniform float2    nearFar;      
+uniform float4    rtParams0;
+uniform float     waterDepthGradMax;
+
+
+float4 main( PFXVertToPix IN ) : SV_Target
+{    
+   //float2 prepassCoord = IN.uv0;
+   //IN.uv0 = ( IN.uv0.xy * rtParams0.zw ) + rtParams0.xy;
+   float depth = decodeGBuffer( prepassDepthTex, prepassTex, IN.uv0, projParams ).w;
+   //return float4( depth.rrr, 1 );
+   
+   // Skip fogging the extreme far plane so that 
+   // the canvas clear color always appears.
+   //clip( 0.9 - depth );
+   
+   // We assume that the eye position is below water because
+   // otherwise this shader/posteffect should not be active.
+   
+   depth *= nearFar.y;
+   
+   float3 eyeRay = normalize( IN.wsEyeRay );
+   
+   float3 rayStart = eyePosWorld;
+   float3 rayEnd = eyePosWorld + ( eyeRay * depth );
+   //return float4( rayEnd, 1 );
+   
+   float4 plane = waterFogPlane; //float4( 0, 0, 1, -waterHeight );
+   //plane.w -= 0.15;
+   
+   float startSide = dot( plane.xyz, rayStart ) + plane.w;
+   if ( startSide > 0 )
+   {
+      rayStart.z -= ( startSide );
+      //return float4( 1, 0, 0, 1 );
+   }
+
+   float3 hitPos;
+   float3 ray = rayEnd - rayStart;
+   float rayLen = length( ray );
+   float3 rayDir = normalize( ray );
+   
+   float endSide = dot( plane.xyz, rayEnd ) + plane.w;     
+   float planeDist;
+   
+   if ( endSide < -0.005 )    
+   {  
+      //return float4( 0, 0, 1, 1 );   
+      hitPos = rayEnd;
+      planeDist = endSide;
+   }
+   else
+   {   
+      //return float4( 0, 0, 0, 0 );
+      float den = dot( ray, plane.xyz );
+      
+      // Parallal to the plane, return the endPnt.
+      //if ( den == 0.0f )
+      //   return endPnt;          
+      
+      float dist = -( dot( plane.xyz, rayStart ) + plane.w ) / den;  
+      if ( dist < 0.0 )         
+         dist = 0.0;
+         //return float4( 1, 0, 0, 1 );
+      //return float4( ( dist ).rrr, 1 );
+              
+         
+      hitPos = lerp( rayStart, rayEnd, dist );
+      
+      planeDist = dist;
+   }
+      
+   float delta = length( hitPos - rayStart );  
+      
+   float fogAmt = 1.0 - saturate( exp( -FOG_DENSITY * ( delta - FOG_DENSITY_OFFSET ) ) );   
+   //return float4( fogAmt.rrr, 1 );
+
+   // Calculate the water "base" color based on depth.
+   float4 fogColor = waterColor * tex1D( waterDepthGradMap, saturate( delta / waterDepthGradMax ));      
+   // Modulate baseColor by the ambientColor.
+   fogColor *= float4( ambientColor.rgb, 1 );
+   
+   float3 inColor = hdrDecode( tex2D( backbuffer, IN.uv0 ).rgb );
+   inColor.rgb *= 1.0 - saturate( abs( planeDist ) / WET_DEPTH ) * WET_DARKENING;
+   //return float4( inColor, 1 );
+   
+   float3 outColor = lerp( inColor, fogColor.rgb, fogAmt );
+   
+   return float4( hdrEncode( outColor ), 1 );        
+}

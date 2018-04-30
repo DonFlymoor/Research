@@ -1,0 +1,19 @@
+{
+  "domElement": "<esc-stiffness></esc-stiffness>",
+  "name": "ui.apps.escstiffness.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "An app which helps you calibrate an ESC configuration",
+  "css": {
+    "left": "20px",
+    "height": "210px",
+    "width": "250px",
+    "min-width": "250px",
+    "min-height": "210px",
+    "top": "100px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "escStiffness"
+}

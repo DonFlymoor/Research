@@ -1,0 +1,48 @@
+<div class="container downloading local" layout="column">
+  <div layout="column" layout-align="center center" class="md-padding" >
+    <md-button class="md-raised" ng-click="checkUpdates()" ng-disabled="checkingUpdates || modSchCtrl.updating">{{ 'ui.repository.scheduled_chk' | translate}}</md-button>
+    <div ng-show="checkingUpdates">{{ 'ui.repository.scheduled_chking' | translate}}</div>
+  </div>
+  <div ng-repeat="item in modSchCtrl.list | orderBy:'-date' track by $index" layout="column" style=" cursor: pointer;" flex="10" class="md-padding" ng-class="{modInactive: item.hasConflict, modActive: !item.hasConflict&&item.update, entry: !item.hasConflict&&!item.update}" ng-click="selectMod(item)" >
+    <div class="topReserved"></div>
+    <div layout="row" layout-align="start center">
+      <div> <input type="checkbox" ng-model="item.update" ng-click="$event.stopPropagation();"> </div>
+      <div flex="50">{{:: item.filename}}</div>
+      <div flex>
+        <!-- <div style="position: relative;" layout="row" layout-align="start center">
+          <div style="position: absolute; bottom: 100%; text-align: left;" class="smallText" layout="row">
+            {{ 'ui.repository.scheduled_date' | translate}}
+          </div>
+          {{ item.date }}
+        </div> -->
+      </div>
+      <div>
+        <md-button class="md-raised" ng-click="showConflict(item); $event.stopPropagation();" ng-if="item.conflict.length" >{{ 'ui.repository.scheduled_conflicts' | translate}}</md-button>
+        <div ng-if="item.conflict === undefined">{{ 'ui.repository.scheduled_no_conflict' | translate}}</div>
+      </div>
+    </div>
+    <div layout="row" layout-align="space-between end" class="smallText">
+      <div flex=20>
+        {{ 'ui.repository.scheduled_reason' | translate}}: {{:: item.reason}}
+      </div>
+      <div flex>
+        URI:<a>{{:: item.uri}}</a>
+      </div>
+      <div flex>
+        {{ 'ui.repository.scheduled_status' | translate}}:<a>{{ item.state}}</a>
+      </div>
+      <div>
+        Size: {{:: item.filesize | bytes}}
+      </div>
+    </div>
+  </div>
+  <div ng-show="modSchCtrl.list.length === 0" layout="row" layout-align="center center" class="md-padding" >
+    {{ 'ui.repository.scheduled_nothing' | translate}}
+  </div>
+  <div ng-show="modSchCtrl.list.length !== 0" layout="row" layout-align="left center" class="md-padding" >
+    <md-button class="md-raised" ng-click="update()" ng-disabled="modSchCtrl.updating || checkingUpdates">{{ 'ui.repository.scheduled_upd' | translate}}</md-button>
+  </div>
+  <div ng-show="modSchCtrl.metered" layout="row" layout-align="center center" class="md-padding" >
+    {{ 'ui.repository.scheduled_network_limit' | translate}}
+  </div>
+</div>

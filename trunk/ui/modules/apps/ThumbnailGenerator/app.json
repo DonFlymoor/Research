@@ -1,0 +1,19 @@
+{
+  "domElement": "<thumbnail-generator></thumbnail-generator>",
+  "name": "ui.apps.thumbnail_generator.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Generates thumbnails for vehicles.",
+  "css": {
+    "left": "200px",
+    "height": "600px",
+    "width": "370px",
+    "min-width": "300px",
+    "min-height": "320px",
+    "top": "200px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "thumbnailGenerator"
+}
