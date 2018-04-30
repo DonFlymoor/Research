@@ -1,0 +1,114 @@
+{
+"bogie_tire_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Front Tires",
+        "value":1000,
+    }
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["tire_02a_22x10_41", ["bogie_wheel_FR","bogie_tire_FR"], [], {"pos":{"x":-0.80, "y":-0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["tire_02a_22x10_41", ["bogie_wheel_FL","bogie_tire_FL"], [], {"pos":{"x": 0.80, "y":-0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["tire_02a_22x10_41", ["bogie_wheel_FR","bogie_tire_FR"], [], {"pos":{"x":-1.13, "y":-0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["tire_02a_22x10_41", ["bogie_wheel_FL","bogie_tire_FL"], [], {"pos":{"x": 1.13, "y":-0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+     ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$tirepressure_F", "range", "psi", "Wheels", 80, 0, 100, "Front Tire Pressure", "Relative to atmospheric pressure"]
+    ],
+    "slotType" : "bogie_tire_F",
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            {"enableTireLbeams":false,"enableTireReinfBeams":true,"disableMeshBreaking":false,"disableHubMeshBreaking":false},
+            //{"enableTirePeripheryReinfBeams":true},
+
+            //general settings
+            {"radius":0.525},
+            {"tireWidth":0.57},
+
+            //tire options
+            {"wheelSideBeamSpring":0,"wheelSideBeamDamp":50},
+            {"wheelSideBeamSpringExpansion":2001000,"wheelSideBeamDampExpansion":50},
+            {"wheelSideTransitionZone":0.0,"wheelSideBeamPrecompression":0.98},
+            {"wheelReinfBeamSpring":101000,"wheelReinfBeamDamp":200},
+            {"wheelTreadBeamSpring":601000,"wheelTreadBeamDamp":500},
+            {"wheelPeripheryBeamSpring":2001000,"wheelPeripheryBeamDamp":250},
+
+            //deform values
+            {"wheelSideBeamDeform":78000,"wheelSideBeamStrength":82000},
+            {"wheelReinfBeamDeform":78000,"wheelReinfBeamStrength":82000},
+            {"wheelTreadBeamDeform":78000,"wheelTreadBeamStrength":96000},
+            {"wheelPeripheryBeamDeform":158000,"wheelPeripheryBeamStrength":176000},
+
+            //general tire values
+            {"nodeWeight":0.85},
+            {"nodeMaterial":"|NM_RUBBER","hasTire":true},
+            {"frictionCoef":1},
+            {"slidingFrictionCoef":1},
+            {"noLoadCoef":1.12},
+            {"loadSensitivitySlope":0.000004},
+            {"fullLoadCoef":0.25},
+            {"softnessCoef":0.3},
+            {"treadCoef":0.5},
+            {"triangleCollision":false},
+            {"pressurePSI":"$tirepressure_F"},
+            {"dragCoef":5},
+    ],
+}
+"bogie_tire_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Rear Tires",
+        "value":1000,
+    }
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["tire_02a_22x10_41", ["bogie_wheel_RR","bogie_tire_RR"], [], {"pos":{"x":-0.80, "y":0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["tire_02a_22x10_41", ["bogie_wheel_RL","bogie_tire_RL"], [], {"pos":{"x": 0.80, "y":0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["tire_02a_22x10_41", ["bogie_wheel_RR","bogie_tire_RR"], [], {"pos":{"x":-1.13, "y":0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["tire_02a_22x10_41", ["bogie_wheel_RL","bogie_tire_RL"], [], {"pos":{"x": 1.13, "y":0.62, "z":0.43}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+     ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$tirepressure_R", "range", "psi", "Wheels", 80, 0, 100, "Rear Tire Pressure", "Relative to atmospheric pressure"]
+    ],
+    "slotType" : "bogie_tire_R",
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            {"enableTireLbeams":false,"enableTireReinfBeams":true,"disableMeshBreaking":false,"disableHubMeshBreaking":false},
+            //{"enableTirePeripheryReinfBeams":true},
+
+            //general settings
+            {"radius":0.525},
+            {"tireWidth":0.57},
+
+            //tire options
+            {"wheelSideBeamSpring":0,"wheelSideBeamDamp":50},
+            {"wheelSideBeamSpringExpansion":2001000,"wheelSideBeamDampExpansion":50},
+            {"wheelSideTransitionZone":0.0,"wheelSideBeamPrecompression":0.98},
+            {"wheelReinfBeamSpring":101000,"wheelReinfBeamDamp":200},
+            {"wheelTreadBeamSpring":601000,"wheelTreadBeamDamp":500},
+            {"wheelPeripheryBeamSpring":2001000,"wheelPeripheryBeamDamp":250},
+
+            //deform values
+            {"wheelSideBeamDeform":78000,"wheelSideBeamStrength":82000},
+            {"wheelReinfBeamDeform":78000,"wheelReinfBeamStrength":82000},
+            {"wheelTreadBeamDeform":78000,"wheelTreadBeamStrength":96000},
+            {"wheelPeripheryBeamDeform":158000,"wheelPeripheryBeamStrength":176000},
+
+            //general tire values
+            {"nodeWeight":0.85},
+            {"nodeMaterial":"|NM_RUBBER","hasTire":true},
+            {"frictionCoef":1},
+            {"slidingFrictionCoef":1},
+            {"noLoadCoef":1.12},
+            {"loadSensitivitySlope":0.000004},
+            {"fullLoadCoef":0.25},
+            {"softnessCoef":0.3},
+            {"treadCoef":0.5},
+            {"triangleCollision":false},
+            {"pressurePSI":"$tirepressure_R"},
+            {"dragCoef":5},
+    ],
+}
+}

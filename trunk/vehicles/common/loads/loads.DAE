@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>GabeNY</author>
+      <authoring_tool>OpenCOLLADA for 3ds Max;  ;  </authoring_tool>
+      <source_data>file:///C:/BeamNG/vehicle_artwork/trailers/source/loads.max</source_data>
+    </contributor>
+    <created>2016-08-03T22:29:31</created>
+    <modified>2016-08-03T22:29:31</modified>
+    <unit name="centimeter" meter="0.01"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="crate_cola">
+      <profile_COMMON>
+        <newparam sid="crate_cola_d_tga-surface">
+          <surface type="2D">
+            <init_from>crate_cola_d_tga</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="crate_cola_d_tga-sampler">
+          <sampler2D>
+            <source>crate_cola_d_tga-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="crate_cola_s_tga-surface">
+          <surface type="2D">
+            <init_from>crate_cola_s_tga</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="crate_cola_s_tga-sampler">
+          <sampler2D>
+            <source>crate_cola_s_tga-surface</source>
+          </sampler2D>
+        </newparam>
+        <newparam sid="crate_cola_n_tga-surface">
+          <surface type="2D">
+            <init_from>crate_cola_n_tga</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="crate_cola_n_tga-sampler">
+          <sampler2D>
+            <source>crate_cola_n_tga-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.5882353 0.5882353 0.5882353 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="crate_cola_d_tga-sampler" texcoord="CHANNEL1"/>
+            </diffuse>
+            <specular>
+              <color>0 0 0 1</color>
+            </specular>
+            <shininess>
+              <float>9.999999</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+          <extra>
+            <technique profile="OpenCOLLADA3dsMax">
+              <specularLevel>
+                <texture texture="crate_cola_s_tga-sampler" texcoord="CHANNEL1"/>
+              </specularLevel>
+              <bump bumptype="HEIGHTFIELD">
+                <texture texture="crate_cola_n_tga-sampler" texcoord="CHANNEL1"/>
+              </bump>
+            </technique>
+          </extra>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming type="bool">0</apply_reflection_dimming>
+            <dim_level type="float">0</dim_level>
+            <falloff type="float">0</falloff>
+            <falloff_type type="integer">0</falloff_type>
+            <index_of_refraction type="float">1.5</index_of_refraction>
+            <opacity_type type="integer">0</opacity_type>
+            <reflection_level type="float">3</reflection_level>
+            <wire_size type="float">1</wire_size>
+            <wire_units type="integer">0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock type="bool">1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock type="bool">1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock type="bool">0</diffuse_specular_lock>
+            <self_illumination type="float">0</self_illumination>
+            <soften type="float">0.1</soften>
+            <specular_level type="float">0</specular_level>
+            <use_self_illum_color type="bool">0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+  </library_effects>
+  <library_materials>
+    <material id="crate_cola-material" name="crate_cola">
+      <instance_effect url="#crate_cola"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="geom-crate_cola" name="crate_cola">
+      <mesh>
+        <source id="geom-crate_cola-positions">
+          <float_array id="geom-crate_cola-positions-array" count="24">60 -50 11.5 60 50 11.5 60 -50 111.5 60 50 111.5 -60 -50 11.5 -60.00001 50 11.5 -59.99999 -50 111.5 -60 50 111.5</float_array>
+          <technique_common>
+            <accessor source="#geom-crate_cola-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="geom-crate_cola-normals">
+          <float_array id="geom-crate_cola-normals-array" count="72">1 3.8147e-8 -3.8147e-8 1 3.8147e-8 -3.8147e-8 1 3.8147e-8 -3.8147e-8 1 3.8147e-8 -3.8147e-8 -1 -7.62939e-8 7.62939e-8 -1 -7.62939e-8 7.62939e-8 -1 -7.62939e-8 7.62939e-8 -1 -7.62939e-8 7.62939e-8 -3.17891e-8 -1.749e-15 -1 -3.17891e-8 -2.42532e-15 -1 -3.17891e-8 -1.88898e-15 -1 -3.17891e-8 -1.21266e-15 -1 -3.17891e-8 1 1.749e-15 -3.17891e-8 1 2.42532e-15 -3.17891e-8 1 1.88898e-15 -3.17891e-8 1 1.21266e-15 0 0 1 0 0 1 0 0 0.9999999 0 0 1 3.17891e-8 -1 -1.749e-15 3.17891e-8 -1 -2.42532e-15 3.17891e-8 -1 -1.88898e-15 3.17891e-8 -1 -1.21266e-15</float_array>
+          <technique_common>
+            <accessor source="#geom-crate_cola-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="geom-crate_cola-map1">
+          <float_array id="geom-crate_cola-map1-array" count="72">0.007379115 0.4932378 0 0.007379115 0.04927681 0 0.5401335 0.04927681 0 0.5401335 0.4932378 0 0.5530058 0.8713341 0 0.5530058 0.5081807 0 0.9887906 0.5081807 0 0.9887906 0.8713341 0 0.551774 0.4932378 0 0.551774 0.04927681 0 0.995735 0.04927681 0 0.995735 0.4932378 0 0.551774 0.04927681 0 0.995735 0.04927681 0 0.995735 0.4932378 0 0.551774 0.4932378 0 0.5401335 0.04927681 0 0.5401335 0.4932378 0 0.007379127 0.4932378 0 0.007379127 0.04927681 0 0.540136 0.511973 0 0.540136 0.9559347 0 0.007382884 0.9559347 0 0.007382884 0.511973 0</float_array>
+          <technique_common>
+            <accessor source="#geom-crate_cola-map1-array" count="24" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="geom-crate_cola-vertices">
+          <input semantic="POSITION" source="#geom-crate_cola-positions"/>
+        </vertices>
+        <triangles material="crate_cola" count="12">
+          <input semantic="VERTEX" source="#geom-crate_cola-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#geom-crate_cola-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#geom-crate_cola-map1" offset="2" set="0"/>
+          <p>0 0 9 1 1 10 3 2 11 3 2 11 2 3 8 0 0 9 4 4 13 6 5 14 7 6 15 7 6 15 5 7 12 4 4 13 0 8 5 4 9 6 5 10 7 5 10 7 1 11 4 0 8 5 1 12 1 5 13 2 7 14 3 7 14 3 3 15 0 1 12 1 3 16 21 7 17 22 6 18 23 6 18 23 2 19 20 3 16 21 2 20 17 6 21 18 4 22 19 4 22 19 0 23 16 2 20 17</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_lights>
+    <light id="EnvironmentAmbientLight" name="EnvironmentAmbientLight">
+      <technique_common>
+        <ambient>
+          <color>0 0 0</color>
+        </ambient>
+      </technique_common>
+    </light>
+  </library_lights>
+  <library_images>
+    <image id="crate_cola_d_tga">
+      <init_from>../../../vehicle_artwork/trailers/source/crate_cola_d.tga</init_from>
+    </image>
+    <image id="crate_cola_n_tga">
+      <init_from>../../../vehicle_artwork/trailers/source/crate_cola_n.tga</init_from>
+    </image>
+    <image id="crate_cola_s_tga">
+      <init_from>../../../vehicle_artwork/trailers/source/crate_cola_s.tga</init_from>
+    </image>
+  </library_images>
+  <library_visual_scenes>
+    <visual_scene id="MaxScene">
+      <node name="EnvironmentAmbientLight">
+        <instance_light url="#EnvironmentAmbientLight"/>
+      </node>
+      <node id="node-crate_cola" name="crate_cola">
+        <instance_geometry url="#geom-crate_cola">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="crate_cola" target="#crate_cola-material">
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+        <extra>
+          <technique profile="OpenCOLLADA">
+            <cast_shadows type="bool">1</cast_shadows>
+            <primary_visibility type="integer">1</primary_visibility>
+            <receive_shadows type="bool">1</receive_shadows>
+            <secondary_visibility type="integer">1</secondary_visibility>
+          </technique>
+        </extra>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#MaxScene"/>
+  </scene>
+</COLLADA>

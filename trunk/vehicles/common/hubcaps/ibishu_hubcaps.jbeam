@@ -1,0 +1,730 @@
+{
+"ibishu_hubcap_01a_15_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Blade Front Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_F_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["ibishu_hubcap_01a_15", ["hubcap_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.01, "y":1.01, "z":1.01}}],
+         ["ibishu_hubcap_01a_15", ["hubcap_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.01, "y":1.01, "z":1.01}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15120, "hubcapBeamStrength":22500},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":30},
+            {"hubcapAttachBeamDeform":918, "hubcapAttachBeamStrength":1620},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.15},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"ibishu_hubcap_01a_15_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Blade Rear Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_R_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["ibishu_hubcap_01a_15", ["hubcap_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.01, "y":1.01, "z":1.01}}],
+         ["ibishu_hubcap_01a_15", ["hubcap_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.01, "y":1.01, "z":1.01}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15120, "hubcapBeamStrength":22500},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":30},
+            {"hubcapAttachBeamDeform":918, "hubcapAttachBeamStrength":1620},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.15},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"ibishu_hubcap_03a_15_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Deep Dish Front Hubcaps",
+        "value":100,
+    }
+    "slotType" : "hubcap_F_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["ibishu_hubcap_03a_15", ["hubcap_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+         ["ibishu_hubcap_03a_15", ["hubcap_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15120, "hubcapBeamStrength":22500},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":30},
+            {"hubcapAttachBeamDeform":918, "hubcapAttachBeamStrength":1620},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.15},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"ibishu_hubcap_03a_15_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Deep Dish Rear Hubcaps",
+        "value":100,
+    }
+    "slotType" : "hubcap_R_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["ibishu_hubcap_03a_15", ["hubcap_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+         ["ibishu_hubcap_03a_15", ["hubcap_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15120, "hubcapBeamStrength":22500},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":30},
+            {"hubcapAttachBeamDeform":918, "hubcapAttachBeamStrength":1620},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.15},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"ibishu_hubcap_05a_15_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Straked Front Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_F_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["ibishu_hubcap_05a_15", ["hubcap_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+         ["ibishu_hubcap_05a_15", ["hubcap_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15120, "hubcapBeamStrength":22500},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":30},
+            {"hubcapAttachBeamDeform":918, "hubcapAttachBeamStrength":1620},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.15},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"ibishu_hubcap_05a_15_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Straked Rear Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_R_15",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["ibishu_hubcap_05a_15", ["hubcap_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+         ["ibishu_hubcap_05a_15", ["hubcap_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.05},
+            {"hubcapRadius":0.20},
+            {"hubcapBeamSpring":240600, "hubcapBeamDamp":12}
+            {"hubcapBeamDeform":15120, "hubcapBeamStrength":22500},
+            {"hubcapAttachBeamSpring":120600, "hubcapAttachBeamDamp":30},
+            {"hubcapAttachBeamDeform":918, "hubcapAttachBeamStrength":1620},
+            {"hubcapNodeWeight":0.15},
+            {"hubcapCenterNodeWeight":0.15},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"ibishu_hubcap_02a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu 16 Slot Front Hubcaps",
+        "value":80,
+    },
+
+    "slotType" : "hubcap_F_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_02a_14", ["hubcap_FR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_02a_14", ["hubcap_FL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_02a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu 16 Slot Rear Hubcaps",
+        "value":80,
+    },
+
+    "slotType" : "hubcap_R_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_02a_14", ["hubcap_RR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_02a_14", ["hubcap_RL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_03a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Deep Dish Front Hubcaps",
+        "value":90,
+    },
+
+    "slotType" : "hubcap_F_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_03a_14", ["hubcap_FR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_03a_14", ["hubcap_FL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_03a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Deep Dish Rear Hubcaps",
+        "value":90,
+    },
+
+    "slotType" : "hubcap_R_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_03a_14", ["hubcap_RR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_03a_14", ["hubcap_RL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.18},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_04a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu White Dish Front Hubcaps",
+        "value":110,
+    },
+
+    "slotType" : "hubcap_F_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_04a_14", ["hubcap_FR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_04a_14", ["hubcap_FL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.12},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_04a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu White Dish Rear Hubcaps",
+        "value":110,
+    },
+
+    "slotType" : "hubcap_R_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_04a_14", ["hubcap_RR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_04a_14", ["hubcap_RL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_05a_14_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Straked Front Hubcaps",
+        "value":70,
+    },
+
+    "slotType" : "hubcap_F_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_05a_14", ["hubcap_FR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_05a_14", ["hubcap_FL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_05a_14_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Straked Rear Hubcaps",
+        "value":70,
+    },
+
+    "slotType" : "hubcap_R_14",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_05a_14", ["hubcap_RR"], [], {"pos":{"x":-0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_05a_14", ["hubcap_RL"], [], {"pos":{"x": 0.558, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_02a_13_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu 16 Slot Front Hubcaps",
+        "value":70,
+    },
+
+    "slotType" : "hubcap_F_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_02a_13", ["hubcap_FR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_02a_13", ["hubcap_FL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.16},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_02a_13_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu 16 Slot Rear Hubcaps",
+        "value":70,
+    },
+
+    "slotType" : "hubcap_R_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_02a_13", ["hubcap_RR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_02a_13", ["hubcap_RL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.16},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_03a_13_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Deep Dish Front Hubcaps",
+        "value":80,
+    },
+
+    "slotType" : "hubcap_F_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_03a_13", ["hubcap_FR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_03a_13", ["hubcap_FL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.16},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_03a_13_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Deep Dish Rear Hubcaps",
+        "value":80,
+    },
+
+    "slotType" : "hubcap_R_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_03a_13", ["hubcap_RR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_03a_13", ["hubcap_RL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapRadius":0.16},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_04a_13_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu White Dish Front Hubcaps",
+        "value":100,
+    },
+
+    "slotType" : "hubcap_F_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_04a_13", ["hubcap_FR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_04a_13", ["hubcap_FL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_04a_13_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu White Dish Rear Hubcaps",
+        "value":100,
+    },
+
+    "slotType" : "hubcap_R_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_04a_13", ["hubcap_RR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_04a_13", ["hubcap_RL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_05a_13_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Straked Front Hubcaps",
+        "value":60,
+    },
+
+    "slotType" : "hubcap_F_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_05a_13", ["hubcap_FR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_05a_13", ["hubcap_FL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+"ibishu_hubcap_05a_13_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ibishu Straked Rear Hubcaps",
+        "value":60,
+    },
+
+    "slotType" : "hubcap_R_13",
+
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //hubcaps
+        ["ibishu_hubcap_05a_13", ["hubcap_RR"], [], {"pos":{"x":-0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["ibishu_hubcap_05a_13", ["hubcap_RL"], [], {"pos":{"x": 0.546, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true,"enableExtraHubcapBeams":false}
+            {"hubcapOffset":0.01},
+            {"hubcapWidth":0.06},
+            {"hubcapBeamSpring":184460, "hubcapBeamDamp":11.6}
+            {"hubcapBeamDeform":15240, "hubcapBeamStrength":18300},
+            {"hubcapAttachBeamSpring":92460, "hubcapAttachBeamDamp":10},
+            {"hubcapAttachBeamDeform":1326, "hubcapAttachBeamStrength":1836},
+            {"hubcapNodeWeight":0.11},
+            {"hubcapCenterNodeWeight":0.14},
+            {"hubcapNodeMaterial":"|NM_PLASTIC"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+},
+}

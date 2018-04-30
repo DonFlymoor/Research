@@ -1,0 +1,11 @@
+{
+	"license_plate_gridmap_2_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Virtual Reality Plate Design",
+        "value":50,
+    }
+    "slotType" : "licenseplate_design_2_1",
+    "licenseplate_path" : "vehicles/common/licenseplates/gridmap/licenseplate-default.json",
+	}
+}

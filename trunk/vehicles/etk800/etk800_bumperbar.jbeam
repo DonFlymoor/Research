@@ -1,0 +1,153 @@
+{
+"etk800_bumperbar_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Front Bumper Support",
+        "value":250,
+    }
+    "slotType" : "etk800_bumperbar_F",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_bumperbar_F", ["etk800_bumperbar"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"collision":true}
+         {"selfCollision":true},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"etk800_bumperbar"},
+         {"nodeWeight":2.5},
+         //front bumper bar
+         ["f16rr", -0.57, -1.95, 0.47],
+         ["f16r", -0.41, -2.04, 0.47],
+         ["f16", 0.0, -2.10, 0.47],
+         ["f16l", 0.41, -2.04, 0.47],
+         ["f16ll", 0.57, -1.95, 0.47],
+         ["f17rr", -0.57, -1.95, 0.59],
+         ["f17r", -0.41, -2.04, 0.59],
+         ["f17", 0.0, -2.10, 0.59],
+         ["f17l", 0.41, -2.04, 0.59],
+         ["f17ll", 0.57, -1.95, 0.59],
+         {"group":""},
+
+    ],
+
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":2001000,"beamDamp":200},
+          //front bumper bar
+          {"beamDeform":19200,"beamStrength":"FLT_MAX"},
+          //main shape widthwise
+          ["f16rr","f16r"],
+          ["f16r","f16"],
+          ["f16l","f16"],
+          ["f16ll","f16l"],
+          ["f17rr","f17r"],
+          ["f17r","f17"],
+          ["f17l","f17"],
+          ["f17ll","f17l"],
+          //vertical
+          ["f16rr","f17rr"],
+          ["f16r","f17r"],
+          ["f16","f17"],
+          ["f16l","f17l"],
+          ["f16ll","f17ll"],
+          //surf cross
+          ["f16rr","f17r"],
+          ["f16ll","f17l"],
+          ["f16r","f17"],
+          ["f16l","f17"],
+          ["f17r","f16"],
+          ["f17l","f16"],
+          ["f17rr","f16r"],
+          ["f17ll","f16l"],
+          {"beamDeform":8400,"beamStrength":"FLT_MAX"},
+          //attach
+          ["f16r","f11rr"],
+          ["f16","f11"],
+          ["f16l","f11ll"],
+          ["f17r","f13rr"],
+          ["f17","f13"],
+          ["f17l","f13ll"],
+          ["f17r","f11rr"],
+          ["f17","f11"],
+          ["f17l","f11ll"],
+          ["f16r","f13rr"],
+          ["f16","f13"],
+          ["f16l","f13ll"],
+          ["f17r","f11"],
+          ["f17l","f11"],
+          ["f17","f11rr"],
+          ["f17","f11ll"],
+          ["f16r","f13"],
+          ["f16l","f13"],
+          ["f16","f13rr"],
+          ["f16","f13ll"],
+          //extra
+          ["f17","f13rr"],
+          ["f17","f13ll"],
+          ["f16","f11rr"],
+          ["f16","f11ll"],
+          ["f17rr","f13rr"],
+          ["f17ll","f13ll"],
+          ["f16rr","f11rr"],
+          ["f16ll","f11ll"],
+          ["f17rr","f11rr"],
+          ["f16rr","f13rr"],
+          ["f17ll","f11ll"],
+          ["f16ll","f13ll"],
+
+          ["f18r","f16r"],
+          ["f18l","f16l"],
+          //rigids
+          ["f16rr","f16"],
+          ["f16ll","f16"],
+          ["f16r","f16l"],
+          ["f17r","f17l"],
+          ["f17rr","f17"],
+          ["f17ll","f17"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "triangles": [
+            ["id1:","id2:","id3:"],
+            //bumper bar
+            {"groundModel":"metal"},
+            {"group":"etk800_bumperbar"},
+            {"dragCoef":2},
+            ["f13rr","f16r","f17r"],
+            ["f11rr","f16r","f13rr"],
+            ["f17r","f17rr","f16rr"],
+            ["f17r","f16rr","f16r"],
+            ["f17","f17r","f16r"],
+            ["f17","f16r","f16"],
+            ["f17l","f17","f16"],
+            ["f17l","f16","f16l"],
+            ["f17ll","f17l","f16l"],
+            ["f17ll","f16l","f16ll"],
+            ["f13ll","f17l","f16l"],
+            ["f13ll","f16l","f11ll"],
+
+            ["f13","f13rr","f17r"],
+            ["f13","f17r","f17"],
+            ["f13ll","f13","f17"],
+            ["f13ll","f17","f17l"],
+
+            ["f11rr","f11","f16r"],
+            ["f11","f16","f16r"],
+            ["f11","f11ll","f16"],
+            ["f11ll","f16l","f16"],
+
+            ["f13rr","f17rr","f17r"],
+            ["f13ll","f17l","f17ll"],
+
+            ["f16rr","f11rr","f16r"],
+            ["f16ll","f16l","f11ll"],
+
+            {"group":""},
+
+
+    ],
+}
+}

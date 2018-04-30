@@ -1,0 +1,187 @@
+{
+//BASIC BRAKE PADS
+"brakepad_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Basic Front Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_F",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"basic"},
+    ],
+},
+"brakepad_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Basic Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_R",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"basic"},
+    ],
+},
+"brakepad_RR": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Basic Rear Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_RR",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"basic"},
+    ],
+},
+//PREMIUM BRAKE PADS
+"brakepad_F_premium": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Premium Front Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_F",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"premium"},
+    ],
+},
+"brakepad_R_premium": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Premium Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_R",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"premium"},
+    ],
+},
+"brakepad_RR_premium": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Premium Rear Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_RR",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"premium"},
+    ],
+},
+//SPORT BRAKE PADS
+"brakepad_F_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Sport Front Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_F",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"sport"},
+    ],
+},
+"brakepad_R_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Sport Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_R",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"sport"},
+    ],
+},
+"brakepad_RR_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Sport Rear Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_RR",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"sport"},
+    ],
+},
+//SEMI-RACE BRAKE PADS
+"brakepad_F_semi_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Semi Race Front Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_F",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"semi-race"},
+    ],
+},
+"brakepad_R_semi_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Semi Race Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_R",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"semi-race"},
+    ],
+},
+"brakepad_RR_semi_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Semi Race Rear Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_RR",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"semi-race"},
+    ],
+},
+//FULL RACE BRAKE PADS
+"brakepad_F_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Full Race Front Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_F",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"full-race"},
+    ],
+},
+"brakepad_R_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Full Race Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_R",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"full-race"},
+    ],
+},
+"brakepad_RR_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Full Race Rear Rear Brake Pads",
+        "value":150,
+    },
+    "slotType" : "brakepad_RR",    
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"padMaterial":"full-race"},
+    ],
+},
+}

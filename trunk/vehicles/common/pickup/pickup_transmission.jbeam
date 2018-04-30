@@ -1,0 +1,403 @@
+{
+
+"pickup_transmission_4A": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"4-Speed Automatic Transmission",
+        "value":350,
+    },
+    "slotType" : "pickup_transmission",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_converter","pickup_converter","Torque Converter", {"coreSlot":true}],
+        ["pickup_transfer_case","pickup_transfer_case_4WD","Transfer Case", {"coreSlot":true}],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["torqueConverter", "torqueConverter", "mainEngine", 1],
+        ["automaticGearbox", "gearbox", "torqueConverter", 1],
+    ],
+    "gearbox": {
+        "uiName":"Gearbox",
+        "gearRatios":[-2.00, 0, 2.4, 1.47, 1.0, 0.68],
+        "parkLockTorque":2500,
+        "oneWayViscousCoef":60,
+        "friction": 8,
+        "gearboxNode:":"tra1",
+    },
+    "vehicleController": {
+        "automaticModes":"PRND21",
+        "calculateOptimalLoadShiftPoints": true
+        "transmissionGearChangeDelay":2
+        "gearboxDecisionSmoothingUp":2
+        "gearboxDecisionSmoothingDown":2
+        "aggressionSmoothingUp":1
+        "aggressionSmoothingDown":0.5
+        "aggressionHoldOffThrottleDelay":1.75,
+        "lowShiftDownRPM":1000,
+        "lowShiftUpRPM":1800,
+    },
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["pickup_transmission", ["pickup_engine","pickup_transmission"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"selfCollision":false}
+         {"collision":true}
+         //--4 Speed Auto-
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"nodeWeight":35},
+         {"group":"pickup_transmission"},
+         ["tra1", 0.0, -0.68, 0.48],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          //--TRANSMISSION CONE--
+          {"beamSpring":20001000,"beamDamp":500},
+          {"beamDeform":250000,"beamStrength":"FLT_MAX"},
+          ["tra1","e1r"],
+          ["tra1","e3r"],
+          ["tra1","e1l"],
+          ["tra1","e3l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+},
+"pickup_transmission_6A": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"6-Speed Automatic Transmission",
+        "value":600,
+    }
+    "slotType" : "pickup_transmission",
+    "slots": [
+        ["type", "default", "description"]
+        ["pickup_converter","pickup_converter_heavy","Torque Converter", {"coreSlot":true}],
+        ["pickup_transfer_case","pickup_transfer_case_4WD","Transfer Case", {"coreSlot":true}],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["torqueConverter", "torqueConverter", "mainEngine", 1],
+        ["automaticGearbox", "gearbox", "torqueConverter", 1],
+    ],
+    "gearbox": {
+        "uiName":"Gearbox",
+        //premultiplied to account for 3.55 differential ratio instead of 3.15
+        //source ratios: [-3.4, 0, 4.17, 2.34, 1.52, 1.14, 0.87, 0.69]
+        "gearRatios":[-3.02, 0, 3.70, 2.08, 1.35, 1.02, 0.89, 0.62],
+        "parkLockTorque":2500,
+        "oneWayViscousCoef":60,
+        "friction": 1,
+        "gearboxNode:":"tra1",
+    },
+    "vehicleController": {
+        "automaticModes":"PRND21",
+        "transmissionGearChangeDelay":1.5
+        "calculateOptimalLoadShiftPoints": true
+        "aggressionSmoothingUp":1
+        "aggressionSmoothingDown":0.5
+        "aggressionHoldOffThrottleDelay":1.75,
+        "gearboxDecisionSmoothingUp":2
+        "gearboxDecisionSmoothingDown":2
+        "lowShiftDownRPM":1000,
+        "lowShiftUpRPM":[0,0,1700,1500,1500,1500,1500]
+    },
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["pickup_transmission", ["pickup_engine","pickup_transmission"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"selfCollision":false}
+         {"collision":true}
+         //--6 Speed Auto-
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"nodeWeight":40},
+         {"group":"pickup_transmission"},
+         ["tra1", 0.0, -0.59, 0.48],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          //--TRANSMISSION CONE--
+          {"beamSpring":20001000,"beamDamp":500},
+          {"beamDeform":250000,"beamStrength":"FLT_MAX"},
+          ["tra1","e1r"],
+          ["tra1","e3r"],
+          ["tra1","e1l"],
+          ["tra1","e3l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+}
+"pickup_transmission_5M": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"5-Speed Manual Transmission",
+        "value":300,
+    },
+    "slotType" : "pickup_transmission",
+    "slots": [
+        ["type", "default","description"]
+        ["pickup_flywheel","pickup_flywheel","Flywheel", {"coreSlot":true}],
+        ["pickup_transfer_case","pickup_transfer_case_4WD","Transfer Case", {"coreSlot":true}],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["frictionClutch", "clutch", "mainEngine", 1],
+        ["manualGearbox", "gearbox", "clutch", 1],
+    ],
+    "gearbox": {
+        "uiName":"Gearbox",
+        "gearRatios":[-3.39, 0, 3.9, 2.25, 1.5, 1.0, 0.8],
+        "friction": 1,
+        "gearboxNode:":"tra1",
+    },
+    "clutch": {
+        "uiName":"Clutch",
+    },
+    "vehicleController": {
+        "calculateOptimalLoadShiftPoints": true
+        "lowShiftDownRPM":[0,0,0,1300,1500,1400,1300,1100]
+        "lowShiftUpRPM":[0,0,2800,2600,2500,2300,2000]
+    },
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["pickup_transmission", ["pickup_engine","pickup_transmission"]],
+    ],
+    "props": [
+        ["func"        , "mesh"                , "idRef:", "idX:", "idY:", "baseRotation"      , "rotation"                 , "translation"        , "min", "max", "offset", "multiplier"]
+        //pedal
+        ["clutch"       , "pickup_clutchpedal"   , "fr8", "fr8l", "fr1l", {"x":-90, "y":0, "z":0}, {"x":-25, "y":0, "z":0}    , {"x":0.0, "y":0, "z":0}, 0, 1, 0, 1],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"selfCollision":false}
+         {"collision":true}
+         //--5 Speed Manual-
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         {"nodeWeight":35},
+         {"group":"pickup_transmission"},
+         ["tra1", 0.0, -0.59, 0.48],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          //--TRANSMISSION CONE--
+          {"beamSpring":20001000,"beamDamp":500},
+          {"beamDeform":250000,"beamStrength":"FLT_MAX"},
+          ["tra1","e1r"],
+          ["tra1","e3r"],
+          ["tra1","e1l"],
+          ["tra1","e3l"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+},
+"pickup_flywheel": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Flywheel",
+        "value":150,
+    },
+    "slotType" : "pickup_flywheel",
+    "clutch": {
+        "uiName":"Clutch",
+        "additionalEngineInertia":0.16,
+        "clutchMass":7,
+    },
+},
+"pickup_flywheel_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ultra Light Flywheel",
+        "value":400,
+    },
+    "slotType" : "pickup_flywheel",
+    "clutch": {
+        "uiName":"Clutch",
+        "additionalEngineInertia":0.03,
+        "clutchMass":5,
+    },
+},
+"pickup_flywheel_light": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Lightened Flywheel",
+        "value":200,
+    },
+    "slotType" : "pickup_flywheel",
+    "clutch": {
+        "uiName":"Clutch",
+        "additionalEngineInertia":0.1,
+        "clutchMass":6,
+    },
+},
+"pickup_flywheel_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Flywheel",
+        "value":150,
+    },
+    "slotType" : "pickup_flywheel",
+    "clutch": {
+        "uiName":"Clutch",
+        "additionalEngineInertia":0.22,
+        "clutchMass":8.5,
+    },
+},
+"pickup_converter": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Locking Torque Converter",
+        "value":150,
+    },
+    "slotType" : "pickup_converter",
+    "torqueConverter": {
+        "uiName":"Torque Converter",
+        "converterDiameter":0.285,
+        "converterStiffness":7,
+        "couplingAVRatio":0.85,
+        "stallTorqueRatio":2.2,
+        "lockupClutchTorque":350,
+        "additionalEngineInertia":0.18,
+    },
+    "vehicleController": {
+        "torqueConverterLockupRPM":1000
+        "torqueConverterLockupMinGear":3
+    },
+},
+"pickup_converter_heavy": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Heavy Duty Locking Torque Converter",
+        "value":150,
+    },
+    "slotType" : "pickup_converter",
+    "torqueConverter": {
+        "uiName":"Torque Converter",
+        "converterDiameter":0.295,
+        "converterStiffness":8,
+        "couplingAVRatio":0.85,
+        "stallTorqueRatio":2.2,
+        "lockupClutchTorque":450,
+        "additionalEngineInertia":0.20,
+    },
+    "vehicleController": {
+        "torqueConverterLockupRPM":1000
+        "torqueConverterLockupMinGear":3
+    },
+},
+"pickup_converter_hi": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"High Stall Torque Converter",
+        "value":200,
+    },
+    "slotType" : "pickup_converter",
+    "torqueConverter": {
+        "uiName":"Torque Converter",
+        "converterDiameter":0.27,
+        "converterStiffness":8,
+        "couplingAVRatio":0.85,
+        "stallTorqueRatio":2.2,
+        "additionalEngineInertia":0.16,
+    },
+},
+"pickup_transfer_case_4WD": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"4WD Transfer Case",
+        "value":650,
+    },
+    "slotType" : "pickup_transfer_case",
+    "controller": [
+        ["fileName"],
+        ["4wd", {"shaftName":"transfercase_F", "rangeBoxName":"rangebox"}],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        ["rangeBox", "rangebox", "gearbox", 1, {"gearRatios":[1,2.2], "uiName":"Rangebox"}]
+        //locked center diff
+        ["differential", "transfercase", "rangebox", 1, {"diffType":"locked", "lockTorque":10000, "friction":5, "uiName":"Transfer Case","defaultVirtualInertia":0.1}]
+        //disconnecting front shaft
+        ["shaft", "transfercase_F", "transfercase", 2, {"canDisconnect":true,"uiName":"Front Output Shaft"}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["pickup_transfercase", ["pickup_framefront","pickup_framecab","pickup_lowermounts","pickup_uppermounts","pickup_shocktop"]],
+    ],
+}
+"pickup_transfer_case_4WD_offroad": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"4WD Crawler Transfer Case",
+        "value":950,
+    },
+    "slotType" : "pickup_transfer_case",
+    "controller": [
+        ["fileName"],
+        ["4wd", {"shaftName":"transfercase_F", "rangeBoxName":"rangebox"}],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        ["rangeBox", "rangebox", "gearbox", 1, {"gearRatios":[1,4], "uiName":"Rangebox"}]
+        //locked center diff
+        ["differential", "transfercase", "rangebox", 1, {"diffType":"locked", "lockTorque":10000, "friction":5, "uiName":"Transfer Case","defaultVirtualInertia":0.1}]
+        //disconnecting front shaft
+        ["shaft", "transfercase_F", "transfercase", 2, {"canDisconnect":true,"uiName":"Front Output Shaft"}],
+    ],
+    "gearbox": {
+        "uiName":"Gearbox",
+        //added stabilization for one way clutch with ultra low range
+        "oneWayViscousCoef":20,
+        "oneWayViscousSmoothing":100,
+    },
+    "torqueConverter": {
+        "uiName":"Torque Converter",
+        //added stabilization for torque converter with ultra low range
+        "kFactorSmoothing":250
+    },
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["pickup_transfercase", ["pickup_framefront","pickup_framecab","pickup_lowermounts","pickup_uppermounts","pickup_shocktop"]],
+    ],
+}
+"pickup_transfer_case_AWD": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"AWD Transfer Case",
+        "value":650,
+    },
+    "slotType" : "pickup_transfer_case",
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //lsd center diff
+        ["differential", "transfercase", "gearbox", 1, {"diffType":"lsd", "lsdPreload":50, "lsdLockCoef":0.15, "lsdLockCoef":0.15, "diffTorqueSplit":0.6, "friction":5, "uiName":"Center Differential","defaultVirtualInertia":0.1}]
+        //non disconnecting front shaft
+        ["shaft", "transfercase_F", "transfercase", 2, {"uiName":"Front Output Shaft"}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["pickup_transfercase", ["pickup_framefront","pickup_framecab","pickup_lowermounts","pickup_uppermounts","pickup_shocktop"]],
+    ],
+}
+"pickup_transfer_case_RWD": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"RWD Transfer Case",
+        "value":150,
+    },
+    "slotType" : "pickup_transfer_case",
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        //straight through shaft
+        ["shaft", "transfercase", "gearbox", 1, {"friction":3, "uiName":"Rear Output Shaft"}]
+    ],
+},
+}

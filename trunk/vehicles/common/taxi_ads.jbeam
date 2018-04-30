@@ -1,0 +1,20 @@
+{
+"taxi_ad_pointie": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Pointie Advertisement",
+        "value":10,
+    },
+    "slotType" : "skin_taxi_ad",
+    "globalSkin" : "pointie",
+  },
+"taxi_ad_burger": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Turbo Burger Advertisement",
+        "value":10,
+    },
+    "slotType" : "skin_taxi_ad",
+    "globalSkin" : "burger",
+  },
+}

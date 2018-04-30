@@ -1,0 +1,1360 @@
+{
+"etk_wheel_03a_18x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK 5sport 18x9 Front Wheels",
+        "value":1050,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_18x9","tire_F_225_45_18_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk_wheel_03a_18x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_03a_18x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.240},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.245},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.43},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"etk_wheel_06a_18x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttx10 18x9 Front Wheels (Gray)",
+        "value":1010,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_18x9","tire_F_225_45_18_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk_wheel_06a_18x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_06a_18x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.240},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.245},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.43},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"etk_wheel_06b_18x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttx10 18x9 Front Wheels (Black)",
+        "value":1010,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_18x9","tire_F_225_45_18_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk_wheel_06b_18x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_06b_18x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.240},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.245},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.43},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"etk_wheel_06a_19x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttx10 19x9 Front Wheels (Gray)",
+        "value":1150,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_19x9","tire_F_235_35_19_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_06a_19x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":1, "z":1}}],
+         ["etk_wheel_06a_19x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+        //general settings
+        {"hubRadius":0.255},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.265},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":1035900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":1035900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.48},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+}
+"etk_wheel_06b_19x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttx10 19x9 Front Wheels (Black)",
+        "value":1150,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_19x9","tire_F_235_35_19_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_06b_19x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":1, "z":1}}],
+         ["etk_wheel_06b_19x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+        //general settings
+        {"hubRadius":0.255},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.265},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":1035900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":1035900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.48},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+}
+"etk_wheel_09a_19x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttc10 19x9 Front Wheels (Gray)",
+        "value":1250,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_19x9","tire_F_235_35_19_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_09a_19x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":1, "z":1}}],
+         ["etk_wheel_09a_19x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+        //general settings
+        {"hubRadius":0.255},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.275},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":1035900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":1035900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.48},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+}
+"etk_wheel_09b_19x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttc10 19x9 Front Wheels (Black)",
+        "value":1250,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_19x9","tire_F_235_35_19_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_09b_19x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":1, "z":1}}],
+         ["etk_wheel_09b_19x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+        //general settings
+        {"hubRadius":0.255},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.275},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":1035900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":1035900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.48},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+}
+"etk_wheel_04a_19x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK ttSport 19x9 Front Wheels",
+        "value":1600,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_19x9","tire_F_235_35_19_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_04a_19x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":1, "z":1}}],
+         ["etk_wheel_04a_19x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.255},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.275},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":1035900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":1035900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.48},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+}
+"etk_wheel_08a_19x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK kc5 19x9 Front Wheels",
+        "value":1250,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_19x9","tire_F_235_35_19_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_08a_19x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":1, "z":1}}],
+         ["etk_wheel_08a_19x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.255},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.265},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":1035900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":1035900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.48},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+}
+"etk_wheel_01a_18x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK sComfort 18x9 Front Wheels",
+        "value":950,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_18x9","tire_F_225_45_18_standard", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk_wheel_01a_18x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_01a_18x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.240},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.245},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.43},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"etk_wheel_02a_18x9_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK xSport 18x9 Front Wheels",
+        "value":1100,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_18x9","tire_F_225_45_18_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk_wheel_02a_18x9", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["etk_wheel_02a_18x9", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.51, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.240},
+        {"wheelOffset":-0.045},
+        {"hubWidth":0.245},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.43},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"etk_wheel_05a_17x8_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK td5 17x8 Front Wheels",
+        "value":750,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_17x8_altb","tire_F_225_50_17_standard", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk_wheel_05a_17x8", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_05a_17x8", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.52, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.225},
+        {"wheelOffset":-0.055},
+        {"hubWidth":0.225},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.41},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+    ],
+},
+"wheel_19a_15x7_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK F13-9 15x7 Front Wheels (Gray)",
+        "value":270,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x7","tire_F_195_65_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["wheel_19a_15x7", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+        ["wheel_19a_15x7", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheels
+        {"nodeWeight":5.0},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"selfCollision":true},
+        {"collision":true},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.31, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.57, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.31, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.57, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.20},
+        {"wheelOffset":-0.04},
+        {"hubWidth":0.205},
+        {"numRays":16},
+
+         //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.40},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+    ],
+},
+"wheel_19b_15x7_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK F13-9 15x7 Front Wheels (Black)",
+        "value":270,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x7","tire_F_195_65_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["wheel_19b_15x7", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+        ["wheel_19b_15x7", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheels
+        {"nodeWeight":5.0},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"selfCollision":true},
+        {"collision":true},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.31, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.57, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.31, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.57, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.20},
+        {"wheelOffset":-0.04},
+        {"hubWidth":0.205},
+        {"numRays":16},
+
+         //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.40},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+    ],
+},
+"wheel_21a_15x7_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK Q16 15x7 Front Wheels (Gray)",
+        "value":350,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x7","tire_F_195_65_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["wheel_21a_15x7", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+        ["wheel_21a_15x7", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheels
+        {"nodeWeight":5.0},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"selfCollision":true},
+        {"collision":true},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.31, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.57, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.31, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.57, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.20},
+        {"wheelOffset":-0.04},
+        {"hubWidth":0.205},
+        {"numRays":16},
+
+         //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.40},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+    ],
+},
+"wheel_21b_15x7_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK Q16 15x7 Front Wheels (White)",
+        "value":350,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x7","tire_F_195_65_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["wheel_21b_15x7", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+        ["wheel_21b_15x7", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheels
+        {"nodeWeight":5.0},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"selfCollision":true},
+        {"collision":true},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.31, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.57, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.31, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.57, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.20},
+        {"wheelOffset":-0.04},
+        {"hubWidth":0.205},
+        {"numRays":16},
+
+         //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1501000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.40},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+    ],
+},
+"wheel_21a_15x8_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK Q16 15x8 Front Wheels (Gray)",
+        "value":400,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x8_altb","tire_F_205_55_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["wheel_21a_15x8", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.98, "y":1.0, "z":1.0}}],
+        ["wheel_21a_15x8", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":1.0, "z":1.0}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheels
+        {"nodeWeight":5.0},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"selfCollision":true},
+        {"collision":true},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.31, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.57, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.31, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.57, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.20},
+        {"wheelOffset":-0.04},
+        {"hubWidth":0.225},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.47},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+    ],
+},
+"wheel_21b_15x8_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK Q16 15x8 Front Wheels (White)",
+        "value":400,
+    },
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"],
+        ["tire_F_15x8_altb","tire_F_205_55_15_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["wheel_21b_15x8", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.98, "y":1.0, "z":1.0}}],
+        ["wheel_21b_15x8", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":1.0, "z":1.0}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        //front wheels
+        {"nodeWeight":5.0},
+        {"frictionCoef":0.5},
+        {"nodeMaterial":"|NM_METAL"},
+        {"selfCollision":true},
+        {"collision":true},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.31, 0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.57, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.31, 0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.57, 0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"beamDeform":78500,"beamStrength":"FLT_MAX"},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.20},
+        {"wheelOffset":-0.04},
+        {"hubWidth":0.225},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1651000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.47},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+    ],
+},
+"etk_wheel_07a_16x7_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK Aero-5 16x7 Front Wheels",
+        "value":430,
+    }
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"]
+        ["tire_F_16x7","tire_F_215_55_16_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["etk_wheel_07a_16x7", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_07a_16x7", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, -0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, -0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, -0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, -0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.215},
+        {"wheelOffset":-0.015},
+        {"hubWidth":0.225},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":945900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":945900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1551000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.42},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+    ],
+}
+"etk_wheel_07a_16x8_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"ETK Aero-5 16x8 Front Wheels",
+        "value":510,
+    }
+    "slotType" : "wheel_F_5",
+
+    "slots": [
+        ["type", "default", "description"]
+        ["tire_F_16x8","tire_F_225_50_16_sport", "Front Tires"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        //wheels
+        ["etk_wheel_07a_16x8", ["wheel_FR","wheelhub_FR"], [], {"pos":{"x":-0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["etk_wheel_07a_16x8", ["wheel_FL","wheelhub_FL"], [], {"pos":{"x": 0.48, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "nodes": [
+        ["id", "posX", "posY", "posZ"],
+        {"collision":true},
+        {"selfCollision":true},
+        //front wheels
+        {"nodeWeight":5.0},
+        {"nodeMaterial":"|NM_METAL"},
+        {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
+        {"frictionCoef":0.5},
+        {"group":"wheelhub_FR"},
+        ["fw1r", -0.33, -0.0, 0.0],
+        {"group":"wheelhub_FR"},
+        ["fw1rr", -0.60, -0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1l", 0.33, -0.0, 0.0],
+        {"group":"wheelhub_FL"},
+        ["fw1ll", 0.60, -0.0, 0.0],
+        {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
+        {"group":""},
+    ],
+    "beams": [
+        ["id1:", "id2:"],
+        {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+        {"breakGroup":""},
+        {"beamDeform":78500,"beamStrength":434000},
+        {"beamSpring":801000,"beamDamp":6},
+        //front wheel
+        ["fw1r","fw1rr"],
+        ["fw1l","fw1ll"],
+        {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false,"enableHubcaps":false,"hasTire":false},
+
+        //general settings
+        {"hubRadius":0.215},
+        {"wheelOffset":-0.015},
+        {"hubWidth":0.225},
+        {"numRays":16},
+
+        //hub options
+        {"hubTreadBeamSpring":990900, "hubTreadBeamDamp":10},
+        {"hubPeripheryBeamSpring":990900, "hubPeripheryBeamDamp":10},
+        {"hubSideBeamSpring":1601000, "hubSideBeamDamp":10},
+        {"hubNodeWeight":0.44},
+        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubNodeMaterial":"|NM_METAL"},
+        {"hubFrictionCoef":0.5},
+    ],
+}
+}

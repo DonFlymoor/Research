@@ -1,0 +1,56 @@
+{
+"etk800_radiator": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Radiator",
+        "value":180,
+    }
+    "slotType" : "etk800_radiator",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_radiator", ["etk_radiator"]],
+    ],
+    "mainEngine":{
+        "radiatorArea":0.37,
+        "radiatorEffectiveness":12000,
+        "coolantVolume":8.5,
+        "radiatorFanType":"electric",
+        "radiatorFanTemperature":100,
+        "radiatorFanMaxAirSpeed":2.5,
+        "thermostatTemperature":90
+        },
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+}
+"etk800_radiator_race": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"High Performance Radiator",
+        "value":280,
+    }
+    "slotType" : "etk800_radiator",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_radiator", ["etk_radiator"]],
+    ],
+    "mainEngine":{
+        "radiatorArea":0.4,
+        "radiatorEffectiveness":16000,
+        "coolantVolume":9,
+        "radiatorFanType":"electric",
+        "radiatorFanTemperature":100,
+        "radiatorFanMaxAirSpeed":3,
+        "thermostatTemperature":90
+        },
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+}
+}

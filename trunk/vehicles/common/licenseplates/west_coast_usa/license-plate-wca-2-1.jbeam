@@ -1,0 +1,11 @@
+{
+	"license_plate_wca_2_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"California Plate Design",
+        "value":50,
+    }
+    "slotType" : "licenseplate_design_2_1",
+    "licenseplate_path" : "vehicles/common/licenseplates/west_coast_usa/licenseplate-default.json",
+	}
+}

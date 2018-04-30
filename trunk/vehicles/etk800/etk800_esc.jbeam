@@ -1,0 +1,82 @@
+{
+    "etk800_ESC": {
+        "information":{
+            "authors":"Diamondback",
+            "name":"Electronic Stability & Traction Control",
+            "value":250,
+        }
+        "slotType" : "etk800_ESC",
+        "controller": [
+            ["fileName"],
+            ["postCrashBrake",{"brakeThreshold": 60}],
+            ["esc"],
+            ["adaptiveBrakeLights"]
+        ],
+        "esc": {
+            "actionedWheels": ["FL", "FR", "RR", "RL"],
+            "isDebugMode": 0,
+            "defaultConfig": 1,
+            "configurations": {
+                "Regular ESC":{
+                    //ESC
+                    "escEnabled": true,
+                    "escConfigurationEnabled": true,
+                    "order":10,
+                    "activeColor":"98FB00",
+                    
+                    "maxSideAcceleration":10,
+                    "brakeForceMultiplier":1,
+                    "escThreshold":0.16,
+                    "characteristicSpeed":-1,
+                    "proportionalFactor": 0.85,
+                    "integralFactor": 1.5,
+                    "maxIntegralPart": 2.0,
+                    "skewStiffnessFront":148500,
+                    "skewStiffnessRear":161000,
+                    "desiredYawRateSmoothing":570,
+                    //TCS
+                    "slipThreshold": 0.15,
+                    "minThrottleFactor": 0.05,
+                    "maxBrakingFactor": 0.85,
+                    "throttleProportionalFactor": 2.0,
+                    "throttleIntegralFactor": 2,
+                    "brakingProportionalFactor": 2,
+                    "brakingIntegralFactor": 1.5,
+                    "brakeThrottleSwitchThreshold": 20,
+                },
+                "Sport ESC":{
+                    //ESC
+                    "escEnabled": true,
+                    "escConfigurationEnabled": true,
+                    "order":20,
+                    "activeColor":"3096F1",
+                    
+                    "maxSideAcceleration":11,
+                    "brakeForceMultiplier":1,
+                    "escThreshold":0.25,
+                    "characteristicSpeed":-1,
+                    "proportionalFactor": 0.25,
+                    "integralFactor": 0.7,
+                    "maxIntegralPart": 1.0,
+                    "skewStiffnessFront":148500,
+                    "skewStiffnessRear":161000,
+                    "desiredYawRateSmoothing":570,
+                    //TCS
+                    "slipThreshold": 0.35,
+                    "minThrottleFactor": 0.35,
+                    "maxBrakingFactor": 0.6,
+                    "brakeThrottleSwitchThreshold": 60,
+                },
+                "ESC Off":{
+                    //ESC
+                    "escEnabled": false,
+                    "escConfigurationEnabled": true,
+                    "order":30,
+                    //UI
+                    "overrideESCPulse": 1,
+                    "overrideTCSPulse": 1,
+                }
+            }
+        },
+    }
+}

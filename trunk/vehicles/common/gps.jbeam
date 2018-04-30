@@ -1,0 +1,38 @@
+{
+"gps": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"BeamNavigator",
+        "value":250,
+    }
+    "slotType" : "gps",
+    "controller": [
+        ["fileName"],
+        ["beamNavigator"],
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["suctionmount", ["gps"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["gpsholder", ["gps"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["gps", ["gps"], [],{"pos":{"x":0,"y":0,"z":0}}],
+    ],
+}
+"gps_alt": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"BeamNavigator",
+        "value":250,
+    },
+    "controller": [
+        ["fileName"],
+        ["beamNavigator"],
+    ],
+    "slotType" : "gps_alt",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["suctionmount_alt", ["gps"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["gpsholder", ["gps"], [],{"pos":{"x":0,"y":0,"z":0}}],
+         ["gps", ["gps"], [],{"pos":{"x":0,"y":0,"z":0}}],
+    ],
+}
+}

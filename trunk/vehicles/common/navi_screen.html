@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        body{
+            margin: 0;
+            padding:0;
+        }
+        #mapContainer{
+            perspective: 500px;
+            max-width: 256px;
+            max-height: 128px;
+            overflow: hidden;
+            background: rgb(255, 255, 255);
+
+        }
+        #mapPerspective{
+            transform: rotateX(60deg);
+        }
+        #map{
+            max-width: 256px;
+            max-height: 128px;
+            /*background: green;*/
+        }
+        #pointer{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -15px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 15px 40px 15px;
+            border-color: transparent transparent #ff6600 transparent;
+        }
+        #bootscreen{
+            position: absolute;
+            width: 256px;
+            height: 128px;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            background-image: url('navigator_bootscreen.png');
+            background-color: black;
+            background-size: cover;
+            transition: opacity 2s, transform 1.5s;
+        }
+        .fadeout{
+            opacity: 0;
+            <!--transform: scale(2, 2);-->
+        }
+
+    </style>
+</head>
+<body>
+<div id="bootscreen"></div>
+<div id="mapContainer">
+    <div id="mapPerspective">
+        <svg id="map"></svg>
+        <div id="pointer"></div>
+    </div>
+</div>
+</body>
+
+<script>
+    var map = (function(){
+        var state = {
+            x: 0,
+            y: 0,
+            zoom: 500,
+            rotation: 0
+        };
+
+        var elements = [];
+        var ROADCOLOR = '#000000';
+
+        function updateBoundingBox(){
+            var parts = [
+                state.x-state.zoom,
+                state.y-state.zoom,
+                state.zoom*2,
+                state.zoom*2
+            ];
+            document.getElementById('map').setAttribute('viewBox', parts.join(' '));
+        }
+
+        function updateRotation(){
+            document.getElementById('map').style.transform =  'scale(3,3) rotate('+state.rotation+'deg)';
+        }
+
+        function drawPoints(data){
+            var el;
+            Object.keys(data).forEach(function(key){
+                el = data[key];
+                elements.push(svgCircle(-el.pos[0], el.pos[1], el.radius, ROADCOLOR));
+            });
+        }
+
+        function drawLines(data){
+            var el, el2;
+            Object.keys(data).forEach(function(key){
+                el = data[key];
+                if(el.links !== undefined){
+                    Object.keys(el.links).forEach(function(key2){
+                        el2 = data[key2];
+                        elements.push(
+                        	drawLine(
+                                {x: -el.pos[0], y: el.pos[1], radius: el.radius},
+                                {x: -el2.pos[0], y: el2.pos[1], radius: el2.radius},
+                                ROADCOLOR
+                            )
+                        );
+                    });
+                }
+            });
+        }
+
+        function drawLine(p1, p2, color){
+            var angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+            var points = [];
+
+            points.push(p1.x+Math.sin(angle)*p1.radius, p1.y-Math.cos(angle)*p1.radius);
+            points.push(p1.x-Math.sin(angle)*p1.radius, p1.y+Math.cos(angle)*p1.radius);
+
+            points.push(p2.x-Math.sin(angle)*p2.radius, p2.y+Math.cos(angle)*p2.radius);
+            points.push(p2.x+Math.sin(angle)*p2.radius, p2.y-Math.cos(angle)*p2.radius);
+
+            return svgPath(color, points);
+        }
+
+        function svgCircle(x, y, radius, color){
+        	return '<circle cx="'+x+'" cy="'+y+'" r="'+radius+'" fill="'+color+'" />';
+        }
+
+        function svgPath(color, coords){
+        	var path = '<path fill="'+color+'" d="';
+        	path += 'M'+coords[0]+' '+coords[1];
+        	for(var i = 2; i < coords.length; i+=2){
+        		path += ' L'+coords[i]+' '+coords[i+1];
+        	}
+        	path += ' Z" />';
+        	return path;
+        }
+
+        function setData(data){
+            if(Object.keys(data).length <= 0)
+            {
+                console.log("Received empty map data")
+                return
+            }
+            updateBoundingBox();
+            updateRotation();
+            drawPoints(data);
+            drawLines(data);
+            render();
+            hideBootscreen();
+        }
+
+        function render(){
+        	document.getElementById('map').innerHTML = elements.join('');
+        }
+
+        function hideBootscreen(){
+            document.getElementById('bootscreen').className += ' fadeout';
+        }
+
+        function updateData(data){
+            setLocation(data.x, data.y);
+            setRotation(data.rotation);
+            state.zoom = data.zoom;
+            updateBoundingBox();
+        }
+
+        function setLocation(x, y){
+            state.x = -x;
+            state.y = y;
+            updateBoundingBox();
+        }
+
+        function setRotation(rotation){
+            state.rotation = rotation+180;
+            updateRotation();
+        }
+
+        return {
+            updateData: updateData,
+            setRotation: setRotation,
+            setData: setData,
+            setLocation: setLocation
+        }
+    })();
+</script>
+</html>

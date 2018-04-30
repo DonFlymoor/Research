@@ -1,0 +1,11 @@
+{
+	"license_plate_eca_2_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Maine US Plate Design",
+        "value":50,
+    }
+    "slotType" : "licenseplate_design_2_1",
+    "licenseplate_path" : "vehicles/common/licenseplates/east_coast_usa/licenseplate-default.json",
+	}
+}
