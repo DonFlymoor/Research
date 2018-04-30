@@ -1,0 +1,85 @@
+{
+    "segments" : {
+
+        "bridge1" : {
+            "nodes" : ["Bridge1_A", "Bridge1_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge2" : {
+            "nodes" : ["Bridge2_A", "Bridge2_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge3" : {
+            "nodes" : ["Bridge3_A", "Bridge3_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge4" : {
+            "nodes" : ["Bridge4_A", "Bridge4_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge5" : {
+            "nodes" : ["Bridge5_A", "Bridge5_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge6" : {
+            "nodes" : ["Bridge6_A", "Bridge6_B", "Bridge6_C", "Bridge6_D", "Bridge6_E", "Bridge6_F", "Bridge6_G"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge7" : {
+            "nodes" : ["Bridge7_A", "Bridge7_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge8" : {
+            "nodes" : ["Bridge8_A", "Bridge8_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge9" : {
+            "nodes" : ["Bridge9_A", "Bridge9_B", "Bridge9_C", "Bridge9_D", "Bridge9_E", "Bridge9_F"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge10" : {
+            "nodes" : ["Bridge10_A", "Bridge10_B", "Bridge10_C"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge11" : {
+            "nodes" : ["Bridge11_A", "Bridge11_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge12" : {
+            "nodes" : ["Bridge12_A", "Bridge12_B"],
+            "drivability" : 1 ,
+        }
+        
+        //"bridge13" : {
+            //"nodes" : ["Bridge13_A", "Bridge13_B", "Bridge13_C", "Bridge13_D", "Bridge13_E", "Bridge13_F", "Bridge13_G", "Bridge13_H", "Bridge13_I", "Bridge13_J"],
+            //"drivability" : 1 ,
+        //}
+        
+        "bridge14" : {
+            "nodes" : ["Bridge14_A", "Bridge14_B"],
+            "drivability" : 1 ,
+        }
+        
+        "bridge15" : {
+            "nodes" : ["Bridge15_A", "Bridge15_B"],
+            "drivability" : 1 ,
+        }
+        
+        "dirttrack" : {
+            "nodes" : ["dirttrack_1", "dirttrack_2", "dirttrack_3", "dirttrack_4", "dirttrack_5", "dirttrack_6", "dirttrack_7", "dirttrack_8", "dirttrack_9", "dirttrack_10","dirttrack_11", "dirttrack_12", "dirttrack_13", "dirttrack_14", "dirttrack_15", "dirttrack_16", "dirttrack_17", "dirttrack_18", "dirttrack_19", "dirttrack_20","dirttrack_21", "dirttrack_22", "dirttrack_23", "dirttrack_24", "dirttrack_25", "dirttrack_26", "dirttrack_27", "dirttrack_28", "dirttrack_29", "dirttrack_30","dirttrack_31", "dirttrack_32"],
+            "drivability" : 1 ,
+        }
+        
+    }
+}CS
