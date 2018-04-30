@@ -1,0 +1,59 @@
+{
+"features":"levels.west_coast_usa.info.features",
+"suitablefor":"levels.west_coast_usa.info.suitablefor",
+"authors":"BeamNG",
+"roads":"levels.west_coast_usa.info.roads",
+"title":"levels.west_coast_usa.info.title",
+"defaultSpawnPointName":"spawns_industrial",
+"biome":"levels.west_coast_usa.info.biome",
+"size":[
+  2048,
+  2048
+],
+"previews":[
+  "west_coast_usa_preview1.jpg",
+  "west_coast_usa_preview2.jpg",
+  "west_coast_usa_preview3.jpg"
+],
+"defaultSpawnPointName":"spawns_industrial",
+"spawnPoints":[
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.industrial",
+    "objectname":"spawns_industrial",
+    "preview":"spawns_industrial.jpg"
+  },
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.chinatown",
+    "objectname":"spawns_chinatown",
+    "preview":"spawns_chinatown.jpg"
+  },
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.dockyards",
+    "objectname":"spawns_dockyards",
+    "preview":"spawns_dockyards.jpg"
+  },
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.redwood_forest",
+    "objectname":"spawns_redwood_forest",
+    "preview":"spawns_redwood_forest.jpg"
+  }
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.highway",
+    "objectname":"spawns_highway",
+    "preview":"spawns_highway.jpg"
+  }
+  
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.dirttrack",
+    "objectname":"spawns_dirttrack",
+    "preview":"spawns_dirttrack.jpg"
+  }
+  
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.racetrack",
+    "objectname":"spawns_racetrack",
+    "preview":"spawns_racetrack.jpg"
+  }
+],
+"description":"levels.west_coast_usa.info.description"
+}
