@@ -1,0 +1,19 @@
+{
+  "domElement": "<wheels-debug></wheels-debug>",
+  "name": "ui.apps.wheelsdebug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows statistics of every wheel",
+  "css": {
+    "left": "0px",
+    "height": "auto",
+    "width": "220px",
+    "min-width": "120px",
+    "min-height": "120px",
+    "top": "0px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "wheelsDebug"
+}

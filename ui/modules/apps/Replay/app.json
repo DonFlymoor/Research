@@ -1,0 +1,17 @@
+{
+  "domElement": "<replay></replay>",
+  "name": "ui.apps.replay.name",
+    "types": [
+    "ui.apps.categories.utility"
+  ],
+  "css": {
+    "right": "10px",
+    "height": "170px",
+    "width": "350px",
+    "top": "100px"
+  },
+  "description": "An app for replaying things",
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "replay"
+}

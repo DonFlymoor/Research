@@ -1,0 +1,13 @@
+<div style="height: 100%; width: 100%; background-color: rgba(0, 0, 0, 0.7);" layout="row" layout-align="center center">
+  <div class="md-padding" style="min-height: 200px; width: 30%; min-width: 400px; background-color: rgba(255, 255, 255, 0.85); color: rgb(62, 62, 62); padding-top: 0;" layout="column">
+    <div layout="row" layout-align="space-between center">
+      <h3>{{ 'ui.mainmenu.onlineFeatures.featureTitle' | translate }}</h3>
+    </div>
+    <md-divider style="border-color: rgb(62, 62, 62);"></md-divider>
+    <div flex style="padding-top: 20px; padding-bottom: 20px;" bng-translate="ui.mainmenu.onlineFeatures.featureDescription"></div>
+    <div layout="row" layout-align="end end">
+      <md-button ng-click="storeAnswer('disable')" class="">{{ 'ui.common.disable' | translate}}</md-button>
+      <md-button ng-click="storeAnswer('enable')" class="md-raised md-primary">{{ 'ui.common.enable' | translate}}</md-button>
+    </div>
+  </div>
+</div>

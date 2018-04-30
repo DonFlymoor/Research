@@ -1,0 +1,20 @@
+{
+  "domElement": "<vehicle-debug></vehicle-debug>",
+  "name": "ui.apps.vehicledebug.name",
+  "types": [
+    "ui.apps.categories.debug",
+    "ui.apps.categories.vehicle_control"
+  ],
+  "description": "An app with various debug helpers",
+  "css": {
+    "left": "20px",
+    "height": "210px",
+    "width": "310px",
+    "min-width": "230px",
+    "min-height": "40px",
+    "top": "100px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "vehicleDebug"
+}

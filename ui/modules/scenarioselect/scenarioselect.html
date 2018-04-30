@@ -1,0 +1,131 @@
+<md-content flex="70" style="max-width:1200px; height:100%;" layout="column">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button md-no-ink class="md-icon-button md-default" aria-label="Back" ui-sref="menu.playmodes">
+        <md-icon class="material-icons">arrow_back</md-icon>
+      </md-button>
+
+      <span flex>{{ ::'ui.playmodes.scenarios' | translate }}</span>
+
+      <span>{{ ::'ui.common.sortBy' | translate }}:</span>
+      <md-select ng-model="selectedOrder" aria-label="_">
+        <md-option md-no-ink ng-repeat="order in ::tilesOrder" value="{{ ::order.key }}">{{ ::order.label | translate}}</md-option>
+      </md-select>
+
+      <ng-md-icon icon="search"></ng-md-icon>
+      <md-input-container flex>
+        <label>{{ ::'ui.common.search' | translate }}</label>
+        <input ng-model="query" ng-model-options="{debounce: 100}">
+      </md-input-container>
+    </div>
+  </md-toolbar>
+
+  <div flex layout-padding style="overflow-y: auto">
+    <md-grid-list
+          md-cols-sm="2" md-cols-md="2" md-cols-gt-md="3"
+          md-row-height-gt-md="16:9" md-row-height="16:9"
+          md-gutter="4px" md-gutter-gt-sm="4px"
+          class="gridMarkSelected">
+      <md-grid-tile ng-repeat="scenario in filtered"
+                      ng-class="(scenario === selected) ? 'selectedGridItem' : ''"
+                      style="overflow: hidden;"
+                      bng-all-clicks-no-nav single="selectScenario(scenario)" double="startScenario(scenario)" ng-focus="selectScenario(scenario)"
+                      >
+
+        <imageslider imageurls="scenario.preview" style="height: 100%; width: 100%"></imageslider>
+
+        <md-grid-tile-footer>
+          <div layout="row" layout-align="start center" class="md-padding">
+            <div ng-if=":: scenario.official"  layout="row" layout-align="center center">
+              <img src="images/beamng_logo_50x50.png" height="22px" style="-webkit-filter: brightness(0) invert(1);" />
+              <md-tooltip md-direction="top">
+                {{ ::'ui.common.official' | translate }}
+              </md-tooltip>
+            </div>
+            <div flex>
+              <h3>{{ scenario.name | translate }}</h3>
+            </div>
+            <md-icon ng-if="::scenario.maxPlayers > 1" class="material-icons" style="color:white; font-size: 1.5em; margin: 5px;">filter_{{::scenario.maxPlayers}}</md-icon>
+          </div>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+    </md-grid-list>
+  </div>
+</md-content>
+
+<md-content flex="30" ng-show="selected" layout="column" style="max-width: 400px; height: 100%">
+  <md-toolbar class="md-primary md-hue-1">
+    <div class="md-toolbar-tools">
+      <span flex>{{ selected.name | translate }}</span>
+    </div>
+  </md-toolbar>
+
+  <imageslider imageurls="selected.preview" style="width: 100%;min-height:200px;"></imageslider>
+
+  <p layout-padding bng-translate="{{selected.description}}"></p>
+  <md-divider></md-divider>
+
+  <div flex class="md-padding" style="overflow: auto">
+    <md-list>
+      <md-list-item ng-show="selected.maxPlayers > 1" class="md-2-line">
+        <md-icon class="material-icons" style="font-size: 2em">people</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ ::'ui.common.property.multiseatPlayers' | translate }}</h3>
+          <p>From {{selected.minPlayers}} up to {{ selected.maxPlayers }} local players
+          <md-icon class="material-icons" style="cursor: pointer; font-size: 1em">help<md-tooltip md-direction="left">Requires one controller per player</md-tooltip></md-icon>
+          </p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line">
+         <md-icon class="material-icons" style="font-size: 2em">flag</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ ::'ui.common.property.difficulty' | translate }}</h3>
+          <p>{{ difText(selected.difficulty) || 'Unknown' }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line">
+         <md-icon class="material-icons" style="font-size: 2em">account_circle</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ ::'ui.common.property.authors' | translate }}</h3>
+          <p>{{ selected.authors || 'Unknown' }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line">
+        <md-icon class="material-icons" style="font-size: 2em">event</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ ::'ui.common.property.createdAt' | translate }}</h3>
+          <p>{{ selected.date * 1000 | date: 'dd MMMM yyyy' }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line">
+        <md-icon class="material-icons" style="font-size: 2em">terrain</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ ::'ui.common.property.map' | translate }}</h3>
+          <p>{{ selected.map | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-if="selected.goals !== undefined">
+        <md-icon class="material-icons" style="font-size: 2em">check</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ ::'ui.common.property.goals' | translate }}</h3>
+          <p>
+            <p layout="row" layout-align="start center" ng-repeat="goal in selected.goals">
+              <md-icon class="material-icons" style="font-size: 1.7em; margin: 0.2em;" ng-if="goal.icon">{{:: goal.icon}}</md-icon>
+              {{:: goal.tooltip | translate}}
+            </p>
+          </p>
+        </div>
+      </md-list-item>
+
+    </md-list>
+  </div>
+
+  <div layout="row" class="md-padding">
+    <button layout-fill class="md-button md-primary md-raised" ng-click="startScenario(selected)"><b>{{ ::'ui.common.action.play' | translate }}</b></button>
+  </div>
+</md-content>

@@ -1,0 +1,28 @@
+.app .Odometer {
+
+}
+
+@font-face {
+    font-family: Squada One;
+    src: url(../../fonts/SquadaOne-Regular.ttf) format(truetype);
+}
+
+.app .Odometer .titleDiv {
+    color: white;
+    font-size:20pt;
+    height:20px;
+    font-family: Squada One; 
+    text-align:center;
+    vertical-align:middle;
+}
+
+.app .Odometer .distanceDiv {
+    color: white;
+    font-size:20pt;
+    height:20px;
+    font-family: Squada One; 
+    text-align:left;
+    vertical-align:middle;
+    padding-top: 12px;
+    padding-left: 12px;
+}

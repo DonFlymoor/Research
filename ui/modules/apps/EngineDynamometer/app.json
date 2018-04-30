@@ -1,0 +1,18 @@
+{
+  "domElement": "<engine-dynamometer></engine-dynamometer>",
+  "name": "ui.apps.engine_dynamometer.name",
+    "types": [
+    "ui.apps.categories.vehicle_info",
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "css": {
+    "left": "0px",
+    "height": "150px",
+    "top": "0px",
+    "width": "450px"
+  },
+  "description": "This app shows a graphical representation of the engine's rpm, torque and power at any time",
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "engineDynamometer"
+}

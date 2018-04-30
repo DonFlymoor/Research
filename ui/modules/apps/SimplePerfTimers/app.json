@@ -1,0 +1,17 @@
+{
+  "domElement": "<simple-perf-timers></simple-perf-timers>",
+  "name": "ui.apps.performance_timers.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "App with timers for 0-100km/h / 0-60MPH and X-0 km/h / MPH performance. Click the table to change what units the next speed test will be in.",
+  "css": {
+    "left": "200px",
+    "height": "100px",
+    "top": "200px",
+    "width": "420px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.1",
+  "directive": "simplePerfTimers"
+}

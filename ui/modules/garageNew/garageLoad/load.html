@@ -1,0 +1,25 @@
+<div style="height: 75%; width: 700px; color: currentColor; position: absolute; top: 15%; left: calc(50% - 350px);" bng-nav-root>
+  <gp-panel active="true" no-padding="true" navigatable="false">
+    <gp-panel-tab>
+      <gp-panel-tab-header>
+        {{::'ui.garage.load.loadCar' | translate}}
+      </gp-panel-tab-header>
+      
+      <div class="filler">
+        <div style="margin-top: 30px; cursor: pointer;" ng-repeat="car in gpLoad.list track by $index" ng-click="gpLoad.load($index)" bng-nav-item bng-nav-default-focus="$index === 0" ng-focus="gpLoad.activeListElement = $index" item-nav-actions="{confirm: {navigation: false, name: 'ui.actions.load'}}">
+          <gp-list-input btn-name="{{:: 'ui.common.load' | translate}}" btn-click="gpLoad.load($index)" btn-size="60px" flex active="$index === gpLoad.activeListElement" style="margin-top: 15px;">
+            <div style="font-size: 1.5em; margin: 5px;" class="font1">{{car.Name}}</div>
+          </gp-list-input>
+        </div>
+
+        <div ng-if="gpLoad.list.isEmpty()" class="container font2" style="padding: 24px;">
+          {{ :: 'ui.garage.load.emptyHint' | translate }}
+        </div>
+      </div>
+    <!-- 
+      <gp-panel-tab-footer layout="row"> 
+        <gp-btn icon="'check'" title="ui.common.save" class="gpBtn" style="margin: 5px;" ui-sref="garage.save"></gp-btn>
+      </gp-panel-tab-footer> -->
+    </gp-panel-tab>
+  </gp-panel>
+</div>

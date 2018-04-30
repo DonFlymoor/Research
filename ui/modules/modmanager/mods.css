@@ -1,0 +1,59 @@
+.contentModManager md-tabs {
+  min-height: 48px !important;
+}
+
+.contentModManager md-tabs-content-wrapper {
+  display: none;
+}
+
+
+
+
+
+/* === local ===================================================== */
+.contentModManager .modEntry button:hover {
+  background-color: inherit !important; /*To prevent the white background of clickable md list items*/
+}
+
+.contentModManager .local .modActive:nth-child(2n) {
+  background-color: #eeffee;
+}
+
+.contentModManager .local .modActive:nth-child(2n + 1) {
+  background-color: #ddffdd;
+}
+
+
+.contentModManager .local .modInactive:nth-child(2n) {
+  background-color: #ffeeee;
+}
+
+.contentModManager .local .modInactive:nth-child(2n + 1) {
+  background-color: #ffdddd;
+}
+
+
+
+
+/* === downloading ================================ */
+.contentModManager .downloading .entry {
+  cursor: pointer;
+}
+
+.contentModManager .downloading .entry:nth-child(2n + 1) {
+  background-color: #E5E5E5;
+}
+
+.contentModManager .downloading .entry:nth-child(2n) {
+  background-color: #CACACA;
+}
+
+.contentModManager .smallText {
+  font-size: .7em;
+  color: grey;
+}
+
+.contentModManager .topReserved {
+  height: 1em;
+}
+

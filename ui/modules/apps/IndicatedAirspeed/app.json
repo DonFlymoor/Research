@@ -1,0 +1,18 @@
+{
+  "domElement": "<indicated-airspeed></indicated-airspeed>",
+  "name": "ui.apps.indicated_airspeed.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays the indicated airspeed (IAS) of the vehicle. Click the app to switch display units.",
+  "css": {
+    "left": "0",
+    "height": "512px",
+    "top": "0",
+    "width": "512px"
+  },
+  "author": "beamng",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "indicatedAirspeed"
+}

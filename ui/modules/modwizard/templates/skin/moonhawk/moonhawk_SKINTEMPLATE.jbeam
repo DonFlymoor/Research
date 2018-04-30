@@ -1,0 +1,12 @@
+{
+
+"moonhawk_SKINTEMPLATE": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"moonhawk_SKINTEMPLATE",
+        "value":600,
+    },
+    "slotType" : "paint_design",
+    "globalSkin" : "moonhawk_SKINTEMPLATE",
+  },
+}

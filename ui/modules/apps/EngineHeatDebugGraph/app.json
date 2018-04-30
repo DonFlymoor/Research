@@ -1,0 +1,17 @@
+{
+  "domElement": "<engine-heat-debug-graph></engine-heat-debug-graph>",
+  "name": "ui.apps.engine_heat_debug_graph.name",
+  "types": [
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "This app shows a graphical representation of the timeframe Electronic Stability Control needs to operate",
+  "css": {
+    "left": "0px",
+    "height": "160px",
+    "top": "0px",
+    "width": "450px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "engineHeatDebugGraph"
+}

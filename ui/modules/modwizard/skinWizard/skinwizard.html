@@ -1,0 +1,158 @@
+<link type="text/css" rel="stylesheet" href="modules/modwizard/modwizard.css">
+
+<center class="mainmenu" bng-nav-root style="top: 0%;">
+
+  <div class="navigation">
+    <md-button md-no-ink class="navbtn" ng-if="skinWzrdCtrl.index !== 3"ng-click="skinWzrdCtrl.back()" style="float: left;">
+      <md-icon class="material-icons">keyboard_arrow_left</md-icon>
+      {{ :: 'ui.feedback.back' | translate}}
+    </md-button>
+
+    <md-button class="md-noink navbtn" ng-click="skinWzrdCtrl.next()" style="float: right;">
+      {{ (skinWzrdCtrl.index === 3) ? 'ui.modWizard.skinWizard.viewSkin' : 'ui.common.next' | translate}}
+      <md-icon class="material-icons">keyboard_arrow_right</md-icon>
+    </md-button>
+
+    <md-button ng-if="skinWzrdCtrl.index === 3" class="md-noink navbtn" ng-click="skinWzrdCtrl.done()" style="float: right;">
+      {{ :: 'ui.common.finish' | translate}}
+    </md-button>
+
+  </div>
+
+  <md-tabs style="pointer-events:none;" md-dynamic-height flex md-selected="skinWzrdCtrl.index" md-stretch-height="true" md-stretch-tabs="always" >
+    <!-- pointer-events: none to disable tab clicking -->
+    <md-tab style="pointer-events:auto" label="Step 1">
+      <md-grid-list class="grid" md-cols="6" style="margin-top: 10px" md-row-height="13:12" md-gutter="2vh">
+
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Skin Wizard</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="3" md-colspan="6" class="other" style="background-color: transparent">
+          <img src="modules/modwizard/images/skin/skinWizard.jpg" style="width:100%;height:auto;">
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="6" class="other">
+          <div layout-padding>
+            <p>
+              {{ :: 'ui.modWizard.skinWizard.intro' | translate}}
+            </p>
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 2">
+      <md-grid-list class="grid" md-cols="6" style="margin-top: 10; pointer-events:auto" md-row-height="13:12" md-gutter="2vh">
+        <!-- pointer-events: auto used to reenable mouse functionality within the tab -->
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">
+              {{ :: 'ui.modWizard.skinWizard.selectVehicle' | translate}}
+            </h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="5" md-colspan="6" class="other">
+          <md-content style="width: 100%; height: 100%; max-width: 90vh; background-color: transparent">
+            <div flex layout-padding style="overflow-y: auto">
+              <md-grid-list flex md-cols-sm="1" md-cols-md="3" md-cols-lg="3" md-cols-gt-lg="3" md-row-height-gt-md="16:9" md-row-height="16:9"
+                md-gutter="4px" md-gutter-gt-sm="4px" class="gridMarkSelected">
+                <md-grid-tile style="background-color: grey;" md-selected="1" ng-repeat="model in skinWzrdCtrl.data" bng-all-clicks single="skinWzrdCtrl.vehicleSelect(model)">
+                  <img ng-src="{{model.preview}}" style="height: 100%; width: 100%;"></img>
+                  <md-grid-tile-footer>
+                    <div layout="row" layout-align="start center" class="md-padding">
+                      <h3>{{model.Brand}} {{model.Name}}</h3>
+                    </div>
+                  </md-grid-tile-footer>
+                </md-grid-tile>
+              </md-grid-list>
+            </div>
+          </md-content>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 3">
+      <md-grid-list class="grid" md-cols="6" style="margin-top: 10px; pointer-events:auto" md-row-height="13:12" md-gutter="2vh">
+
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">{{skinWzrdCtrl.selectedVehicle.Brand}} {{skinWzrdCtrl.selectedVehicle.Name}}</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="4" md-colspan="6" class="other" style="background-color: transparent">
+          <img ng-src="{{skinWzrdCtrl.selectedVehicle.preview}}" style="width:100%;height:auto;">
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="other">
+          <form name="skinWzrdCtrl.modnameform" class="simple-form">
+            <md-input-container layout-align="center center" style="width: 100%;">
+              <span class="md-headline"> {{ :: 'ui.modWizard.skinWizard.skinName' | translate}}</span>
+              <input required="true" type="text" ng-model="skinWzrdCtrl.modName"></input>
+            </md-input-container>
+          </form>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 4">
+      <md-grid-list class="grid" md-cols="6" style="margin-top: 10px; pointer-events:auto" md-row-height="13:12" md-gutter="2vh">
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">{{ :: 'ui.modWizard.skinWizard.howTo' | translate}}</h1>
+          </div>
+        </md-grid-tile>
+        <md-grid-tile md-rowspan="1" md-colspan="4" class="other">
+          <span class="md-headline">{{ :: 'ui.modWizard.skinWizard.filesGenerated' | translate}}</span>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="1" md-colspan="2" class="other tile" ng-click="skinWzrdCtrl.openMod()" bng-nav-item bng-sound="{focus: 'event:>UI>Main Mouse Over', click: 'event:>UI>Main Select'}">
+          <span class="md-headline">{{ :: 'ui.modWizard.skinWizard.openFolder' | translate}}</span>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="2" class="other">
+          <div layout-padding>
+            <p>
+              {{ :: 'ui.modWizard.skinWizard.editFile' | translate}}
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="4" class="other">
+          <img src="modules/modwizard/images/skin/skinWizardA.jpg" style="width:90%;height:auto;">
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="3" md-colspan="4" class="other">
+          <div layout="column" layout-align="start start" style="text-align: left">
+              <div layout="row" layout-align="start start" layout-padding >
+                {{ :: 'ui.modWizard.skinWizard.desc' | translate}}
+
+              </div>
+              <div layout="column" layout-align="start start">
+                <md-subheader  style="background: none; font-size: 1.1em; font-weight: bold;">Left Side:</md-subheader>
+                <div layout-padding>
+                  {{ :: 'ui.modWizard.skinWizard.left' | translate}}
+                </div>
+              </div>
+
+              <div layout="column" layout-align="start start">
+                <md-subheader style="background: none; font-size: 1.1em; font-weight: bold;" >Right Side:</md-subheader>
+                <div layout-padding>
+                  {{ :: 'ui.modWizard.skinWizard.right' | translate}}
+                </div>
+              </div>
+          </div>
+        </md-grid-tile>
+        <md-grid-tile md-rowspan="3" md-colspan="2" class="other">
+          <img src="modules/modwizard/images/skin/skinWizardB.jpg" style="width:70%;">
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+  </md-tabs>
+
+</center>

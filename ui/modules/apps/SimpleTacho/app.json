@@ -1,0 +1,18 @@
+{
+  "domElement": "<simple-tacho></simple-tacho>",
+  "name": "ui.apps.tachometer.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays current engine RPM.",
+  "css": {
+    "left": "200px",
+    "height": "100px",
+    "top": "200px",
+    "width": "300px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.2",
+  "preserveAspectRatio" : true,
+  "directive": "simpleTacho"
+}

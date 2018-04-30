@@ -1,0 +1,19 @@
+{
+  "domElement": "<hotlapping></hotlapping>",
+  "name": "ui.apps.hotlapping.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "css": {
+    "left": "50px",
+    "height": "400px",
+    "width": "350px",
+    "min-width": "320px",
+    "min-height": "200px",
+    "top": "30px"
+  },
+  "description": "Lets you race against a self-set checkpoint.",
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "hotlapping"
+}

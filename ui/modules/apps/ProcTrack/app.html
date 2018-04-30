@@ -1,0 +1,19 @@
+ <div style="max-height:42px; width:100%; background:rgba(0,0,0,0.43);" layout="column" layout-align="center center" >  
+    <div layout="row" style="width:100%" layout-align="center center" layout-wrap> 
+        <div style="margin:1px;">
+        	<form ng-submit="find()">
+        		<table style="width: 100%">
+              <th>
+                <i class="material-icons" style="cursor: pointer; cursor: hand; font-size: 2em; color:white;float:left;" role="button" ng-click="randomize()" tabindex="0">shuffle</i>
+              </th>
+              <th style="width: 60%">
+            		<input stlye="width:100%" flex type="number" ng-model="seed" placeholder="seed" ng-mouseenter="enterMouse()" ng-click="enterMouse()" >
+              </th>
+              <th style="width: 40%">
+            		<button type="submit" class="md-raised md-button md-default-theme" style=" margin:auto; line-height:26px; min-height:26px; background:rgba(255,255,255,0.75);">Generate</button>
+              </th>
+         		</div>
+         	</form>
+         </div>
+    </div>
+</div>

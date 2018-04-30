@@ -1,0 +1,62 @@
+<!-- <link type="text/css" rel="stylesheet" href="modules/modmanager/mods.css"> -->
+<style>
+  md-tabs-wrapper, md-tabs-canvas, md-pagination-wrapper {
+    height: 64px !important;
+
+  }
+  .md-tab {
+    line-height: 40px !important;
+  }
+  .md-tab.md-active {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+</style>
+<div layout="row" style="max-width:1400px; min-width:600px; height: 100%">
+  <md-content  layout="column">
+    <md-toolbar >
+      <div class="md-toolbar-tools" layout="row">
+        <div ng-switch="hasFilter.back !== undefined">
+          <div  ng-switch-when="true">
+            <md-button ng-click="hasFilter.back()" md-no-ink class="md-icon-button md-default">
+              <md-icon style="font-size: 1.8em" class="material-icons dashboard-icons md-default-theme">arrow_back</md-icon>
+            </md-button>
+          </div>
+          <div ng-switch-default>
+            <md-button ng-hide="app.gameState" ng-click="goToMenu()" md-no-ink class="md-icon-button md-default">
+              <md-icon style="font-size: 1.8em" class="material-icons dashboard-icons md-default-theme">arrow_back</md-icon>
+            </md-button>
+          </div>
+        </div>
+
+        <div style="width: 1400px;">
+          <md-tabs class="md-primary" md-selected="modCtrl.selectedTab" md-stretch-tabs="always">
+            <md-tab ng-click="switchState('menu.mods.local')" label="{{ 'ui.repository.mods' | translate}}"></md-tab>
+            <md-tab ng-click="switchState('menu.mods.repository')" label="{{ 'ui.mainmenu.repo' | translate}}"></md-tab>
+          </md-tabs>
+        </div>
+
+      </div>
+
+    </md-toolbar>
+
+    <div flex layout-padding style="overflow-y: auto">
+      <md-content style="max-width:1200px; min-width:800px;" class="contentModManager">
+        <div ui-view="content" layout></div>
+      </md-content>
+    </div>
+  </md-content>
+
+  <md-content layout="column" flex="25" style="max-width: 500px; height: 100%;" ng-if="hasFilter">
+    <md-toolbar class="md-primary md-hue-1">
+      <div class="md-toolbar-tools">
+        <!-- <md-button ng-if="hasFilter.back !== undefined" md-no-ink class="md-icon-button md-default md-accent" aria-label="Back" ng-click="hasFilter.back()"> -->
+        <!-- <md-icon class="material-icons">arrow_back</md-icon> -->
+        <!-- </md-button> -->
+        <span flex>{{ hasFilter.name | translate }}</span>
+      </div>
+    </md-toolbar>
+
+    <div style="overflow: auto;" class="md-padding" ui-view="filter"></div>
+  </md-content>
+</div>

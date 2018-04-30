@@ -1,0 +1,18 @@
+{
+  "domElement": "<cruise-control></cruise-control>",
+  "name": "ui.apps.cruise_control.name",
+  "types": [
+    "ui.apps.categories.vehicle_control"
+  ],
+  "description": "An app to precisely set and control the speed of a vehicle",
+  "css": {
+    "left": "20px",
+    "height": "150px",
+    "top": "100px",
+    "width": "150px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "cruiseControl"
+}

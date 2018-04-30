@@ -1,0 +1,232 @@
+.garage {
+  color: rgb(185, 185, 185);
+  z-index: 10 !important;
+}
+
+.garage .controllerKey {
+  width: 100%;
+  height: auto;
+}
+
+.garage .menuItem {
+  height: 67px;
+  width: 67px;
+  margin: 7px;
+}
+
+.garage .menuItem .menu-icon {
+  font-size: 48px;
+}
+
+.garage .menu-icon {
+  color: inherit;
+}
+
+.garage .btn {
+  background-color: rgba(255,255,255,0.5);
+  cursor: pointer;
+}
+
+.garage .btn.active {
+  background-color: rgba(255, 103, 0, 0.7);
+  border: solid 3px rgba(255, 255, 255, 0.35)
+}
+
+.garage .btn md-icon {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.garage .btn.active md-icon {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.garage .btn svg {
+  fill: #b9b9ba;
+}
+
+
+.garage .btn.active svg {
+  fill: white;
+}
+
+.garage .btn:focus {
+  background-color: rgba(255, 103, 0, 0.7);
+  border: solid 3px rgba(255, 255, 255, 0.35)
+}
+
+.garage .btn:focus md-icon {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.garage .normalBtn {
+  opacity: 0.5;
+  cursor: pointer;
+  background-color: currentColor;
+}
+
+.garage .normalBtn:focus {
+  opacity: 1;
+}
+
+.garage .btnRound {
+  cursor: pointer;
+  border-radius: 50%; 
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.garage .btnRound md-icon {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.garage .btnRound.active {
+  border: 3px solid;
+  border-color: rgba(255, 103, 0, 0.7) !important;
+}
+
+.garage .btnRound.active md-icon{
+  color: rgb(200, 200, 200) !important;
+}
+
+.garage .tabContainer {
+  position: absolute;
+  top: 15px;
+}
+
+.garage .tabContainer .tabItem {
+  margin: 5px;
+  height: 42px;
+  width: 42px;
+}
+
+.garage .tabContainer .menu-icon {
+  font-size: 32px;
+}
+
+
+
+
+
+
+
+
+
+
+.garage ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.garage ::-webkit-scrollbar-thumb,
+.garage ::-webkit-scrollbar-thumb:hover,
+.garage ::-webkit-scrollbar-thumb:active {
+  background: #FF6700;
+}
+
+.garage ::-webkit-scrollbar-track ,
+.garage ::-webkit-scrollbar-track:hover ,
+.garage ::-webkit-scrollbar-track:active {
+  background: #b9b9ba;
+}
+
+.garage ::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+
+
+
+
+
+.garage .gpBtn {
+  height: 50px;
+  width: 50px;
+}
+
+.garage .gpArrow svg {
+  width: 100%;
+}
+
+
+.garage .controllerHint {
+  width: 150px;
+  font-size: 22px; 
+}
+
+
+
+
+.garage .imgListItem {
+  position: relative;
+  /*background-color: rgba(255, 255, 255, 0.1);*/
+}
+
+.garage .imgListItem.selected {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.garage .imgListItem.selected.active {
+  background-color: rgba(255, 103, 0, 0.35);
+}
+
+.garage .animateAwesomeThings2 .activeBox {
+  -webkit-transform: scale(1);
+  -webkit-animation: wrongSizeOne 0.05s forwards;
+}
+
+.garage .animateAwesomeThings2 .gradientBox {
+  -webkit-transform: scale(1);
+  -webkit-animation: wrongSizeTwo 0.05s forwards;
+}
+
+@-webkit-keyframes wrongSizeOne {
+  100% { -webkit-transform: scale(0.8); }
+}
+
+@-webkit-keyframes wrongSizeTwo {
+  100% { -webkit-transform: scale(1.05); }
+}
+
+.garage .animateAwesomeThings .movingPixels {
+  /*-webkit-transition: left 3s, right 3s, top 3s, bottom 3s; */
+  -webkit-transition: left 0.1s, right 0.1s, top 0.1s, bottom 0.1s;
+  -webkit-transition-timing-function: linear;
+}
+
+
+.garage .inputListItem:focus {
+  background-color: rgba(255, 103, 0, 0.35);
+}
+
+.garage .animateAwesomeThings .followActiveBox {
+  -webkit-transform: scale(0.8);
+  -webkit-animation: rightSizeOne 0.05s forwards;
+  -webkit-animation-delay: 0.15s;
+}
+
+.garage .animateAwesomeThings .gradientBox {
+  -webkit-transform: scale(1.05);
+  -webkit-animation: rightSizeTwo 0.05s forwards;
+  -webkit-animation-delay: 0.15s;
+}
+
+@-webkit-keyframes rightSizeOne {
+  100% { -webkit-transform: scale(1); }
+}
+
+@-webkit-keyframes rightSizeTwo {
+  100% { -webkit-transform: scale(1); }
+}
+
+.garage .animateAwesomeThingsMove1 .gradientBox {
+  -webkit-transform: scale(1.05);
+  -webkit-animation: moveLeft 0.1s forwards;
+}
+
+@-webkit-keyframes moveLeft {
+  100% { -webkit-transform: scale(1); }
+}
+
+
+.garage md-list-item:focus {
+  background-color: rgba(255, 103, 0, 0.35);
+}
+

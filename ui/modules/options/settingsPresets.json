@@ -1,0 +1,63 @@
+ [
+    {},
+
+    {
+      "GraphicMeshQuality": 0,
+      "GraphicTextureQuality": 0,
+      "GraphicLightingQuality": 0,
+      "GraphicShaderQuality": 0,
+      "GraphicPostfxQuality": 0,
+      "GraphicAnisotropic": 0,
+      "GraphicAntialias": 0,
+      "GraphicDynReflectionEnabled": false,
+      "GraphicDynReflectionFacesPerupdate": 1,
+      "GraphicDynReflectionDetail": 0,
+      "GraphicDynReflectionDistance": 10,
+      "GraphicDynReflectionTexsize": 0
+    },
+
+    {
+      "GraphicMeshQuality": 1,
+      "GraphicTextureQuality": 1,
+      "GraphicLightingQuality": 1,
+      "GraphicShaderQuality": 1,
+      "GraphicPostfxQuality": 1,
+      "GraphicAnisotropic": 4,
+      "GraphicAntialias": 1,
+      "GraphicDynReflectionEnabled": false,
+      "GraphicDynReflectionFacesPerupdate": 1,
+      "GraphicDynReflectionDetail": 0,
+      "GraphicDynReflectionDistance": 40,
+      "GraphicDynReflectionTexsize": 0
+    },
+
+    {
+      "GraphicMeshQuality": 2,
+      "GraphicTextureQuality": 2,
+      "GraphicLightingQuality": 2,
+      "GraphicShaderQuality": 2,
+      "GraphicPostfxQuality": 2,
+      "GraphicAnisotropic": 8,
+      "GraphicAntialias": 3,
+      "GraphicDynReflectionEnabled": false,
+      "GraphicDynReflectionFacesPerupdate": 2,
+      "GraphicDynReflectionDetail": 0.1,
+      "GraphicDynReflectionDistance": 80,
+      "GraphicDynReflectionTexsize": 1
+    },
+
+    {
+      "GraphicMeshQuality": 3,
+      "GraphicTextureQuality": 3,
+      "GraphicLightingQuality": 3,
+      "GraphicShaderQuality": 3,
+      "GraphicPostfxQuality": 3,
+      "GraphicAnisotropic": 16,
+      "GraphicAntialias": 3,
+      "GraphicDynReflectionEnabled": false,
+      "GraphicDynReflectionFacesPerupdate": 2,
+      "GraphicDynReflectionDetail": 0.3,
+      "GraphicDynReflectionDistance": 450,
+      "GraphicDynReflectionTexsize": 1
+    }
+  ]

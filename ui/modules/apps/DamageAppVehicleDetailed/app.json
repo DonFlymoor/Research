@@ -1,0 +1,20 @@
+{
+  "domElement": "<detailed-damage-app></detailed-damage-app>",
+  "name": "ui.apps.detailed_vehicle_damage_app.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "",
+  "css": {
+    "left": "0px",
+    "height": "420px",
+    "width": "240px",
+    "min-width": "60px",
+    "min-height": "60px",
+    "top": "0px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "detailedDamageApp"
+}

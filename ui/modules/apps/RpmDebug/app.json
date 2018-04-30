@@ -1,0 +1,19 @@
+{
+  "domElement": "<simple-rpm-debug></simple-rpm-debug",
+  "name": "ui.apps.rpm_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "App which shows current RPM in relation to specified values for idle, shiftdown, shiftup and maximum engine RPM.",
+  "css": {
+    "left": "100px",
+    "height": "200px",
+    "width": "200px",
+    "min-width": "120px",
+    "min-height": "120px",
+    "top": "100px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.1",
+  "directive": "simpleRpmDebug"
+}

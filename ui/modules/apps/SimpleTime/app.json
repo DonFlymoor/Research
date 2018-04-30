@@ -1,0 +1,17 @@
+{
+  "domElement": "<simple-time></simple-time>",
+  "name": "ui.apps.time.name",
+  "types": [
+    "ui.apps.categories.utility"
+  ],
+  "description": "Displays current system time.",
+  "css": {
+    "left": "0px",
+    "top": "0px",
+    "height": "40px",
+    "width": "80px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "simpleTime"
+}

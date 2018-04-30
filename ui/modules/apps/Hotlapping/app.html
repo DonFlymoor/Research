@@ -1,0 +1,129 @@
+ <div style="max-height:100%; width:100%; background:rgba(0, 0, 0, 0.43);color:white;" layout="column" layout-align="center center" > 
+    <div layout="row" style="width:100%" layout-align="center center" layout-wrap ng-show="controlsEnabled">
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="startHotlapping()" ng-show="!started && !closed" >Start Hotlapping</md-button> 
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="addCheckPoint()" ng-show=" started && ! closed" >Add Checkpoint</md-button>
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="stopTimer()" ng-show=" started && closed " >Stop Timer</md-button>
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="clearAllCP()" ng-show="!started && closed" >End Hotlapping</md-button>
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="toggleSettings()" ng-show="!showSettings">Advanced...</md-button> 
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="toggleSettings()" ng-show=" showSettings">Hide Advanced</md-button> 
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="skip()" ng-disabled="!(closed && started)">Skip Lap</md-button> 
+    </div>
+    <div layout="row" style="width:100%" layout-align="center center" layout-wrap ng-show="showSettings" ng-show="controlsEnabled"> 
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="clearAllCP()">End Hotlapping</md-button>
+      <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="toggleDetail()">Toggle Detail</md-button>
+
+      <!-- Size Changer -->
+      <div layout="row" style="width:100%" layout-align="center center" layout-wrap ng-show="controlsEnabled"> 
+          <md-button flex style="margin: 2px; min-width: 75px" md-no-ink class="md-raised" ng-click="sizeDown()">-</md-button>
+          <md-button flex style="margin: 2px; min-width: 150px" md-no-ink class="md-raised" ng-click="resetSize()" >Reset Size</md-button>
+          <md-button flex style="margin: 2px; min-width: 75px" md-no-ink class="md-raised" ng-click="sizeUp()">+</md-button>
+      </div>
+      <!-- 
+
+            File Selector
+
+       -->
+      <div layout="row" style="width:100%" layout-align="center center" layout-wrap ng-show="controlsEnabled"> 
+        <!-- menu to load the files.-->
+        <md-menu ng-show="!renaming" style="padding: 0; padding-left: 8px;" >
+          <md-button class="md-icon-button bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="refreshTracklist(); $mdOpenMenu()">
+            <md-icon class="material-icons" style="cursor: pointer; color: rgba(255, 255, 255, 0.901961);">folder</md-icon>
+          </md-button>
+          <md-menu-content>
+            <md-list-item ng-repeat="file in tracklist" ng-click="load(file)">
+              {{file}}
+            </md-list-item>
+          </md-menu-content>
+
+        </md-menu>
+
+        <!-- button to cancel renaming.-->
+        <md-button ng-show="renaming" class="md-warn md-icon-button md-primary bng-no-focus" md-no-ink style="padding-left: 8px; margin: 0; width: auto;" ng-click="cancelRename()">
+          <md-icon class="material-icons" style="cursor: pointer; color: #FD9393;">close</md-icon>
+          <md-tooltip>Cancel renaming</md-tooltip>
+        </md-button>
+
+        <!-- actual input field.-->
+        <label style="padding-left: 8px; padding-right: 8px" flex>
+           <input style="width:100%" placeholder="(no file)" ng-disabled="!loadedFile && !renaming" ng-focus="startRenaming()" ng-mouseenter="hoverRenaming()" ng-model="loadedFile">
+           <md-tooltip>Click to Rename</md-tooltip>
+        </label>
+
+        <!-- button to accept renaming -->
+        <md-button ng-show="renaming"  ng-disabled="!loadedFile" class="md-primary md-icon-button md-primary bng-no-focus" md-no-ink style="margin: 0; width: auto; padding-right: 8px;" ng-click="acceptRename(loadedFile)">
+          <md-icon class="material-icons" ng-disabled="!loadedFile" style="cursor: pointer; color: #A8DD73;">done</md-icon>
+          <md-tooltip>Rename</md-tooltip>
+        </md-button>
+
+        <!-- button to save -->
+        <md-button ng-show="!renaming" ng-disabled="!closed || saved" class="md-primary md-icon-button md-primary bng-no-focus" md-no-ink style="margin: 0; width: auto; padding-right: 8px;" ng-click="save()">
+          <md-icon class="material-icons" ng-disabled="!closed || saved" style="cursor: pointer; color: rgba(255, 255, 255, 0.901961);">save</md-icon>
+          <md-tooltip>Save track</md-tooltip>
+        </md-button>
+
+      </div>
+    </div>
+
+
+    <div layout="row" style="width:100%" layout-align="center center" layout-wrap ng-show="!controlsEnabled">
+        <table style="width:100%;">
+          <thead><tr>
+            <th>
+              <i ng-click="toggleDetail()" class="material-icons" style="cursor: pointer; cursor: hand;">query_builder</i>
+            </th>
+            <th width="50%" ><b>{{scenarioInfo.lap}}</b></th>
+            <th width="50%" ><b>{{scenarioInfo.wp}}</b></th>
+          </tr></thead>
+        </table>
+    </div>
+   
+
+    <div flex style="width:100%; overflow-y:auto" layout-wrap> 
+        <table style="width:100%; height:100%;border-bottom:1px solid white;">
+          <thead><tr>
+            <th width="20%" ><b>{{times.best.lap}}</b></th>
+            <th width="40%" ><b>{{times.best.duration}}</b></th>
+            <th width="40%" style="color:{{times.best.diffColor}}"><b>{{times.best.diff}}</b></th> 
+          </tr></thead>
+      </table> 
+        <!-- simple table -->
+        <table style="width:100%; height:100%" ng-show="!detailed">
+          <thead><tr>
+            <th width="20%" ><b>Lap</b></th>
+            <th width="40%" ><b>Duration</b></th>
+            <th width="40%" ><b>Vs prev. best</b></th> 
+          </tr></thead>
+          <tbody style="text-align:center"> 
+            <tr ng-repeat="row in times.snapshot" ng-show="$index == 0"> 
+              <td style="{{row.durationStyle}}">       {{row.lap       }} </td>
+              <td style="{{row.durationStyle}}">       {{row.duration }} </td>
+              <td style="color:{{::row.diffColor}}">   {{::row.diff     }} </td>
+            </tr> 
+            <tr ng-repeat="row in times.normal" ng-show="$index > 0">
+              <td>{{::row.lap      }}</td>
+              <td style="{{row.durationStyle}}">{{::row.duration }}</td>
+              <td style="color:{{::row.diffColor}}">{{::row.diff     }}</td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <!-- detailed table -->
+        <table style="width:100%; height:100%" ng-show="detailed">
+          <thead><tr>
+            <th><b>Lap</b></th>
+            <th><b>Duration</b></th>
+            <th><b>Vs prev. best</b></th> 
+            <th><b>Total</b></th> 
+          </tr></thead>
+          <tbody style="text-align:center"> 
+            <tr ng-repeat="row in times.detail">
+              <td>{{::row.lap      }} </td>
+              <td style="{{row.durationStyle}}">{{::row.duration }}</td>
+              <td style="color:{{::row.diffColor}}">{{::row.diff     }} </td>
+              <td>{{::row.total }} </td>
+            </tr>
+          </tbody>
+        </table>
+
+    </div>
+</div>

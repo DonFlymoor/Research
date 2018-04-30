@@ -1,0 +1,88 @@
+<link type="text/css" rel="stylesheet" href="modules/garageNew/garageSelect/select.css">
+
+<div class="background" bng-blur></div>
+
+<div class="container select" bng-nav-root root-nav-actions="{up: {cmd: 'up()', navigation: true}, down: {cmd: 'down()', navigation: true}, left: {cmd: 'left()', navigation: true}, right: {cmd: 'right()', navigation: true}}">
+  <div class="filler" bng-nav-item bng-nav-default-focus="true" item-nav-actions="{confirm: {cmd: 'confirm()', name: 'ui.actions.spawn', navigation: false}}">
+    <div class="info" layout="row" layout-align="center stretch">
+
+      <gp-panel navigatable="false" class="filler infoPanelLeft" rotated="true" part="true" style="width: 250px;">
+        <div class="filler" layout="column" layout-align="space-between start" style="min-height: 400px; max-height: 600px; direction: ltr;">
+          <div ng-repeat="key in gpSelect.overviewKeylist track by $index" ng-if="gpSelect.showData(key, false)" layout="column" class="infoItem font1 color1">
+            <span class="heading font2 color2">{{:: key}}</span>
+            <span ng-if=":: !gpSelect.isRealRange(key)">{{ gpSelect.considerUnit(key, gpSelect.keyExists(key, gpSelect.getCurrentConfig()[key])) }}</span>
+            <span ng-if=":: gpSelect.isRealRange(key)">{{ gpSelect.considerUnit(key, gpSelect.keyExists(key, gpSelect.getCurrentConfig()[key]).min) }} - {{ gpSelect.considerUnit(key, gpSelect.keyExists(key, gpSelect.getCurrentConfig()[key]).max) }}</span>
+          </div>
+        </div>
+      </gp-panel>
+
+      <div class="filler infoPanelRight infoPanelLeft" style="position: relative;" flex>
+        <div style="position: relative;">
+          <gp-heading style="position: absolute; bottom: 20px; right: 40px; left: 0;">
+            <div flex layout="row" layout-align="space-between end" class="title">
+              <div>
+                <img style="height: 60px; position: relative; bottom: -17px;" ng-src="{{gpSelect.models[gpSelect.selectedModel].logo}}" ng-if="gpSelect.models[gpSelect.selectedModel].logo !== undefined" />
+                <span>{{gpSelect.getCurrentConfig().Name}}</span>
+              </div>
+              <span class="font1 years color2" ng-if="gpSelect.getCurrentConfig().aggregates.Years.min !== undefined">{{gpSelect.getCurrentConfig().aggregates.Years.min}} - {{gpSelect.getCurrentConfig().aggregates.Years.max}}</span>
+            </div>
+          </gp-heading>
+        </div>
+        <gp-panel navigatable="false" middle="true" flex>
+          <div class="filler" ng-style="{'background': gpSelect.getCurrentConfig().previewGarage !== undefined ? 'url(' + (gpSelect.getCurrentConfig().previewGarage === '/ui/images/emptyBackground.png' ? '/ui/images/AppDefault.png' : gpSelect.getCurrentConfig().previewGarage) + ') center center / cover no-repeat' : '', 'background-size': 'cover'}" style="position: relative;">
+            <div class="font2 color2" style="position: absolute; top: 10px; right: 10px;" layout="column">
+              <div layout="row" layout-align="end center" style="height: 40px; margin-bottom: 7px;">
+                <div style="margin-right: 10px;">{{gpSelect.getCountry()}}</div>
+                <country-flag src="gpSelect.getCountry()" ng-show="gpSelect.getCountry() != 'missing'" layout></country-flag>
+              </div>
+              <span ng-if="gpSelect.getCurrentConfig().Value" style="font-size: 14pt;" layout="row" layout-align="end center" class="color1 font1">
+                ${{gpSelect.getCurrentConfig().Value | numStr:','}}
+              </span>
+            </div>
+
+            <div ng-if="gpSelect.getCurrentConfig().aggregates.Source['BeamNG - Official']" class="color1" style="position: absolute; bottom: 10px; left: 10px;" layout="row" layout-align="center center">
+              <img src="images/beamng_logo_50x50.png" height="22px" style="-webkit-filter: brightness(0) invert(1); margin-right: 8px;" />
+              <span class="font2 color1">{{:: 'ui.common.official' | translate}}</span>
+            </div>
+
+            <div class="font2 color2" style="position: absolute; bottom: 10px; left: 100px; right: 100px;" layout="row" layout-align="center center">
+              <md-icon class="material-icons" style="color: currentColor; margin: 5px;">info</md-icon>
+              {{gpSelect.getCurrentConfig().Description}}
+            </div>
+          </div>
+        </gp-panel>
+      </div>
+      
+      <gp-panel navigatable="false" class="filler infoPanelRight" part="true" style="width: 350px;">
+        <div class="filler" layout="column" layout-align="space-between start" style="min-height: 400px; max-height: 600px;">
+          <div layout="column" class="infoItem font1 color1">
+            <span class="heading font2 color2">Torque</span>
+            <span>{{ gpSelect.considerUnit('Torque', gpSelect.getCurrentConfig()['Torque']) }} @ {{ gpSelect.getCurrentConfig()['TorquePeakRPM']}} rpm</span>
+          </div>
+
+          <div layout="column" class="infoItem font1 color1">
+            <span class="heading font2 color2">Power</span>
+            <span>{{ gpSelect.considerUnit('Power', gpSelect.getCurrentConfig()['Power']) }} @ {{ gpSelect.getCurrentConfig()['PowerPeakRPM']}} rpm</span>
+          </div>
+
+          <div ng-repeat="key in gpSelect.perfKeyList track by $index" ng-if="gpSelect.showData(key, true)" layout="row" layout-align="space-between center" class="listItem infoItem font1 color1">
+            <span class="heading font2 color2">{{:: key}}</span>
+            <span ng-if=":: !gpSelect.isRealRange(key)">{{ gpSelect.considerUnit(key, gpSelect.keyExists(key, gpSelect.getCurrentConfig()[key])) }}</span>
+            <span ng-if=":: gpSelect.isRealRange(key)">{{ gpSelect.considerUnit(key, gpSelect.keyExists(key, gpSelect.getCurrentConfig()[key]).min) }} - {{ gpSelect.considerUnit(key, gpSelect.keyExists(key, gpSelect.getCurrentConfig()[key]).max) }}</span>
+          </div>
+        </div>
+      </gp-panel>
+    </div>
+
+    <gp-img-list navigatable="false" increase-func="increaseModel" decrease-func="decreaseModel" class="leftList" active="true" ratio="16/9" reverse="true" list="gpSelect.models" selected="gpSelect.selectedModel" left="gpSelect.last === 'up'" right="gpSelect.last === 'down'"></gp-img-list>
+
+    <gp-img-list navigatable="false" increase-func="increaseConfig" decrease-func="decreaseConfig" class="bottomList" active="true" ratio="16/9" horizontal="true" list="gpSelect.models[gpSelect.selectedModel].configs" sort-by="gpSelect.sortByValue" selected="gpSelect.selectedConfigs[gpSelect.selectedModel]" left="gpSelect.last === 'left'" right="gpSelect.last === 'right'"></gp-img-list>
+
+
+    <div style="position: absolute; bottom: 83px; left: 145px;" class="color2">
+      <gp-circle style="position: absolute; top: -12px; left: -10px;"></gp-circle>
+      <gp-gradient both="true" style="position: absolute; bottom: 42px; height: 25px; left: -2.5px;" orientation="vertical"></gp-gradient>
+      <gp-gradient both="true" style="position: absolute; left: 42px; width: 25px; bottom: 0.5px;"></gp-gradient>
+    </div>
+  <div>
+</div>

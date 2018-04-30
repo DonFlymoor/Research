@@ -1,0 +1,18 @@
+{
+  "domElement": "<winds></winds>",
+  "name": "ui.apps.wind.name",
+  "types": [
+    "ui.apps.categories.info"
+  ],
+  "description": "Controlling wind has never been easier! Click number to change the unit.",
+  "css": {
+    "left": "200px",
+    "height": "300px",
+    "top": "200px",
+    "width": "250px"
+  },
+  "author": "CarlosAir",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "winds"
+}

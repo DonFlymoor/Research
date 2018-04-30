@@ -1,0 +1,41 @@
+{
+  "camera": {
+    "mode": "relative",
+    "relative": {
+      "position": [-0.3, 0.6, 1], // X, Y, Z
+      "rotation": [0, -170, 0], // X, Y, Z
+      "fov": 75
+    }
+  },
+  "map": {
+    "name": "west_coast_usa",
+    "spawnpoint": "spawns_gasstation",
+    "dayTime": "12:02",
+    "timeRunning": false,
+    "dayLengthSeconds": 3600,
+    //"weather": "rainy"
+  },
+  //"scenario": "roadconfig1",
+  "vehicle": {
+    "name": "etk800",
+    "visible": true
+  },
+  "session": {
+    "name": "AnnotationRun1",
+    "description": "testing run 1",
+    "dataLimit": 200, // data entries
+    "format": "json",
+    "distance": 30, // in meters
+    "fastForward": true,
+    "sessionPrefix": "annotation/{sessionName}",
+    "dataPrefix": "{YYYY}_{MM}_{DD}_{HH}_{mm}_{ss}",
+    //"dummy": true // if set, data extraction does not happen. Useful for debugging the AI
+  },
+  "ai": {
+    "mode": "span",
+    "drivability": 0.9, //will span part of road network w drivability > config.ai.drivability
+    "aggression": 0.7,
+    "driveInLane": "on",
+    "speedLimitKmh": 30
+  }
+}

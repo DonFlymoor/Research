@@ -1,0 +1,18 @@
+{
+  "domElement": "<race-laps></race-laps>",
+  "name": "ui.apps.racelaps.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "css": {
+    "left": "0px",
+    "height": "80px",
+    "width": "150px",
+    "min-width": "100px",
+    "min-height": "40px",
+    "top": "0px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "raceLaps"
+}

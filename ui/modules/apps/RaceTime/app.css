@@ -1,0 +1,28 @@
+.app .RaceTime {
+
+}
+
+@font-face {
+    font-family: Squada One;
+    src: url(../../fonts/SquadaOne-Regular.ttf) format(truetype);
+}
+
+.app .RaceTime .titleDiv {
+    color: white;
+    font-size:20pt;
+    height:20px;
+    font-family: Squada One; 
+    text-align:center;
+    vertical-align:middle;
+}
+
+.app .RaceTime .timeDiv {
+    color: white;
+    font-size:20pt;
+    height:20px;
+    font-family: Squada One; 
+    text-align:left;
+    vertical-align:middle;
+    padding-top: 12px;
+    padding-left: 12px;
+}

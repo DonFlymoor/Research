@@ -1,0 +1,18 @@
+{
+  "domElement": "<gforces-debug></gforces-debug>",
+  "name": "ui.apps.g-forces.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Simple visualisation of the g-forces affecting the vehicle.",
+  "css": {
+    "left": "0px",
+    "height": "300px",
+    "top": "0px",
+    "width": "300px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "gforcesDebug"
+}

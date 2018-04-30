@@ -1,0 +1,103 @@
+<link type="text/css" rel="stylesheet" href="modules/garagePrototype/garageSelect/select.css">
+
+<div class="background" bng-blur></div>
+
+<div style="position: absolute; width: 100%; height: 100%;" layout="column" layout-align="center center">
+  <div ng-if= "!gpProtoSelect.hasStock" style="border: 1px solid white; background-color: rgba(0,0,0,0.7); width: 40%;" layout="row" layout-align="center center">
+    <h1 class="color1 font1" style="font-size: 18pt">No stock available, please come back later.</h1>
+  </div>
+</div>
+
+<div ng-if="gpProtoSelect.hasStock" class="container select" bng-nav-root root-nav-actions="{up: {cmd: 'up()', navigation: true}, down: {cmd: 'down()', navigation: true}, left: {cmd: 'left()', navigation: true}, right: {cmd: 'right()', navigation: true}}">
+  <div class="filler" bng-nav-item bng-nav-default-focus="true" item-nav-actions="{confirm: {cmd: 'confirm()', name: (gpProtoSelect.params.mode === 'garage' ? 'ui.actions.spawn' : 'Purchase Car'), navigation: false}}">
+      <div id="money" ng-if="gpProtoSelect.params.mode === 'dealer'"class="money" layout="row" layout-align="end end" style="font-size: 2em; padding: 1%;" >
+        ${{ gpProtoSelect.params.money }}
+      </div>
+    <div class="info" layout="row" layout-align="center stretch">
+
+      <gp-panel navigatable="false" class="filler infoPanelLeft" rotated="true" part="true" style="width: 250px;">
+        <div class="filler" layout="column" layout-align="space-between start" style="min-height: 400px; max-height: 600px; direction: ltr;">
+          <div ng-repeat="key in gpProtoSelect.overviewKeylist track by $index" ng-if="gpProtoSelect.showData(key, false)" layout="column" class="infoItem font1 color1">
+            <span class="heading font2 color2">{{:: key}}</span>
+            <span ng-if=":: !gpProtoSelect.isRealRange(key)">{{ gpProtoSelect.considerUnit(key, gpProtoSelect.keyExists(key, gpProtoSelect.getCurrentConfig()[key])) }}</span>
+            <span ng-if=":: gpProtoSelect.isRealRange(key)">{{ gpProtoSelect.considerUnit(key, gpProtoSelect.keyExists(key, gpProtoSelect.getCurrentConfig()[key]).min) }} - {{ gpProtoSelect.considerUnit(key, gpProtoSelect.keyExists(key, gpProtoSelect.getCurrentConfig()[key]).max) }}</span>
+          </div>
+        </div>
+      </gp-panel>
+
+      <div class="filler infoPanelRight infoPanelLeft" style="position: relative;" flex>
+        <div style="position: relative;">
+          <gp-heading style="position: absolute; bottom: 20px; right: 40px; left: 0;">
+            <div flex layout="row" layout-align="space-between end" class="title">
+              <div>
+                <img style="height: 60px; position: relative; bottom: -17px;" ng-src="{{gpProtoSelect.models[gpProtoSelect.selectedModel].logo}}" ng-if="gpProtoSelect.models[gpProtoSelect.selectedModel].logo !== undefined" />
+                <span>{{gpProtoSelect.getCurrentConfig().Name}}</span>
+              </div>
+              <span class="font1 years color2" ng-if="gpProtoSelect.getCurrentConfig().aggregates.Years.min !== undefined">{{gpProtoSelect.getCurrentConfig().aggregates.Years.min}} - {{gpProtoSelect.getCurrentConfig().aggregates.Years.max}}</span>
+            </div>
+          </gp-heading>
+        </div>
+        <gp-panel navigatable="false" middle="true" flex >
+
+          <div class="filler" ng-style="{'background': gpProtoSelect.getCurrentConfig().previewGarage !== undefined ? 'url(' + (gpProtoSelect.getCurrentConfig().previewGarage === '/ui/images/emptyBackground.png' ? '/ui/images/AppDefault.png' : gpProtoSelect.getCurrentConfig().previewGarage) + ') center center / cover no-repeat' : '', 'background-size': 'cover'}" style="position: relative;">
+
+            <!-- Overlay to indicate vehicle owned status -->
+
+
+            <div class="font2 color2" style="position: absolute; top: 10px; right: 10px;" layout="column">
+              <div layout="row" layout-align="end center" style="height: 40px; margin-bottom: 7px;">
+                <div style="margin-right: 10px;">{{gpProtoSelect.getCountry()}}</div>
+                <country-flag src="gpProtoSelect.getCountry()" ng-show="gpProtoSelect.getCountry() != 'missing'" layout></country-flag>
+              </div>
+              <span ng-if="gpProtoSelect.getCurrentConfig().Value" style="font-size: 14pt;" layout="row" layout-align="end center" class="color1 font1">
+                ${{gpProtoSelect.getCurrentConfig().Value | numStr:','}}
+              </span>
+            </div>
+
+            <div ng-if="gpProtoSelect.getCurrentConfig().aggregates.Source['BeamNG - Official']" class="color1" style="position: absolute; bottom: 10px; left: 10px;" layout="row" layout-align="center center">
+              <img src="images/beamng_logo_50x50.png" height="22px" style="-webkit-filter: brightness(0) invert(1); margin-right: 8px;" />
+              <span class="font2 color1">{{:: 'ui.common.official' | translate}}</span>
+            </div>
+
+            <div class="font2 color2" style="position: absolute; bottom: 10px; left: 100px; right: 100px;" layout="row" layout-align="center center">
+              <md-icon class="material-icons" style="color: currentColor; margin: 5px;">info</md-icon>
+              {{gpProtoSelect.getCurrentConfig().Description}}
+            </div>
+          </div>
+
+        </gp-panel>
+
+      </div>
+      <gp-panel navigatable="false" class="filler infoPanelRight" part="true" style="width: 350px;">
+        <div class="filler" layout="column" layout-align="space-between start" style="min-height: 400px; max-height: 600px;">
+          <div layout="column" class="infoItem font1 color1">
+            <span class="heading font2 color2">Torque</span>
+            <span>{{ gpProtoSelect.considerUnit('Torque', gpProtoSelect.getCurrentConfig()['Torque']) }} @ {{ gpProtoSelect.getCurrentConfig()['TorquePeakRPM']}} rpm</span>
+          </div>
+
+          <div layout="column" class="infoItem font1 color1">
+            <span class="heading font2 color2">Power</span>
+            <span>{{ gpProtoSelect.considerUnit('Power', gpProtoSelect.getCurrentConfig()['Power']) }} @ {{ gpProtoSelect.getCurrentConfig()['PowerPeakRPM']}} rpm</span>
+          </div>
+
+          <div ng-repeat="key in gpProtoSelect.perfKeyList track by $index" ng-if="gpProtoSelect.showData(key, true)" layout="row" layout-align="space-between center" class="listItem infoItem font1 color1">
+            <span class="heading font2 color2">{{:: key}}</span>
+            <span ng-if=":: !gpProtoSelect.isRealRange(key)">{{ gpProtoSelect.considerUnit(key, gpProtoSelect.keyExists(key, gpProtoSelect.getCurrentConfig()[key])) }}</span>
+            <span ng-if=":: gpProtoSelect.isRealRange(key)">{{ gpProtoSelect.considerUnit(key, gpProtoSelect.keyExists(key, gpProtoSelect.getCurrentConfig()[key]).min) }} - {{ gpProtoSelect.considerUnit(key, gpProtoSelect.keyExists(key, gpProtoSelect.getCurrentConfig()[key]).max) }}</span>
+          </div>
+        </div>
+      </gp-panel>
+    </div>
+
+    <gp-img-list navigatable="false" increase-func="increaseModel" decrease-func="decreaseModel" class="leftList" active="true" ratio="16/9" reverse="true" list="gpProtoSelect.models" selected="gpProtoSelect.selectedModel" left="gpProtoSelect.last === 'up'" right="gpProtoSelect.last === 'down'"></gp-img-list>
+
+    <gp-img-list navigatable="false" increase-func="increaseConfig" decrease-func="decreaseConfig" class="bottomList" active="true" ratio="16/9" horizontal="true" list="gpProtoSelect.models[gpProtoSelect.selectedModel].configs" sort-by="gpProtoSelect.sortByValue" selected="gpProtoSelect.selectedConfigs[gpProtoSelect.selectedModel]" left="gpProtoSelect.last === 'left'" right="gpProtoSelect.last === 'right'"></gp-img-list>
+
+
+    <div style="position: absolute; bottom: 83px; left: 145px;" class="color2">
+      <gp-circle style="position: absolute; top: -12px; left: -10px;"></gp-circle>
+      <gp-gradient both="true" style="position: absolute; bottom: 42px; height: 25px; left: -2.5px;" orientation="vertical"></gp-gradient>
+      <gp-gradient both="true" style="position: absolute; left: 42px; width: 25px; bottom: 0.5px;"></gp-gradient>
+    </div>
+  <div>
+</div>

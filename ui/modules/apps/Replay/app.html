@@ -1,0 +1,103 @@
+<div style="height:100%; width: 100%; color: rgba(255, 255, 255, 0.901961); background-color: rgba(0,0,0,0.43);" layout="column">
+  <div style="height:20px; padding: 0 5px 0 5px" layout="row" layout-align="space-between center" >
+
+    <!-- --- --- Top left icon --- --- -->
+    <!-- Open file -->
+    <md-button ng-if="!renaming && state != 'recording'" class="md-icon-button bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="listRecordings()">
+      <md-icon class="material-icons" style="cursor: pointer; color: rgba(255, 255, 255, 0.901961);">folder</md-icon>
+    </md-button>
+
+    <!-- Renaming -->
+    <md-button ng-if="renaming" class="md-warn md-icon-button md-primary bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="cancelRename()">
+      <md-icon class="material-icons" style="cursor: pointer; color: #FD9393;">close</md-icon>
+      <md-tooltip>Cancel renaming</md-tooltip>
+    </md-button>
+
+    <!-- Recording -->
+    <md-button ng-if="!renaming && state == 'recording'" class="md-warn md-icon-button md-primary bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="cancelRecording()">
+      <md-icon class="material-icons" style="cursor: pointer; color: #FD9393;">close</md-icon>
+      <md-tooltip>Cancel recording</md-tooltip>
+    </md-button>
+
+    <!-- --- --- Filename text box --- --- -->
+    <!-- File name -->
+    <label style="padding-left: 8px; padding-right: 8px" flex>
+      <input style="width:100%" placeholder="(no file)" class="bng-hidden-input" ng-disabled="state == 'recording' || !loadedFile" ng-focus="startRenaming()" ng-mouseup="hoverRenaming()" ng-mouseenter="hoverRenaming()" ng-model="loadedFile"></input>
+    </label>
+
+    <!-- --- --- Top right icon --- --- -->
+    <!-- Renaming -->
+    <md-button ng-if="renaming" ng-disabled="!loadedFile" class="md-primary md-icon-button md-primary bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="acceptRename()">
+      <md-icon class="material-icons" style="cursor: pointer; color: #A8DD73;">done</md-icon>
+      <md-tooltip>Rename</md-tooltip>
+    </md-button>
+
+    <!-- Close -->
+    <md-button ng-if="!renaming && state != 'recording' && state != 'idle'" class="md-icon-button" ng-disabled="state != 'playing'" md-no-ink style="margin: 0; width: auto" ng-click="stop()">
+      <md-icon class="material-icons" style="cursor:pointer; color: rgba(255, 255, 255, 0.901961);">stop</md-icon>
+      <md-tooltip>Close replay</md-tooltip>
+    </md-button>
+
+    <!-- Recording -->
+    <md-button ng-if="!renaming && state != 'playing'" class="md-icon-button" md-no-ink style="margin: 0; width: auto" ng-click="toggleRecording()" ng-disabled="state == 'playing'">
+      <md-icon class="material-icons" style="cursor:pointer; color:red">{{ state == 'recording' ? 'stop' : 'fiber_manual_record'}}</md-icon>
+      <md-tooltip>{{ state == 'recording' ? 'Save recording' : 'Record new replay'}}</md-tooltip>
+    </md-button>
+
+  </div>
+  <md-divider></md-divider>
+  <div layout="row" style="position: relative">
+
+    <!-- Play/pause -->
+    <span>
+      <md-button class="md-icon-button" md-no-ink style="margin: 0; width: auto" ng-click="togglePlay()" ng-disabled="state == 'recording' || !loadedFile">
+        <md-icon class="material-icons" style="font-size: 3em; cursor:pointer; color: rgba(255, 255, 255, 0.901961);">{{ (state == 'playing' && !paused) ? 'pause' : 'play_arrow' }}</md-icon>
+        <md-tooltip>{{ state == 'playing && !paused' ? 'Pause' : 'Play' }}</md-tooltip>
+      </md-button>
+    </span>
+
+    <span flex></span>
+
+    <!-- Playback position number -->
+    <span class"md-padding">
+      <span ng-style="{color: loadedFile? 'lightgrey':'darkgrey'}">
+          <span ng-style="{color: isSeeking? 'white':''}" style="align:center; position: relative; font-family: monospace; font-size: 3em">{{ positionSeconds*1000 | date: 'mm:ss.sss'}}</span>
+          <small>({{ totalSeconds*1000 | date: 'mm:ss.sss'}})</small>
+      </span>
+    </span>
+
+    <span flex></span>
+
+  </div>
+  <div layout="row" layout-align="start center"  >
+
+        <!-- Speed -->
+        <span ng-hide="state == 'idle'">
+            <md-button ng-disabled="!loadedFile" class="md-icon-button" md-no-ink style="margin: 0; width: auto" ng-click="toggleSpeed(-1)">
+              <md-icon class="material-icons" style="font-size: 1em; cursor:pointer; color: rgba(255, 255, 255, 0.901961);">remove</md-icon>
+              <md-tooltip>Slower motion</md-tooltip>
+            </md-button>
+            <small ng-style="{color: loadedFile? '':'lightgrey'}">{{speed.toFixed(2)}}x
+              <md-tooltip>Playback speed</md-tooltip>
+            </small>
+            <md-button ng-disabled="!loadedFile" class="md-icon-button" md-no-ink style="margin: 0; width: auto" ng-click="toggleSpeed(+1)">
+              <md-icon class="material-icons" style="font-size: 1em; cursor:pointer; color: rgba(255, 255, 255, 0.901961)">add</md-icon>
+              <md-tooltip>Faster motion</md-tooltip>
+            </md-button>
+        </span>
+
+
+    <!-- Playback position bar -->
+      <md-slider flex ng-disabled="!loadedFile" ng-model="positionPercent" min="0" max="1" step="0.001" ng-change="seek(positionPercent)" ng-disabled="state != 'playing'" style="padding-left:16px; padding-right: 16px;" aria-label="_"></md-slider>
+
+  </div>
+  <div layout="row" layout-align="start center">
+      <span class="material-icons" style="padding-left: 4px; padding-right: 7px; text-shadow: black 0.0em 0.0em 0.3em; color:#ffb8bb; font-size:1.8em;">info</span>
+      <span style="text-shadow: black 0.0em 0.0em 1.0em; color:#ffb8bb"><strong>Note:</strong> Replay system is experimental. It lacks features and may work incorrectly.</span>
+      <!-- Framerate debug information -->
+      <!--
+      FPS Rec: {{fpsRec}}
+      FPS Play: {{fpsPlay}}
+      -->
+  </div>
+</div>

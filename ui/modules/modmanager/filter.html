@@ -1,0 +1,43 @@
+<div layout="column">
+  <span translate="ui.modmanager.numActive" translate-values="modLoclCtrl.numActiveObj()"></span>
+  <br/>
+
+  <md-input-container style="padding: 2px; margin: 0 20px">
+    <label>{{ :: 'ui.common.search' | translate}}</label>
+    <input ng-model="modLoclCtrl.filter.customFilter.$">
+  </md-input-container>
+  <br />
+
+  <div>
+    {{'ui.modmanager.show' | translate}}:
+  </div>
+  <md-select ng-model="modLoclCtrl.filter.customFilter.modType" layout="column">
+    <md-option value="" flex="25" >{{'ui.repository.cat_all'| translate}}</md-option>
+    <md-option ng-repeat="type in modLoclCtrl.types | orderBy" value="{{type}}" flex="25">{{type | capitalize}}</md-option>
+  </md-select>
+  <md-divider></md-divider>
+  <br />
+  <div>
+    {{'ui.repository.order_by' | translate}}:
+  </div>
+  <md-select ng-model="modLoclCtrl.filter.orderby" aria-label="_" flex ng-change="repo.filterApply();">
+    <md-option value="dateAdded" flex="25" >{{'ui.modmanager.dateAdded' | translate}}</md-option>
+    <md-option value="modname" flex="25" >{{'ui.modmanager.modname' | translate}}</md-option>
+    <md-option value="modType" flex="25" >{{'ui.modmanager.type' | translate}}</md-option>
+    <md-option value="-active" flex="25" >{{'ui.modmanager.active' | translate}}</md-option>
+  </md-select>
+  <md-divider></md-divider>
+  <br />
+
+
+
+  <div layout="column" >
+    <md-button style="text-transform: none;" ng-click="modLoclCtrl.updateAll()" ng-if="online === 'enable'"class="md-button md-raised md-primary">{{ :: 'ui.modmanager.updateAll' | translate}}</md-button>
+    <md-button style="text-transform: none;" ng-click="modLoclCtrl.activateAllMods()" class="md-button md-raised">{{ :: 'ui.modmanager.activateAll' | translate}}</md-button>
+    <md-button style="text-transform: none;" ng-click="modLoclCtrl.deactivateAllMods()" class="md-button md-raised">{{ :: 'ui.modmanager.deactivateAll' | translate}}</md-button>
+    <md-button style="text-transform: none;" ng-click="modLoclCtrl.openModFolderInExplorer()" class="md-button md-raised">{{ :: 'ui.modmanager.openModFolderInExplorer' | translate}}</md-button>
+    <br/>
+    <md-button style="text-transform: none;" ng-click="modLoclCtrl.deleteAll()" class="md-button md-raised md-warn">{{ :: 'ui.modmanager.deleteAll' | translate}}</md-button>
+  </div>
+
+</div>

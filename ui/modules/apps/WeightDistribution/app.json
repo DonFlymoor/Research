@@ -1,0 +1,20 @@
+{
+  "domElement": "<weight-distribution></weight-distribution>",
+  "name": "ui.apps.weight_distribution.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows the forces working on every wheel",
+  "css": {
+    "left": "0px",
+    "height": "auto",
+    "width": "220px",
+    "min-width": "120px",
+    "min-height": "120px",
+    "top": "0px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "weightDistribution"
+}

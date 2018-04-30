@@ -1,0 +1,19 @@
+{
+  "domElement": "<key-list></key-list>",
+  "name": "ui.apps.special_vehicle_keys.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays special keys of the current vehicle",
+  "css": {
+    "min-width": "200px",
+    "height": "400px",
+    "width": "400px",
+    "right": "200px",
+    "min-height": "50px",
+    "top": "200px"
+  },
+  "author": "beamng",
+  "version": "0.2",
+  "directive": "keyList"
+}

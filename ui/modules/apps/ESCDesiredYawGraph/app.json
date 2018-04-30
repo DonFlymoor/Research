@@ -1,0 +1,17 @@
+{
+  "domElement": "<esc-desired-yaw-graph></esc-desired-yaw-graph>",
+  "name": "ui.apps.esc_desired_yaw_rate_graph.name",
+  "types": [
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "Shows a graph which visualizes the calculation of the desired yaw rate for the Electronic Stability Control system",
+  "css": {
+    "bottom": "0px",
+    "height": "200px",
+    "top": "0px",
+    "width": "500px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "escDesiredYawGraph"
+}

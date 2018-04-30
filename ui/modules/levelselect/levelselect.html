@@ -1,0 +1,129 @@
+<md-content flex="80" style="max-width:1200px; min-width:600px; height: 100%" layout="column">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button md-no-ink class="md-icon-button md-default" aria-label="Back" ui-sref="menu.playmodes">
+        <md-icon class="material-icons">arrow_back</md-icon>
+      </md-button>
+      <span flex>{{ 'ui.levelselect.title' | translate }}</span>
+
+      <md-icon class="material-icons" md-font-icon="play">play</md-icon>
+
+      <md-input-container flex>
+        <label>{{ ::'ui.common.search' | translate }}</label>
+        <input ng-model="query" ng-model-options="{debounce: 100}" ng-change="levels.updateList(query)">
+      </md-input-container>
+    </div>
+  </md-toolbar>
+
+  <div flex layout-padding style="overflow-y: auto">
+    <md-grid-list flex
+          md-cols-sm="2" md-cols-md="2" md-cols-gt-md="3"
+          md-row-height-gt-md="16:9" md-row-height="16:9"
+          md-gutter="4px" md-gutter-gt-sm="4px"
+          class="gridMarkSelected">
+      <md-grid-tile ng-repeat="level in levels.filtered track by level.misFilePath"
+                    bng-all-clicks single="level.disableReason ? showDisable(level.disableReason) : levels.details(level, app.gameState)"
+                    double="level.disableReason ? showDisable(level.disableReason) : levels.details(level, app.gameState)"
+                    ng-mouseover="levels.select(level)"
+                    ng-focus="levels.select(level)">
+        <imageslider ng-style="(level.disableReason) ? {'-webkit-filter': 'grayscale(100%)'} : {} " style="width: 100%; height: 100%;" imageurls="level.previews" ></imageslider>
+        <md-grid-tile-footer>
+          <div layout="row" layout-align="start center" class="md-padding">
+              <div ng-if=":: level.official"  layout="row" layout-align="center center">
+                <img src="images/beamng_logo_50x50.png" height="22px" style="-webkit-filter: brightness(0) invert(1);" />
+                <md-tooltip md-direction="top">
+                  Official
+                </md-tooltip>
+              </div>
+              <h3>{{ ::level.title | translate }}</h3>
+            </div>
+          </md-grid-tile-footer>
+      </md-grid-tile>
+    </md-grid-list>
+  </div>
+</md-content>
+
+<md-content ng-show="levels.selected" layout="column" flex style="max-width: 400px; height: 100%;">
+  <md-toolbar class="md-primary md-hue-1">
+    <div class="md-toolbar-tools">
+      <span flex>{{ levels.selected.title | translate }}</span>
+    </div>
+  </md-toolbar>
+
+  <img src="{{ levels.selected.previews[0] }}" style="width: 100%">
+  <md-divider></md-divider>
+
+  <div flex layout-padding style="overflow:auto">
+    <md-list>
+
+      <md-list-item class="md-2-line" ng-show="levels.selected.description">
+        <md-icon class="material-icons" style="font-size: 2em">message</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.description' | translate }}</h3>
+          <p>{{ levels.selected.description | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-show="(levels.selected.size[0] || -1) != -1">
+        <md-icon class="material-icons" style="font-size: 2em">settings_overscan</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.size' | translate }}</h3>
+          <p>{{ levels.selected.size[0] || 0 | unit : 'length' : 3}} x {{ levels.selected.size[1] || 0 | unit : 'length' : 3}}
+            <span ng-show="(levels.selected.size[0] || -1) > 0 && (levels.selected.size[1] || -1) > 0">
+              ({{ levels.selected.size[0] * levels.selected.size[1] | unit : 'area' : 1 }})
+            </span>
+          </p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-show="levels.selected.biome">
+        <md-icon class="material-icons" style="font-size: 2em">landscape</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.biome' | translate }}</h3>
+          <p>{{ levels.selected.biome | translate }}</p>
+        </div>
+      </md-list-item>
+
+
+      <md-list-item class="md-2-line"  ng-show="levels.selected.roads">
+        <md-icon class="material-icons" style="font-size: 2em">directions_car</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.roads' | translate }}</h3>
+          <p>{{ levels.selected.roads | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-show="levels.selected.suitablefor">
+        <md-icon class="material-icons" style="font-size: 2em">flag</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.suitablefor' | translate }}</h3>
+          <p>{{ levels.selected.suitablefor | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-show="levels.selected.features">
+        <md-icon class="material-icons" style="font-size: 2em">place</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.features' | translate }}</h3>
+          <p>{{ levels.selected.features | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-show="levels.selected.authors">
+        <md-icon class="material-icons" style="font-size: 2em">people</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.authors' | translate }}</h3>
+          <p>{{ levels.selected.authors | translate }}</p>
+        </div>
+      </md-list-item>
+
+      <md-list-item class="md-2-line" ng-show="levels.selected.spawnPoints.length > 1">
+        <md-icon class="material-icons" style="font-size: 2em">pin_drop</md-icon>
+        <div class="md-list-item-text">
+          <h3>{{ 'ui.levelselect.spawnpoints' | translate }}</h3>
+          <p>{{ levels.selected.spawnPoints.length }}</p>
+        </div>
+      </md-list-item>
+    </md-list>
+  </div>
+</md-content>

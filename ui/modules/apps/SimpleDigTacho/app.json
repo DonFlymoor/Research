@@ -1,0 +1,19 @@
+{
+  "domElement": "<simple-dig-tacho></simple-dig-tacho>",
+  "name": "ui.apps.digital_tachometer.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays current engine RPM.",
+  "css": {
+    "left": "200px",
+    "height": "50px",
+    "width": "120px",
+    "min-width": "120px",
+    "min-height": "50px",
+    "top": "200px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.1",
+  "directive": "simpleDigTacho"
+}

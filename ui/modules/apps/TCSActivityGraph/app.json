@@ -1,0 +1,17 @@
+{
+  "domElement": "<tcs-activity-graph></tcs-activity-graph>",
+  "name": "ui.apps.tcs_activity_graph.name",
+  "types": [
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "This app shows a graphical representation of the TCS' activity at any time",
+  "css": {
+    "left": "0px",
+    "height": "150px",
+    "width": "450px",
+    "bottom": "150px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "tcsActivityGraph"
+}

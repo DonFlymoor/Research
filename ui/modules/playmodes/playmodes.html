@@ -1,0 +1,31 @@
+<style>
+  .top-level-thing ng-md-icon.bng-grid-icon > svg { padding: 10px; }
+  .top-level-thing md-grid-tile-footer figcaption { width: 100%; }
+  .top-level-thing md-grid-tile-footer figcaption h2 { width: 100%; text-align: center; }
+  .top-level-thing md-grid-tile { cursor: pointer; }
+  .top-level-thing md-grid-tile { opacity: 0.93; }
+  .top-level-thing md-grid-tile:hover { opacity: 1.0;  }
+  .top-level-thing.opaque { background-color: white; }
+  .top-level-thing .disabled { opacity: 0.7; cursor: not-allowed !important; }
+  .top-level-thing .disabled:hover { opacity: 0.7; cursor: not-allowed !important; }
+  .top-level-thing.transparent { background-color: transparent; }
+</style>
+
+<md-content layout-fill style="height:100%; width:100%;" layout="row" layout-align="space-around center" class="top-level-thing transparent">
+  <div flex="60" flex-lg="40" flex-gt-lg="80" style="max-width: 1400px;">
+    <md-grid-list md-cols="2" md-cols-gt-lg="6" md-row-height="1:1" md-gutter="12px">
+      <md-grid-tile ng-repeat="card in ::modes.list" ui-sref="{{ ::(card.disabled ? '.' : 'menu.' + card.targetState) }}"
+          ng-class="{disabled: card.disabled}" mdx-paint-bg="accent">
+        <md-icon class="material-icons" style="font-size: 4vmax; color: white">{{ ::card.icon }}</md-icon>
+        <md-grid-tile-footer>
+          <h2 style="margin: 0" ng-if="!card.disabled">{{ ::card.translateid | translate }}</h2>
+          <div ng-if="card.disabled" style="margin: 5px;">
+            <span>{{ ::card.translateid | translate}}</span>
+            <br />
+            <span><b>{{ 'ui.playmodes.comingSoon' | translate}}</b></span>
+          </div>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+    </md-grid-list>
+  </div>
+</md-content>

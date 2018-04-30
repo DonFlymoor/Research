@@ -1,0 +1,19 @@
+{
+  "domElement": "<race-checkpoint-comparison></race-checkpoint-comparison>",
+  "name": "ui.apps.checkpoint_time_comparison.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Compare the time between the just passed checkpoint to the time from the last lap",
+  "css": {
+    "min-width": "100px",
+    "height": "80px",
+    "width": "150px",
+    "right": "150px",
+    "min-height": "40px",
+    "top": "0px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "raceCheckpointComparison"
+}

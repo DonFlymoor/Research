@@ -1,0 +1,21 @@
+bng-accordion {
+  display: block;
+  -webkit-user-select: none; }
+  bng-accordion bng-accordion-pane {
+    display: block; }
+    bng-accordion bng-accordion-pane.bng-pane-closed > bng-pane-header {
+      border-bottom-color: darkgrey; }
+    bng-accordion bng-accordion-pane.bng-pane-open > bng-pane-header {
+      border-bottom-color: steelblue; }
+  bng-accordion bng-pane-header {
+    display: block;
+    cursor: pointer;
+    border-bottom: solid 1px; }
+    bng-accordion bng-pane-header ._root {
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      box-sizing: border-box; }
+  bng-accordion bng-pane-body {
+    display: block;
+    padding-left: 5px; }

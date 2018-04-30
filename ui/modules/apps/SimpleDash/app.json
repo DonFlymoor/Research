@@ -1,0 +1,20 @@
+{
+  "domElement": "<simple-dash></simple-dash>",
+  "name": "ui.apps.dashboard_indicators.name",
+  "types": [
+    "ui.apps.categories.vehicle_info"
+  ],
+  "description": "Displays typical dashboard indicators, including fuel, parking brake, indicators, ABS and headlights status. Clicking the parking brake/indicators/headlights indicators will toggle them.",
+  "css": {
+    "left": "0px",
+    "height": "50px",
+    "width": "270px",
+    "min-width": "240px",
+    "min-height": "40px",
+    "top": "0px"
+  },
+  "author": "Metalmuncher",
+  "version": "0.1",
+  "preserveAspectRatio" : true,
+  "directive": "simpleDash"
+}

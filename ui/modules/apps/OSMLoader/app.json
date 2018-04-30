@@ -1,0 +1,12 @@
+{
+  "name" : "OSM Street Loader",
+  "author": "beamng.ui Team",
+  "types": [
+    "ui.apps.categories.utility"
+  ],
+  "version": "0.1",
+  "description": "Load any location from Open Street Map.",
+  "directive": "osmloader",
+  "domElement": "<osmloader></osmloader>",
+  "css": {"top": "30px", "left": "50px", "width": "350px", "height": "400px", "min-width": "320px", "min-height": "200px"}
+}

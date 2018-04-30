@@ -1,0 +1,17 @@
+{
+  "domElement": "<force-feedback-graph></force-feedback-graph>",
+  "name": "ui.apps.ffb_graph.name",
+  "types": [
+    "ui.apps.categories.vehicle_profiling"
+  ],
+  "description": "This app shows a graphical representation of the FFB-Forces",
+  "css": {
+    "left": "0px",
+    "height": "200px",
+    "top": "0px",
+    "width": "500px"
+  },
+  "author": "beamng.ui Team",
+  "version": "0.1",
+  "directive": "forceFeedbackGraph"
+}

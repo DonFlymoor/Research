@@ -1,0 +1,128 @@
+<style>
+.contentModManager .modlist {
+  padding: 0;
+  /*height: 800px;*/
+}
+
+.contentModManager .content {
+  position: absolute;
+  overflow: auto;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 64px;
+}
+
+.contentModManager .modEntry button:hover {
+  background-color: inherit !important; /*To prevent the white background of clickable md list items*/
+}
+
+.contentModManager .modlist .modActive:nth-child(2n) {
+  background-color: #eeffee;
+}
+
+.contentModManager .modlist .modActive:nth-child(2n + 1) {
+  background-color: #ddffdd;
+}
+
+
+.contentModManager .modlist .modInactive:nth-child(2n) {
+  background-color: #ffeeee;
+}
+
+.contentModManager .modlist .modInactive:nth-child(2n + 1) {
+  background-color: #ffdddd;
+}
+
+
+.contentModManager .modlist .modUnpacked:nth-child(2n) {
+  background-color: #ffffee;
+}
+
+
+.contentModManager .modlist .modUnpacked:nth-child(2n + 1) {
+  background-color: #ffffdd;
+}
+
+
+</style>
+
+<md-content style="width: 650px; height:100%; position: relative" class="contentModManager">
+  <md-toolbar class="md-primary md-toolbar-tools" layout="row" layout-align="space-between center">
+    <h1>{{ :: 'ui.modmanager.modmanager' | translate}}</h1>
+    <span>
+      {{ :: 'ui.modmanager.active' | translate}}:
+      <span style="cursor:pointer; outline: none" ng-click="activateAllMods()">
+        <md-tooltip>{{ :: 'ui.modmanager.activateAll' | translate}}</md-tooltip>
+        <md-icon class="material-icons">{{activeMods === numberOfMods ? 'radio_button_on' : 'radio_button_off'}}</md-icon>
+        <md-button style="margin-left:-16px; margin-right: -6px;" md-no-ink class="md-icon-button md-default" aria-label="">all</md-button>
+      </span>
+      <span style="cursor:pointer; outline: none" ng-click="deactivateAllMods()">
+        <md-tooltip>{{ :: 'ui.modmanager.deactivateAll' | translate}}</md-tooltip>
+        <md-icon class="material-icons">{{activeMods === 0 ? 'radio_button_on' : 'radio_button_off'}}</md-icon>
+        <md-button style="margin-left:-8px" md-no-ink class="md-icon-button md-default" aria-label="">none</md-button>
+      </span>
+    </span>
+
+  </md-toolbar>
+
+  <div class="content" layout="column">
+    <div layout="row" layout-align="center center">
+      <md-radio-group ng-model="customFilter.modType" ng-init="customFilter.modType = ''" layout="row" layout-align="start center" layout-wrap style="padding: 16px 16px 0 16px; width: 75%;">
+        <md-radio-button value="" flex="25" >All</md-radio-button>
+        <md-radio-button ng-repeat="type in types | orderBy" value="{{type}}" flex="25">{{type | capitalize}}</md-radio-button>
+      </md-radio-group>
+    </div>
+
+    <md-input-container style="padding: 2px; margin: 0 20px">
+      <label>{{ :: 'ui.common.search' | translate}}</label>
+      <input ng-model="customFilter.$">
+    </md-input-container>
+
+
+    <div layout="row" style="padding: 16px;">
+      <div style="min-width: 56px; text-align: center" ng-if="devMode">
+        {{ :: 'ui.modmanager.active' | translate}}
+      </div>
+      <span flex style="outline:none; cursor: pointer;" ng-click="setOrderby('modname')">
+        Modname
+        <md-icon style="font-size: 16px;" ng-if="orderby === 'modname'">{{reverse ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+      </span>
+      <span style="text-align: center; outline:none; width: 150px; cursor: pointer;" ng-click="setOrderby('dateAdded')">
+        Date Added
+        <md-icon style="font-size: 16px;" ng-if="orderby === 'dateAdded'">{{reverse ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+      </span>
+      <div style="margin-left: 8px; min-width: 102px; outline:none; cursor: pointer;" ng-click="setOrderby('modType')">
+        Type
+        <md-icon style="font-size: 16px;" ng-if="orderby === 'modType'">{{reverse ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</md-icon>
+      </div>
+    </div>
+    <md-virtual-repeat-container class="modlist" flex ng-if="list">
+      <md-list-item
+          md-virtual-repeat="mod in list | orderBy : [orderby, 'modname'] : reverse | filter : customFilter : strict"
+          style="padding: 0;"
+          md-item-size="52"
+          ng-click="details(mod)"
+          class="modEntry"
+          ng-class="{modInactive: !mod.active, modUnpacked: (!mod.packed && mod.active), modActive: mod.active}"
+          md-no-ink>
+        <div style="height: 52px; width: 100%;" layout="row" layout-align="space-between center">
+          <md-button md-no-ink class="md-fab md-mini md-primary" ng-class="" ng-click="toogleActivation($event, mod)">
+            <md-icon class="material-icons">{{mod.active ? 'visibility' : 'visibility_off'}}</md-icon>
+            <md-tooltip>{{'ui.modmanager.' + (mod.active ? 'deactivate' : 'activate') | translate}}</md-tooltip>
+          </md-button>
+          <div flex class="truncate">{{ mod.repoDate.name || mod.modname}}</div>
+          <div style="text-align: center; width: 150px;">{{ formatDate(mod.dateAdded * -1)}}</div>
+          <div style="margin: 6px 8px; width: 40px; padding: 0 8px; height: 40px; background-color: rgba(125, 124, 124, 0.21); border-radius: 20px;">
+            <md-icon class="material-icons" style="color: white">{{ getTypeIcon(mod.modType)}}</md-icon>
+            <md-tooltip>{{mod.modType | capitalize}}</md-tooltip>
+          </div>
+          <md-button md-no-ink class="md-fab md-mini md-warn" ng-click="deleteMod($event, mod)" ng-disabled="!mod.packed">
+            <md-icon class="material-icons">delete</md-icon>
+            <md-tooltip>{{ :: 'ui.modmanager.deleteMod' | translate}}</md-tooltip>
+          </md-button>
+        </div>
+      </md-list-item>
+    </md-virtual-repeat-container>
+  </div>
+</md-content>

@@ -1,0 +1,17 @@
+{
+  "domElement": "<race-checkpoints></race-checkpoints>",
+  "name": "ui.apps.race_check_points.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Show the current check point in a race",
+  "css": {
+    "left": "0px",
+    "height": "50px",
+    "top": "0px",
+    "width": "250px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "raceCheckpoints"
+}

@@ -1,0 +1,17 @@
+{
+  "domElement": "<race-countdown></race-countdown>",
+  "name": "ui.apps.racecountdown.name",
+  "types": [
+    "ui.apps.categories.racing"
+  ],
+  "description": "Count down app for the racing",
+  "css": {
+    "left": "0px",
+    "height": "160px",
+    "top": "220px",
+    "width": "690px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "raceCountdown"
+}

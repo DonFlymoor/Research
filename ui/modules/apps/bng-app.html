@@ -1,0 +1,31 @@
+<div style="position: absolute; overflow:hidden;" class="bng-app">
+  <!-- app side -->
+  <div ng-transclude style="width: 100%; height: 100%; box-sizing: border-box;"></div>
+
+  <!-- editing side -->
+  <div class="editing-side"
+
+  ng-mousedown="translateStart($event)"
+  style="display: flex; justify-content: center; width: 100%; height:100%; color: white; position: absolute; left:0; top: 0;"  ng-show="$parent.editMode" ng-style="{cursor: edit ? 'move': '', 'background-color': edit ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.4)'}" layout layout-align="end center">
+
+    <span style="position:absolute; top:2px; left:2px; color: white; font-size: 1.2em">{{ ::name | translate }}</span>
+    <div style="position: absolute; bottom: 0; left: 0; padding:2px" layout="column" ng-mousedown="$event.stopPropagation()">
+      <label>
+          <input type="checkbox" ng-model="entry.noCockpit" ng-change="$parent.updateCockpitApps()">{{ ::'ui.appselect.noCockpit' | translate }}
+      </label>
+
+      <!--       <label>
+        <input type="checkbox" ng-model="entry.race">Race
+      </label> -->
+    </div>
+
+    <span class="material-icons" style="z-index: 1; cursor: pointer; position:absolute; right: 0; top:0; background-color:red" ng-click="kill(); $event.stopPropagation()" ng-mousedown="$event.stopPropagation()">clear</span>
+    
+    <center style="font-size:1.2em; user-select:none; z-index: 1;">
+      <span ng-if="!showDimensions" class="material-icons" style="font-size:45px;">open_with</span><br/>
+      <span ng-if="showDimensions">{{ dimensions.width }} x {{ dimensions.height }}</span>
+    </center>
+
+    <span class="material-icons resizeHandle" ng-mousedown="resizeStart($event);" style="cursor: nw-resize; position: absolute; right: 0; bottom: 0; -webkit-transform: scale(1, -1)">call_made</span>
+  <div>
+</div>

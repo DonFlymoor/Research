@@ -1,0 +1,14 @@
+<div style="width:100%; height:100%;" layout="row" layout-align="center center">
+  <md-button ng-click="reset();" style="transition:none" class="md-warn md-fab" md-no-ink>
+    <md-icon class="material-icons">restore</md-icon>
+    <md-tooltip>{{ 'ui.appselect.reset' | translate}}</md-tooltip>
+  </md-button>
+  <md-button ui-sref="menu" style="transition:none" class="md-primary md-hue-1 md-fab" md-no-ink>
+    <md-icon class="material-icons">check</md-icon>
+    <md-tooltip>{{ 'ui.appselect.done' | translate}}</md-tooltip>
+  </md-button>
+  <md-button ui-sref="appselect" style="transition:none" class="md-accent md-fab" md-no-ink>
+    <md-icon class="material-icons">add</md-icon>
+    <md-tooltip>{{ 'ui.appselect.add' | translate}}</md-tooltip>
+  </md-button>
+</div>

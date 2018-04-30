@@ -1,0 +1,64 @@
+<md-content style="min-width:500px;max-width:500px">
+
+  <md-subheader>{{ ::'ui.options.audio.hardware' | translate }}</md-subheader>
+
+  <md-list-item layout class="bng-short-select-item" ng-repeat="param in ::options.uiElements.audio.selectGroup1">
+    <p flex="40">{{ ::param.name | translate }}</p>
+    <md-select flex ng-model="options.data.values[param.key]" ng-change="options.applyState()" aria-label="_">
+      <md-select-label style="width:100%"></md-select-label>
+      <md-option md-no-ink ng-repeat="opt in options.data.options[param.key].modes.values"
+                 ng-value="options.data.options[param.key].modes.keys[$index]">
+        {{ ::opt }}
+      </md-option>
+    </md-select>
+  </md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-subheader>{{ ::'ui.options.audio.volume' | translate }}</md-subheader>
+
+  <md-list-item layout layout-align="center center" ng-repeat="param in ::options.uiElements.audio.volumeSliders">
+    <p flex="30">{{ ::param.name | translate }}</p>
+    <md-slider flex ng-model="options.data.values[param.key]" min="0" max="1" step="0.01" aria-label="_" ng-change="options.applyState()"></md-slider>
+    <span flex="20" style="text-align: right">{{ options.data.values[param.key] * 100 | number: 0 }}</span>
+  </md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-subheader>{{ ::'ui.options.audio.quality' | translate }}</md-subheader>
+
+  <md-list-item  layout="column" ng-repeat="param in ::options.uiElements.audio.audioSources">
+    <div layout="row" layout-align="center center" style="width: 100%">
+      <p flex="30">{{:: param.name | translate }}</p>
+      <md-slider flex ng-model="options.data.values.AudioMaxChannels"
+        min="{{ ::param.min }}" max="{{ ::param.max }}" step="{{ ::param.step }}" aria-label="_" ng-change="options.applyState()">
+      </md-slider>
+      <span flex="20" style="text-align: right">{{ options.data.values.AudioMaxChannels }}</span>
+    </div>
+  </md-list-item>
+
+  <md-list-item layout class="bng-short-select-item">
+    <p flex="40">{{:: 'ui.options.audio.sources' | translate}}</p>
+    <md-select flex class="bng-select-fullwidth"
+               ng-model="options.data.values.AudioMaxChannels" ng-change="options.applyState()" aria-label="_">
+      <md-option md-no-ink ng-repeat="label in options.data.options.AudioMaxChannels.modes.values"
+                           ng-value="options.data.options.AudioMaxChannels.modes.keys[$index]">
+        {{:: label }}
+      </md-option>
+    </md-select>
+  </md-list-item>
+
+  <md-divider></md-divider>
+
+  <md-list-item layout>
+    <md-button md-no-ink class="md-raised md-warn" flex ng-click="opt.toggleMute()">
+      <md-icon class="material-icons">{{options.data.values.AudioMasterVol <= 1e-3 ? 'volume_up' : 'volume_off'}}</md-icon> 
+      <span ng-if="options.data.values.AudioMasterVol <= 1e-3">{{ ::'ui.options.audio.unmute' | translate }}</span>
+      <span ng-if="options.data.values.AudioMasterVol > 1e-3">{{ ::'ui.options.audio.mute' | translate }}</span>
+    </md-button>
+    <md-button md-no-ink class="md-raised" flex bng-sound="{click: 'event:>UI>Volume Test'}" >
+      <md-icon class="material-icons">check</md-icon> {{ ::'ui.common.test' | translate }}
+    </md-button>
+  </md-list-item>
+
+</md-content>

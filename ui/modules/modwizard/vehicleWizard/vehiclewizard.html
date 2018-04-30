@@ -1,0 +1,167 @@
+<link type="text/css" rel="stylesheet" href="modules/modwizard/modwizard.css">
+
+<center class="mainmenu" bng-nav-root style="top: 0%;"> 
+  <md-tabs style="pointer-events:none" md-dynamic-height flex md-selected="vhclWzrdCtrl.index" md-stretch-height="true" md-stretch-tabs="always"> <!--vehicleWizard.index-->
+    <!-- pointer-events: none to disable tab clicking -->
+    <md-tab style="pointer-events:auto" label="Step 1">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Vehicle Wizard</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="3" md-colspan="6" class="other" style="background-color: transparent">
+            <img src="modules/modwizard/images/vehicle/vehicleWizard.jpg" style="width:100%;height:auto;">
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="6" class="other">
+          <div layout-padding>
+            <p>
+              Welcome to the vehicle creation wizard.
+            </p>
+            <p> 
+              The wizard will give you an overview on how to make a vehicle for 
+              BeamNG.Drive as well as generate a template vehicle.
+            </p>
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 2">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Node Beam Overview</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="other">
+          <div layout-padding>
+            <p >
+              BeamNG vehicles are comprised of mainly two components, nodes and beams.
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="3" class="other">
+          <div layout-padding>
+            <h1 class="md-title" style="font-size: 3vh">Nodes</h1>
+            <p >
+              A node is like a joint in a skeleton. Beams are attached to the node and can rotate around them.
+              Nodes define the weight of the vehicle.
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="3" class="other">
+          <div layout-padding>
+            <img src="modules/modwizard/images/vehicle/vehicleNodes.jpg" style="width:100%;height:auto;">
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="3" class="other">
+          <div layout-padding>
+            <p>
+              <img src="modules/modwizard/images/vehicle/vehicleBeams.jpg" style="width:100%;height:auto;">
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="3" class="other">
+          <div layout-padding>
+            <h1 class="md-title" style="font-size: 3vh">Beams</h1>
+            <p >
+              Beams are like bones within a skeleton. Between the nodes one has to put beams
+              in order to make a physical structure (skeleton) of the vehicle.
+            </p>
+          </div>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 3">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px; pointer-events:auto"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">Vehicle File Generation</h1>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="6" class="other">
+          <form name="vhclWzrdCtrl.modnameform" class="simple-form">
+            <md-input-container layout-align="center center" style="width: 100%;">
+              <span class="md-headline">Please choose a name for your vehicle</span>
+              <label>Vehicle Name</label>
+              <input required="true" type="text" ng-model="vhclWzrdCtrl.modName"></input>
+            </md-input-container>
+          </form>
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+
+    <md-tab label="Step 4">
+      <md-grid-list 
+        class="grid"
+        md-cols="6"
+        style="margin-top: 10px; pointer-events:auto"
+        md-row-height="13:12"
+        md-gutter="2vh">
+        <md-grid-tile md-rowspan="1" md-colspan="6" class="title">
+          <div>
+            <h1 class="md-title" style="font-size: 4vh">How to Edit Vehicle Files</h1>
+          </div>
+        </md-grid-tile>
+        <md-grid-tile md-rowspan="1" md-colspan="4" class="other">
+          <span class="md-headline">Vehicle files have been generated.</span>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="1" md-colspan="2" class="other tile" ng-click="vhclWzrdCtrl.openMod()" bng-nav-item bng-sound="{focus: 'event:>UI>Main Mouse Over', click: 'event:>UI>Main Select'}">
+          <span class="md-headline">Click here to open folder</span>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="2" class="other">
+          <div layout-padding>
+            <p>
+              To begin creating your vehicle simply edit the .jbeam file.
+            </p>
+          </div>
+        </md-grid-tile>
+
+        <md-grid-tile md-rowspan="2" md-colspan="4" class="other">
+          <img src="modules/modwizard/images/vehicle/vehicleLocation.jpg" style="width:100%;height:auto;">
+        </md-grid-tile>
+      </md-grid-list>
+    </md-tab>
+  </md-tabs>
+
+  <div class="navigation">
+    <md-button md-no-ink class="navbtn" ng-click="vhclWzrdCtrl.back()" style="float: left;">
+      <md-icon class="material-icons">keyboard_arrow_left</md-icon>
+      Back
+    </md-button>
+    <md-button class="md-noink navbtn" ng-click="vhclWzrdCtrl.next()" style="float: right;">
+      Next
+      <md-icon class="material-icons">keyboard_arrow_right</md-icon>
+    </md-button>
+  </div>
+</center>
