@@ -16,10 +16,13 @@ local clientsWrite = {}
 local gameState = "menu"
 
 local vehicleSetup = false
+local vehicleCursor = 0
 
 local handlers = {}
 
 local frame = 0
+
+local conSleep = 1
 
 lastVehicleState = {
   steering = 0,
@@ -41,9 +44,6 @@ local function receive(c)
     log("E", "Error whilst reading from socket: " .. tostring(error))
   end
   
-  if line ~= nil then
-    log("D", "Got data from socket: '" .. line .. "'")
-  end
   return line
 end
 
@@ -72,24 +72,24 @@ end
 
 local function setupVehicle()
   local command = "controller.mainController.setGearboxMode('realistic')"
-  be:getPlayerVehicle(0):queueLuaCommand(command)
+  be:getPlayerVehicle(vehicleCursor):queueLuaCommand(command)
   
   vehicleSetup = true
 end
 
 local function requestVehicleInput(key)
   local command = "obj:queueGameEngineLua('lastVehicleState." .. key .. " = ' .. input.state." .. key .. ".val)"
-  local v = be:getPlayerVehicle(0)
+  local v = be:getPlayerVehicle(vehicleCursor)
   if v then
-    be:getPlayerVehicle(0):queueLuaCommand(command)
+    be:getPlayerVehicle(vehicleCursor):queueLuaCommand(command)
   end
 end
 
 local function requestVehicleDrivetrain(key)
   local command = "obj:queueGameEngineLua('lastVehicleState." .. key .. " = ' .. drivetrain." .. key .. ")"
-  local v = be:getPlayerVehicle(0)
+  local v = be:getPlayerVehicle(vehicleCursor)
   if v then
-    be:getPlayerVehicle(0):queueLuaCommand(command)
+    be:getPlayerVehicle(vehicleCursor):queueLuaCommand(command)
   end
 end
 
@@ -105,7 +105,7 @@ end
 
 local function issueShiftToGear(val)
   local command = "drivetrain.shiftToGear(" .. val .. ")"
-  be:getPlayerVehicle(0):queueLuaCommand(command)
+  be:getPlayerVehicle(vehicleCursor):queueLuaCommand(command)
 end
 
 local function issueVehicleInput(key, val)
@@ -113,7 +113,7 @@ local function issueVehicleInput(key, val)
     issueShiftToGear(val)
   else
     local command = "input.event('" .. key .. "', " .. val .. ", 1)"
-    be:getPlayerVehicle(0):queueLuaCommand(command)
+    be:getPlayerVehicle(vehicleCursor):queueLuaCommand(command)
   end
 end
 
@@ -126,12 +126,21 @@ end
 local function connect()
   log("I", "Connecting to research server (" .. host .. ", " .. tostring(port) .. ")")
   connection = socket.connect(host, port)
-  table.insert(clientsRead, connection)
-  table.insert(clientsWrite, connection)
-  log("I", "Connected!")
+  if connection ~= nil then
+    table.insert(clientsRead, connection)
+    table.insert(clientsWrite, connection)
+    log("I", "Connected!")
+    return true
+  end
+  
+  return false
 end
 
 local function send(data)
+  if connection == nil then
+    return
+  end
+  
   local mpac = mp.pack(data)
   connection:send(mpac)
 end
@@ -158,7 +167,7 @@ local function getVehicleState(width, height)
   state.parkingbrake = lastVehicleState.parkingbrake
   state.gear = lastVehicleState.gear
   
-  local vdata = map.objects[be:getPlayerVehicle(0):getID()]
+  local vdata = map.objects[be:getPlayerVehicle(vehicleCursor):getID()]
   state.pos = vdata.pos:toTable()
   state.vel = vdata.vel:toTable()
   state.dir = vdata.dirVec:toTable()
@@ -169,15 +178,8 @@ local function getVehicleState(width, height)
   return state
 end
 
-local function onInit()
-  if connection == nil then
-    log("I", "Starting Research adapter...")
-    connect()
-  end
-end
-
 local function handleVControl(msg)
-  log("D", "Got a VeControl message from the server. Issuing vehicle inputs.")
+  log("D", "Got a VControl message from the server. Issuing vehicle inputs.")
   issueVehicleInputs(msg["inputs"])
 end
 
@@ -226,6 +228,13 @@ local function handleStartScenario(msg)
   guihooks.trigger("ChangeState", "menu")
 end
 
+local function handleRestartScenario(msg)
+  scenario_scenarios.restartScenario()
+  
+  local state = {type = "ScenarioRestarted"}
+  send(state)
+end
+
 local function handleRelativeCamera(msg)
   local pos = vec3(msg['pos'][1], msg['pos'][2], msg['pos'][3])
   local rot = vec3(msg['rot'][1], msg['rot'][2], msg['rot'][3])
@@ -257,10 +266,17 @@ local function handleResume(msg)
   send(state)
 end
 
+local function handleVehicleCursor(msg)
+  local newCursor = msg["cursor"]
+  log("I", "Switching vehicle cursor to: " .. tostring(newCursor))
+  vehicleCursor = newCursor
+  local state = {type = "VehicleCursor", cursor = vehicleCursor}
+  send(state)
+end
+
 local function handleSocketInput()
   local message = readSocketMessage()
   if message ~= nil then
-    log("I", "Got server message: " .. message)
     message = mp.unpack(message)
     local msgType = message["type"]
     if msgType ~= nil then
@@ -274,6 +290,19 @@ local function handleSocketInput()
 end
 
 local function onUpdate(dt)
+  if connection == nil then
+    if conSleep <= 0 then
+      log("I", "Trying to connect...")
+      if not connect() then
+        conSleep = 5
+      end
+    else
+      conSleep = conSleep - dt
+    end
+    
+    return
+  end
+  
   requestVehicleData()
   handleSocketInput()
 end
@@ -281,6 +310,9 @@ end
 local function onClientPostStartMission()
   local state = {type = "MapLoaded"}
   send(state)
+end
+
+local function onScenarioRestarted()
 end
 
 local function onCountdownEnded()
@@ -297,12 +329,15 @@ handlers.handleShowHUD = handleShowHUD
 handlers.handleVControl = handleVControl
 handlers.handleReqVState = handleReqVState
 handlers.handleLoadScenario = handleLoadScenario
+handlers.handleVehicleCursor = handleVehicleCursor
 handlers.handleStartScenario = handleStartScenario
+handlers.handleRestartScenario = handleRestartScenario
 handlers.handleRelativeCamera = handleRelativeCamera
 
-M.onInit = onInit
+M.onTick = onTick
 M.onUpdate = onUpdate
 M.onClientPostStartMission = onClientPostStartMission
 M.onCountdownEnded = onCountdownEnded
+M.onScenarioRestarted = onScenarioRestarted
 
 return M
