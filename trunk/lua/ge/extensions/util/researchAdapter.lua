@@ -39,12 +39,15 @@ local function log(level, message)
 end
 
 local function receive(c)
-  local line, err = c:receive()
+  local length, err = c:receive()
+  local data, err = c:receive(tonumber(length))
+  
   if err then
     log("E", "Error whilst reading from socket: " .. tostring(error))
+    return nil
   end
   
-  return line
+  return data
 end
 
 local function readSocketMessage()
