@@ -21,7 +21,7 @@ local options = {
   uiUpscaling = {modes={keys={'disabled', '720', '1080'}, values={'Disabled', '1280 x 720', '1920 x 1080'}}},
   onlineFeatures = {modes={keys={'enable', 'disable'}, values={'ui.common.enable', 'ui.common.disable'}}},
   defaultGearboxBehavior = {modes={keys={'arcade', 'realistic'}, values={'ui.common.arcade', 'ui.common.realistic'}}},
-  absBehavior = {modes={keys={'arcade', 'realistic', 'off'}, values={'ui.common.arcade', 'ui.common.realistic', 'ui.common.off'}}},
+  absBehavior = {modes={keys={'realistic', 'off', 'arcade'}, values={'ui.common.ABSrealistic', 'ui.common.ABSoff', 'ui.common.ABSarcade'}}},
   escBehavior = {modes={keys={'arcade', 'realistic', 'off'}, values={'ui.common.arcade', 'ui.common.realistic', 'ui.common.off'}}},
   communityTranslations = {modes={keys={'enable', 'disable'}, values={'ui.common.enable', 'ui.common.disable'}}},
 }
@@ -45,6 +45,7 @@ local settingsList = {       -- { storage, default_value }
   uiUnitDistance              = { deprecated, nil },
   uiUnitTemperature           = { cloud  , 'f' },
   uiUnitWeight                = { cloud  , 'lb' },
+  uiUnitTorque                = { cloud  , 'imperial' },
   uiUnitConsumptionRate       = { cloud  , 'imperial' },
   uiUnitTorque                = { cloud  , 'imperial' },
   uiUnitEnergy                = { cloud  , 'imperial' },
@@ -52,8 +53,8 @@ local settingsList = {       -- { storage, default_value }
   uiUnitPower                 = { cloud  , 'bhp' },
   uiUnitVolume                = { cloud  , 'gal' },
   uiUnitPressure              = { cloud  , 'psi' },
-  onlineFeatures              = { cloud  , 'enable' },
-  modAutoUpdates              = { disk   , false },
+  onlineFeatures              = { cloud  , 'ask' },
+  modAutoUpdates              = { disk   , true },
   communityTranslations       = { cloud  , 'disable' },
   disableDynamicCollision     = { disk   , false },
   GraphicFullscreen           = { disk   , true },
@@ -145,6 +146,7 @@ local settingsList = {       -- { storage, default_value }
   GraphicDynReflectionTexsize = { disk   , nil },
   FPSLimiter                  = { disk   , 60 },
   FPSLimiterEnabled           = { disk   , false },
+  HighPerformancePlan         = { disk   , true },
   PostFXLightRaysEnabled      = { disk   , nil },
   GraphicDynReflectionDetail  = { disk   , nil },
   GraphicBorderless           = { disk   , nil },
@@ -200,6 +202,16 @@ local settingsList = {       -- { storage, default_value }
   PerformanceWarningsbatterylow            = { disk, nil },
   PerformanceWarningsbatterycritical       = { disk, nil },
   PerformanceWarningswin8rec               = { disk, nil },
+  SleepInBackground                        = { disk, nil },
+
+  motionSimEnabled                         = { disk, false },
+  motionSimVersion                         = { disk, 1 },
+  motionSimIP                              = { disk, "127.0.0.1" },
+  motionSimPort                            = { disk, 4444 },
+  motionSimHz                              = { disk, 100 },
+  motionSimAccelerationSmoothingX          = {disk, 40},
+  motionSimAccelerationSmoothingY          = {disk, 40},
+  motionSimAccelerationSmoothingZ          = {disk, 40}
 }
 
 local defaultValues = { }
@@ -288,7 +300,8 @@ local function refreshLanguages()
   -- list available languages
   options.userLanguagesAvailable = {}
   table.insert(options.userLanguagesAvailable, {key="", name="Automatic"}) -- the empty ('') language will be auto - it'll use the OS/steam lang
-  local locales = FS:findFilesByRootPattern('game:/locales/', '*.json', -1, true, false)
+  local locales = FS:findFilesByRootPattern('/locales/', '*.json', -1, true, false)
+
   for _, l in pairs(locales) do
     local key = string.match(l, 'locales/([^\\.]+).json')
 
@@ -357,15 +370,8 @@ local function setState(newState, ignoreCache)
   refreshLanguages()
 end
 
-local function setValue(key, value, ignoreCache, cloud)
+local function setValue(key, value, ignoreCache)
   local newValues = deepcopy(values)
-  if type(cloud) == 'boolean' then
-    if settingsList[k] then
-      settingsList[k][1] = cloud
-    else
-      settingsList[k] = { cloud }
-    end
-  end
   newValues[key] = value
   setState(newValues, ignoreCache)
 end
@@ -392,7 +398,7 @@ local function load(ignoreCache)
   for k,v in pairs(options) do
     if v.keys and v.values and not v.dict then
       v.dict = {}
-      for i = 0, #v.keys, 1 do
+      for i = 0, tableSizeC(v.keys) - 1 do
         v.dict[v.keys[i]] = v.values[i]
       end
     end
@@ -444,7 +450,7 @@ local function onFirstUpdate()
   -- force application of all settings the first time, since init() has not correctly applied all of them
   -- we could make init() call load(), but that would fail because it's still too early, and some stuff is not initialized yet
   load(true)
-  require('settings_graphic').onFirstUpdate(data)
+  require('settings_graphic').onFirstUpdate(values)
   require('settings_audio').onFirstUpdate()
 end
 

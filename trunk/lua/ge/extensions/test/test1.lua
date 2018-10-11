@@ -96,7 +96,7 @@ local function getAvailableVehicles()
 
     local vehicleConfigs = {}
     for _, vn in pairs(dirs) do
-        vehicleConfigs[vn] = FS:findFilesByPattern('game:vehicles/'..vn, '*.pc', 0, true, false)
+        vehicleConfigs[vn] = FS:findFilesByPattern('vehicles/'..vn, '*.pc', 0, true, false)
     end
 
     return vehicleConfigs

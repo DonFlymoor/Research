@@ -64,7 +64,7 @@
           {"beamDeform":5000,"beamStrength":55000},
           //attach to front exhaust
           {"breakGroup":"exhaust_c_R"},
-          ["ex6r", "ex3r"{"isExhaust":"mainEngine","highlight":{"radius":0.005, "col":"#ffff00ff"}}],
+          ["ex6r", "ex3r"{"isExhaust":"mainEngine"}],
           ["ex6r", "ex4r"],
           ["ex6r", "ex5r"],
           ["ex10r", "ex3r"],
@@ -192,7 +192,7 @@
           {"beamDeform":5000,"beamStrength":55000},
           //attach to front exhaust
           {"breakGroup":"exhaust_c_R"},
-          ["ex6r", "ex3r"{"isExhaust":"mainEngine","highlight":{"radius":0.005, "col":"#ffff00ff"}}],
+          ["ex6r", "ex3r"{"isExhaust":"mainEngine"}],
           ["ex6r", "ex4r"],
           ["ex6r", "ex5r"],
           ["ex10r", "ex3r"],

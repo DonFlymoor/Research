@@ -1,0 +1,20 @@
+{
+    "name": "SideWinder Force Feedback Wheel (USB)"
+    "guid": "{C299046D-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        // movement
+        {"control": "xaxis" ,   "action": "steering", "angle": 240},
+        {"control": "yaxis" ,   "action": "brake"},
+        {"control": "rzaxis"    ,   "action": "accelerate"},
+        {"control": "button2"   ,   "action": "reset_physics"},
+        {"control": "button3"   ,   "action": "pause"},
+        {"control": "button4"   ,   "action": "parkingbrake"},
+        {"control": "button5"   ,   "action": "switch_next_vehicle"},
+        {"control": "button6"   ,   "action": "decrease_zoom"},
+        {"control": "button7"   ,   "action": "increase_zoom"},
+        {"control": "button8"   ,   "action": "center_camera"},
+        {"control": "button9"   ,   "action": "switch_camera_next"},
+        //{"control": "btn_x"   ,   "action": "toggleFirstPerson"},
+    ]
+}

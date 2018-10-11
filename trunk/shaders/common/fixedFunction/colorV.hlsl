@@ -9,7 +9,9 @@ struct Conn
    float4 HPOS             : SV_Position;
    float4 color            : COLOR;
 };
-Conn main( Appdata In, uniform float4x4 modelview : register(C0) )
+uniform float4x4 modelview;
+
+Conn main( Appdata In )
 {
    Conn Out;
    Out.HPOS = mul(modelview, float4(In.position,1));

@@ -1,0 +1,11 @@
+<div layout="column" ng-show="!automationDetailCtrl.onlineState || automationDetailCtrl.loadingPage" layout-align="center center" class="md-padding" style="width: 100%; font-size: 30px;text-align: center;">
+  {{ 'ui.repository.loading' | translate }}
+  <div class="md-padding" ng-show="automationDetailCtrl.loadTimeout === true" style="font-size: 0.5em">
+    {{ 'ui.repository.loadingTimedOut' | translate }}<a ui-sref="menu.help">{{ "ui.repository.support" | translate }}</a>.
+  </div>
+</div>
+<md-content ng-show="automationDetailCtrl.modData" flex layout="column">
+  <div flex layout-padding style="overflow-y: auto">
+    <div ng-bind-html="automationDetailCtrl.modData.message"></div>
+  </div>
+</md-content>

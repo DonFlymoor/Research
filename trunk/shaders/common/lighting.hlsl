@@ -271,17 +271,14 @@ void compute4Lights( float3 wsView,
       outDiffuse += intensity[i] * inLightColor[i];
 
    // Output the specular power.
-   float4 specularIntensity = pow( rDotL, specularPower.xxxx ) * atten;
-   /*float specIntensArray[4];
-   specIntensArray[0] = specularIntensity.x;
-   specIntensArray[1] = specularIntensity.y;
-   specIntensArray[2] = specularIntensity.z;
-   specIntensArray[3] = specularIntensity.w;
-   */
+   specularPower = max(specularPower, 1.0f);
+   float specNorm = ( specularPower + 8 ) / (8 * PI);
+   float4 specularIntensity = pow( rDotL, specularPower) * specNorm * atten;
+   
    // Apply the per-light specular attenuation.
    float4 specular = float4(0,0,0,1);
    for ( i = 0; i < 4; i++ )
-      specular += float4( inLightColor[i].rgb * inLightColor[i].a * specularIntensity[i], 1);// specularIntensity[i], 1 );
+      specular += float4( inLightColor[i].rgb * inLightColor[i].a * specularIntensity[i], 1);
 
    // Add the final specular intensity values together
    // using a single dot product operation then get the

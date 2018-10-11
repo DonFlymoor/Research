@@ -18,15 +18,15 @@ struct Conn
 	float4 color : COLOR0;
 };
 
+uniform float4x4 modelview;
+uniform float2 fadeStartEnd;
+uniform float3 cameraPos;
+uniform float3 ambient;
+
 //-----------------------------------------------------------------------------
 // Main
 //-----------------------------------------------------------------------------
-Conn main(  Vert In, 
-            uniform float4x4 modelview : register(C0),
-	    uniform float2 fadeStartEnd : register(C4),
-	    uniform float3 cameraPos : register(C5),
-	    uniform float3 ambient : register(C6)
-)
+Conn main( Vert In )
 {
    Conn Out;
 

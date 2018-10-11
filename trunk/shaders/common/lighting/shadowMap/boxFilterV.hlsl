@@ -17,12 +17,12 @@ struct ConnectData
    float2 tex0            : TEXCOORD0;
 };
 
+uniform float4x4 modelview;
 
 //-----------------------------------------------------------------------------
 // Main                                                                        
 //-----------------------------------------------------------------------------
-ConnectData main( VertData IN,
-                  uniform float4x4 modelview       : register(C0))
+ConnectData main( VertData IN )
 {
    ConnectData OUT;
 

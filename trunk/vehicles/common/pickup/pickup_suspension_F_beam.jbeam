@@ -167,7 +167,7 @@
           ["fh3l","fsh1l"],
 
           //to hub
-          {"beamSpring":10001000,"beamDamp":150},
+          {"beamSpring":10001000,"beamDamp":100},
           ["fh2l", "fax1l"],
           ["fh2r", "fax1r"],
           ["fh3l", "fax2l"],
@@ -192,7 +192,7 @@
           ["fh3r", "fax2"],
 
           //hub
-          {"beamSpring":8001000,"beamDamp":150},
+          {"beamSpring":8001000,"beamDamp":100},
           {"beamDeform":267500,"beamStrength":621000},
           ["fh2r","fh3r"],
           ["fh2r","fh1r"],
@@ -211,7 +211,7 @@
           ["fh2l", "fh2r"],
           ["fh3r", "fh3l"],
 
-          {"beamSpring":8001000,"beamDamp":150},
+          {"beamSpring":8001000,"beamDamp":100},
           {"beamDeform":267500,"beamStrength":408400},
           {"optional":true},
           {"breakGroup":"wheel_FR"},

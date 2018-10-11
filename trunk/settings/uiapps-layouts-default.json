@@ -1,0 +1,1232 @@
+{
+  "freeroam": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit": true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "css":{ "right":"0px", "top":"0px", "height":"500px", "width":"355px"},
+      "noCockpit":false,
+      "directive":"keyList",
+      "jsSource":"../../ui/modules/apps/Keys/app.js",
+      "name":"Keys",
+      "domElement":"<key-list></key-list>"
+    },
+    {
+      "name" : "Radial menu",
+      "directive": "radialmenu",
+      "domElement": "<radialmenu></radialmenu>",
+      "jsSource":"../../ui/modules/apps/RadialMenu/app.js",
+      "css": { "width": "450px", "height": "450px", "top": "0", "left": "0", "bottom": "0", "right": "0", "margin": "auto"}
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    }
+  ],
+
+  "scenario_cinematic_start": [
+     {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    }
+  ],
+
+  "annotation_mode": [
+     {
+      "name" : "AnnotationInfo",
+      "domElement": "<annotation-info></annotation-info>",
+      "css": {"width": "300px", "height": "250px", "top": "0px", "left": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "annotationInfo",
+      "jsSource": "../../ui/modules/apps/AnnotationInfo/app.js"
+    }
+  ],
+
+  "scenario": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "80px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Race Time",
+      "domElement": "<race-time></race-time>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "0px"},
+      "noCockpit": false,
+      "directive": "raceTime",
+      "jsSource": "../../ui/modules/apps/RaceTime/app.js"
+    },
+    {
+      "name": "RaceLaps",
+      "domElement": "<race-laps></race-laps>",
+      "css": {"width": "130px", "height": "80px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "raceLaps",
+      "jsSource": "../../ui/modules/apps/RaceLaps/app.js"
+    },
+    {
+      "name" : "Race Check Points",
+      "domElement": "<race-checkpoints></race-checkpoints>",
+      "css": {"width": "300px", "height": "40px", "top": "0px", "left": "0px", "right": "0px",  "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCheckpoints",
+      "jsSource": "../../ui/modules/apps/RaceCheckPoints/app.js"
+    },
+    {
+      "name" : "Race Time Comparison",
+      "domElement": "<race-time-comparison></race-time-comparison>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "150px"},
+      "noCockpit": false,
+      "directive": "raceTimeComparison",
+      "jsSource": "../../ui/modules/apps/RaceTimeComparison/app.js"
+    },
+    {
+      "name" : "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    },
+    {
+      "name" : "Race Realtime Display",
+      "domElement": "<race-realtime-display></race-realtime-display>",
+      "css": {"width": "690px", "height": "160px", "top": "200px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceRealtimeDisplay",
+      "jsSource": "../../ui/modules/apps/RaceRealtimeDisplay/app.js"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    },
+    {
+      "directive": "characterRealtimeDisplay",
+      "css": {
+        "right": 0,
+        "width": "400px",
+        "position": "absolute",
+        "top": "",
+        "bottom": "65px",
+        "left": 0,
+        "height": "160px",
+        "margin": "auto"
+      },
+      "noCockpit": false,
+      "preserveAspectRatio": false,
+      "jsSource": "../../ui/modules/apps/CharacterRealtimeDisplay/app.js",
+      "name": "ui.apps.characterRealtimeDisplay.name",
+      "domElement": "<character-realtime-display></character-realtime-display>"
+    }
+  ],
+
+  "exploration": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit": true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "css":{ "right":"0px", "top":"0px", "height":"500px", "width":"355px"},
+      "noCockpit":false,
+      "directive":"keyList",
+      "jsSource":"../../ui/modules/apps/Keys/app.js",
+      "name":"Keys",
+      "domElement":"<key-list></key-list>"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    },
+    {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    },
+    {
+      "name" : "Race Realtime Display",
+      "domElement": "<race-realtime-display></race-realtime-display>",
+      "css": {"width": "690px", "height": "160px", "top": "200px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceRealtimeDisplay",
+      "jsSource": "../../ui/modules/apps/RaceRealtimeDisplay/app.js"
+    }
+  ],
+
+
+  "noncompeteScenario": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "80px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Race Time",
+      "domElement": "<race-time></race-time>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "0px"},
+      "noCockpit": false,
+      "directive": "raceTime",
+      "jsSource": "../../ui/modules/apps/RaceTime/app.js"
+    },
+    {
+      "name": "RaceLaps",
+      "domElement": "<race-laps></race-laps>",
+      "css": {"width": "130px", "height": "80px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "raceLaps",
+      "jsSource": "../../ui/modules/apps/RaceLaps/app.js"
+    },
+    {
+      "name" : "Race Check Points",
+      "domElement": "<race-checkpoints></race-checkpoints>",
+      "css": {"width": "300px", "height": "40px", "top": "0px", "left": "0px", "right": "0px",  "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCheckpoints",
+      "jsSource": "../../ui/modules/apps/RaceCheckPoints/app.js"
+    },
+    {
+      "name" : "Race Time Comparison",
+      "domElement": "<race-time-comparison></race-time-comparison>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "150px"},
+      "noCockpit": false,
+      "directive": "raceTimeComparison",
+      "jsSource": "../../ui/modules/apps/RaceTimeComparison/app.js"
+    },
+    {
+      "name" : "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    }
+  ],
+  "damageScenario":[
+    {
+      "css":{ "right":"", "width":"500px", "position":"absolute", "top":"0px", "left":"0px", "height":"400px", "bottom":"" },
+      "noCockpit":false,
+      "directive":"messages",
+      "jsSource":"../../ui/modules/apps/Messages/app.js",
+      "name":"Messages",
+      "domElement":"<messages></messages>"
+    },
+    {
+      "css":{ "right":0, "width":"150px", "position":"absolute", "top":"0px", "bottom":"", "left":0, "height":"80px", "margin":"auto" },
+      "noCockpit":false,
+      "directive":"raceTime",
+      "jsSource":"../../ui/modules/apps/RaceTime/app.js",
+      "name":"Race Time",
+      "domElement":"<race-time></race-time>"
+    },
+    {
+      "css":{ "right":"20px", "width":"300px", "height":"300px", "bottom":"20px" },
+      "noCockpit":true,
+      "directive":"tacho2",
+      "jsSource":"../../ui/modules/apps/Tacho2/app.js",
+      "name":"Tacho2",
+      "domElement":"<tacho2></tacho2>"
+    },
+    {
+      "css":{ "right":"20px", "width":"150px", "height":"150px", "bottom":"320px" },
+      "noCockpit":true,
+      "directive":"forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name":"ForcedInduction",
+      "domElement":"<forced-induction></forced-induction>"
+    },
+    {
+      "css":{ "right":"0px", "left":"0px", "top":"220px", "width":"690px", "height":"160px", "margin":"auto" },
+      "noCockpit":false,
+      "directive":"raceCountdown",
+      "jsSource":"../../ui/modules/apps/RaceCountdown/app.js",
+      "name":"RaceCountdown",
+      "domElement":"<race-countdown></race-countdown>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    }
+  ],
+  "driftScenario": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "80px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Race Time",
+      "domElement": "<race-time></race-time>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "0px"},
+      "noCockpit": false,
+      "directive": "raceTime",
+      "jsSource": "../../ui/modules/apps/RaceTime/app.js"
+    },
+    {
+      "name": "RaceLaps",
+      "domElement": "<race-laps></race-laps>",
+      "css": {"width": "130px", "height": "80px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "raceLaps",
+      "jsSource": "../../ui/modules/apps/RaceLaps/app.js"
+    },
+    {
+      "name" : "Race Check Points",
+      "domElement": "<race-checkpoints></race-checkpoints>",
+      "css": {"width": "300px", "height": "40px", "top": "0px", "left": "0px", "right": "0px",  "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCheckpoints",
+      "jsSource": "../../ui/modules/apps/RaceCheckPoints/app.js"
+    },
+    {
+      "name" : "Race Time Comparison",
+      "domElement": "<race-time-comparison></race-time-comparison>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "150px"},
+      "noCockpit": false,
+      "directive": "raceTimeComparison",
+      "jsSource": "../../ui/modules/apps/RaceTimeComparison/app.js"
+    },
+    {
+      "name" : "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    },
+    {
+      "name" : "Race Realtime Display",
+      "domElement": "<race-realtime-display></race-realtime-display>",
+      "css": {"width": "690px", "height": "160px", "top": "200px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceRealtimeDisplay",
+      "jsSource": "../../ui/modules/apps/RaceRealtimeDisplay/app.js"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    }
+  ],
+"offroadScenario": [
+  {
+    "name": "Messages",
+    "domElement": "<messages></messages>",
+    "css": { "width": "500px", "height": "400px", "top": "80px", "left": "0px"},
+    "noCockpit": false,
+    "directive": "messages",
+    "jsSource": "../../ui/modules/apps/Messages/app.js"
+  },
+  {
+    "name": "Race Time",
+    "domElement": "<race-time></race-time>",
+    "css": {"width": "150px", "height": "80px", "top": "0px", "right": "0px"},
+    "noCockpit": false,
+    "directive": "raceTime",
+    "jsSource": "../../ui/modules/apps/RaceTime/app.js"
+  },
+  {
+    "name": "RaceLaps",
+    "domElement": "<race-laps></race-laps>",
+    "css": {"width": "130px", "height": "80px", "top": "0px", "left": "0px"},
+    "noCockpit": false,
+    "directive": "raceLaps",
+    "jsSource": "../../ui/modules/apps/RaceLaps/app.js"
+  },
+  {
+    "name" : "Race Check Points",
+    "domElement": "<race-checkpoints></race-checkpoints>",
+    "css": {"width": "300px", "height": "40px", "top": "65px", "left": "0px", "right": "0px",  "margin": "auto"},
+    "noCockpit": false,
+    "directive": "raceCheckpoints",
+    "jsSource": "../../ui/modules/apps/RaceCheckPoints/app.js"
+  },
+  {
+    "name" : "Race Time Comparison",
+    "domElement": "<race-time-comparison></race-time-comparison>",
+    "css": {"width": "150px", "height": "80px", "top": "0px", "right": "150px"},
+    "noCockpit": false,
+    "directive": "raceTimeComparison",
+    "jsSource": "../../ui/modules/apps/RaceTimeComparison/app.js"
+  },
+  {
+    "name" : "Tacho2",
+    "domElement": "<tacho2></tacho2>",
+    "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+    "noCockpit":true,
+    "directive": "tacho2",
+    "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+  },
+  {
+    "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+    "noCockpit":true,
+    "directive": "forcedInduction",
+    "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+    "name" : "ForcedInduction",
+    "domElement": "<forced-induction></forced-induction>"
+  },
+  {
+    "name" : "RaceCountdown",
+    "domElement": "<race-countdown></race-countdown>",
+    "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+    "noCockpit": false,
+    "directive": "raceCountdown",
+    "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+  },
+  {
+    "name" : "Race Realtime Display",
+    "domElement": "<race-realtime-display></race-realtime-display>",
+    "css": {"width": "690px", "height": "160px", "top": "200px", "left": "0px", "right": "0px", "margin": "auto"},
+    "noCockpit": false,
+    "directive": "raceRealtimeDisplay",
+    "jsSource": "../../ui/modules/apps/RaceRealtimeDisplay/app.js"
+  },
+  {
+    "name" : "Precision Compass",
+    "domElement":"<compass-precise></compass-precise>",
+    "css": {"width": "600px", "height": "60px", "top": "5px", "left": "0px", "right": "0px", "margin": "auto"},
+    "noCockpit": false,
+    "directive": "compassPrecise",
+    "jsSource": "../../ui/modules/apps/CompassPrecise/app.js"
+  },
+  {
+    "directive":"simplePowertrainControl",
+    "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+    "noCockpit":true,
+    "preserveAspectRatio":true,
+    "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+    "name":"Simple Powertrain Control",
+    "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+  },
+  {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    }
+],
+  "singleCheckpointScenario": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "00px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Race Time",
+      "domElement": "<race-time></race-time>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "0px", "left": "0px", "margin":"auto"},
+      "noCockpit": false,
+      "directive": "raceTime",
+      "jsSource": "../../ui/modules/apps/RaceTime/app.js"
+    },
+    {
+      "name" : "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    },
+    {
+      "name" : "Race Realtime Display",
+      "domElement": "<race-realtime-display></race-realtime-display>",
+      "css": {"width": "690px", "height": "160px", "top": "200px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceRealtimeDisplay",
+      "jsSource": "../../ui/modules/apps/RaceRealtimeDisplay/app.js"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"", "width":"180px", "position":"absolute", "top":"", "left":"0px", "height":"320px", "bottom":"0px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    },
+    {
+      "directive": "characterRealtimeDisplay",
+      "css": {
+        "right": 0,
+        "width": "400px",
+        "position": "absolute",
+        "top": "",
+        "bottom": "65px",
+        "left": 0,
+        "height": "160px",
+        "margin": "auto"
+      },
+      "noCockpit": false,
+      "preserveAspectRatio": false,
+      "jsSource": "../../ui/modules/apps/CharacterRealtimeDisplay/app.js",
+      "name": "ui.apps.characterRealtimeDisplay.name",
+      "domElement": "<character-realtime-display></character-realtime-display>"
+    }
+  ],
+
+  "multiseatscenario": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "80px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Race Time",
+      "domElement": "<race-time></race-time>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "0px"},
+      "noCockpit": false,
+      "directive": "raceTime",
+      "jsSource": "../../ui/modules/apps/RaceTime/app.js"
+    },
+    {
+      "name": "RaceLaps",
+      "domElement": "<race-laps></race-laps>",
+      "css": {"width": "130px", "height": "80px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "raceLaps",
+      "jsSource": "../../ui/modules/apps/RaceLaps/app.js"
+    },
+    {
+      "name" : "Race Check Points",
+      "domElement": "<race-checkpoints></race-checkpoints>",
+      "css": {"width": "300px", "height": "40px", "top": "0px", "left": "0px", "right": "0px",  "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCheckpoints",
+      "jsSource": "../../ui/modules/apps/RaceCheckPoints/app.js"
+    },
+    {
+      "name" : "Race Time Comparison",
+      "domElement": "<race-time-comparison></race-time-comparison>",
+      "css": {"width": "150px", "height": "80px", "top": "0px", "right": "150px"},
+      "noCockpit": false,
+      "directive": "raceTimeComparison",
+      "jsSource": "../../ui/modules/apps/RaceTimeComparison/app.js"
+    },
+    {
+      "name" : "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {"width": "690px", "height": "160px", "top": "220px", "left": "0px", "right": "0px", "margin": "auto"},
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    }
+  ],
+
+  "quickraceScenario":[
+    {
+      "directive":"messages",
+      "css":{ "right":"", "width":"500px", "position":"absolute", "top":"0px", "left":"0px", "height":"400px", "bottom":"" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Messages/app.js",
+      "name":"Messages",
+      "domElement":"<messages></messages>"
+    },
+    {
+      "directive":"tacho2",
+      "css":{ "right":"20px", "width":"300px", "height":"300px", "bottom":"20px" },
+      "noCockpit":true,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Tacho2/app.js",
+      "name":"Tacho2",
+      "domElement":"<tacho2></tacho2>"
+    },
+    {
+      "directive":"forcedInduction",
+      "css":{ "right":"20px", "width":"150px", "height":"150px", "bottom":"320px" },
+      "noCockpit":true,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name":"ForcedInduction",
+      "domElement":"<forced-induction></forced-induction>"
+    },
+    {
+      "directive":"raceCountdown",
+      "css":{ "right":"0px", "left":"0px", "top":"220px", "width":"690px", "height":"160px", "margin":"auto" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/RaceCountdown/app.js",
+      "name":"RaceCountdown",
+      "domElement":"<race-countdown></race-countdown>"
+    },
+    {
+      "directive":"hotlapping",
+      "css":{ "right":"10px", "width":"350px", "position":"absolute", "top":"10px", "left":"", "height":"600px", "bottom":"" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Hotlapping/app.js",
+      "name":"Hotlapping",
+      "domElement":"<hotlapping></hotlapping>"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{ "right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px" },
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"simplePedals",
+      "css":{ "right":"", "width":"130px", "position":"absolute", "top":"", "left":"355px", "height":"90px", "bottom":"20px" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/SimplePedals/app.js",
+      "name":"ui.apps.pedals_and_axis.name",
+      "domElement":"<simple-pedals></simple-pedals>"
+    },
+    {
+      "directive":"simpleSteering",
+      "css":{ "right":"", "width":"130px", "position":"absolute", "top":"", "left":"355px", "height":"90px", "bottom":"110px" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/SimpleSteering/app.js",
+      "name":"ui.apps.steering_position.name",
+      "domElement":"<simple-steering></simple-steering>"
+    },
+    {
+      "directive":"simpleBrakeThermals",
+      "css":{ "right":"", "width":"150px", "position":"absolute", "top":"", "left":"20px", "height":"180px", "bottom":"20px" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/SimpleBrakeThermals/app.js",
+      "name":"Simple Brake Thermals",
+      "domElement":"<simple-brake-thermals></simple-brake-thermals>"
+    },
+    {
+      "directive":"gforcesDebug",
+      "css":{ "right":"", "width":"180px", "position":"absolute", "top":"", "left":"170px", "height":"180px", "bottom":"20px" },
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/gForcesDebug/app.js",
+      "name":"ui.apps.g-forces.name",
+      "domElement":"<gforces-debug></gforces-debug>"
+    }
+  ],
+  "proceduralScenario":[
+    {
+      "directive":"messages",
+      "css":{ "right":"", "width":"500px", "position":"absolute", "top":"0px", "left":"0px", "height":"400px", "bottom":"" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Messages/app.js",
+      "name":"Messages",
+      "domElement":"<messages></messages>"
+    },
+    {
+      "directive":"tacho2",
+      "css":{ "right":"20px", "width":"300px", "height":"300px", "bottom":"20px" },
+      "noCockpit":true,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Tacho2/app.js",
+      "name":"Tacho2",
+      "domElement":"<tacho2></tacho2>"
+    },
+    {
+      "directive":"forcedInduction",
+      "css":{ "right":"20px", "width":"150px", "height":"150px", "bottom":"320px" },
+      "noCockpit":true,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name":"ForcedInduction",
+      "domElement":"<forced-induction></forced-induction>"
+    },
+    {
+      "directive":"raceCountdown",
+      "css":{ "right":"0px", "left":"0px", "top":"220px", "width":"690px", "height":"160px", "margin":"auto" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/RaceCountdown/app.js",
+      "name":"RaceCountdown",
+      "domElement":"<race-countdown></race-countdown>"
+    },
+    {
+      "directive":"proctrack",
+      "css":{ "right":"10px", "width":"350px", "position":"absolute", "top":"10px", "left":"", "height":"50px", "bottom":"" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/ProcTrack/app.js",
+      "name":"ProcTrack",
+      "domElement":"<proctrack></proctrack>"
+    },
+    {
+      "directive":"hotlapping",
+      "css":{ "right":"10px", "width":"350px", "position":"absolute", "top":"55px", "left":"", "height":"550px", "bottom":"" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Hotlapping/app.js",
+      "name":"Hotlapping",
+      "domElement":"<hotlapping></hotlapping>"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{ "right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px" },
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"simplePedals",
+      "css":{ "right":"", "width":"130px", "position":"absolute", "top":"", "left":"355px", "height":"90px", "bottom":"20px" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/SimplePedals/app.js",
+      "name":"ui.apps.pedals_and_axis.name",
+      "domElement":"<simple-pedals></simple-pedals>"
+    },
+    {
+      "directive":"simpleSteering",
+      "css":{ "right":"", "width":"130px", "position":"absolute", "top":"", "left":"355px", "height":"90px", "bottom":"110px" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/SimpleSteering/app.js",
+      "name":"ui.apps.steering_position.name",
+      "domElement":"<simple-steering></simple-steering>"
+    },
+    {
+      "directive":"simpleBrakeThermals",
+      "css":{ "right":"", "width":"150px", "position":"absolute", "top":"", "left":"20px", "height":"180px", "bottom":"20px" },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/SimpleBrakeThermals/app.js",
+      "name":"Simple Brake Thermals",
+      "domElement":"<simple-brake-thermals></simple-brake-thermals>"
+    },
+    {
+      "directive":"gforcesDebug",
+      "css":{ "right":"", "width":"180px", "position":"absolute", "top":"", "left":"170px", "height":"180px", "bottom":"20px" },
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/gForcesDebug/app.js",
+      "name":"ui.apps.g-forces.name",
+      "domElement":"<gforces-debug></gforces-debug>"
+    }
+  ],
+
+
+  "garage": [
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "300px", "height": "400px", "top": "80px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    }
+  ],
+  "christmasEvent":[
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": { "width": "500px", "height": "400px", "top": "0px", "left": "0px"},
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {"width": "300px", "height": "300px", "bottom": "20px", "right": "20px"},
+      "noCockpit": true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "css": {"width": "150px", "height": "150px", "bottom": "320px", "right": "20px"},
+      "noCockpit":true,
+      "directive": "forcedInduction",
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name" : "ForcedInduction",
+      "domElement": "<forced-induction></forced-induction>"
+    },
+    {
+      "css":{ "right":"0px", "top":"0px", "height":"500px", "width":"355px"},
+      "noCockpit":false,
+      "directive":"keyList",
+      "jsSource":"../../ui/modules/apps/Keys/app.js",
+      "name":"Keys",
+      "domElement":"<key-list></key-list>"
+    },
+    {
+      "name" : "Radial menu",
+      "directive": "radialmenu",
+      "domElement": "<radialmenu></radialmenu>",
+      "jsSource":"../../ui/modules/apps/RadialMenu/app.js",
+      "css": { "width": "450px", "height": "450px", "top": "0", "left": "0", "bottom": "0", "right": "0", "margin": "auto"}
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{"right":"260px", "width":"230px", "position":"absolute", "top":"", "left":"", "height":"170px", "bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{"right":"","width":"180px","position":"absolute","top":"","left":"0px","height":"320px","bottom":"300px"},
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    },
+    {
+      "directive":"navigation",
+      "css":{"right":"","width":"500px","position":"absolute","top":"","left":"0px","height":"300px","bottom":"0px"},
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/Navigation/app.js",
+      "name":"ui.apps.navigation.name",
+      "domElement":"<navigation></navigation>"
+    }
+  ],
+  "busRouteScenario":[
+    {
+      "directive":"messages",
+      "css":{
+        "left":"0px",
+        "width":"500px",
+        "height":"400px",
+        "top":"0px"
+      },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Messages/app.js",
+      "name":"Messages",
+      "domElement":"<messages></messages>"
+    },
+    {
+      "directive":"tacho2",
+      "css":{
+        "right":"20px",
+        "width":"300px",
+        "height":"300px",
+        "bottom":"20px"
+      },
+      "noCockpit":true,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Tacho2/app.js",
+      "name":"Tacho2",
+      "domElement":"<tacho2></tacho2>"
+    },
+    {
+      "directive":"forcedInduction",
+      "css":{
+        "right":"20px",
+        "width":"150px",
+        "height":"150px",
+        "bottom":"320px"
+      },
+      "noCockpit":true,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/Forcedinduction/app.js",
+      "name":"ForcedInduction",
+      "domElement":"<forced-induction></forced-induction>"
+    },
+    {
+      "directive":"simplePowertrainControl",
+      "css":{
+        "right":"260px",
+        "width":"230px",
+        "position":"absolute",
+        "top":"",
+        "left":"",
+        "height":"170px",
+        "bottom":"0px"
+      },
+      "noCockpit":true,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name":"Simple Powertrain Control",
+      "domElement":"<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive":"raceCountdown",
+      "css":{
+        "right":0,
+        "width":"690px",
+        "position":"absolute",
+        "top":0,
+        "left":0,
+        "bottom":0,
+        "height":"160px",
+        "margin":"auto"
+      },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/RaceCountdown/app.js",
+      "name":"ui.apps.racecountdown.name",
+      "domElement":"<race-countdown></race-countdown>"
+    },
+    {
+      "directive":"busLine",
+      "css":{
+        "right":0,
+        "width":"260px",
+        "position":"absolute",
+        "top":"0px",
+        "bottom":"",
+        "left":"",
+        "height":"230px",
+        "margin":"auto"
+      },
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/busLine/app.js",
+      "name":"bus line",
+      "domElement":"<bus-line></bus-line>"
+    },
+    {
+      "directive":"raceRealtimeDisplay",
+      "css":{
+        "right":"0px",
+        "left":"0px",
+        "top":"200px",
+        "width":"690px",
+        "height":"160px",
+        "margin":"auto"
+      },
+      "noCockpit":false,
+      "preserveAspectRatio":false,
+      "jsSource":"../../ui/modules/apps/RaceRealtimeDisplay/app.js",
+      "name":"Race Realtime Display",
+      "domElement":"<race-realtime-display></race-realtime-display>"
+    },
+    {
+      "directive":"damageApp",
+      "css":{
+        "right":"",
+        "width":"180px",
+        "position":"absolute",
+        "top":"",
+        "left":"0px",
+        "height":"320px",
+        "bottom":"0px"
+      },
+      "noCockpit":false,
+      "preserveAspectRatio":true,
+      "jsSource":"../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name":"ui.apps.vehicle_damage_app.name",
+      "domElement":"<damage-app></damage-app>"
+    }
+  ],
+  "dderbyScenario":[
+    {
+      "name": "Messages",
+      "domElement": "<messages></messages>",
+      "css": {
+        "width": "500px",
+        "height": "400px",
+        "top": "80px",
+        "left": "0px"
+      },
+      "noCockpit": false,
+      "directive": "messages",
+      "jsSource": "../../ui/modules/apps/Messages/app.js"
+    },
+    {
+      "name": "Tacho2",
+      "domElement": "<tacho2></tacho2>",
+      "css": {
+        "width": "300px",
+        "height": "300px",
+        "bottom": "20px",
+        "right": "20px"
+      },
+      "noCockpit": true,
+      "directive": "tacho2",
+      "jsSource": "../../ui/modules/apps/Tacho2/app.js"
+    },
+    {
+      "name": "RaceCountdown",
+      "domElement": "<race-countdown></race-countdown>",
+      "css": {
+        "width": "690px",
+        "height": "160px",
+        "top": "220px",
+        "left": "0px",
+        "right": "0px",
+        "margin": "auto"
+      },
+      "noCockpit": false,
+      "directive": "raceCountdown",
+      "jsSource": "../../ui/modules/apps/RaceCountdown/app.js"
+    },
+    {
+      "name": "Race Realtime Display",
+      "domElement": "<race-realtime-display></race-realtime-display>",
+      "css": {
+        "width": "690px",
+        "height": "160px",
+        "top": "200px",
+        "left": "0px",
+        "right": "0px",
+        "margin": "auto"
+      },
+      "noCockpit": false,
+      "directive": "raceRealtimeDisplay",
+      "jsSource": "../../ui/modules/apps/RaceRealtimeDisplay/app.js"
+    },
+    {
+      "directive": "simplePowertrainControl",
+      "css": {
+        "right": "260px",
+        "width": "230px",
+        "position": "absolute",
+        "top": "",
+        "left": "",
+        "height": "170px",
+        "bottom": "0px"
+      },
+      "noCockpit": true,
+      "preserveAspectRatio": true,
+      "jsSource": "../../ui/modules/apps/SimplePowertrainControl/app.js",
+      "name": "Simple Powertrain Control",
+      "domElement": "<simple-powertrain-control></simple-powertrain-control>"
+    },
+    {
+      "directive": "damageApp",
+      "css": {
+        "right": "",
+        "width": "180px",
+        "position": "absolute",
+        "top": "",
+        "left": "0px",
+        "height": "320px",
+        "bottom": "0px"
+      },
+      "noCockpit": false,
+      "preserveAspectRatio": true,
+      "jsSource": "../../ui/modules/apps/DamageAppVehicleSimple/app.js",
+      "name": "ui.apps.vehicle_damage_app.name",
+      "domElement": "<damage-app></damage-app>"
+    },
+    {
+      "directive": "jsonDebug",
+      "css": {
+        "right": "",
+        "width": "280px",
+        "position": "absolute",
+        "top": "",
+        "left": "180px",
+        "height": "230px",
+        "bottom": "0px"
+      },
+      "noCockpit": false,
+      "jsSource": "../../ui/modules/apps/JsonDump/app.js",
+      "name": "ui.apps.json_dump.name",
+      "domElement": "<json-debug></json-debug>"
+    }
+  ]
+}

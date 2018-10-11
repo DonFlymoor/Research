@@ -14,12 +14,12 @@ local desiredwindowPlacement = nil
 
 local function getSceneObj(objectName)
     local sceneObj = scenetree.findObject(objectName)
-    if not sceneObj then 
+    if not sceneObj then
         log("E", logTag, "could  not find "..objectName)
         return
     end
     return sceneObj
-end 
+end
 
 local function videoModeFromString( videoModeStr )
     local vm = { width = 0, height = 0, fullScreen = 0, bitDepth = 0, refreshRate = 0, antialiasLevel = 0}
@@ -88,7 +88,7 @@ local function getGPU()
   local adapters = GFXInit.getAdapters()
   for k, a in ipairs(adapters) do
     if gpu ~= '' and a.gpu == gpu then return gpu end
-    if gpu == '' and a.gpu ~= '' then return a.gpu end 
+    if gpu == '' and a.gpu ~= '' then return a.gpu end
   end
 
   gpu = adapters[1].gpu
@@ -101,7 +101,7 @@ local function getGFX()
     local adapters = GFXInit.getAdapters()
     for k, a in ipairs(adapters) do
         if gfx ~= '' and a.gfx == gfx then return gfx end
-        if gfx == '' and a.gfx ~= '' then  return a.gfx end 
+        if gfx == '' and a.gfx ~= '' then  return a.gfx end
     end
 
     gfx = adapters[1].gfx
@@ -281,7 +281,14 @@ local function buildOptionHelpers()
             SimpleSettings.fpslimiterEnabled = value
         end
     }
-
+    o.SleepInBackground = {
+        get = function ()
+            return getSleepInBackground()
+        end,
+        set = function ( value )
+            setSleepInBackground(value)
+        end
+    }
     -- SettingsGraphicFullscreen
     o.GraphicFullscreen = {
         get = function ()

@@ -26,7 +26,7 @@ angular.module('beamng.garage')
   };
 
   vm.getCountry = function () {
-    var shortHand = 
+    var shortHand =
       { 'United States': 'USA'
       , 'Japan': 'JP'
       , 'Germany': 'GER'
@@ -66,7 +66,7 @@ angular.module('beamng.garage')
 
   var alreadyShown = ['Years', 'Value', 'Country', 'Source', 'Brand']; // 'Body Style'
   vm.showData = (title, performance) => alreadyShown.indexOf(title) === -1 && Vehicles.showData(title, true, performance);
-  
+
   vm.sortByValue = (a, b) => a.aggregates && a.aggregates.Value && a.aggregates.Value.min && b.aggregates && b.aggregates.Value && b.aggregates.Value.min ? a.aggregates.Value.min - b.aggregates.Value.min : 1;
 
   $scope.down = () => console.warn('callback doesn\'t seem to be registered');
@@ -85,4 +85,4 @@ angular.module('beamng.garage')
     $state.go('garage.menu.parts');
   };
 
-}]);
+}])

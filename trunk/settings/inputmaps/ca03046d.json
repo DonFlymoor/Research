@@ -1,0 +1,28 @@
+{
+    "name": "Logitech Momo Racing Force Feedback Wheel)"
+    "guid": "{CA03046D-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        // axes:
+        //%device = "{CA03046D-0000-0000-0000-504944564944}-" @ %joyNum;
+        // camera
+        {"control": "button2"   ,   "action": "rotate_camera_right"},
+        {"control": "button3"   ,   "action": "rotate_camera_left"},
+        // movement
+        {"control": "xaxis" ,   "action": "steering", "angle": 240},
+        {"control": "rzaxis"    ,   "action": "brake"   ,   "isInverted": true},
+        {"control": "yaxis" ,   "action": "accelerate"  ,   "isInverted": true},
+        {"control": "button9"   ,   "action": "toggleShifterMode"},
+        // paddle - left
+        {"control": "button0"   ,   "action": "shiftDown"},
+        // paddle - right
+        {"control": "button1"   ,   "action": "shiftUp"},
+        {"control": "button7"   ,   "action": "reset_physics"},
+        //{"control": "button7" ,   "action": "pause"},
+        {"control": "button8"   ,   "action": "parkingbrake"},
+        {"control": "button6"   ,   "action": "switch_next_vehicle"},
+        {"control": "button5"   ,   "action": "center_camera"},
+        {"control": "button4"   ,   "action": "switch_camera_next"},
+        //{"control": "btn_x"   ,   "action": "toggleFirstPerson"},
+    ]
+}

@@ -38,6 +38,12 @@ angular.module('beamng.stuff')
     vm.onlineState = data;
     if(vm.onlineState){
       vm.gotoPage();
+      vm.loadTimeout = false;
+    }
+    else{
+      vm.loadTimeout = false;
+      vm.loadingPage = false;
+      $timeout.cancel(timeOut);
     }
   });
   $scope.$on("OnlineStateChanged", function(evt, data) {

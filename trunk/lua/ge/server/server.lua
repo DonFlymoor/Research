@@ -63,14 +63,16 @@ local function createGameActual(levelPath)
       be:decalManagerLoad(levelPath..".decals")
     end
 
+    -- NOTE(AK): These spawns are only needed by freeroam. Scenario does it's own spawning
     spawn.spawnCamera()
 
     spawn.spawnPlayer()
+    ------------------------------------
 
-    core_gamestate.requestExitLoadingScreen()
+    core_gamestate.requestExitLoadingScreen(logTag)
 
     clientPostStartMission(levelPath)
-    
+
     clientStartMission(getMissionFilename())
 
     TorqueScript.setVar("$loadingLevel", "false") -- DO NOT REMOVE, this is used on the c++ side
@@ -106,8 +108,10 @@ local function createGameWrapper (levelPath)
     local function help ()
         createGameActual(levelPath)
     end
-    -- yes this is weird, but it fixes the race proble between createGame and luaPreRender
-    core_gamestate.requestEnterLoadingScreen(help, 2)
+    --log('I', logTag, 'Loading = '..tostring(core_gamestate.loading()))
+    -- yes this is weird, but it fixes the problem with createGame and luaPreRender
+    core_gamestate.requestEnterLoadingScreen(logTag, help)
+    core_gamestate.requestEnterLoadingScreen('worldReadyState')
 end
 
 M.createGame = createGameWrapper

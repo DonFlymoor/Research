@@ -5,8 +5,9 @@
 uniform_sampler2D( edgeBuffer , 0 );
 uniform_sampler2D( backBuffer , 1 );
 
-float4 main( PFXVertToPix IN,             
-             uniform float2 targetSize : register(C0) ) : SV_TARGET0
+uniform float2 targetSize;
+
+float4 main( PFXVertToPix IN ) : SV_TARGET0
 {
    float2 pixelSize = 1.0 / targetSize;
 

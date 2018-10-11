@@ -1,0 +1,19 @@
+{
+  "domElement": "<clutch-thermal-debug></clutch-thermal-debug>",
+  "name": "ui.apps.clutch_thermal_debug.name",
+  "types": [
+    "ui.apps.categories.debug"
+  ],
+  "description": "Shows some clutch thermal statistics",
+  "css": {
+    "left": "0px",
+    "height": "auto",
+    "width": "300px",
+    "min-width": "300px",
+    "min-height": "130",
+    "top": "0px"
+  },
+  "author": "Diamondback",
+  "version": "0.1",
+  "directive": "clutchThermalDebug"
+}

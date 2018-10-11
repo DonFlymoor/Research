@@ -3,7 +3,7 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 
 local max = math.max
@@ -15,9 +15,12 @@ local sampleTimer = 0
 local sampleStart = 0
 local coolDownTimer = 0
 local soundNode = 0
+local soundEvent = nil
+local soundCoolDown = 0
+local electricsBrakeName = nil
 
 local function updateGFX(dt)
-  local brake = electrics.values.brake or 0
+  local brake = electrics.values[electricsBrakeName] or 0
   coolDownTimer = max(coolDownTimer - dt, 0)
   if lastBrake - brake > 0.01 and not doSample and coolDownTimer <= 0 then
     doSample = true
@@ -33,8 +36,8 @@ local function updateGFX(dt)
       if dBrake < -0.2 then
         local intensity = -dBrake * sampleWindow
         --print(intensity)
-        obj:playSFXOnce("event:>Vehicle>Pneumatics>Air_Brakes", soundNode, intensity, 1.0)
-        coolDownTimer = 0.5
+        obj:playSFXOnce(soundEvent, soundNode, intensity, 1)
+        coolDownTimer = soundCoolDown
       end
     end
   end
@@ -60,6 +63,9 @@ local function init(jbeamData)
   else
     soundNode = 0
   end
+  soundEvent = jbeamData.soundEvent or "event:>Vehicle>Pneumatics>Air_Brakes"
+  soundCoolDown = jbeamData.soundCoolDown or 0.5
+  electricsBrakeName = jbeamData.electricsBrakeName or "brake"
 end
 
 M.init = init

@@ -108,10 +108,10 @@
       <span>{{ ::data.title | translate }}</span>
     </div>
 
-    <div style="font-size: 2em; margin-top: 10px;" ng-if="scenario.highscores.place == 1">New local best time!</div>
-    <div style="font-size: 1.5em; margin-top: 10px;" ng-if="scenario.highscores.place != -1 && scenario.highscores.place != 1">Place {{scenario.highscores.place}}</div>
+    <div style="font-size: 2em; margin-top: 10px; color: white" ng-if="scenario.highscores.place == 1">New local best time!</div>
+    <div style="font-size: 1.5em; margin-top: 10px; color: white" ng-if="scenario.highscores.place != -1 && scenario.highscores.place != 1">Place {{scenario.highscores.place}}</div>
 
-    <div style="font-size: 2.5em; margin-bottom=20px;">{{data.time}}</div>
+    <div style="font-size: 2.5em; margin-bottom: 20px; color: white">{{data.time}}</div>
     
     
   </div>

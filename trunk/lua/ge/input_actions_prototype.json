@@ -1,0 +1,10 @@
+// Please refer to modding/input/ documentation for information about input actions
+// DOT NOT EDIT THIS FILE.
+
+{
+
+"set_checkpoint"          :{"cat":"gameplay", "order": 14, "ctx": "tlua", "onDown"  :"if core_checkpoints then core_checkpoints.setCheckpoint(PLAYER) end",  "actionMap": "ExplorationCheckpoints",  "title": "Save a checkpoint",      "desc": "Save a checkpoint to return to at any time" },
+"goto_checkpoint"         :{"cat":"gameplay", "order": 15, "ctx": "tlua", "onDown"  :"if core_checkpoints then core_checkpoints.teleportToCheckpoint(PLAYER) end",      "title": "Teleport to checkpoint", "desc": "Teleport to a saved checkpoint" },
+"openPhotomode"          :{"cat":"gameplay", "order": 16, "ctx": "tlua", "onDown"  :"campaign_exploration:openPhotomode()",    "actionMap": "ExplorationGeneral",      "title": "openPhotomode",         "desc": "PhotoSafari" },
+
+}

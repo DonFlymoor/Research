@@ -3,7 +3,7 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 M.defaultOrder = 40
 
@@ -47,7 +47,7 @@ local function init(jbeamData)
 
   lockedLines = {}
   lockedBrakingTorques = {}
-  for _,v in pairs(jbeamData.lockedLines) do
+  for _, v in pairs(jbeamData.lockedLines or {}) do
     lockedLines[v] = true
     lockedBrakingTorques[v] = 0
   end
@@ -57,15 +57,28 @@ local function init(jbeamData)
   electricsName = jbeamData.electricsName or "linelock"
 
   if not hasBuiltPie then
-      core_quickAccess.addEntry({ level = '/powertrain/', generator = function(entries)
-            local noEntry = { title = 'Line Lock', priority = 40, icon = 'radial_line_lock', onSelect = function() controller.getController(name).toggleLineLock() return {'reload'} end }
-            if electrics.values[electricsName] >= 1 then
-              noEntry.color = '#ff6600'
+    core_quickAccess.addEntry(
+      {
+        level = "/powertrain/",
+        generator = function(entries)
+          local noEntry = {
+            title = "Line Lock",
+            priority = 40,
+            icon = "radial_line_lock",
+            onSelect = function()
+              controller.getController(name).toggleLineLock()
+              return {"reload"}
             end
-            table.insert(entries, noEntry)
-          end})
-    end
-    hasBuiltPie = true
+          }
+          if electrics.values[electricsName] >= 1 then
+            noEntry.color = "#ff6600"
+          end
+          table.insert(entries, noEntry)
+        end
+      }
+    )
+  end
+  hasBuiltPie = true
 
   lineLockActive = 0
 end

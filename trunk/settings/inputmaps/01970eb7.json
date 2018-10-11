@@ -1,0 +1,66 @@
+{
+    "name": "Fanatec Porsche 911 Turbo S Wheel"
+    "guid": "{01970EB7-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        //button0 = unmarked upper left left
+        //button1 = LSB
+        //button2 = unmarked upper left right
+        //button3 = RSB
+        //button4 = X
+        //button5 = A
+        //button6 = Y
+        //button7 = B
+        //button8 = left paddle
+        //button9 = right paddle
+        //button10 = back
+        //button11 = start
+        //button12-17 = gears 1-6
+        //button18 = reverse
+        // movement
+        {"control": "rzaxis", "action": "brake" , "isInverted": true    ,   "deadzone": {"end": 0.02 }},
+        {"control": "yaxis", "action": "accelerate" ,   "isInverted": true  ,   "deadzone": {"end": 0.02 }},
+        {"control": "slider", "action": "clutch"    ,   "isInverted": true  ,   "deadzone": {"end": 0.02 }},
+    {
+    "ffb" :       {"forceLimit"        : 4.5                   , "smoothing"         : 150                 , "forceCoef"         : 450                 , "forceCoefLowSpeed": 220, "smoothingHF"       : 50                  }, 
+    "isForceInverted"   : true                , 
+    "ffbUpdateType" : 0,
+    "isForceEnabled"    : true                , 
+    "control"           : "xaxis"             , 
+    "action"            : "steering",
+    "angle": 240
+    }, 
+        {"control": "button10"  ,   "action": "toggleShifterMode"},
+        // paddle - left
+        {"control": "button8"   ,   "action": "shiftDown"},
+        // paddle - right
+        {"control": "button9"   ,   "action": "shiftUp"},
+        {"control": "button6"   ,   "action": "parkingbrake"},
+        //camera controls
+        {"control": "button4"   ,   "action": "switch_camera_next"},
+        {"control": "lpov"  ,   "action": "rotate_camera_left"},
+        {"control": "rpov"  ,   "action": "rotate_camera_right"},
+        {"control": "upov"  ,   "action": "rotate_camera_up"},
+        {"control": "dpov"  ,   "action": "rotate_camera_down"},
+        {"control": "button5"   ,   "action": "center_camera"},
+        //lights
+        {"control": "button0", "action": "toggle_headlights"},
+        {"control": "button2", "action": "activateStarterMotor"},
+        {"control": "button1", "action": "toggle_left_signal"},
+        {"control": "button3", "action": "toggle_right_signal"},
+        // gears
+        {"control": "button18"  ,   "action": "gearR"},
+        {"control": "button12"  ,   "action": "gear1"},
+        {"control": "button13"  ,   "action": "gear2"},
+        {"control": "button14"  ,   "action": "gear3"},
+        {"control": "button15"  ,   "action": "gear4"},
+        {"control": "button16"  ,   "action": "gear5"},
+        {"control": "button17"  ,   "action": "gear6"},
+        {"control": "button11"  ,   "action": "pause"},
+    { "action"            : "menu_item_select"    , "control"           : "button5"             }, 
+    { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+    { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+    { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+    { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+    ]
+}

@@ -27,6 +27,9 @@ local kbdOutRateMult = 0
 local kbdInRateMult = 0
 local padSmoother = nil
 local vehicleSteeringWheelLock = 450
+local handbrakeSoundEngaging    = nil
+local handbrakeSoundDisengaging = nil
+local handbrakeSoundDisengaged  = nil
 
 local function init()
   --scale rates based on steering wheel degrees
@@ -51,6 +54,15 @@ local function init()
   elseif foundSteeringHydro then
     if v.data.input == nil then v.data.input = {} end
     v.data.input.steeringWheelLock = vehicleSteeringWheelLock
+  end
+
+  for wi,wd in pairs(wheels.wheels) do
+    if wd.parkingTorque and wd.parkingTorque > 0 then
+      handbrakeSoundEngaging    = sounds.createSoundscapeSound('handbrakeEngaging')
+      handbrakeSoundDisengaging = sounds.createSoundscapeSound('handbrakeDisengaging')
+      handbrakeSoundDisengaged  = sounds.createSoundscapeSound('handbrakeDisengaged')
+      break
+    end
   end
 
   rateMult = 5 / 8
@@ -202,10 +214,6 @@ local function update(dt)
         end
       end
     end
-    if e.clearOnThrottle and k == 'parkingbrake' and (M.parkingbrake or e.minLimit) > 0.5 and (controller.mainController.throttle or e.minLimit) > 0.5 then
-      e.clearOnThrottle = nil
-      e.val = 0
-    end
 
     if k == "steering" then
       local f = M.filterSettings[e.filter] -- speed-sensitive steering limit
@@ -213,6 +221,13 @@ local function update(dt)
     end
 
     ival = math.min(math.max(ival, e.minLimit), e.maxLimit)
+
+    if k == "parkingbrake" then
+      local prev = M[k] or e.minLimit
+      if handbrakeSoundEngaging    and prev == e.minLimit and ival > prev then sounds.playSound(handbrakeSoundEngaging   ) end
+      if handbrakeSoundDisengaging and prev == e.maxLimit and ival < prev then sounds.playSound(handbrakeSoundDisengaging) end
+      if handbrakeSoundDisengaged  and ival == e.minLimit and ival < prev then sounds.playSound(handbrakeSoundDisengaged ) end
+    end
 
     M[k] = ival
     electrics.values[k..'_input'] = ival
@@ -244,7 +259,6 @@ local function event(itype, ivalue, filter, angle)
   end
   M.state[itype].val = ivalue
   M.state[itype].filter = filter
-  M.state[itype].clearOnThrottle = nil
   M.state[itype].angle = angle
 end
 
@@ -256,29 +270,6 @@ local function toggleEvent(itype)
     M.state[itype].val = 1
   end
   M.state[itype].filter = 0
-  M.state[itype].clearOnThrottle = nil
-end
-
--- will smartly decide whether the user is actually parking the car (toggle), or just drifting around (temporary brake)
-local function smartParkingBrake(ivalue, filter)
-  -- gather some stats
-  local speed = electrics.values['wheelspeed']
-  if speed == nil then return event('parkingbrake', ivalue, filter) end -- not a typical car, so just set the pbrake as instructed
-  local energy = 0
-  for wi,wd in pairs(wheels.wheels) do energy = energy + wd.slipEnergy end
-  energy = energy / tableSize(wheels.wheels)
-
-  -- are we sliding or rolling?
-  local isAxis = filter == M.FILTER_DIRECT or filter == M.FILTER_PAD
-  local parkingSpeed = 10/3.6 --km/h to m/s
-  local rolling = math.abs(speed) > parkingSpeed
-  local skiddingThreshold = 50
-  local skidding = energy > skiddingThreshold
-
-  -- decide what to do, based on context
-  if rolling or skidding or isAxis then return event('parkingbrake', ivalue, filter) end -- transparent use / temporary pbrake
-  if ivalue > 0.5 then return toggleEvent('parkingbrake') end -- car is parked, use onDown to toggle pbrake
-  if M.state['parkingbrake'].val > 0.5 then M.state['parkingbrake'].clearOnThrottle = true end -- car is left parked with smart brake, let user use throttle to accelerate out of parking situation
 end
 
 -- keyboard (multi-key) compatibility
@@ -301,27 +292,6 @@ local function padAccelerateBrake(val, filter)
   end
 end
 
--- save the input state: persists the paring brake between reloads
-local function onSerialize()
-  -- try to save the values only
-  local res = {}
-  for kk,vv in pairs(M.state) do
-    res[kk] = { val = vv.val, clearOnThrottle = vv.clearOnThrottle }
-  end
-  return res
-end
-
--- restore the values
-local function onDeserialize(data)
-  local res = {}
-  for kk,vv in pairs(data) do
-    if M.state[kk] == nil then
-      M.state[kk] = getDefaultState(kk)
-    end
-    M.state[kk].val = vv.val
-    M.state[kk].clearOnThrottle = vv.clearOnThrottle
-  end
-end
 local function settingsChanged()
   M.filterSettings = {}
   for i,v in ipairs({ M.FILTER_KBD, M.FILTER_PAD, M.FILTER_DIRECT, M.FILTER_KBD2 }) do
@@ -355,10 +325,6 @@ M.event = event
 M.toggleEvent = toggleEvent
 M.kbdSteer = kbdSteer
 M.padAccelerateBrake = padAccelerateBrake
-M.smartParkingBrake = smartParkingBrake
 M.settingsChanged = settingsChanged
-
-M.onSerialize = onSerialize
-M.onDeserialize = onDeserialize
 
 return M

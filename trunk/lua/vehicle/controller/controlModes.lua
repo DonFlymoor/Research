@@ -2,10 +2,8 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
-local filterchain = require("filterchain")
-
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 
 local min = math.min
@@ -27,7 +25,7 @@ local function updateGFX(dt)
   inputs.throttlebrake = input.throttle - input.brake
 
   local control = controlModes[M.controlModeIndex].electrics
-  for _,v in pairs(control) do
+  for _, v in pairs(control) do
     local config = configurations[v]
     electrics.values[v] = min(max(electrics.values[v] + config.smoother:get(inputs[config.input], dt) * config.speed * dt, config.min), config.max)
   end
@@ -36,7 +34,7 @@ end
 local function setControlModeIndex(index)
   M.controlModeIndex = index
   M.controlModeName = controlModes[M.controlModeIndex].name
-  gui.message("Control Mode: "..controlModes[M.controlModeIndex].name, 5, "vehicle.controls.mode")
+  gui.message("Control Mode: " .. controlModes[M.controlModeIndex].name, 5, "vehicle.controls.mode")
 end
 
 local function toggleControlMode(value)
@@ -60,7 +58,7 @@ local function init(jbeamData)
   local config = tableFromHeaderTable(jbeamData.config)
   configurations = {}
   inputs = {}
-  for _,v in pairs(config) do
+  for _, v in pairs(config) do
     configurations[v.electric] = v
     configurations[v.electric].smoother = newTemporalSmoothingNonLinear(configurations[v.electric].smoothIn, configurations[v.electric].smoothOut)
     electrics.values[v.electric] = 0
@@ -73,21 +71,37 @@ local function init(jbeamData)
   M.controlModeName = controlModes[M.controlModeIndex].name
 
   if not hasRegisteredQuickAccess then
-    core_quickAccess.addEntry({ level = '/', generator = function(entries)
-          if controller.getController('controlModes') then
-            table.insert(entries, { title = 'Modes', priority = 40, ["goto"] = '/controlmodes/', icon = 'settings' })
+    core_quickAccess.addEntry(
+      {
+        level = "/",
+        generator = function(entries)
+          if controller.getController("controlModes") then
+            table.insert(entries, {title = "Modes", priority = 40, ["goto"] = "/controlmodes/", icon = "settings"})
           end
-        end})
+        end
+      }
+    )
 
-    core_quickAccess.addEntry({ level = '/controlmodes/', generator = function(entries)
-          for k,v in pairs(controlModes) do
-            local entry = { title = v.name, onSelect = function() setControlModeIndex(k) return {'reload'} end}
+    core_quickAccess.addEntry(
+      {
+        level = "/controlmodes/",
+        generator = function(entries)
+          for k, v in pairs(controlModes) do
+            local entry = {
+              title = v.name,
+              onSelect = function()
+                setControlModeIndex(k)
+                return {"reload"}
+              end
+            }
             if M.controlModeIndex == k then
-              entry.color = '#ff6600'
+              entry.color = "#ff6600"
             end
             table.insert(entries, entry)
           end
-        end})
+        end
+      }
+    )
     hasRegisteredQuickAccess = true
   end
 end

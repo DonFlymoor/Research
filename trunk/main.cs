@@ -11,7 +11,7 @@ function createCanvas(%windowTitle)
     if($forceFullscreen) {
         $pref::Video::displayOutputDevice = "";
     }
-
+    
     %deskRes    = getDesktopVideoMode();
     %deskResX   = getWord(%deskRes, $WORD::RES_X);
     %deskResY   = getWord(%deskRes, $WORD::RES_Y);
@@ -20,7 +20,7 @@ function createCanvas(%windowTitle)
     %deskRefresh  = getWord(%deskRes, $WORD::REFRESH);
 
     $pref::Video::mode = %deskResX SPC %deskResY SPC "false" SPC %deskResBPP SPC %deskRefresh SPC "4";
-
+        
 
     // Create the Canvas
     %foo = new GuiCanvas(Canvas)
@@ -96,7 +96,7 @@ exec("art/main.cs");
 
 // make sure some important paths exist
 if(!IsDirectory("settings/")) createPath( "settings/" );
-//if(!IsDirectory("screenshots/")) createPath( "screenshots/" );
+if(!IsDirectory("screenshots/")) createPath( "screenshots/" );
 
 // Parse the command line arguments
 //debug("--------- Parsing Arguments ---------");

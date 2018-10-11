@@ -17,7 +17,6 @@
           <div class="leftSide">{{ ::'ui.performance.minRequired' | translate }}</div>
           <div flex layout="row" layout-align="start center" >
              {{ ::'ui.common.fooOrBar' | translate: {foo: 'Desktop Intel i3', bar: 'AMD quad-core'} }}
-             {{ ::'ui.performance.orBetter' | translate }}
           </div>
         </md-list-item>
         <md-list-item layout="row" layout-align="start center" style="font-size:0.8em">
@@ -61,7 +60,7 @@
         <md-list-item layout="row" layout-align="start center" style="font-size:0.8em">
           <div class="leftSide">{{ ::'ui.performance.recommended' | translate }}</div>
           <div flex layout="row" layout-align="start center">
-            GeForce GTX 780, Radeon R9 290 {{ ::'ui.performance.orBetter' | translate }}
+            GeForce GTX 780, Radeon R9 290
           </div>
         </md-list-item>
         <md-list-item layout="row" layout-align="start center" ng-repeat="(i, w) in hwinfo.gpu.warnings">
@@ -227,7 +226,40 @@
     </div>
   </md-card>
 
+  <md-card class="card" flex>
+    <div class="md-title md-padding">{{ ::'ui.performance.mods.title' | translate }}</div>
+    <md-divider></md-divider>
+    <div layout="row" flex layout-align="start start">
+      <div>
+        <md-icon style="font-size:128px; height:128px; color: rgb(130,130,130)" ng-if="hwinfo.mods.state == 'load'">cached</md-icon>
+        <md-icon style="font-size:128px; height:128px; color: rgb(139,195,74)" ng-if="hwinfo.mods.state == 'ok'">check_circle</md-icon>
+        <md-icon style="font-size:128px; height:128px; color: rgb(255,152,0)" ng-if="hwinfo.mods.state == 'warn'">warning</md-icon>
+        <md-icon style="font-size:128px; height:128px; color: rgb(211,47,47)" ng-if="hwinfo.mods.state == 'error'">warning</md-icon>
+      </div>
 
+      <md-list class="questionAnswer" flex layout="column" layout-align="center start" style="min-height:128px">
+        <md-list-item layout="row" layout-align="start center" style="font-weight:bold;" translate="ui.performance.mods.stat" translate-values="{zip: hwinfo.mods.zip, unpacked: hwinfo.mods.unpacked}">
+        </md-list-item>
+        <md-list-item layout="row" layout-align="start center" style="font-size:0.8em">
+          <div class="leftSide">{{ ::'ui.performance.optimal' | translate }}</div>
+          <div flex layout="row" layout-align="start center" translate="ui.performance.mods.lt" translate-values="{zip: 100, unpacked: 10}">
+          </div>
+        </md-list-item>
+        <md-list-item layout="row" layout-align="start center" style="font-size:0.8em">
+          <div class="leftSide">{{ ::'ui.performance.recommended' | translate }}</div>
+          <div flex layout="row" layout-align="start center" translate="ui.performance.mods.lt" translate-values="{zip: 200, unpacked: 20}">
+          </div>
+        </md-list-item>
+        <md-list-item layout="row" layout-align="start center" ng-repeat="(i, w) in hwinfo.mods.warnings">
+          <div class="{{::w.type}}" layout="row" flex>
+            <div flex><b>{{ ::'ui.common.' + w.type | translate }}</b>: <span bng-translate="ui.performance.warnings.{{w.msg}}"></span></div>
+            <md-button class="md-warn md-raised" ng-if="!w.ack" ng-click="acknowledgeWarning(w.msg)">{{ ::'ui.performance.acknowledge' | translate }}</md-button>
+            <md-button class="md-raised" disabled ng-if="w.ack">{{ ::'ui.performance.acknowledged' | translate }}</md-button>
+          </div>
+        </md-list-item>
+      </md-list>
+    </div>
+  </md-card>
 
   <md-card class="card" flex>
     <div class="md-title md-padding">{{ ::'ui.perforamnce.improvements' | translate }}</div>

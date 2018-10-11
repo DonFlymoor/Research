@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <base href="/ui/">
+    <title>Simple Game UI</title>
 
     <!-- 3rd party includes -->
     <script src="lib/ext/angular.min.js"></script>
@@ -10,7 +11,7 @@
     <script src="lib/ext/hu.js"></script> <!-- not core, will be lazily loaded by navigation app -->
     <!-- BeamNG UI -->
     <script src="main.js"></script>
-    
+
     <script src="lib/int/logger.js"></script> <!-- not core, but is added as a dependency virtually everywhere -->
     <script src="lib/int/utilities.js"></script>  <!-- not core, but for some strange reason streams are made read only! -->
     <script src="lib/int/beamngApi.js"></script>
@@ -20,18 +21,18 @@
 
   <body ng-controller="TestController as test">
     <app-container>
-      
+
         <!-- There is a bug in launching apps that prevents the **first** app
         added from getting its CSS from app-container. Don't know the
         source of this (probably something ngTransclude-related) but, adding
         a dummy bng-app in here hides the problem. -->
-      
+
       <bng-app style="display:none"></bng-app>
     </app-container>
 
-    <!-- absolute positioning needed to get over app container layer. Maybe this won't be needed in the future, 
+    <!-- absolute positioning needed to get over app container layer. Maybe this won't be needed in the future,
          but game is priority. Until then, absolute is just fine. -->
     <button ng-click="test.addOtherApp()" style="position: absolute; top: 0; left: 0;">Add another</button>
-    
+
   </body>
 </html>

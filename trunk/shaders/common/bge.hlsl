@@ -286,6 +286,20 @@ float3 AL_CalcSpecularFresnel(float3 specColor, float _dot)
 	return specColor + (1.0 - specColor) * pow(1.0 - _dot, 5);
 }
 
+float roughnessToSpecPower(float roughness)
+{
+    float a = roughness * roughness;
+    float a2 = a * a;
+    return clamp((2 / a2) - 2, 1, 16000);
+}
+
+float SpecPowerToRoughness(float specPower)
+{
+    specPower = clamp(specPower, 1, 16000);
+    float a2 = (specPower + 2);
+    return sqrt(sqrt(a2));
+}
+
 #if defined(BGE_USE_SCENE_CBUFFER)
 
 #define MaterialFlag_diffuseMapUV1      (1 << 0)
@@ -319,7 +333,12 @@ cbuffer RenderPassConstBuffer : register(b0)
     float4 clipPlane0;
     float4 projectionParams;
     int4 viewportParams;
+    float4 lightInfoBufferParams;
 }
+
+// render pass textures
+uniform TextureCube sceneCubeMap : register(T0);
+uniform Texture2D lightInfoBuffer : register(T1);
 
 cbuffer cspPrimitive : register(b1)
 {

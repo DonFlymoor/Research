@@ -5,7 +5,7 @@
 local logTag = 'campaignsLoader'
 
 local M = {}
-M.campaignModules   = {'campaign_campaigns', 'campaign_exploration', 'campaign_comics','campaign_rewards', 'campaign_dealer'}
+M.campaignModules   = {'campaign_campaigns', 'campaign_exploration', 'campaign_comics','campaign_rewards'}
 
 local scenariosInAllCampaigns = {}
 
@@ -14,7 +14,7 @@ local function loadCampaign(campaignfile)
   --TODO(AK): add code to validate that this campaign is valid
   local campaign = readJsonFile(campaignfile)
   campaign.sourceFile =  string.gsub(campaignfile, "(.*:)(.*)", "%2")
-  campaign.sourcePath = string.gsub(campaignfile, "(.*)/(.*)", "%1")
+  campaign.sourcePath = string.gsub(campaignfile, "(.*)/(.*)", "%1")      
   campaign.official = isOfficialContent(FS:getFileRealPath(campaign.sourcePath))
   local index = string.find(campaign.sourcePath, "/[^/]*$") + 1
   -- todo: insert all images of the scenarios belong to this as well
@@ -25,7 +25,6 @@ local function loadCampaign(campaignfile)
   --dump(campaign)
   return campaign
 end
-
 
 local function getCampaignFilenames()
   if not FS:directoryExists('/campaigns/') then
@@ -67,7 +66,7 @@ local function isLocationForScenario(campaign, subsectionKey, locationKey)
   if campaign and campaign.meta.subsections then
     local subsection = campaign.meta.subsections[subsectionKey]
     if subsection and subsection.locations[locationKey] then
-      local location = subsection.locations[locationKey]
+      local location = subsection.locations[locationKey] 
       -- dump(location.path)
       return location.path ~= nil
     end
@@ -105,17 +104,6 @@ local function getIsScenarioRestricted(scenarioFullPath)
   return false
 end
 
-local function onInit()
-  --log('D', logTag, 'onInit called...')
-  -- scenariosInAllCampaigns = generateCampaignScenariosList()
-
-  -- Make sure save directory for the campaigns exists
-  local ts = [[
-    if(!IsDirectory("saves/campaigns/")) createPath( "saves/campaigns/" );
-  ]]
-  --TorqueScript.eval(ts)
-end
-
 local function splitFieldByToken(field, token)
   --log('D', logTag, 'splitFieldByToken called...')
   --log('D', logTag, 'field: '..tostring(field))
@@ -123,8 +111,8 @@ local function splitFieldByToken(field, token)
 
   local fieldParts = {}
   local pattern = "([^"..token..".]+)"
-  for part in field:gmatch(pattern) do
-    table.insert(fieldParts, part)
+  for part in field:gmatch(pattern) do 
+    table.insert(fieldParts, part) 
   end
   --dump(fieldParts)
   return fieldParts
@@ -154,7 +142,7 @@ local function validate(newCampaign)
     if subsection.locations then
       for locationKey, locationData in pairs(subsection.locations) do
         locationData.info = locationData.info or {}
-
+        
         if not locationData.info.title then
           locationData.info.title = locationData.title or '<missing title>'
           locationData.title = nil
@@ -194,7 +182,7 @@ local function processCampaignStartInternal(newCampaign, endCallback)
   -- log('D', logTag, 'processCampaignStartInternal called...')
   if not newCampaign then
    log('E', logTag, 'can not process a campaign that is NULL')
-   return
+   return    
   end
 
   -- TODO(AK): need a way to check if a module is loaded and use it
@@ -202,12 +190,12 @@ local function processCampaignStartInternal(newCampaign, endCallback)
   if campaign then
     stop()
   end
-
+  
   newCampaign.endCampaignCallback = endCallback
 
   local processedCampaign = {meta = newCampaign, state = {}}
   -- dump(processedCampaign)
-
+  
   if not validate(processedCampaign) then
     log('E', logTag, 'campaign ' .. processedCampaign.meta.title .. 'is not fully valid due to missing data.')
     return
@@ -220,7 +208,7 @@ local function processCampaignStartInternal(newCampaign, endCallback)
     local statusTable = processedCampaign.state.locationStatus
     for subsectionKey,subsection in pairs(processedCampaign.meta.subsections) do
       subsection.key = subsectionKey
-      for locationKey,location in pairs(subsection.locations) do
+      for locationKey,location in pairs(subsection.locations) do          
           statusTable[subsectionKey..'.'..locationKey] = {attempts = 0, state = 'ready', medal=''}
       end
     end
@@ -233,7 +221,7 @@ end
 -- this function is called when the user selects a campaign to play from the UI
 local function start(newCampaign, endCallback)
   log('D', logTag, 'starting a campaign')
-
+  
   -- this is to prevent bug where campaign is started while a different level is still loaded.
   -- Loading the first scenario in the campaign causes the current loaded level to unload which breaks the campaign.
   if scenetree.MissionGroup then
@@ -242,23 +230,14 @@ local function start(newCampaign, endCallback)
       log('D', logTag, 'Triggering a delayed start of campaign...')
       M.triggerDelayedStart = nil
       start(newCampaign, endCallback)
-    end
-
+    end    
+    
     endActiveGameMode(M.triggerDelayedStart)
   else
     loadGameModeModules(scenario_scenariosLoader.scenarioModules, scenario_quickRaceLoader.quickRaceModules, M.campaignModules)
-
+    
     local processedCampaign = processCampaignStartInternal(newCampaign, endCallback)
-
-    -- Auto load a campaign in progress
-    local campaignSaveFilename = campaign_campaignsLoader.checkSaveExists(processedCampaign.meta.title, processedCampaign.meta.enableSaves)
-    --log('I', logTag, 'Found saved campaign: '..tostring(campaignSaveFilename))
-
-    if campaignSaveFilename then
-      campaign_campaignsLoader.resumeSavedCampaign(processedCampaign, campaignSaveFilename)
-    else
-      campaign_campaigns.startCampaign(processedCampaign)
-    end
+    campaign_campaigns.startCampaign(processedCampaign)
   end
 end
 
@@ -272,103 +251,12 @@ local function startByFolder(path, endCallback)
   end
 end
 
-function getCampaignSaveInfo()
-  --log('I', logTag, 'getCampaignSaveInfo called....')
-
-  local savesFiles = {}
-  local files = FS:findFilesByPattern('/saves/campaigns/', '*.json', 1, true, false)
-  --dump(files)
-
-  for k,filename in pairs(files) do
-    local fileData = readJsonFile(filename) or {}
-    if fileData.header and fileData.header.type == 'campaignSave' then
-      table.insert(savesFiles, {filename = filename, title = fileData.header.title})
-    end
-  end
-  return savesFiles
-end
-
-local function checkSaveExists(title, savesEnabled)
-  --log('I', logTag, 'checkSaveExists called....Title: '..title..' savesEnabled: '..tostring(savesEnabled))
-
-  if savesEnabled and title then
-    local saveInfo = getCampaignSaveInfo()
-    for k,entry in pairs(saveInfo) do
-      if entry.title == title then
-        return entry.filename;
-      end
-    end
-  end
-
-  return nil
-end
-
-local function getFreeSaveFilename()
-  local saveInfos = getCampaignSaveInfo()
-  local fileCount = 0
-  if saveInfos then
-    fileCount = #saveInfos
-  end
-  return 'slot'..fileCount..'.json'
-end
-
-local function AddSaveDataCallback(moduleKey, data)
-  -- do all the verification here
-  if not moduleKey then
-    return
-  end
-
-  local next = next
-  if not data or next(data) == nil then
-    return
-  end
-  local saveDataTable = M.saveDataTable
-  saveDataTable[moduleKey] = data
-end
-
-local function saveCampaign(campaign)
-  log('I', logTag, 'saving campaign json file: '..tostring(campaign.meta.enableSaves))
-
-  if campaign.meta.enableSaves then
-    local filename = campaign_campaignsLoader.checkSaveExists(campaign.meta.title, campaign.meta.enableSaves)
-
-    if not filename then
-      filename = '/saves/campaigns/'..getFreeSaveFilename()
-    end
-
-    M.saveDataTable = {}
-    extensions.hook("onSaveCampaign", AddSaveDataCallback)
-    M.saveDataTable.header = {version = 1, type = 'campaignSave', title = campaign.meta.title}
-    serializeJsonToFile(filename, M.saveDataTable, true)
-    M.saveDataTable = nil
-  end
-end
-
-local function resumeSavedCampaign(campaign, saveFilename)
-  log('I', logTag, 'resuming saved campaign from json file: '..saveFilename)
-  -- TODO(AK): Look into the use of global _G. Once system is up and running, confirm if there is a better approach
-  local savedData = readJsonFile(saveFilename)
-  for name,data in pairs(savedData) do
-    if name ~= 'campaign_campaigns' then
-      if _G[name] and type(_G[name].onResumeCampaign) == 'function' then
-        _G[name].onResumeCampaign(campaign, data)
-      end
-    end
-  end
-
-  _G['campaign_campaigns'].resumeCampaign(campaign, savedData['campaign_campaigns'])
-end
-
 -- public interface
 M.getCampaignFilenames  = getCampaignFilenames
 M.getList               = getList
 M.getCampaignScenarios  = getCampaignScenarios
-M.onInit                = onInit
 M.start                 = start
 M.startByFolder         = startByFolder
 M.splitFieldByToken     = splitFieldByToken
-M.checkSaveExists       = checkSaveExists
-M.saveCampaign          = saveCampaign
-M.resumeSavedCampaign   = resumeSavedCampaign
 return M
 

@@ -24,11 +24,11 @@
             <div layout="row">
               <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.6em">
                 <!-- <span style="font-size: 1em; margin-right: 5px; padding:0px 4px;background:#880000; color: white" ng-if="!mod.active">Deactivated</span> -->
-                <span>{{ mod.title ? mod.title : mod.modname }}</span>
+                <span>{{ mod.title ? mod.title : mod.modname | limitTo: 30 }}</span>
               </div>
             </div>
             <div flex style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ mod.tag_line ? mod.tag_line : "Description unavailable." }}</div>
-            <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath }}</div>
+            <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath | limitTo: 30 }}{{mod.displaypath.length > 30 ? '...' : ''}}</div>
 
             <div layout="row" layout-align="end end" class="subButton">
               <div style="cursor: default; position: absolute; top: 4px; left:4px;" ng-if="!mod.progress">
@@ -67,11 +67,11 @@
               <div layout="row">
                 <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.6em">
                   <!-- <span style="font-size: 1em; margin-right: 5px; padding:0px 4px;background:#880000; color: white" ng-if="!mod.active">Deactivated</span> -->
-                  <span>{{ mod.title ? mod.title : mod.modname }}</span>
+                  <span>{{ mod.title ? mod.title : mod.modname | limitTo: 30}}</span>
                 </div>
               </div>
               <div flex style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ mod.tag_line ? mod.tag_line : "Description unavailable." }}</div>
-              <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath }}</div>
+              <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath | limitTo: 30 }}{{mod.displaypath.length > 30 ? '...' : ''}}</div>
 
               <div layout="row" layout-align="end end" class="subButton">
                 <div>
@@ -105,14 +105,14 @@
           <div layout="column" layout-fill layout-padding layout-align="space-between start">
             <div layout="row">
               <div flex layout="row" layout-align="start start" style="font-size:1em;margin:0;font-weight:bold;overflow:hidden;max-height:2.6em">
-                <span>{{ ::mod.modData.title ? mod.modData.title : mod.modname}}</span>
+                <span>{{ ::mod.modData.title ? mod.modData.title : mod.modname | limitTo: 30}}</span>
               </div>
               <div>
                 <span style="font-size: 1em; margin-right: 5px; padding:0px 4px;background:#880000; color: white" ng-if="!mod.active">Deactivated</span>
               </div>
             </div>
             <div flex style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ mod.modData.tag_line ? mod.modData.tag_line : "Description unavailable."}}</div>
-            <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath }}</div>
+            <div style="font-size:1em;max-height:3.4em; padding-left: 0; max-width: 80%; overflow:hidden;">{{ :: mod.displaypath | limitTo: 30 }}{{mod.displaypath.length > 30 ? '...' : ''}}</div>
             <div layout="row" layout-align="end end" class="subButton">
               <!--Have to use css classes to switch between icons on hover because ng-mouseleave does not always trigger correctly -->
               <div style="cursor: default;" ng-if="!mod.packed">
@@ -120,6 +120,14 @@
                 <md-tooltip md-direction="left">{{ ::'ui.repository.modUnpacked' | translate }}</md-tooltip>
               </div>
 
+              <div ng-if="!mod.active" >
+                <md-icon ng-click="toggleActivation($event, mod, $index)" class="material-icons md-default-theme disableCircle" style="opacity: 1; color:#cc6600;">do_not_disturb_off</md-icon>
+                <md-tooltip md-direction="left">{{ ::'ui.modmanager.activateTip' | translate }}</md-tooltip>
+              </div>
+              <div ng-if="mod.active" >
+                <md-icon ng-click="toggleActivation($event, mod, $index)" class="material-icons md-default-theme disableCircle" style="opacity: 1; color:#cc6600;">do_not_disturb_on</md-icon>
+                <md-tooltip md-direction="left">{{ ::'ui.modmanager.deactivateTip' | translate }}</md-tooltip>
+              </div>
               <div ng-if="mod.packed">
                 <md-icon  ng-click="subscribe($event, mod, $index)" class="material-icons md-default-theme cancelCircle" style="opacity: 1; color:#880000;">cancel</md-icon>
                 <md-tooltip md-direction="left">{{ ::'ui.modmanager.removeAndUnsub' | translate }}</md-tooltip>

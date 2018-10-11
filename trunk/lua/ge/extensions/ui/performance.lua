@@ -3,11 +3,17 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
+local frameMeters = {'luaDelay',
+  'sfxDelay',
+  'physDelay',
+  'cpuRender',
+  'cpuPreRender',
+  'cpuPostRender',
+  'framePresentDelay',
+  'cpuUpdateUI',
+  'othersFrameMs'}
 
-local unlimitedUpdates = false
-local frameMeters = {'luaDelay', 'sfxDelay', 'physDelay', 'cpuRender', 'cpuPreRender', 'cpuPostRender', 'gpuDelay', 'gpuUI', 'othersFrameMs'}
-
-local function onPreRender(dt)
+local function onPreRender()
   local rawData = getPerformanceMetrics()
 
   -- fix data up so it is standalone
@@ -43,12 +49,7 @@ local function onPreRender(dt)
 
   --dump(rawData)
 
-  if unlimitedUpdates then
-    guihooks.trigger('PerformanceData', rawData)
-  else
-    guihooks.triggerStream('PerformanceData', rawData)
-  end
-  guihooks.triggerStream('PerformanceDraw')
+  guihooks.triggerStream('PerformanceData', rawData)
 end
 
 local function rainbowColor(numOfSteps, step)
@@ -74,9 +75,8 @@ local function rainbowColor(numOfSteps, step)
   return { math.floor(r*255), math.floor(g*255), math.floor(b*255), 1}
 end
 
-local function requestConfig(_unlimitedUpdates)
-  unlimitedUpdates = _unlimitedUpdates
-  log('D', 'performance.requestConfig', "performance module config: unlimited updates: " .. tostring(unlimitedUpdates))
+local function requestConfig()
+  log('D', 'performance.requestConfig', 'assembling config')
   local graphCount = 9
   local gpuCount = 11
 
@@ -86,13 +86,13 @@ local function requestConfig(_unlimitedUpdates)
       physDelay     = { title = 'Physics', unit = 'ms', precision = 3, window = 30, color = rainbowColor(graphCount, 0) },
       cpuRender     = { title = 'CPU Render', unit = 'ms', precision = 1, window = 30, color = rainbowColor(graphCount, 7) },
       fps           = { title = 'FPS', unit = 'fps', precision = 0, window = 30, color = rainbowColor(graphCount, 2) },
-      gpuDelay      = { title = 'GPU Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 3) },
+      framePresentDelay      = { title = 'GPU Present Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 3) },
       gpuVsync      = { title = 'Vsync', unit = '', precision = 0, window = 30, color = rainbowColor(graphCount, 7) },
       sfxDelay      = { title = 'Audio Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 4) },
       luaDelay      = { title = 'Lua Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 5) },
       cpuPreRender  = { title = 'preRender', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 6) },
       cpuPostRender = { title = 'postRender', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 1) },
-      gpuUI         = { title = 'gpuUI', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 6) },
+      cpuUpdateUI         = { title = 'cpuUpdateUI', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 6) },
       othersFrameMs = { title = 'othersFrameMs', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 8) },
       --sin           = { title = 'Sinus test', unit = '', precision = 2, window = 30, color = rainbowColor(graphCount, 6) },
       --const         = { title = 'constant value test', unit = '', precision = 2, window = 30, color = rainbowColor(graphCount, 7) },
@@ -100,30 +100,30 @@ local function requestConfig(_unlimitedUpdates)
       memprocessVirtUsed   = { title = 'Virtual memory', unit = 'bytes', precision = 1, window = 30, color = rainbowColor(graphCount, 7) },
       cpumeasuredSpeed   = { title = 'CPU Speed', unit = 'GHz', precision = 3, window = 30, color = rainbowColor(graphCount, 8) },
 
-      AL_LightBinMgr       = { title = 'Light', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 0) },
-      AL_PrePassBin        = { title = 'PrePass', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 6) },
-      EditorBin            = { title = 'Editor', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 1) },
-      GlowBin              = { title = 'Glow', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 7) },
-      ObjTranslucentBin    = { title = 'Translucent Objects', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 2) },
-      RenderBinImposter    = { title = 'Imposter', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 8) },
-      RenderBinMesh        = { title = 'Mesh', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 3) },
-      RenderBinParticle    = { title = 'Particle', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 9) },
-      RenderBinTranslucent = { title = 'Translucent', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 4) },
-      RenderTerrain        = { title = 'Terrain', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 10) },
-      PostFX               = { title = 'Post Effects', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 5) },
+      gpu_AL_LightBinMgr       = { title = 'Light', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 0) },
+      gpu_AL_PrePassBin        = { title = 'PrePass', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 6) },
+      gpu_EditorBin            = { title = 'Editor', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 1) },
+      gpu_GlowBin              = { title = 'Glow', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 7) },
+      gpu_ObjTranslucentBin    = { title = 'Translucent Objects', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 2) },
+      gpu_RenderBinImposter    = { title = 'Imposter', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 8) },
+      gpu_RenderBinMesh        = { title = 'Mesh', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 3) },
+      gpu_RenderBinParticle    = { title = 'Particle', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 9) },
+      gpu_RenderBinTranslucent = { title = 'Translucent', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 4) },
+      gpu_RenderTerrain        = { title = 'Terrain', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 10) },
+      gpu_PostFX               = { title = 'Post Effects', unit = 'ms', precision = 2, window = 30, color = rainbowColor(gpuCount, 5) },
 
       -- the default value if it was not found above
       default       = { title = '', unit = '', precision = 3, window = 30, color = 'random' }, -- 'random' as color is special ;)
     },
     stacked = {
-      { title = "CPU", precision = 0, unit = 'ms', graphs = frameMeters },
+      { title = "CPU", precision = 0, unit = 'ms', graphs = frameMeters}
       --{ title = "Test", graphs = {'const', 'sin'} },
     },
     simple = {
       { title = 'FPS', graph = 'fps' },
       { title = 'Physics delay', graph = 'physDelay' },
       { title = 'CPU delay', graph = 'cpuRender' },
-      { title = 'GPU delay', graph = 'gpuDelay' },
+      { title = 'GPU Present Delay', graph = 'framePresentDelay' },
       { title = 'GPU vsync', graph = 'gpuVsync' },
       { title = 'Audio delay', graph = 'sfxDelay' },
       { title = 'Lua delay', graph = 'luaDelay' },
@@ -138,30 +138,30 @@ local function requestConfig(_unlimitedUpdates)
   if tonumber(settings.getValue('GraphicLightingQuality')) > 0 then
     -- all other gfx settings other than lowest
     table.insert(config.stacked, { title = "GPU", precision = 2, unit = 'ms', graphs = {
-      'AL_LightBinMgr',
-      'AL_PrePassBin',
-      'EditorBin',
-      'GlowBin',
-      'ObjTranslucentBin',
-      'RenderBinImposter',
-      'RenderBinMesh',
-      'RenderBinParticle',
-      'RenderBinTranslucent',
-      'RenderTerrain',
-      'PostFX',
+      'gpu_AL_LightBinMgr',
+      'gpu_AL_PrePassBin',
+      'gpu_EditorBin',
+      'gpu_GlowBin',
+      'gpu_ObjTranslucentBin',
+      'gpu_RenderBinImposter',
+      'gpu_RenderBinMesh',
+      'gpu_RenderBinParticle',
+      'gpu_RenderBinTranslucent',
+      'gpu_RenderTerrain',
+      'gpu_PostFX',
       }
     })
   else
     -- lowest graphics settings
     table.insert(config.stacked, { title = "GPU (lowest)", precision = 2, unit = 'ms', graphs = {
-      'EditorBin',
-      'GlowBin',
-      'ObjTranslucentBin',
-      'RenderBinImposter',
-      'RenderBinMesh',
-      'RenderBinParticle',
-      'RenderBinTranslucent',
-      'RenderTerrain',
+      'gpu_EditorBin',
+      'gpu_GlowBin',
+      'gpu_ObjTranslucentBin',
+      'gpu_RenderBinImposter',
+      'gpu_RenderBinMesh',
+      'gpu_RenderBinParticle',
+      'gpu_RenderBinTranslucent',
+      'gpu_RenderTerrain',
       }
     })
   end
@@ -171,7 +171,7 @@ end
 
 local function onLoad()
   --log('D', 'performance.onLoad', "performance module loaded")
-  requestConfig(false)
+  requestConfig()
 end
 
 local function onExtensionUnloaded()
@@ -189,3 +189,5 @@ M.requestConfig = requestConfig
 M.onDeserialized = onDeserialized
 
 return M
+
+

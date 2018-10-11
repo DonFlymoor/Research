@@ -395,7 +395,7 @@ local function onClientStartMission()
 	-- Get list off all levels
 	if not gotAllLevels then
 		for k,v in ipairs(core_levels.getList()) do
-			if v.size and levelsToSkip[v.levelName] == nil and v.levelName == 'GridMap' then
+			if v.size and levelsToSkip[v.levelName] == nil then
 				table.insert(mapNames, v.levelName)
 			end	
 		end

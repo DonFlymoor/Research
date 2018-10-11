@@ -56,8 +56,8 @@ end
 
 local function apiCall(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback)
   if not enabled then return false end
-  
-  if not Engine.Online.isAuthenticated() then 
+
+  if not Engine.Online.isAuthenticated() then
     log('E', "online.apiCall", "Client isn't authenticated!!!")
     return false
   end
@@ -213,6 +213,15 @@ local function onExtensionLoaded()
   onSettingsChanged()
 end
 
+local function splitAsKeys(str, delim, maxNb, value)
+  local res = {}
+  local items = split(str, delim, maxNb)
+  for _, i in ipairs(items) do
+    res[i] = value or 1
+  end
+  return res
+end
+
 local function showStoredMessages()
   local hidden_ids = splitAsKeys(settings.getValue("OnlineHiddenMessageIDs", ''), ',')
   local data2display = {}
@@ -250,7 +259,7 @@ end
 
 -- called from C++ do not remove
 local function onInstructions(data)
-  log('D', 'online.onInstructions', 'got instructions: ' .. dumps(data))
+  --log('D', 'online.onInstructions', 'got instructions: ' .. dumps(data))
 
   if not data.origin or data.origin ~= 'gameauth' or type(data.cmds) ~= 'table' then
     log('E', 'online.onInstructions', 'unknown instructions. Discarded: ' .. dumps(data))
@@ -271,6 +280,8 @@ local function onInstructions(data)
       extensions.core_repository.setRepoMsg(cmd)
     elseif cmd.type == "repocmd" then
       extensions.core_repository.setRepoCmd(cmd)
+    elseif cmd.type == 'automationmsg' then
+      extensions.core_repository.setrepoAutomationMsg(cmd)
     else
       log('E', 'online.onInstructions', 'unknown instruction: ' .. dumps(cmd))
     end

@@ -20,6 +20,24 @@ singleton Material(street_lines1)
     annotation = "SOLID_LINE";
 };
 
+singleton Material(illumination)
+{
+    mapTo = "illumination";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/roads/illumination.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "0";
+    translucent = "1";
+    translucentBlendOp = "addAlpha";
+    alphaTest = "0";
+    alphaRef = "0";
+    emissive[0] = "1";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+    //detailMap[1] = "levels/west_coast_usa/art/shapes/roads/street_asphalt_detail_1x1.dds";
+};
+
 singleton Material(street_concrete1)
 {
     mapTo = "street_concrete1";
@@ -39,6 +57,29 @@ singleton Material(street_concrete1)
     materialTag0 = "beamng"; materialTag1 = "vehicle";
     //detailMap[1] = "levels/west_coast_usa/art/shapes/roads/street_concrete1_detail_d.dds";
     detailScale[1] = "8 2";
+    annotation = "STREET";
+};
+
+singleton Material(tramline)
+{
+    mapTo = "tramline";
+    diffuseMap[0] = "levels/west_coast_usa/art/road/tramline_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/road/tramline_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/road/tramline_n.dds";
+    reflectivityMap[0] = "levels/west_coast_usa/art/road/tramline_r.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "1";
+    translucentBlendOp = "None";
+    alphaTest = "0";
+    alphaRef = "0";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+    cubemap = "global_cubemap_metalblurred";
+    //detailMap[1] = "levels/west_coast_usa/art/shapes/roads/street_concrete1_detail_d.dds";
+    //detailScale[1] = "8 2";
     annotation = "STREET";
 };
 
@@ -108,28 +149,6 @@ singleton Material(curbs)
     //detailMap[1] = "levels/west_coast_usa/art/shapes/roads/street_asphalt_detail_1x1.dds";
     detailScale[1] = "2 2";
     annotation = "SIDEWALK";
-};
-
-singleton Material(tramline)
-{
-    mapTo = "tramline";
-    vertColor[0] = "1";
-    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/roads/tramline_r.dds";
-    diffuseMap[0] = "levels/west_coast_usa/art/shapes/roads/tramline_d.dds";
-    specularMap[0] = "levels/west_coast_usa/art/shapes/roads/tramline_s.dds";
-    normalMap[0] = "levels/west_coast_usa/art/shapes/roads/tramline_n.dds";
-    specularPower[0] = "32";
-    pixelSpecular[0] = "1";
-    diffuseColor[0] = "1 1 1 1";
-    useAnisotropic[0] = "1";
-    castShadows = "1";
-    translucent = "1";
-    translucentBlendOp = "None";
-    alphaTest = "1";
-    alphaRef = "64";
-    materialTag0 = "beamng"; materialTag1 = "vehicle";
-    cubemap = "global_cubemap_metalblurred";
-    detailScale[0] = "4 0.5";
 };
 
 singleton Material(metal_galvanized)
@@ -204,11 +223,11 @@ singleton Material(groundmesh_grass2)
 {
     mapTo = "groundmesh_grass2";
     vertColor[0] = "1";
-    diffuseMap[0] = "levels/west_coast_usa/art/terrain/Grass-02-D.dds";
+    diffuseMap[0] = "levels/west_coast_usa/art/terrain/grass_mesh_d.dds";
     specularColor[0] = "0 0 0";
     normalMap[0] = "levels/west_coast_usa/art/terrain/Grass-02-N.dds";
     specularPower[0] = "32";
-    pixelSpecular[0] = "1";
+    pixelSpecular[0] = "0";
     diffuseColor[0] = "1 1 1 1";
     useAnisotropic[0] = "1";
     castShadows = "1";
@@ -262,6 +281,31 @@ singleton Material(rumble)
     alphaRef = "64";
     materialTag0 = "beamng"; materialTag1 = "vehicle";
     //detailMap[1] = "levels/west_coast_usa/art/shapes/roads/street_asphalt_detail_1x1.dds";
+    detailScale[0] = "4 0.5";
+    annotation = "SOLID_LINE";
+};
+
+singleton Material(trackedge)
+{
+    mapTo = "trackedge";
+    vertColor[0] = "1";
+    groundType = "RUMBLE_STRIP";
+    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/roads/trackedge_r.dds";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/roads/trackedge_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/roads/trackedge_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/roads/trackedge_n.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "1";
+    translucentBlendOp = "None";
+    alphaTest = "1";
+    alphaRef = "64";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+    //detailMap[1] = "levels/west_coast_usa/art/shapes/roads/street_asphalt_detail_1x1.dds";
+    cubemap = "global_cubemap_metalblurred";
     detailScale[0] = "4 0.5";
     annotation = "SOLID_LINE";
 };
@@ -321,6 +365,7 @@ singleton Material(vertexColor_glow)
     diffuseColor[0] = "1 1 1 1";
     useAnisotropic[0] = "1";
     castShadows = "1";
+    doubleSided = "1";
     translucent = "0";
     translucentBlendOp = "None";
     alphaTest = "0";

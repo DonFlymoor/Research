@@ -34,5 +34,13 @@
         <button style="width: 50%" ng-click="addVehicle('dealer', model, config)" type="button">Add to Dealer</button>
       </td>
     </tr>
+    <tr>
+      <td>Reset Mission</td>
+      <td layout="row">
+        <select ng-model="selectedMission" ng-options="mission.key for mission in missions | orderBy: 'key'">
+        </select>
+        <button style="width: 50%" ng-click="resetMission(selectedMission)" type="button">Reset</button>
+      </td>
+    </tr>
   </table>
 </div>

@@ -1,0 +1,54 @@
+{
+"name" : "SimXperience AccuForce", "version" : 1, "devicetype" : "joystick", "vidpid" : "804C1FC9", "bindings" :   [
+    {
+"action" : "toggle_headlights", "control" : "button1"
+
+},     {
+"action" : "shiftDown", "control" : "button5"
+
+},     {
+"action" : "increase_cc_speed", "control" : "button8"
+
+},     {
+"action" : "activateStarterMotor", "control" : "button7"
+
+},     {
+"action" : "toggle_foglights", "control" : "button2"
+
+},     {
+"control" : "xaxis", "isForceEnabled" : true, "action" : "steering", "ffb" :       {"responseCorrected" : false, "forceCoefLowSpeed" : 290, "forceCoef" : 380, "smoothingHF" : 250, "frequency" : "0", "smoothing" : 500, "responseCurve" : [[0, 0], [1, 1]], "forceLimit" : 10}, "filterType" : "2", "ffbUpdateType" : 1, "isForceInverted" : false
+
+},     {
+"action" : "toggle_hazard_signal", "control" : "button12"
+
+},     {
+"action" : "toggleESCMode", "control" : "button3"
+
+},     {
+"action" : "pause", "control" : "button15"
+
+},     {
+"action" : "shiftUp", "control" : "button10"
+
+},     {
+"action" : "switch_camera", "control" : "button4"
+
+},     {
+"action" : "toggle_left_signal", "control" : "button14"
+
+},     {
+"action" : "toggle_lightbar_signal", "control" : "button11"
+
+},     {
+"action" : "toggle_right_signal", "control" : "button13"
+
+},     {
+"action" : "decrease_cc_speed", "control" : "button9"
+
+},     {
+"action" : "set_cc_speed", "control" : "button7"
+
+}]
+, "guid" : "{804C1FC9-0000-0000-0000-504944564944}"
+
+}

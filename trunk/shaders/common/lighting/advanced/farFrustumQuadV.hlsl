@@ -2,9 +2,9 @@
 #include "../../hlslStructs.h"
 #include "farFrustumQuad.hlsl"
 
+uniform float4 rtParams0;
 
-FarFrustumQuadConnectV main( VertexIn_PNTT IN,
-                             uniform float4 rtParams0 )
+FarFrustumQuadConnectV main( VertexIn_PNTT IN )
 {
    FarFrustumQuadConnectV OUT;
 

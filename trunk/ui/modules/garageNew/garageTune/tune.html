@@ -1,7 +1,7 @@
-<div style="position: absolute; left: 0; right: 0; left: 0; max-height: 750px; height: 80%">
-  <div style="width: 400px; color: currentColor; position: absolute; top: 15%; left: 5%; bottom: 0;" ng-if="gpTune.categories.length > 0">
-    <gp-panel rotated="true" icon-fallback="true" disable-selectcorner="true" active="true" open-tab="gpTune.openTab" no-padding="true" default-active="true">
-      <gp-panel-tab icon="#garage_{{category | lowercase}}" rotated="true" title="{{category}}" ng-repeat="category in gpTune.categories" layout="column" bng-nav-root>
+<div class="container">
+  <div style="width: 400px; color: currentColor; position: absolute; top: 15%; left: 5%; bottom: 60px; min-height: 200px; max-height: 900px;" ng-if="gpTune.categories.length > 0">
+    <gp-panel rotated="true" disable-selectcorner="true" active="true" open-tab="gpTune.openTab" no-padding="true" default-active="true">
+      <gp-panel-tab icon="garage_{{iconMap[category] | lowercase}}" rotated="true" title="{{category}}" ng-repeat="category in gpTune.categories" layout="column" bng-nav-root>
         <gp-panel-tab-header>
           {{gpTune.categories[gpTune.openTab] || 'ui.garage.tuning' | translate}}
         </gp-panel-tab-header>
@@ -29,7 +29,7 @@
     </gp-panel>
   </div>
 
-  <div style="height: 250px; width: 450px; color: currentColor; position: absolute; bottom: 0; right: 5%;">
+  <div style="height: 250px; width: 450px; color: currentColor; position: absolute; bottom: 60px; right: 5%;">
     <gp-panel navigatable="false">
       <gp-panel-tab>
         <gp-panel-tab-header>

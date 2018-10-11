@@ -64,8 +64,9 @@ float GetEdgeWeight(float2 uv0, in sampler2D prepassDepthBuffer, in sampler2D pr
 uniform_sampler2D( prepassBuffer , 0 );
 uniform_sampler2D( prepassDepthBuffer , 1 );
 
-float4 main( PFXVertToPix IN,
-             uniform float2 targetSize : register(C0) ) : SV_TARGET0
+uniform float2 targetSize;
+
+float4 main( PFXVertToPix IN ) : SV_TARGET0
 {
    return GetEdgeWeight(IN.uv0, prepassDepthBuffer, prepassBuffer, targetSize );//rtWidthHeightInvWidthNegHeight.zw);
 }

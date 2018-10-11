@@ -1,0 +1,68 @@
+{
+"name" : "Saitek Heavy Eqpt. Wheel & Pedal", "version" : 1, "devicetype" : "joystick", "vidpid" : "22170738", "bindings" :   [
+    {
+"action" : "toggleMenues", "control" : "button4"
+
+},     {
+"action" : "reset_physics", "control" : "rpov"
+
+},     {
+"action" : "menu_item_left", "control" : "lpov"
+
+},     {
+"isInverted" : true, "control" : "yaxis", "action" : "accelerate_brake"
+},     {
+"action" : "shiftUp", "control" : "button7"
+
+},     {
+"action" : "switch_camera_next", "control" : "button2"
+
+},     {
+"action" : "menu_item_up", "control" : "upov"
+
+},     {
+"action" : "menu_item_right", "control" : "rpov"
+
+},     {
+"action" : "pause", "control" : "button8"
+
+},     {
+"action" : "menu_item_down", "control" : "dpov"
+
+},     {
+"action" : "rotate_camera_vertical", "control" : "rzaxis"
+
+},     {
+"action" : "shiftDown", "control" : "button6"
+
+},     {
+"action" : "steering", "control" : "xaxis", "angle": 900
+
+},     {
+"action" : "rotate_camera_horizontal", "control" : "ryaxis"
+
+},     {
+"action" : "center_camera", "control" : "button5"
+
+},     {
+"action" : "activateStarterMotor", "control" : "dpov"
+
+},     {
+"action" : "decrease_zoom", "control" : "button0"
+
+},     {
+"action" : "toggle_headlights", "control" : "upov"
+
+},     {
+"action" : "increase_zoom", "control" : "button3"
+
+},     {
+"action" : "recover_vehicle", "control" : "lpov"
+
+},     {
+"action" : "look_back", "control" : "button1"
+
+}]
+, "guid" : "{22170738-0000-0000-0000-504944564944}"
+
+}

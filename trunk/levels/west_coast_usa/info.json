@@ -6,10 +6,12 @@
 "title":"levels.west_coast_usa.info.title",
 "defaultSpawnPointName":"spawns_industrial",
 "biome":"levels.west_coast_usa.info.biome",
+"x86Compatible": true,
 "size":[
   2048,
   2048
 ],
+
 "previews":[
   "west_coast_usa_preview1.jpg",
   "west_coast_usa_preview2.jpg",
@@ -42,17 +44,23 @@
     "objectname":"spawns_highway",
     "preview":"spawns_highway.jpg"
   }
-  
+
   {
     "translationId":"levels.west_coast_usa.spawnpoints.dirttrack",
     "objectname":"spawns_dirttrack",
     "preview":"spawns_dirttrack.jpg"
   }
-  
+
   {
     "translationId":"levels.west_coast_usa.spawnpoints.racetrack",
     "objectname":"spawns_racetrack",
     "preview":"spawns_racetrack.jpg"
+  }
+  
+  {
+    "translationId":"levels.west_coast_usa.spawnpoints.dragstrip",
+    "objectname":"spawns_dragstrip",
+    "preview":"spawns_dragstrip.jpg"
   }
 ],
 "description":"levels.west_coast_usa.info.description"

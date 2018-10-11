@@ -1310,7 +1310,31 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   local n = 0
   local hubnodebase = vehicle.maxIDs.nodes
 
-  local hubOptions = deepcopy(wheel)
+  local cleanwheel = deepcopy(wheel)
+  cleanwheel.axleBeams = nil
+  cleanwheel.childParts = nil
+  cleanwheel.originFilename = nil
+  cleanwheel.slotType = nil
+  cleanwheel.partOrigin = nil
+  cleanwheel.enableABS = nil
+  cleanwheel.enableBrakeThermals = nil
+  cleanwheel.enableHubcaps = nil
+  cleanwheel.enableTireLbeams = nil
+  cleanwheel.enableTirePeripheryReinfBeams = nil
+  cleanwheel.enableTireReinfBeams = nil
+  cleanwheel.enableTireSideReinfBeams = nil
+  cleanwheel.enableTreadReinfBeams = nil
+  cleanwheel.hasTire = nil
+  cleanwheel.brakeDiameter = nil
+  cleanwheel.brakeInputSplit = nil
+  cleanwheel.brakeMass = nil
+  cleanwheel.brakeSplitCoef = nil
+  cleanwheel.brakeSpring = nil
+  cleanwheel.brakeTorque = nil
+  cleanwheel.brakeType = nil
+  cleanwheel.brakeVentingCoef = nil
+
+  local hubOptions = deepcopy(cleanwheel)
   hubOptions.beamSpring = hubOptions.hubBeamSpring or hubOptions.beamSpring
   hubOptions.beamDamp = hubOptions.hubBeamDamp or hubOptions.beamDamp
   hubOptions.beamDeform = hubOptions.hubBeamDeform or hubOptions.beamDeform
@@ -1371,7 +1395,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
     table.insert(hubNodes, n)
   end
 -- Hub Cap
-  local hubcapOptions = deepcopy(wheel)
+  local hubcapOptions = deepcopy(cleanwheel)
   hubcapOptions.beamSpring = hubcapOptions.hubcapBeamSpring or hubcapOptions.beamSpring
   hubcapOptions.beamDamp = hubcapOptions.hubcapBeamDamp or hubcapOptions.beamDamp
   hubcapOptions.beamDeform = hubcapOptions.hubcapBeamDeform or hubcapOptions.beamDeform
@@ -1419,7 +1443,8 @@ function addPressureWheel(vehicle, wheelKey, wheel)
     hubcapOptions.nodeWeight = nil
   end
 
-  local hubcapAttachOptions = deepcopy(wheel)
+
+  local hubcapAttachOptions = deepcopy(cleanwheel)
   hubcapAttachOptions.beamSpring = hubcapAttachOptions.hubcapAttachBeamSpring or hubcapAttachOptions.beamSpring
   hubcapAttachOptions.beamDamp = hubcapAttachOptions.hubcapAttachBeamDamp or hubcapAttachOptions.beamDamp
   hubcapAttachOptions.beamDeform = hubcapAttachOptions.hubcapAttachBeamDeform or hubcapAttachOptions.beamDeform
@@ -1428,7 +1453,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   hubcapAttachOptions.wheelID = nil
   hubcapAttachOptions.disableMeshBreaking = true
 
-  local sideOptions = deepcopy(wheel)
+  local sideOptions = deepcopy(cleanwheel)
   sideOptions.beamSpring   = sideOptions.wheelSideBeamSpring or 0
   sideOptions.beamDamp     = sideOptions.wheelSideBeamDamp or 0
   sideOptions.beamDeform   = sideOptions.wheelSideBeamDeform or sideOptions.beamDeform
@@ -1449,7 +1474,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   sideReinfOptions.beamPrecompression = sideOptions.wheelSideReinfBeamPrecompression or 1
   sideReinfOptions.disableMeshBreaking = true
 
-  local reinfOptions = deepcopy(wheel)
+  local reinfOptions = deepcopy(cleanwheel)
   reinfOptions.beamSpring   = reinfOptions.wheelReinfBeamSpring or 0
   reinfOptions.beamDamp     = reinfOptions.wheelReinfBeamDamp or 0
   reinfOptions.beamDamp     = reinfOptions.wheelReinfBeamDamp or 0
@@ -1462,7 +1487,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
 
   reinfOptions.disableMeshBreaking = true
 
-  local treadOptions = deepcopy(wheel)
+  local treadOptions = deepcopy(cleanwheel)
   treadOptions.beamSpring      = treadOptions.wheelTreadBeamSpring or treadOptions.beamSpring
   treadOptions.beamDamp        = treadOptions.wheelTreadBeamDamp or treadOptions.beamDamp
   treadOptions.beamDeform      = treadOptions.wheelTreadBeamDeform or treadOptions.beamDeform
@@ -1486,6 +1511,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   peripheryOptions.beamDeform = peripheryOptions.wheelPeripheryBeamDeform or peripheryOptions.beamDeform
   peripheryOptions.beamStrength = peripheryOptions.wheelPeripheryBeamStrength or peripheryOptions.beamStrength
   peripheryOptions.beamPrecompression = peripheryOptions.wheelPeripheryBeamPrecompression or 1
+  peripheryOptions.dampCutoffHz = peripheryOptions.wheelPeripheryBeamDampCutoffHz or nil
 
   local peripheryReinfOptions = deepcopy(peripheryOptions)
   peripheryReinfOptions.beamSpring = peripheryReinfOptions.wheelPeripheryReinfBeamSpring or peripheryOptions.beamSpring
@@ -1493,6 +1519,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   peripheryReinfOptions.beamDeform = peripheryReinfOptions.wheelPeripheryReinfBeamDeform or peripheryOptions.beamDeform
   peripheryReinfOptions.beamStrength = peripheryReinfOptions.wheelPeripheryReinfBeamStrength or peripheryOptions.beamStrength
   peripheryReinfOptions.beamPrecompression = peripheryReinfOptions.wheelPeripheryReinfBeamPrecompression or 1
+  peripheryReinfOptions.dampCutoffHz = peripheryOptions.wheelPeripheryReinfBeamDampCutoffHz or nil
 
   vehicle.triangles = vehicle.triangles or {}
   local pressureGroupName = '_wheelPressureGroup' .. wheel.wheelID
@@ -1543,7 +1570,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   local treadBeams = {}
   local reinfBeams = {}
 
-  for i = 0, wheel.numRays - 1, 1 do
+  for i = 0, wheel.numRays - 1 do
     local i2 = 2*i
     local nextdelta = 2*((i+1)%wheel.numRays)
     local outhubnode = hubnodebase + i2
@@ -1558,7 +1585,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
     local nextnextouttirenode = nextnextintirenode + 1
 
     -- Hub caps
-    if (wheel.enableHubcaps or false) and wheel.numRays%2 ~= 1 and i < ((wheel.numRays)/2) then
+    if wheel.enableHubcaps and wheel.numRays%2 ~= 1 and i < ((wheel.numRays)/2) then
       local hubcapnode = hubcapnodebase + i
       local nexthubcapnode = hubcapnodebase + ((i+1)%(wheel.numRays/2))
       local nextnexthubcapnode = hubcapnodebase + ((i+2)%(wheel.numRays/2))
@@ -1568,9 +1595,9 @@ function addPressureWheel(vehicle, wheelKey, wheel)
       local hubcapouthubnode = hubcapinhubnode + 1
 
       --hubcap periphery
-      b = addBeamWithOptions(vehicle, 'wheels', hubcapnode, nexthubcapnode,    NORMALTYPE, hubcapOptions)
+      addBeamWithOptions(vehicle, 'wheels', hubcapnode, nexthubcapnode,    NORMALTYPE, hubcapOptions)
       --attach to center node
-      b = addBeamWithOptions(vehicle, 'wheels', hubcapnode, hubcapaxisnode,    NORMALTYPE, hubcapOptions)
+      addBeamWithOptions(vehicle, 'wheels', hubcapnode, hubcapaxisnode,    NORMALTYPE, hubcapOptions)
       --attach to axis
       if wheel.enableExtraHubcapBeams == true then
         addBeamWithOptions(vehicle, 'wheels', hubcapnode, wheel.node1, NORMALTYPE, hubcapAttachOptions)
@@ -1582,12 +1609,12 @@ function addPressureWheel(vehicle, wheelKey, wheel)
       end
 
       --span beams
-      b = addBeamWithOptions(vehicle, 'wheels', hubcapnode, nextnexthubcapnode,    NORMALTYPE, hubcapOptions)
+      addBeamWithOptions(vehicle, 'wheels', hubcapnode, nextnexthubcapnode,    NORMALTYPE, hubcapOptions)
 
       --attach it
-      b = addBeamWithOptions(vehicle, 'wheels', hubcapnode, hubcapinhubnode,    NORMALTYPE, hubcapAttachOptions)
-      b = addBeamWithOptions(vehicle, 'wheels', hubcapnode, nexthubcapinhubnode,    NORMALTYPE, hubcapAttachOptions)
-      b = addBeamWithOptions(vehicle, 'wheels', hubcapnode, hubcapouthubnode,    BEAM_SUPPORT, hubcapAttachOptions)
+      addBeamWithOptions(vehicle, 'wheels', hubcapnode, hubcapinhubnode,    NORMALTYPE, hubcapAttachOptions)
+      addBeamWithOptions(vehicle, 'wheels', hubcapnode, nexthubcapinhubnode,    NORMALTYPE, hubcapAttachOptions)
+      addBeamWithOptions(vehicle, 'wheels', hubcapnode, hubcapouthubnode,    BEAM_SUPPORT, hubcapAttachOptions)
 
       --self:addBeamWithOptions(vehicle, 'wheels', hubcapnode, wheel.node1,    NORMALTYPE, hubcapAttachOptions)
       --self:addBeamWithOptions(vehicle, 'wheels', hubcapnode, wheel.node2,    NORMALTYPE, hubcapAttachOptions)
@@ -1620,7 +1647,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
         addBeamWithOptions(vehicle, 'wheels', outtirenode, nextintirenode, NORMALTYPE, treadOptions) )
 
       --tread reinforcement
-      if wheel.enableTreadReinfBeams or false then
+      if wheel.enableTreadReinfBeams then
         table.insert( treadBeams,
           addBeamWithOptions(vehicle, 'wheels', intirenode, nextouttirenode, NORMALTYPE, treadReinfOptions) )
         table.insert( treadBeams,
@@ -1646,12 +1673,12 @@ function addPressureWheel(vehicle, wheelKey, wheel)
         addBeamWithOptions(vehicle, 'wheels', inhubnode,   nextintirenode, BEAM_ANISOTROPIC, sideOptions) )
 
       --reinf beams
-      if wheel.enableTireReinfBeams or false then
+      if wheel.enableTireReinfBeams then
         table.insert( reinfBeams,
           addBeamWithOptions(vehicle, 'wheels', intirenode,  outhubnode,     NORMALTYPE, reinfOptions) )
         table.insert( reinfBeams,
           addBeamWithOptions(vehicle, 'wheels', inhubnode,   outtirenode,    NORMALTYPE, reinfOptions) )
-      elseif wheel.enableTireLbeams or false then
+      elseif wheel.enableTireLbeams then
           table.insert( reinfBeams,
             addBeamWithOptions(vehicle, 'wheels', intirenode,  outhubnode,     BEAM_LBEAM, reinfOptions, inhubnode ))
           table.insert( reinfBeams,
@@ -1659,7 +1686,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
       end
 
       --side reinf beams
-      if wheel.enableTireSideReinfBeams or false then
+      if wheel.enableTireSideReinfBeams then
         table.insert( sideBeams,
           addBeamWithOptions(vehicle, 'wheels', outhubnode, nextouttirenode, BEAM_ANISOTROPIC, sideReinfOptions) )
         table.insert( sideBeams,
@@ -1670,7 +1697,7 @@ function addPressureWheel(vehicle, wheelKey, wheel)
           addBeamWithOptions(vehicle, 'wheels', inhubnode, nodebase + 2*((i+2)%wheel.numRays), BEAM_ANISOTROPIC, sideReinfOptions) )
       end
 
-      if wheel.enableTirePeripheryReinfBeams or false then
+      if wheel.enableTirePeripheryReinfBeams then
           addBeamWithOptions(vehicle, 'wheels', intirenode, nextnextintirenode, NORMALTYPE, peripheryReinfOptions)
           addBeamWithOptions(vehicle, 'wheels', outtirenode, nextnextouttirenode, NORMALTYPE, peripheryReinfOptions)
       end

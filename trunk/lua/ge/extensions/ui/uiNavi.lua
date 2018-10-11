@@ -285,7 +285,7 @@ local function requestUIDashboardMap()
     d.squareSize = terr:getSquareSize()
   end
 
-  tmp = getPointsOfInterest()
+  local tmp = getPointsOfInterest()
   if tmp then d.poi = tmp end
 
   guihooks.trigger('NavigationMap', d)

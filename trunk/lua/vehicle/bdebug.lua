@@ -19,8 +19,8 @@ M.origState = {
     nodeVis_modes = {'off','simple','weights', 'velocities', 'forces', 'density'},
     nodeText = 'off',
     nodeText_modes = {'off','names','numbers','names+numbers','weights','materials'},
-    flexmeshdebug = 'off',
-    flexmeshdebug_modes = {'off','none', 'groups', 'distance', 'bindings'},
+    --flexmeshdebug = 'off',
+    --flexmeshdebug_modes = {'off','none', 'groups', 'distance', 'bindings'},
     collisionTriangle = false,
     aero = "off",
     aero_modes = {"off", "drag+lift", "aoa", "combined"},
@@ -377,11 +377,11 @@ local function meshVisibilityChanged()
   end
 end
 
-local function setFlexmeshDebugMode(newMode)
-  M.state.vehicle.flexmeshdebug = newMode
-  obj:queueGameEngineLua('be:getObjectByID('..tostring(obj:getID())..'):setFlexMeshDebugMode("'..tostring(M.state.vehicle.flexmeshdebug)..'")')
-  sendState()
-end
+--local function setFlexmeshDebugMode(newMode)
+--  M.state.vehicle.flexmeshdebug = newMode
+--  obj:queueGameEngineLua('be:getObjectByID('..tostring(obj:getID())..'):setFlexMeshDebugMode("'..tostring(M.state.vehicle.flexmeshdebug)..'")')
+--  sendState()
+--end
 
 local function setState(state)
   --log('D', "lua","bdebug.setState called")
@@ -396,7 +396,7 @@ local function setState(state)
   updateDebugDraw()
   meshVisibilityChanged()
   -- update flexbody debug state
-  setFlexmeshDebugMode(M.state.vehicle.flexmeshdebug)
+  --setFlexmeshDebugMode(M.state.vehicle.flexmeshdebug)
 end
 
 local function onDeserialized()
@@ -552,6 +552,6 @@ M.meshVisChange = meshVisChange
 M.resetModes = resetModes
 M.toggleColTris = toggleColTris
 M.cogChange = cogChange
-M.setFlexmeshDebugMode = setFlexmeshDebugMode
+--M.setFlexmeshDebugMode = setFlexmeshDebugMode
 
 return M

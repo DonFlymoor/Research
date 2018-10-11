@@ -22,32 +22,33 @@ uniform float4 rtParams3;
 
 //uniform_sampler2D( prePassBuffer , 0 );
 
-float4 main( FarFrustumQuadConnectP IN,             
-             
-             uniform float3 lightDirection,
-             uniform float4 lightColor,
-             uniform float  lightBrightness,
-             uniform float4 lightAmbient,
-             
-             uniform float3 eyePosWorld,
-             uniform float3 vEye,
-             
-             uniform float4x4 worldToLightProj,
+uniform float3 lightDirection;
+uniform float4 lightColor;
+uniform float  lightBrightness;
+uniform float4 lightAmbient;
 
-             uniform float4 scaleX,
-             uniform float4 scaleY,
-             uniform float4 offsetX,
-             uniform float4 offsetY,
-             uniform float4 atlasXOffset,
-             uniform float4 atlasYOffset,
-             uniform float2 atlasScale,
-             uniform float4 zNearFarInvNearFar,
-             uniform float4 lightMapParams,
+uniform float3 eyePosWorld;
+uniform float3 vEye;
 
-             uniform float2 fadeStartLength,
-             uniform float4 farPlaneScalePSSM,
-             uniform float4 overDarkPSSM,
-             uniform float shadowSoftness ) : SV_Target
+uniform float4x4 worldToLightProj;
+
+uniform float4 scaleX;
+uniform float4 scaleY;
+uniform float4 offsetX;
+uniform float4 offsetY;
+uniform float4 atlasXOffset;
+uniform float4 atlasYOffset;
+uniform float2 atlasScale;
+uniform float4 zNearFarInvNearFar;
+uniform float4 lightMapParams;
+
+uniform float2 fadeStartLength;
+uniform float4 farPlaneScalePSSM;
+uniform float4 overDarkPSSM;
+uniform float shadowSoftness;
+
+
+float4 main( FarFrustumQuadConnectP IN ) : SV_Target
 {
    // Sample/unpack the normal/z data
    GBuffer gbuffer = (GBuffer)0;

@@ -198,6 +198,17 @@ local function getInfo()
     table.insert(res.os.warnings, {type = 'warn', msg = 'win8rec'})
   end
 
+  if core_modmanager.isReady() then
+    res.mods = core_modmanager.getStats()
+    res.mods.warnings = {}
+    if res.mods.unpacked > 20 or res.mods.zip > 150 then
+      table.insert(res.mods.warnings, {type = 'error', msg = 'toomanymods'})
+    elseif res.mods.unpacked > 10 or res.mods.zip > 100 then
+      table.insert(res.mods.warnings, {type = 'warn', msg = 'toomanymods'})
+    end
+    
+  end
+
   local stateLevels = { ['ok'] = 1, ['warn'] = 2, ['error'] = 3 }
   res.globalState = 'ok'
   for k, v in pairs(res) do
@@ -218,6 +229,9 @@ local function getInfo()
       end
     end
   end
+
+  if res.mods == nil then res.mods = {state="load"} end
+
   return res
 end
 
@@ -271,6 +285,10 @@ local function acknowledgeWarning(warning)
   requestInfo()
 end
 
+local function onModManagerReady()
+  requestInfo()
+end
+
 M.getInfo = getInfo
 M.requestInfo = requestInfo
 M.logInfo = logInfo
@@ -279,5 +297,6 @@ M.onBananaBenchReady = onBananaBenchReady
 M.latestBananbench = readBananabenchFile
 M.latestBenchmarkExists = latestBenchmarkExists
 M.acknowledgeWarning = acknowledgeWarning
+M.onModManagerReady = onModManagerReady
 
 return M

@@ -4,13 +4,12 @@
 
 local M = {}
 --Mandatory controller parameters
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 -----
 
 local min = math.min
 local max = math.max
-local floor = math.floor
 local abs = math.abs
 
 local trimSpeed = 0
@@ -44,7 +43,7 @@ local function updateGFX(dt)
   flap = electrics.values.flap
 
   flap = input.flap ~= lastFlapInput and input.flap or min(max(flap + (input.flapChange or 0) * dt * flapSpeed, 0), 1)
-  slat = input.slat ~= lastSlatInput and input.slat or min(max(slat + (input.slatChange or 0) * dt * flapSpeed, 0), 1)
+  slat = input.slat ~= lastSlatInput and input.slat or min(max(slat + (input.slatChange or 0) * dt * slatSpeed, 0), 1)
 
   electrics.values.rudder = rudder + trimming.rudder
   electrics.values.aileron = aileron + trimming.aileron
@@ -55,9 +54,9 @@ local function updateGFX(dt)
   lastFlapInput = input.flap
   lastSlatInput = input.slat
 
-  for k,v in pairs(trimming) do
+  for k, v in pairs(trimming) do
     if abs(v - lastTrimValues[k]) > 0.005 then
-      gui.message(string.format("Trim (%s): %d%%", k, v * 100), 1, "vehicle.trimvalue"..k)
+      gui.message(string.format("Trim (%s): %d%%", k, v * 100), 1, "vehicle.trimvalue" .. k)
       lastTrimValues[k] = v
     end
   end

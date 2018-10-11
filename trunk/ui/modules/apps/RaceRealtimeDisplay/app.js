@@ -14,7 +14,7 @@ angular.module('beamng.apps')
       $scope.$on('ScenarioRealtimeDisplay', function (event, data) {
         // because lua sometimes is not able to send strings...
         $scope.$evalAsync(function() {
-          $scope.translate = {fallback: `${data.msg}`, txt: `${data.msg}`, context: data.context};
+          $scope.translate = {fallback: `${data.msg || ''}`, txt: `${data.msg}`, context: data.context};
         })
       });
     }]

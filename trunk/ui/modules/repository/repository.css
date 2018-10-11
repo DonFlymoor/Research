@@ -29,6 +29,15 @@
   right: 0px;
 }
 
+.disableCircle {
+  background-color: #EEE;
+  font-size:2.5em;
+  position: absolute;
+  opacity: 0;
+  bottom: 42px;
+  right: 0px;
+}
+
 .cancelCircle:hover {
   opacity: 1;
 }
@@ -44,3 +53,6 @@
   padding: 1%;
 }
 
+md-select-menu, md-select-menu md-content {
+  max-height: 512px;
+}

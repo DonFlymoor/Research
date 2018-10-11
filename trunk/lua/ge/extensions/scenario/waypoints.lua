@@ -16,7 +16,7 @@ local logTag = 'waypoints'
 local vehicleWaypointsData = {}
 local nextWpForVehicle = {}
 local waypointBranches = {}
-local currentWaypointChoise = {}
+local currentWaypointChoice = {}
 local currentBranch = nil
 local waypointsConfigData = {}
 local raceMarker = require("scenario/race_marker")
@@ -71,12 +71,16 @@ local function processWaypoint(vid)
       if w.next then
         log('E', logTag, 'next waypoint invalid: ' .. tostring(w.next))
       end
-      raceMarker.hide(true)
+      if bo.playerUsable then
+        raceMarker.hide(true)
+      end
       return nil
     end
     if not scenario.nodes[scenario.lapConfig[w.next]] then
       log('E', logTag, 'waypoint not found: ' .. tostring(scenario.lapConfig[w.next]))
-      raceMarker.hide(true)
+      if bo.playerUsable then
+        raceMarker.hide(true)
+      end
       return nil
     end
     w.nextWp = scenario.nodes[scenario.lapConfig[w.next]]
@@ -87,7 +91,6 @@ local function processWaypoint(vid)
   nextWpForVehicle[vid] = w.next
 
   w.next2Wp = nil
-  raceMarker.clearNextStat()
   w.next2 = getNextWaypoint(w, 2)
   if w.next2 then
     w.next2Wp = scenario.nodes[scenario.lapConfig[w.next2]]
@@ -106,6 +109,7 @@ local function processWaypoint(vid)
       end
     end
 
+    raceMarker.clearNextStat()
     if w.next2Wp then
       raceMarker.setNextPosition(vec3(w.next2Wp.pos),  w.next2Wp.radius)
     end
@@ -135,10 +139,10 @@ end
 
 local function onRaceWaypointReached(data)
   local selected = {}
-  currentWaypointChoise = {}
+  currentWaypointChoice = {}
   for k, v in pairs(waypointBranches) do
     if v.action == 'after' and v.location == data.waypointName then
-      currentWaypointChoise[k] = v.waypoints[1]
+      currentWaypointChoice[k] = v.waypoints[1]
       table.insert(selected, v.waypoints[1])
     end
   end
@@ -150,10 +154,14 @@ local function onRaceWaypointReached(data)
   if not bo or not bo.playerUsable then return end
 
   local wp = scenario.nodes[selected[1]]
-  if wp then raceMarker.setPosition(vec3(wp.pos), wp.radius, ColorF(1, 1, 0.4, 1)) end
+  if wp then 
+    raceMarker.setPosition(vec3(wp.pos), wp.radius, ColorF(1, 1, 0.4, 1)) 
+  end
 
   local wp2 = scenario.nodes[selected[2]]
-  if wp2 then raceMarker.setNextPosition(vec3(wp2.pos), wp2.radius, ColorF(1, 1, 0.4, 1)) end
+  if wp2 then 
+    raceMarker.setNextPosition(vec3(wp2.pos), wp2.radius, ColorF(1, 1, 0.4, 1)) 
+  end
 end
 
 -- callback for the waypoint system
@@ -233,7 +241,7 @@ local function onScenarioChange(scenario)
     vehicleWaypointsData = {}
     nextWpForVehicle = {}
     waypointBranches = {}
-    currentWaypointChoise = {}
+    currentWaypointChoice = {}
     currentBranch = nil
     return
   end
@@ -333,8 +341,6 @@ local function deactivateWaypointBranch(branchName)
 end
 
 local function activateWaypointBranch(branchName, vehicleID)
-  -- log('I', logTag,'activateWaypointBranch called for '..branchName)
-
   if not branchName or currentBranch == branchName then
     return
   end
@@ -345,7 +351,7 @@ local function activateWaypointBranch(branchName, vehicleID)
     return
   end
 
-  -- log('I', logTag,'player current waypoint')
+  -- log('I', logTag,'activateWaypointBranch called for branch: '..branchName .. '  By vehicle: '..vehicle:getField('name', ''))
   -- dump(vehWpData)
 
   if currentBranch then
@@ -434,7 +440,7 @@ local function setupWaypointsData(scenario)
   vehicleWaypointsData = {}
   nextWpForVehicle = {}
   waypointBranches = {}
-  currentWaypointChoise = {}
+  currentWaypointChoice = {}
 
   -- Set waypoint for all vehicles
   if scenario.lapConfig then
@@ -500,12 +506,12 @@ local function onUpdate()
   local scenario = scenario_scenarios.getScenario()
   local veh = be:getPlayerVehicle(0)
   if not scenario or not veh then return end
-  for k, v in pairs(currentWaypointChoise) do
+  for k, v in pairs(currentWaypointChoice) do
     local wpPos = Point3F(scenario.nodes[v].pos.x, scenario.nodes[v].pos.y, scenario.nodes[v].pos.z)
-    local dist = (wpPos - veh:getPosition()):len()
-    if dist < math.max(25, scenario.nodes[v].radius * 3) then
+    local dist = (wpPos - veh:getPosition()):len()    
+    if dist < math.max(25, scenario.nodes[v].radius * 3) then      
       activateWaypointBranch(k, veh:getID())
-      currentWaypointChoise = {}
+      currentWaypointChoice = {}
       return
     end
   end
@@ -559,7 +565,7 @@ local function onSerialize()
   data.vehicleWaypointsData = convertVehicleIdKeysToVehicleNameKeys(vehicleWaypointsData)
   data.nextWpForVehicle = convertVehicleIdKeysToVehicleNameKeys(nextWpForVehicle)
   data.waypointBranches = waypointBranches
-  data.currentWaypointChoise = currentWaypointChoise
+  data.currentWaypointChoice = currentWaypointChoice
   data.currentBranch = currentBranch
   -- dump(data)
   --writeFile("scenario_waypoints.txt", dumps(data))
@@ -571,7 +577,7 @@ local function onDeserialized(data)
   vehicleWaypointsData = convertVehicleNameKeysToVehicleIdKeys(data.vehicleWaypointsData)
   nextWpForVehicle = convertVehicleNameKeysToVehicleIdKeys(data.nextWpForVehicle)
   waypointBranches = data.waypointBranches
-  currentWaypointChoise = data.currentWaypointChoise
+  currentWaypointChoice = data.currentWaypointChoice
   currentBranch = data.currentBranch
 end
 

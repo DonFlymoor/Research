@@ -1,0 +1,20 @@
+{
+    "name": "Logitech Driving Force Pro USB"
+    "guid": "{C298046D-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        // movement
+        {"control": "xaxis" ,   "action": "steering", "filterType": 2, "angle": 900},
+        {"control": "rzaxis"    ,   "action": "brake", "filterType": 2  ,   "isInverted": true},
+        {"control": "yaxis" ,   "action": "accelerate", "filterType": 2 ,   "isInverted": true},
+        {"control": "button13"  ,   "action": "shiftDown"},
+        {"control": "button12"  ,   "action": "shiftUp"},
+        //{"control": "button2" ,   "action": "reset_physics"},
+        //{"control": "button3" ,   "action": "pause"},
+        //{"control": "button1" ,   "action": "toggle_parking_brake"},
+        //{"control": "button5" ,   "action": "switch_next_vehicle"},
+        //{"control": "button8" ,   "action": "center_camera"},
+        {"control": "button9"   ,   "action": "switch_camera_next"},
+        //{"control": "btn_x"   ,   "action": "toggleFirstPerson"},
+    ]
+}

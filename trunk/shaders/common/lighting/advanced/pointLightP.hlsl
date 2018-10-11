@@ -95,23 +95,24 @@ uniform_sampler2D( prePassDepthBuffer, 1);
     uniform_sampler2D( shadowMap, 2);
 #endif
 
-float4 main(   ConvexConnectP IN,
+uniform float4 rtParams0;
 
-               uniform float4 rtParams0,
+uniform float3 lightPosition;
+uniform float4 lightColor;
+uniform float  lightBrightness;
+uniform float  lightRange;
+uniform float2 lightAttenuation;
+uniform float4 lightMapParams;
 
-               uniform float3 lightPosition,
-               uniform float4 lightColor,
-               uniform float  lightBrightness,
-               uniform float  lightRange,
-               uniform float2 lightAttenuation,
-               uniform float4 lightMapParams,
+uniform float3 eyePosWorld;
+uniform float3 vEye;
+uniform float3x3 worldToLightProj;
 
-               uniform float3 eyePosWorld,
-               uniform float3 vEye,
-               uniform float3x3 worldToLightProj,
+uniform float4 lightParams;
+uniform float shadowSoftness;
 
-               uniform float4 lightParams,
-               uniform float shadowSoftness ) : SV_Target0
+
+float4 main( ConvexConnectP IN ) : SV_Target0
 {   
    // Compute scene UV
    float3 ssPos = IN.ssPos.xyz / IN.ssPos.w;

@@ -34,7 +34,7 @@ event:>Vehicle>Electrics>Sirens>Ambulance_13    // Siren 19
 event:>Vehicle>Electrics>Sirens>Police_05      -// Siren 8
 event:>Vehicle>Electrics>Sirens>Police_07      -// Siren 9
 event:>Vehicle>Electrics>Sirens>Police_08      -// Siren 4
-event:>Vehicle>Electrics>Sirens>Police_09  ,    -// Siren 6
+event:>Vehicle>Electrics>Sirens>Police_09      -// Siren 6
 event:>Vehicle>Electrics>Sirens>Police_10      -// Siren 5
 event:>Vehicle>Electrics>Sirens>Police_11      -// Siren 3
 event:>Vehicle>Electrics>Sirens>Police_12      -// Siren 7
@@ -44,6 +44,36 @@ event:>Vehicle>Electrics>Sirens>Police_15       // Siren 21
 event:>Vehicle>Electrics>Sirens>Police_16       // Siren 22
 event:>Vehicle>Electrics>Sirens>Police_17       // Siren 23
 event:>Vehicle>Electrics>Sirens>Police_18       // Siren 24
+
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Ratchet"  // HandBrake 1
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Button"   // HandBrake 1
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Thump"    // HandBrake 1
+"event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Unlock" // HandBrake 2
+"event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Lock"   // HandBrake 2
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_02_Ratchet"  // HandBrake 3
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_02_Button"   // HandBrake 3
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_02_Thump"    // HandBrake 3
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_04_Ratchet"  // HandBrake 4
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_04_Button"   // HandBrake 4
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_04_Thump"    // HandBrake 4
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_05_Ratchet"  // HandBrake 5
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_05_Button"   // HandBrake 5
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_05_Thump"    // HandBrake 5
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_06_Ratchet"  // HandBrake 6
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_06_Button"   // HandBrake 6
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_06_Thump"    // HandBrake 6
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_07_Ratchet"  // HandBrake 7
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_07_Button"   // HandBrake 7
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_07_Thump"    // HandBrake 7
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_08_Ratchet"  // HandBrake 8
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_08_Button"   // HandBrake 8
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_08_Thump"    // HandBrake 8
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_09_Ratchet"  // HandBrake 9
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_09_Button"   // HandBrake 9
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_09_Thump"    // HandBrake 9
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_03_Ratchet"  // HandBrake 10
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_03_Button"   // HandBrake 10
+"event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_03_Thump"    // HandBrake 10
 
 event:>Vehicle>Interior>Indicator>AU3_On         // Indicator 1
 event:>Vehicle>Interior>Indicator>AU3_Off        // Indicator 1
@@ -522,6 +552,149 @@ To attach to nodeId use this:
     "soundscape": [
         ["name", "src"],
         ["siren", "event:>Vehicle>Electrics>Sirens>Police_18"],
+    ]
+},
+///////////Handbrake Sounds//////////////////////////////
+"soundscape_ratchet_handbrake_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Ratchet Handbrake 1"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging",   "event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Button" ],
+        ["handbrakeDisengaged", "event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Thump"  ],
+    ]
+},
+"soundscape_handbrake1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 1"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_01_Thump"],
+    ]
+},
+"soundscape_handbrake2": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 2"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Unlock"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Lock"],
+    ]
+},
+"soundscape_handbrake3": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 3"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_02_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_02_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_02_Thump"],
+    ]
+},
+"soundscape_handbrake4": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 4"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_04_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_04_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_04_Thump"],
+    ]
+},
+"soundscape_handbrake5": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 5"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_05_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_05_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_05_Thump"],
+    ]
+},
+"soundscape_handbrake6": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 6"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_06_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_06_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_06_Thump"],
+    ]
+},
+"soundscape_handbrake7": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 7"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_07_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_07_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_07_Thump"],
+    ]
+},
+"soundscape_handbrake8": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 8"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_08_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_08_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_08_Thump"],
+    ]
+},
+"soundscape_handbrake9": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 9"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_09_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_09_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_09_Thump"],
+    ]
+},
+"soundscape_handbrake10": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Handbrake 10"
+    },
+    "slotType" : "soundscape_handbrake",
+    "soundscape": [
+        ["name", "src"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_03_Ratchet"],
+        ["handbrakeDisengaging","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_03_Button"],
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Ratchet>Ratchet_03_Thump"],
     ]
 },
 //////////////Indicator Sounds/////////////////////////////////////

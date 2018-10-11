@@ -3,14 +3,14 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 
 local min = math.min
 local max = math.max
 
 local powerSteeringStrengthSlow = 0
-local powerSteeringStrengthFast= 0
+local powerSteeringStrengthFast = 0
 local powerSteeringSpeedSlow = 0
 local powerSteeringSpeedFast = 0
 
@@ -20,8 +20,7 @@ local speedRange = 0
 
 local function updateGFXVariabelCoef(dt)
   local speed = electrics.values.wheelspeed or 0
-  local strengthCoef = 1
-  strengthCoef = max(strengthRange * max(min(speed, powerSteeringSpeedFast) - powerSteeringSpeedSlow, 0) / speedRange + powerSteeringStrengthSlow, 0)
+  local strengthCoef = max(strengthRange * max(min(speed, powerSteeringSpeedFast) - powerSteeringSpeedSlow, 0) / speedRange + powerSteeringStrengthSlow, 0)
   strengthCoef = max(strengthCoef + constantOffset, 0)
 
   hydros.wheelPowerSteeringCoef = strengthCoef

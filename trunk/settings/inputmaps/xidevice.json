@@ -1,0 +1,119 @@
+{
+	"bindings": [
+    {
+      "action": "steering",
+      "control": "thumblx",
+      "deadzone": { "end": 0.1 },
+      "ffb": {
+        "smoothingHF": 40,
+        "smoothing": 20,
+        "forceCoef": 10,
+        "forceCoefLowSpeed": 220,
+        "forceLimit": 2
+      },
+      "isForceEnabled": false,
+      "linearity": 1.3
+    }, {
+      "action": "center_camera",
+      "control": "btn_rt"
+    }, {
+      "action": "rotate_camera_vertical",
+      "control": "thumbry",
+      "deadzone": { "end": 0.3 }
+    }, {
+      "action": "rotate_camera_horizontal",
+      "control": "thumbrx",
+      "deadzone": { "end": 0.3 }
+    }, {
+      "action": "switch_camera_next",
+      "control": "btn_back"
+    }, {
+      "action": "pause",
+      "control": "btn_start"
+    }, {
+      "action": "increase_zoom",
+      "control": "btn_y"
+    }, {
+      "action": "decrease_zoom",
+      "control": "btn_b"
+    }, {
+      "action": "shiftDown",
+      "control": "btn_x"
+    }, {
+      "action": "shiftUp",
+      "control": "btn_a"
+    }, {
+      "action": "parkingbrake",
+      "control": "btn_r"
+    }, {
+      "action": "brake",
+      "control": "triggerl"
+    }, {
+      "action": "accelerate",
+      "control": "triggerr"
+    }, {
+      "action": "toggle_headlights",
+      "control": "upov"
+    }, {
+      "action": "activateStarterMotor",
+      "control": "dpov"
+    }, {
+      "action": "clutch",
+      "control": "btn_l"
+    }, {
+      "action": "reset_physics",
+      "control": "rpov"
+    }, {
+      "control": "lpov",
+      "action": "recover_vehicle"
+    }, {
+      "action": "toggleMenues",
+      "control": "btn_lt"
+    }, {
+      "action": "menu_item_right",
+      "control": "rpov"
+    }, {
+      "action": "menu_item_left",
+      "control": "lpov"
+    }, {
+      "action": "menu_item_up",
+      "control": "upov"
+    }, {
+      "action": "menu_item_down",
+      "control": "dpov"
+    }, {
+      "action": "menu_item_select",
+      "control": "btn_a"
+    }, {
+      "action": "menu_item_back",
+      "control": "btn_b"
+    }, {
+      "action": "menu_tab_left",
+      "control": "btn_l"
+    }, {
+      "action": "menu_tab_right",
+      "control": "btn_r"
+    },  {
+      "action": "menu_item_radial_x",
+      "control": "thumblx"
+    }, {
+      "action": "menu_item_radial_y",
+      "control": "thumbly"
+    }, {
+      "action": "accept",
+      "control": "btn_a"
+    }, {
+      "action": "decline",
+      "control": "btn_b"
+    }, {
+      "action": "toggle_minimap",
+      "control": "btn_start"
+    }
+    /** {
+      "action": "toggle_timeTrialsScreen",
+      "control": "btn_start"
+    }*/
+  ],
+	"name": "XInput Device",
+	"vidpid": "XI device"
+}

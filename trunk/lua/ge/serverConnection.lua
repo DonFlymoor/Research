@@ -17,7 +17,7 @@ local function onCameraHandlerSetInitial()
 end
 
 --trigger by starting game and then starting a new level
-local function disconnectActual(callback)
+local function disconnectActual(callback, loadingScreen)
   -- We need to stop the client side simulation
   -- else physics resources will not cleanup properly.
   be:physicsStopSimulation()
@@ -44,20 +44,30 @@ local function disconnectActual(callback)
   -- Call destroyServer in case we're hosting
   server:destroy()
   setMissionFilename("")
-  core_gamestate.requestExitLoadingScreen()
+  if loadingScreen then core_gamestate.requestExitLoadingScreen(logTag) end
   if callback then
     return callback()
   end
 end
 
-local function disconnectWrapper (callback)
+local function disconnectWrapper (callback, loadingScreen)
+  if loadingScreen == nil then loadingScreen = true end
   local function help ()
-    disconnectActual(callback)
+    disconnectActual(callback, loadingScreen)
   end
-  core_gamestate.requestEnterLoadingScreen(help)
+  if loadingScreen then
+    core_gamestate.requestEnterLoadingScreen(logTag, help)
+  else
+    help()
+  end
+end
+
+-- TODO: clean this up, but not call disconnectActual directly it just will result in the gamestate getting mixed messages
+local function noLoadingScreenDisconnect ()
+  disconnectWrapper(nop, false)
 end
 
 M.onCameraHandlerSetInitial = onCameraHandlerSetInitial
 M.disconnect = disconnectWrapper
-M.noLoadingScreenDisconnect = disconnectActual
+M.noLoadingScreenDisconnect = noLoadingScreenDisconnect -- TODO: is this actually used?
 return M

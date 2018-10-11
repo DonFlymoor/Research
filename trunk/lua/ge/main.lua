@@ -20,6 +20,8 @@ print = function(...)
     table.insert(s_args, tostring(args[i]))
   end
   Lua:log('A', "print", table.concat(s_args, ', '))
+  -- if you want to find out, where the print was used:
+  -- Lua:log('A', "print", debug.traceback())
 end
 
 require("utils")
@@ -37,6 +39,7 @@ local deprecatedExtensions = require("deprecatedExtensions")
 extensions = require("extensions")
 extensions.setDeprecatedExtensions(deprecatedExtensions)
 extensions.addModulePath("lua/ge/extensions/")
+extensions.addModulePath("lua/common/extensions/")
 settings = require("settings")
 perf = require("perf")
 spawn = require("spawn")
@@ -52,6 +55,8 @@ audio_client = require("client/audio")
 worldReadyState = -1 -- tracks if the level loading is done yet: 0 = no, 1 = yes, load play ui, 2 = all done
 
 gdcdemo = nil -- demo mode disabled
+
+defaultVehicleModel = 'etk800'
 
 --[[
 -- function to trace the memory usage
@@ -165,7 +170,7 @@ end
 
 --[[
 check if there is default vehicle or not
-if not then use the deafult "pickup"
+if not then use the deafult defaultVehicleModel
 ]]
 function loadDefaultVehicle()
   local myveh = TorqueScript.getVar('$beamngVehicleArgs')
@@ -176,41 +181,51 @@ function loadDefaultVehicle()
     TorqueScript.setVar( '$beamngVehicleColor', mycolor )
     return
   end
-  local data = readJsonFile('settings/default.pc')
-  if data then
-    local dir = FS:directoryExists('vehicles')
-    if dir then
-      if #FS:findFilesByPattern('/vehicles/'..data.model..'/', '*.jbeam', 0, false, false) > 0 then
-        TorqueScript.setVar( '$beamngVehicle', data.model )
-        TorqueScript.setVar( '$beamngVehicleConfig', 'settings/default.pc' )
-        TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
-      else
-        data.model = "etk800"
-        TorqueScript.setVar( '$beamngVehicle', data.model )
 
-        data.color = beamng_cef.getVehicleColor()
-        os.remove('settings/default.pc')
+  local invalidDefaultVehicle = false
+  local data = readJsonFile('settings/default.pc')
+
+  if data then
+    if data.model and data.licenseName and data.colors then
+      local dir = FS:directoryExists('vehicles')
+      if dir then
+        if #FS:findFilesByPattern('/vehicles/'..data.model..'/', '*.jbeam', 0, false, false) > 0 then
+          TorqueScript.setVar( '$beamngVehicle', data.model )
+          TorqueScript.setVar( '$beamngVehicleConfig', 'settings/default.pc' )
+          TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
+        else
+          data.model = defaultVehicleModel
+          TorqueScript.setVar( '$beamngVehicle', data.model )
+
+          data.color = beamng_cef.getVehicleColor()
+          os.remove('settings/default.pc')
+        end
       end
+      TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
+      TorqueScript.setVar( '$beamngVehicleColor', data.color )
+    else
+      log('E', 'main', "The default vehicle in 'settings/default.pc' is broken. You can either delete 'settings/default.pc' or set a new default vehile.")
+      invalidDefaultVehicle = true
     end
-    TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
-    TorqueScript.setVar( '$beamngVehicleColor', data.color )
-  else
-    TorqueScript.setVar( '$beamngVehicle','etk800')
+  end
+
+  if invalidDefaultVehicle then
+    TorqueScript.setVar( '$beamngVehicle', defaultVehicleModel)
     TorqueScript.setVar( '$beamngVehicleColor', "White")
   end
 end
 
 local coreModules =  {'core_apps', 'scenario_scenariosLoader', 'campaign_campaignsLoader', 'core_levels',
-                      'scenario_quickRaceLoader', 'core_highscores', 'core_replay',
-                      'core_vehicles', 'core_jobsystem', 'core_modmanager','core_hardwareinfo',
+                      'scenario_quickRaceLoader', 'core_highscores', 'core_replay','core_vehicles', 
+                      'core_jobsystem', 'core_modmanager','core_hardwareinfo',
                       'core_commandhandler', 'core_remoteController', 'core_gamestate', 'core_online',
-                      'core_paths', 'util_creatorMode', 'util_extUI','core_sounds', 'core_uiMenuView',
-                      'core_inventory', 'core_audio', 'util_annotation'
+                      'core_paths', 'util_creatorMode', 'core_sounds','core_audio', 'core_imgui'
                       }
                       --,'util_extUI'
                       --'core_schemeCommandServer' -- unused for now - replaced by startCommandListener()
 
-local sharedModules = {'core_quickAccess', 'core_camera', 'core_groundMarkers', 'core_environment', 'core_weather', 'core_prefabLogic', 'core_checkpoints'}
+local sharedModules = { 'core_quickAccess', 'core_camera', 'core_groundMarkers', 'core_environment',
+                        'core_weather', 'core_trailerRespawn'}
 
 -- careerModules = {'scenario_levelConnector'} -- TODO(AK): unused for now. move this to the correct file later
 
@@ -260,7 +275,7 @@ end
 function clientPreStartMission(mission)
   worldReadyState = 0
   extensions.hook('onClientPreStartMission', mission)
-  guihooks.trigger('PreStartMission')
+  guihooks.trigger('PreStartMission')  
   loadDefaultVehicle()
 end
 
@@ -284,6 +299,8 @@ end
 function clientEndMission(mission)
   -- core_gamestate.requestGameState()
   -- log("D", "clientEndMission", "ending mission: " .. tostring(mission))
+  be:physicsStopSimulation()
+  bullettime.pause(false)
   extensions.hookNotify('onClientEndMission', mission)
 end
 
@@ -315,9 +332,9 @@ function luaPreRender(dtReal, dtSim, dtRaw)
     luaPreRenderMaterialCheckDuration = luaPreRenderMaterialCheckDuration + dtRaw
     local pv = be:getPlayerVehicle(0)
     local allReady = (not pv) or (pv and pv:isRenderMaterialsReady())
-    if allReady or luaPreRenderMaterialCheckDuration > 15 then
-      --log('D', 'gamestate', 'Checking material finished loading')
-      core_gamestate.requestExitLoadingScreen()
+    if allReady or luaPreRenderMaterialCheckDuration > 30 then
+      log('D', 'gamestate', 'Checking material finished loading')
+      core_gamestate.requestExitLoadingScreen('worldReadyState')
       -- switch the UI to play mode
       -- be:executeJS("HookManager.trigger('ChangeState', 'menu', ['loading', 'backgroundImage.mainmenu']);")
       worldReadyState = 2
@@ -404,8 +421,6 @@ function init()
 
   core_online.openSession() -- try to connect to online services
 
-  Engine.Platform.startCommandListener() -- this starts the named pipe which is used to receive scheme commands during runtime
-
   -- import state last
   importPersistentData()
 
@@ -420,7 +435,7 @@ function init()
   worldReadyState = 0
 
   -- put the mods folder in clear view, so users don't put stuff in the wrong place
-  --if not FS:directoryExists("mods") then FS:directoryCreate("mods") end
+  if not FS:directoryExists("mods") then FS:directoryCreate("mods") end
 end
 
 function onBeamNGWaypoint(args)
@@ -636,9 +651,11 @@ function vehicleSwitched(oldVehicle, newVehicle, player)
   extensions.hook('onVehicleSwitched', oid, nid, player)
 
   if player == 0 then -- update main camera
-    local game = scenetree.findObject("Game")
-    if game then
-      game:setCameraHandler(newVehicle)
+    if not commands.isFreeCamera(player) then
+      local game = scenetree.findObject("Game")
+      if game then
+        game:setCameraHandler(newVehicle)
+      end
     end
   end
 
@@ -652,32 +669,30 @@ function onVehicleDestroyed(vid)
   extensions.hook('onVehicleDestroyed', vid)
 end
 
-function onCouplerAttached(objId1, objId2)
+function onCouplerAttached(objId1, objId2, nodeId, obj2nodeId)
   extensions.load('core_trailerCamera')
-  extensions.hook('onCouplerAttached', objId1, objId2)
+  if core_trailerCamera.checkForTrailer(objId1, objId2) == false then
+    extensions.unload('core_trailerCamera')
+  end
+  extensions.hook('onCouplerAttached', objId1, objId2, nodeId, obj2nodeId)
 end
 
 function onCouplerDetached(objId1, objId2)
   extensions.hook('onCouplerDetached', objId1, objId2)
-  extensions.unload('core_trailerCamera')
+  if core_trailerCamera ~= nil then
+    if core_trailerCamera.checkForTrailer(objId1, objId2) == true then
+      extensions.unload('core_trailerCamera')
+    end
+  end
+end
+
+--Trigered when trailer coupler is detached by the user
+function onCouplerDetach(objId, nodeId)
+  extensions.hook('onCouplerDetach', objId, nodeId)
 end
 
 function onAiModeChange(vehicleID, newAiMode)
   extensions.hook('onAiModeChange', vehicleID, newAiMode)
-end
-
-function onPrefabLoaded(id, prefabName, prefabPath)
-  log('D', 'main', 'onPrefabLoaded: ' .. dumps(id)..',' ..dumps(prefabName))
-  if prefabLogic then
-    prefabLogic.prefabLoaded(id, prefabName, prefabPath)
-  end
-end
-
-function onPrefabUnloaded(id, prefabName, prefabPath)
-  log('D', 'main', 'onPrefabUnloaded: ' .. dumps(id)..',' ..dumps(prefabName))
-  if prefabLogic then
-    prefabLogic.prefabUnloaded(id, prefabName, prefabPath)
-  end
 end
 
 function replayStateChanged(...)
@@ -757,4 +772,8 @@ end
 
 function onVehicleResetted(vehicleID)
     extensions.hook('onVehicleResetted', vehicleID)
+end
+
+function resetGameplay(playerID)
+  extensions.hook('onResetGameplay', playerID)
 end

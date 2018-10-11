@@ -15,7 +15,22 @@ local function processScenarioData(scenarioKey, scenarioData, scenarioFilename)
     if scenarioFilename then
       scenarioData.sourceFile = scenarioFilename
       scenarioData.official = isOfficialContent(FS:getFileRealPath(string.sub(scenarioFilename,0)))
-      scenarioData.levelName = string.gsub(scenarioFilename, "levels/(.*)/scenarios/(.*)%.json", "%1")
+      scenarioData.levelName = string.gsub(scenarioFilename, "(.*/)(.*)/scenarios/(.*)%.json", "%2")
+
+      -- improve the data a little bit
+      scenarioData.mission = 'levels/'..scenarioData.levelName..'/main.level.json'
+
+      if not FS:fileExists(scenarioData.mission) then
+        -- Fallback to old MIS file
+        scenarioData.mission = 'levels/'..scenarioData.levelName..'/'..scenarioData.levelName..'.mis'
+      end
+
+      if not FS:fileExists(scenarioData.mission) then
+        -- Fallback to level directory
+        scenarioData.mission = 'levels/'..scenarioData.levelName..'/'
+        if not FS:directoryExists(scenarioData.mission) then log('E', logTag, scenarioData.levelName.." scenario file not found") end
+      end
+            
       scenarioData.scenarioName = string.gsub(scenarioFilename, "(.*/)(.*)%.json", "%2")
       scenarioData.directory = string.gsub(scenarioFilename, "(.*)/(.*)%.json", "%1")
     end
@@ -101,12 +116,30 @@ local function processScenarioData(scenarioKey, scenarioData, scenarioFilename)
     scenarioData.prefabs = np
 
     -- figure out the previews automatically and check for errors
-    if not scenarioData.previews then
+    if not scenarioData.previews then      
       local tmp = FS:findFilesByRootPattern(scenarioData.directory.."/", scenarioData.scenarioName..'*.jpg', 0, true, false)
+      local matchedScenarios = FS:findFilesByRootPattern(scenarioData.directory.."/", scenarioData.scenarioName..'*.json', 0, true, false)
+      local otherScenarios = {}
+      for i,v in ipairs(matchedScenarios) do
+        local otherScenarioName = string.gsub(v, "(.*/)(.*)%.json", "%2")
+        if otherScenarioName ~= scenarioData.scenarioName then
+          table.insert(otherScenarios, otherScenarioName)
+        end
+      end
+
       scenarioData.previews = {}
       for _, p in pairs(tmp) do
         if string.startswith(p, scenarioData.directory) then
-          table.insert(scenarioData.previews, string.sub(p, string.len(scenarioData.directory) + 2))
+          local imageFilename = string.sub(p, string.len(scenarioData.directory) + 2, string.len(p) - 4)
+          local foundClash = false
+          for i,otherScenarioName in ipairs(otherScenarios) do
+            if imageFilename == otherScenarioName then
+              foundClash = true
+            end
+          end
+          if not foundClash then
+            table.insert(scenarioData.previews, imageFilename..'.jpg')
+          end
         end
       end
     end
@@ -189,15 +222,12 @@ local function getList(subdirectory)
   for _, levelName in ipairs(levelList) do
     local path = ""
     if subdirectory ~= nil then
-      path = 'levels/' .. levelName .. '/scenarios/' .. subdirectory .. '/'
+      path = '/levels/' .. levelName .. '/scenarios/' .. subdirectory .. '/'
     else 
-      path = 'levels/' .. levelName .. '/scenarios/'
+      path = '/levels/' .. levelName .. '/scenarios/'
     end
-    local t3dpath = '/' .. path -- the leading slash is a workaround for a bug in FS:findFilesByRootPattern
-    local subfiles = FS:findFilesByPattern(t3dpath, '*.json', -1, true, false)
+    local subfiles = FS:findFilesByPattern(path, '*.json', -1, true, false)
     for _, scenarioFilename in ipairs(subfiles) do
-      -- remove leading 'game:' in filename
-      scenarioFilename = string.gsub(scenarioFilename, "(.*:/)(.*)", "%2")
       local newScenario = loadScenario(scenarioFilename)
       if newScenario then
         if not shipping_build  or  (shipping_build and not newScenario.restrictToCampaign) then
@@ -272,7 +302,7 @@ local function onFileChanged(filename, type)
   local scenario = scenarios and scenario_scenarios.getScenario()
   if not scenario then return end
 
-  if scenario.sourceFile == 'game:' .. filename then
+  if scenario.sourceFile == filename then
     reloadScenarioSourcefile()
   end
 end
@@ -320,7 +350,7 @@ end
       if (#busScenarios > 0) then
         local newLevel = {}
         newLevel.levelName = levelName
-        newLevel.levelInfo = readJsonFile('game:/levels/'..levelName..'/info.json') -- this contains the level info for the UI!
+        newLevel.levelInfo = readJsonFile('/levels/'..levelName..'/info.json') -- this contains the level info for the UI!
         newLevel.official = isOfficialContent(FS:getFileRealPath('levels/'..levelName..'/info.json'))
         newLevel.previews = customPreviewLoader(levelName)
 

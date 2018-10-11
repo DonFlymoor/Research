@@ -16,6 +16,8 @@ local path = {{}}
 local decals = {}
 local pathSize = 0
 local color = {}
+local previousWp
+local dist = 0
 
 local function setFocus(wp, step, fStart, fEnd, _endPos, _disableVeh, _color)
   --print(dumps(wp), step, fStart, fEnd, _endPos, _disableVeh)
@@ -27,6 +29,21 @@ local function setFocus(wp, step, fStart, fEnd, _endPos, _disableVeh, _color)
   endPos = _endPos
   disableVeh = _disableVeh
   color = _color or {0.2, 0.53, 1}
+end
+
+local function getPathLength()
+  dist = 0
+  previousWp = {}
+  for k, p in pairs(path) do
+    if previousWp.pos ~= nil and p.pos ~= nil then
+      local newDist = (p.pos - previousWp.pos):length()
+      if newDist == newDist then
+        dist = dist + newDist
+      end
+    end
+    previousWp = p
+  end
+  return dist
 end
 
 local function getPathPositionDirection(dist, lastNodeData)
@@ -128,7 +145,7 @@ local function onPreRender(dt)
       if lastPair[1] == endWP[i] then endWP[i] = path[pathSize].wp end
       local pair = {endWP[i-1], endWP[i]}
       local pathWp = map.getPath(pair[1], pair[2])
-      for i, wpName in ipairs(pathWp) do        
+      for i, wpName in ipairs(pathWp) do
         pathSize = pathSize + 1
         local node = path[pathSize] or {}
         path[pathSize] = node
@@ -165,7 +182,7 @@ local function onPreRender(dt)
   if lastControlPoints[1].wp == path[1].wp then
     path[1].pos = lastControlPoints[1].pos
   elseif lastControlPoints[2].wp == path[1].wp then
-    path[1].pos = lastControlPoints[2].pos 
+    path[1].pos = lastControlPoints[2].pos
   end
 
   -- move start pos close to vehicle
@@ -208,7 +225,7 @@ local function onPreRender(dt)
     data.forwardVec:set(normal.x, normal.y, normal.z)
     data.color.a = math.min(alphaNear, alphaFar)
   end
-  
+
   Engine.Render.DynamicDecalMgr.addDecals('art/arrow_waypoint_1.dds', decals, decalsSize)
 end
 
@@ -224,5 +241,6 @@ end
 -- public interface
 M.onPreRender = onPreRender
 M.setFocus = setFocus
+M.getPathLength = getPathLength
 M.onClientEndMission = onClientEndMission
 return M

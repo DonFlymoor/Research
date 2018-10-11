@@ -42,9 +42,9 @@
          {"collision":true},
          {"selfCollision":false},
          //--FRONT INDEPENDENT SUSPENSION--
+         //redefine frame node positions for upper mounts
          {"nodeWeight":12.5},
          {"group":["pickup_framefront","pickup_uppermounts"]},
-         //redefine frame node positions for upper mounts
          ["fr6r", -0.415, -1.67, 0.64],
          ["fr6l", 0.415, -1.67, 0.64],
          ["fr7r", -0.415, -1.35, 0.64],
@@ -58,32 +58,27 @@
          ["al2r", -0.21, -1.26, 0.28],
          ["al2l", 0.21, -1.26, 0.28],
          {"selfCollision":false},
-         //lower arm
+         //lower arm shock mount
          {"group":"pickup_shockbottom"},
-         {"nodeWeight":5.5},
+         {"nodeWeight":4.5},
          ["a1r", -0.60, -1.50, 0.372],
          ["a1l", 0.60, -1.50, 0.372],
+         //shock hinge anti-pop
+         {"group":""},
+         {"collision":false},
+         ["a6r", -0.599, -1.50, 0.24],
+         ["a6l", 0.599, -1.50, 0.24],
          {"nodeWeight":9.0},
+         {"collision":true},
          {"selfCollision":true},
          {"group":"pickup_lowerarm_F"},
          ["a4r", -0.77, -1.48, 0.32],
          ["a4l", 0.77, -1.48, 0.32],
-         //steering rack
-         {"nodeWeight":8.0},
-         {"selfCollision":false},
-         {"group":"pickup_steeringrack"},
-         ["st2r", -0.08, -1.31, 0.3],
-         ["st2l", 0.08, -1.31, 0.3],
          {"nodeWeight":7.0},
          //upper arm
          {"group":"pickup_upperarm_F"},
          ["a5r", -0.68, -1.41, 0.73],
          ["a5l", 0.68, -1.41, 0.73],
-         //shock hinge anti-pop
-         {"nodeWeight":5.5},
-         {"group":""},
-         ["a6r", -0.599, -1.50, 0.24],
-         ["a6l", 0.599, -1.50, 0.24],
          //hub
          {"nodeWeight":7.0},
          {"group":"pickup_hub1_F"},
@@ -94,15 +89,23 @@
          ["hu4r", -0.84, -1.64, 0.48],
          ["hu4l", 0.84, -1.64, 0.48],
          {"group":"pickup_hub5_F"},
+         {"nodeWeight":3.5},
          ["hu5r", -0.81, -1.31, 0.47],
          ["hu5l", 0.81, -1.31, 0.47],
+         //steering rack
+         {"nodeWeight":8.0},
+         {"collision":true},
+         {"selfCollision":false},
+         {"group":"pickup_steeringrack"},
+         ["st2r", -0.08, -1.31, 0.3],
+         ["st2l", 0.08, -1.31, 0.3],
          {"group":""},
     ],
     "beams": [
           ["id1:", "id2:"],
           //--FRONT INDEPENDENT SUSPENSION--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":10001000,"beamDamp":250},
+          {"beamSpring":11001000,"beamDamp":250},
           {"beamDeform":60000,"beamStrength":"FLT_MAX"},
           //front suspension axis points
           //lower subframe
@@ -167,29 +170,29 @@
 
           //front hub to wheel
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":8501000,"beamDamp":250},
+          {"beamSpring":10001000,"beamDamp":100},
           {"beamDeform":175000,"beamStrength":425000},
           {"breakGroup":"wheel_FR"},
           {"optional":true},
-          ["hu5r","fw1rr", {"name":"axle_a_FR"}],
-          ["hu5r","fw1r"],
-          ["hu1r","fw1r"],
+          ["hu5r","fw1rr", {"name":"axle_a_FR","beamSpring":6501000,"beamDamp":50}],
+          ["hu5r","fw1r"{"beamSpring":6501000,"beamDamp":50}],
+          ["hu1r","fw1r"{"beamSpring":16001000,"beamDamp":40}],
           ["fw1r","a5r"],
           ["fw1r","a4r"],
           ["fw1rr","a5r"],
           ["fw1rr","a4r"],
-          ["fw1rr","hu1r"],
+          ["fw1rr","hu1r"{"beamSpring":16001000,"beamDamp":40}],
           ["hu4r","fw1r"],
           ["hu4r","fw1rr"],
           {"breakGroup":"wheel_FL"},
-          ["hu5l","fw1ll", {"name":"axle_a_FL"}],
-          ["hu5l","fw1l"],
-          ["hu1l","fw1l"],
+          ["hu5l","fw1ll", {"name":"axle_a_FL","beamSpring":6001000,"beamDamp":50}],
+          ["hu5l","fw1l"{"beamSpring":6001000,"beamDamp":50}],
+          ["hu1l","fw1l"{"beamSpring":16001000,"beamDamp":40}],
           ["fw1l","a5l"],
           ["fw1l","a4l"],
           ["fw1ll","a5l"],
           ["fw1ll","a4l"],
-          ["fw1ll","hu1l"],
+          ["fw1ll","hu1l"{"beamSpring":16001000,"beamDamp":40}],
           ["hu4l","fw1l"],
           ["hu4l","fw1ll"],
           {"optional":false},
@@ -197,7 +200,7 @@
 
           //front hub
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":8501000,"beamDamp":250},
+          {"beamSpring":10001000,"beamDamp":100},
           {"beamDeform":175000,"beamStrength":425000},
           ["a4r","a5r"],
           ["a4l","a5l"],
@@ -211,6 +214,9 @@
           ["hu4l","a4l"],
           ["hu4r","a5r"],
           ["hu4l","a5l"],
+
+          {"beamSpring":6501000,"beamDamp":100},
+          {"beamSpring":6501000,"beamDamp":150},
           ["hu4r","hu5r"],
           ["hu4l","hu5l"],
           ["hu1r","hu5r"],
@@ -237,7 +243,7 @@
           ["a4l","al2l"{"dampCutoffHz":500}],
 
           //shock bottom
-          {"beamSpring":8001000,"beamDamp":250},
+          {"beamSpring":7001000,"beamDamp":250},
           {"beamDeform":100000,"beamStrength":700000},
           ["a1l","a4l"],
           ["a1r","a4r"],
@@ -552,8 +558,8 @@
     },
     "slidenodes": [
         ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
-        ["st2r", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
-        ["st2l", "steeringrack", true, true, 0.0, 14001000, 230000, 230000],
+        ["st2r", "steeringrack", true, true, 0.0, 18001000, "FLT_MAX", "FLT_MAX"],
+        ["st2l", "steeringrack", true, true, 0.0, 18001000, "FLT_MAX", "FLT_MAX"],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
@@ -576,9 +582,10 @@
     "beams": [
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-            {"beamSpring":20001000,"beamDamp":250,"beamDeform":202500,"beamStrength":275900},
+            {"beamSpring":14001000,"beamDamp":250,"beamDeform":202500,"beamStrength":275900},
             ["fh6r","fh6l"],
             //
+            {"beamSpring":24001000,"beamDamp":250,"beamDeform":202500,"beamStrength":275900},
             ["hu1r","fh6r"{"beamPrecompression":"$=$toe_FR-$steer_center_F","beamPrecompressionTime":0.5}],
             ["hu1l","fh6l"{"beamPrecompression":"$=$toe_FR+$steer_center_F","beamPrecompressionTime":0.5}],
             //steering damper
@@ -594,13 +601,13 @@
     "hydros": [
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-            {"beamSpring":6001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":347100},
+            {"beamSpring":16001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":347100},
             ["fh6r","st2l",{"factor":-0.34,"steeringWheelLock":450,"inRate":1.25,"outRate":1.25}],
             ["fh6l","st2r",{"factor":0.34,"steeringWheelLock":450,"inRate":1.25,"outRate":1.25}],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
     "input": {
-        "FFBcoef":3,
+        "FFBcoef":9,
     },
 },
 }

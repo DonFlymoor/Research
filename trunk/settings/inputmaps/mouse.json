@@ -1,0 +1,30 @@
+{
+"bindings" :   [
+    {
+    "action"            : "rotate_camera_vt_mouse",
+    "control"           : "yaxis"
+    },
+    {
+    "control"           : "xaxis",
+    "action"            : "rotate_camera_hz_mouse",
+    },
+    {
+    "action"            : "nodegrabberGrab",
+    "control"           : "button0"
+    },
+    {
+    "action"            : "nodegrabberAction",
+    "control"           : "button2"
+    },
+    {
+    "action"            : "nodegrabberStrength",
+    "control"           : "zaxis"
+    },
+    {
+    "action"            : "changeCameraSpeed",
+    "control"           : "alt zaxis"
+    },
+  ],
+"name"              : "mouse0",
+"vidpid"            : "6f1d2b60"
+},

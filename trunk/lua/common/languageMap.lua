@@ -546,7 +546,7 @@ local function resolve(key)
     -- language first
     local codeOK = false
     if #lcomp > 0 and type(lcomp[1]) == 'string' then
-      res = res .. M.languages[lcomp[1]] or lcomp[1]
+      res = res .. (M.languages[lcomp[1]] or lcomp[1])
       codeOK = true
     end
     -- then country

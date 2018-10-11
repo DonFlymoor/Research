@@ -37,26 +37,21 @@
   <div style="background-color: white; position: relative" flex>
     <div class="container"
       bng-v-list bng-v-repeat="model in vehicles.shownData">
-      <div class="gridItem" bng-nav-item nav-item-enter-focus="{{ :: 0 === $index }}"  bng-all-clicks single="vehicles.goToConfigs(model)" double="vehicles.launchVehicle(model)">
+      <div class="gridItem VScroll" bng-nav-item nav-item-enter-focus="{{ :: 0 === $index }}"  bng-all-clicks single="vehicles.goToConfigs(model)" double="vehicles.launchVehicle(model)">
         <bng-box>
           <div ng-if="model.preview" style="background-image:url('{{model.preview}}'); background-size: cover; background-position: center center;" class="filler"></div>
 
-          <div layout="row" layout-align="end start" class="container" ng-if=":: model.aggregates.Source['BeamNG - Official']">
-            <div style="z-index: 5; margin-top:4px; margin-right:4px">
-              <img src="images/beamng_logo_50x50.png" height="16px" style="padding-left:4px; -webkit-filter: grayscale(1) brightness(0.5) invert(1);" />
-            </div>
-          </div>
-
           <div layout="row" layout-align="start end" class="container">
-            <div class="vehicleFooter" layout="column" layout-align="center start">
-              <div layout-align="center center" style="margin-left:8px">
+            <div class="vehicleFooter" layout="row" layout-align="start center">
+              <bng-icon style="margin-left: 0.5em; width: 1em; position: relative;" src="'general_beamng_logo_bw'" type="sprite" ng-if=":: model.aggregates.Source['BeamNG - Official']"></bng-icon>
+              <bng-icon style="margin-left: 0.5em; width: 1em; position: relative;" src="'Assets/camshaft_automation_logo.svg'" type="img" ng-if=":: model.Type === 'Automation'"></bng-icon>
+              <div layout-align="center center" style="margin-left: 0.5em; width: calc(100% - 2em);" class="truncate">
                 <span>{{ ::model.Brand }}</span>
                 <span>{{ ::model.Name || 'Unknown' }}</span>
               </div>
             </div>
           </div>
         </bng-box>
-
       </div>
     </div>
   </div>

@@ -1,29 +1,6 @@
+// Please refer to modding/input/ documentation for information about input actions
 // DOT NOT EDIT THIS FILE.
-// it binds the actions names to what they do
-// the bindings file contains the actions to keys, etc mapping
 
-// this is lazy json (comments, missing commas). It does not evaluate against strict json
-// the available contexts:
-// "ctx": "ui"   - user interface javascript
-// "ctx": "vlua" - active vehicle lua
-// "ctx": "elua" - engine lua (async)
-// "ctx": "tlua" - engine lua (sync)
-
-// "isCentered":true has two consequences:
-// first it transforms the values from 0..1 range, to -1..+1 range
-// the binding settings (linearity, deadzone) are then applied on the new -1..+1 range (that is, they are applied on the center of axes values)
-
-// "actionMap":"xxx" makes sure the binding is sent to an specific action map:
-//    'Global' (highest priority): overrides lower priority bindings and CEF forwarding, no matter what (highest priority)
-//    'Menu'    (medium priority): overrides lower priority bindings and CEF forwarding, if the dashboard is active (medium priority)
-//    'Normal'  (lowest priority): rest of bindings
-
-// "cat" is crossreferenced with input_categories.lua
-
-// possible action triggers:
-// "onDown"/"onUp": so far, only possible with buttons and keys
-// "onChange": any change of value axes/buttons/keys
-// "onRelative": relative mouse movement while holding right mouse button (with autocentering of mouse cursor)
 {
 //menu
 
@@ -58,7 +35,8 @@
 "steering"                :{"cat":"vehicle",       "order":  6, "ctx": "vlua", "onChange":"input.event('steering', VALUE, FILTERTYPE, ANGLE)", "isCentered":true, "isBasic":true, "title": "Steering Axis", "desc": "Steers the vehicle with an axis (steering wheels, joysticks, etc)" },
 "clutch"                  :{"cat":"vehicle",       "order":  7, "ctx": "vlua", "onChange":"input.event('clutch', VALUE, FILTERTYPE)", "isBasic":true, "title": "Clutch", "desc": "Presses the clutch" },
 
-"parkingbrake"            :{"cat":"vehicle",       "order":8.0, "ctx": "vlua", "onChange":"input.smartParkingBrake(VALUE, FILTERTYPE)", "isBasic":true, "title": "Parking Brake", "desc": "Smartly activates parking brake (usable when drifting and also when parking)" },
+"parkingbrake"            :{"cat":"vehicle",       "order":8.0, "ctx": "vlua", "onChange":"if controller.mainController.smartParkingBrake then controller.mainController.smartParkingBrake(VALUE, FILTERTYPE) else input.event('parkingbrake', VALUE, FILTERTYPE) end", "isBasic":true, "title": "Parking Brake", "desc": "Smartly activates parking brake (usable when drifting and also when parking)" },
+//"parkingbrake"            :{"cat":"vehicle",       "order":8.0, "ctx": "vlua", "onChange":"input.smartParkingBrake(VALUE, FILTERTYPE)", "isBasic":true, "title": "Parking Brake", "desc": "Smartly activates parking brake (usable when drifting and also when parking)" },
 "parkingbrake_temporary"  :{"cat":"vehicle",       "order":8.1, "ctx": "vlua", "onChange":"input.event('parkingbrake', VALUE, FILTERTYPE)", "isBasic":false, "title": "Parking Brake (temporary)", "desc": "Activates parking brake momentarily" },
 "parkingbrake_toggle"     :{"cat":"vehicle",       "order":8.2, "ctx": "vlua", "onDown"  :"input.toggleEvent('parkingbrake')", "isBasic":false, "title": "Parking Brake (permanent)", "desc": "Activates/deactivates parking brake permanently" },
 
@@ -189,7 +167,7 @@
 "camera_10"        :{"cat":"camera",  "order":120, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER,10)", "title": "Camera 10","desc": "Switch to camera 10"},
 
 // gameplay
-"reset_physics"           :{"cat":"gameplay", "order":  1, "ctx": "tlua", "onDown"  :"be:resetVehicle(PLAYER)", "isBasic":true, "title": "Retry Scenario", "desc": "Restarts the current scenario" },
+"reset_physics"           :{"cat":"gameplay", "order":  1, "ctx": "tlua", "onDown"  :"resetGameplay(PLAYER)", "isBasic":true, "title": "Resets the Physics", "desc": "Restarts the current scenario" },
 "recover_vehicle"         :{"cat":"gameplay", "order":  2, "ctx": "vlua", "onDown"  :"recovery.startRecovering()", "onUp": "recovery.stopRecovering()", "isBasic":true, "title": "Recover Vehicle", "desc": "Rewinds vehicle position" },
 
 "switch_previous_vehicle" :{"cat":"gameplay", "order": 10, "ctx": "tlua", "onDown"  :"be:enterNextVehicle(PLAYER, -1)", "title": "Switch to Previous Vehicle", "desc": "Switches focus to previous vehicle" },
@@ -197,9 +175,8 @@
 
 "accept"                  :{"cat":"gameplay", "order": 12, "ctx": "tlua", "onDown"  :"campaign_exploration:accept()",           "actionMap": "ExplorationMissionUI",    "title": "Mission accept action",  "desc": "Accept the current mission" },
 "decline"                 :{"cat":"gameplay", "order": 13, "ctx": "tlua", "onDown"  :"campaign_exploration:decline()",          "actionMap": "ExplorationMissionUI",    "title": "Mission decline action", "desc": "Decline the current mission" },
-"set_checkpoint"          :{"cat":"gameplay", "order": 14, "ctx": "tlua", "onDown"  :"core_checkpoints.setCheckpoint(PLAYER)",  "actionMap": "ExplorationCheckpoints",  "title": "Save a checkpoint",      "desc": "Save a checkpoint to return to at any time" },
-"goto_checkpoint"         :{"cat":"gameplay", "order": 15, "ctx": "tlua", "onDown"  :"if core_checkpoints then core_checkpoints.teleportToCheckpoint(PLAYER) end",      "title": "Teleport to checkpoint", "desc": "Teleport to a saved checkpoint" },
 "toggle_minimap"          :{"cat":"gameplay", "order": 16, "ctx": "tlua", "onDown"  :"campaign_exploration:toggleMinimap()",    "actionMap": "ExplorationGeneral",      "title": "Toggle minimap",         "desc": "Toggles the minimap of the level" },
+//"toggle_timeTrialsScreen" :{"cat":"gameplay", "order": 17, "ctx": "tlua", "onDown"  :"scenario_quickRace.changeTimeTrialConfig()",   "title": "Change Time Trials Configuration",         "desc": "Opens the configuration menu when in in Time Trials" },
 
 // node grabing
 "nodegrabberRender"       :{"cat":"gameplay", "order": 20, "ctx": "tlua", "onChange":"be.nodeGrabber:renderNodes(VALUE ~= 0)", "title": "Show nodegrabber nodes", "desc": "Displays nodes that can be grabbed", "isBasic":true },
@@ -227,9 +204,11 @@
 "toggleConsole"           :{"cat":"debug", "order": 11, "ctx": "ts",   "onDown"  :"ToggleConsole()", "actionMap": "Global", "title": "Toggle System Console", "desc": "Toggles the console" },
 "toggleRawDt"             :{"cat":"debug", "order": 11, "ctx": "tlua", "onDown"  :"be:setClockType( (1+be:getClockType()) % 3 )", "title": "Toggle Raw DT", "desc": "Toggles Raw DT physics" },
 "clear_console"           :{"cat":"debug", "order": 12, "ctx": "ts",   "onDown"  :"cls()", "actionMap": "Global", "title": "Clear System Console", "desc": "Clears the system console" },
+"toggleNewEditor"            :{"cat":"debug", "order": 9, "ctx": "tlua",   "onDown"  :"editor.toggleActive()", "actionMap": "Global", "title": "NewEditor", "desc": "Opens the new editor" },
 
 "lua_reload"              :{"cat":"debug", "order": 20, "ctx": "tlua", "onDown"  :"Lua:requestReload(); ui_message('engine.lua.reloaded', 2, 'lua', 'refresh')", "actionMap": "Global", "title": "Reload Lua", "desc": "Reloads vehicle lua" },
 "cefdev_console_toggle"   :{"cat":"debug", "order": 22, "ctx": "ts",   "onDown"  :"toggleCEFDevConsole()", "actionMap": "Global", "title": "Toggle UI Console", "desc": "Toggles the Chromium Embedded (CEF) Console" },
+"cefdev_reload_ui"        :{"cat":"debug", "order": 22, "ctx": "ts",   "onDown"  :"reloadUI()", "actionMap": "Global", "title": "Reload UI", "desc": "Reloads UI texture" },
 "flexmeshDebugSelectionToggle" :{"cat":"debug", "order": 22, "ctx": "tlua",   "onChange"  :"be:setFlexMeshDebugSelection(PLAYER, VALUE ~= 0)", "actionMap": "FlexmeshDebug", "title": "Flexmesh Debug", "desc": "Toggles the selection state in Flexmesh Debug" },
 
 // debug (vehicle)

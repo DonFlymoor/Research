@@ -1,16 +1,4 @@
-
 <md-content style="overflow-x: hidden; width: 100%; max-width: 450px; height: 100%" layout="column">
-    <style>
-
-
-      md-tooltip.tt-multiline .md-content {
-          height: auto !important;
-          max-width: 200px !important;
-          font-size: 13px !important;
-      }
-
-
-  </style>
   <md-toolbar>
     <div class="md-toolbar-tools">
       <span flex>{{::'ui.trackBuilder.title' | translate}}</span>
@@ -18,40 +6,6 @@
   </md-toolbar>
 
   <bng-accordion flex class="vAccordion--default" multiple>
-<!--
-<bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
-      <bng-pane-header>
-        <span>Selection</span>
-        <md-icon class="material-icons">{{ ::category.icon }}</md-icon>
-        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
-      </bng-pane-header>
-
-      <bng-pane-body>
-        <md-input-container flex layout="column" layout-align="start start">
-
-          <div layout="row" layout-align="center center" >
-
-          </div>
-
-          <div layout="row">
-            <md-button ng-click="insert(true)" md-no-ink class="md-raised md-primary" aria-label="Settings"  style="min-width: 10px;">
-              <md-tooltip>{{:: 'ui.trackBuilder.insertBefore' | translate }}</md-tooltip>
-              <md-icon class="material-icons">add_box</md-icon>
-              <md-icon class="material-icons">chevron_right</md-icon>
-            </md-button>
-
-            <md-button ng-click="removeSelected()" md-no-ink class="md-raised md-primary" aria-label="Settings"  style="min-width: 10px;">
-              <md-tooltip>{{:: 'ui.trackBuilder.removeSelected' | translate }}</md-tooltip>
-              <md-icon class="material-icons">chevron_right</md-icon>
-              <md-icon class="material-icons">delete</md-icon>
-              <md-icon class="material-icons">chevron_left</md-icon>
-            </md-button>
-          </div>
-        </md-input-container>
-      </bng-pane-body>
-
-    </bng-accordion-pane>-->
-
     <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
       <bng-pane-header>
         <span>Build</span>
@@ -62,7 +16,6 @@
       <div layout="column">
 
         <md-subheader class="md-no-sticky">Selection</md-subheader>
-
         <div layout="row" layout-align="center center">
           <md-button ng-click="select(-100000)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
               <md-tooltip>{{:: 'ui.trackBuilder.selectFirst' | translate }}</md-tooltip>
@@ -85,9 +38,7 @@
             </md-button>
         </div>
 
-
         <md-subheader class="md-no-sticky">Piece</md-subheader>
-
         <div layout="row" layout-align="center center">
           <md-button style="min-width: 40px;"ng-repeat="piece in pieceParameters" ng-click="selectPiece($index)" md-no-ink class="md-raised md-primary" ng-class="$index == selectedBuildPieceIndex ? 'md-accent' : ''" aria-label="Settings" ng-disabled="clearedTrack">
             <md-tooltip >{{:: piece.tooltip | translate }}</md-tooltip>
@@ -102,7 +53,6 @@
         <md-divider></md-divider>
 
         <md-subheader class="md-no-sticky">Placement</md-subheader>
-
         <div layout="row" layout-align="center center">
           <md-button ng-click="insert(false)" md-no-ink class="md-raised md-primary" aria-label="Settings"  style="min-width: 40px;" ng-disabled="clearedTrack">
             <md-tooltip>{{:: 'ui.trackBuilder.insertAfter' | translate }}</md-tooltip>
@@ -152,8 +102,6 @@
     </bng-pane-body>
     </bng-accordion-pane>
 
-
-
     <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
       <bng-pane-header>
         <span>Modify</span>
@@ -165,11 +113,6 @@
         <md-list-item layout="column" layout-align="start start"style="padding:0;">
           <md-subheader class="md-no-sticky">
             Bank
-            <!--
-            <md-icon class="material-icons">info_outline
-             <md-tooltip class="tt-multiline" >{{:: 'ui.trackBuilder.bank_info' | translate }}</md-tooltip>
-          </md-icon>
-        -->
           </md-subheader>
            <md-slider-container layout="row" >
             <!-- <md-slider ng-change="modify('bank', modifierValues.bank)" ng-init="bankAmount = 0" ng-model="modifierValues.bank" min="-90" max="90" style="width: 150px"></md-slider> -->
@@ -194,16 +137,6 @@
               <md-icon class="material-icons">clear</md-icon>
             </md-button>
           </md-slider-container>
-
-          <!--<div layout="row">
-            <md-input-container>
-              <input type="number" ng-mouseup="modify('bank', modifierValues.bank)" ng-model="modifierValues.bank" aria-label="red" aria-controls="red-slider">
-            </md-input-container>
-
-            <md-button ng-click="modify('bank', 0)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings">
-              <md-icon class="material-icons">replay</md-icon>
-            </md-button>
-          </div>-->
         </md-list-item>
 
         <md-divider></md-divider>
@@ -216,7 +149,7 @@
             <md-button ng-click="modify('elevate', (modifierValues.elevate + 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+5</md-button>
             <md-button ng-click="modify('elevate', (modifierValues.elevate + 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+10</md-button>
             <md-input-container  flex="10">
-              <input type="number" ng-mouseup="modify('elevate', modifierValues.elevate)" ng-model="modifierValues.elevate" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+              <input type="number" ng-change="modify('elevate', modifierValues.elevate)" ng-model="modifierValues.elevate" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
             </md-input-container>
 
             <md-button ng-click="modify('elevate', modifierValues.elevate)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
@@ -231,7 +164,6 @@
               <md-tooltip>{{:: 'ui.trackBuilder.clear' | translate }}</md-tooltip>
               <md-icon class="material-icons">clear</md-icon>
             </md-button>
-
           </div>
         </md-list-item>
 
@@ -246,7 +178,7 @@
             <md-button ng-click="modify('width', 20)" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">20</md-button>
 
             <md-input-container  flex="10">
-              <input type="number" ng-mouseup="modify('width', modifierValues.width)" ng-model="modifierValues.width" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+              <input type="number" ng-change="modify('width', modifierValues.width)" ng-model="modifierValues.width" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
             </md-input-container>
 
             <md-button ng-click="modify('width', modifierValues.width)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
@@ -264,12 +196,8 @@
           </div>
         </md-list-item>
 
-
-
       </bng-pane-body>
     </bng-accordion-pane>
-
-
 
     <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
       <bng-pane-header>
@@ -345,7 +273,6 @@
     <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
       <bng-pane-header>
         <span>Settings</span>
-        <!-- <md-icon class="material-icons">settings</md-icon> -->
         <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
       </bng-pane-header>
 
@@ -388,6 +315,27 @@
           </div>
         </div>
 
+        <md-subheader class="md-no-sticky">Positioning</md-subheader>
+        <div layout="row" layout-align="center center">
+          <md-button ng-click="callMakeRefresh('positionTrackBeforeCamera')" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.positionBeforeCameraToolTip' | translate }}</md-tooltip>
+              {{:: 'ui.trackBuilder.positionBeforeCamera' | translate }}
+            </md-button>
+            <md-button ng-click="callMakeRefresh('rotateTrackToCamera')" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px;  margin-right: 30px;" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.rotateToCameraToolTip' | translate }}</md-tooltip>
+              {{:: 'ui.trackBuilder.rotateToCamera' | translate }}
+            </md-button>
+
+            <md-button ng-click="callMakeRefresh('positionTrackAboveVehicle')" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px;" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.PositionAboveVehicleToolTip' | translate }}</md-tooltip>
+              {{:: 'ui.trackBuilder.PositionAboveVehicle' | translate }}
+            </md-button>
+            <md-button ng-click="callMakeRefresh('rotateTrackToTrackVehicle')" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 10px" ng-disabled="clearedTrack">
+              <md-tooltip>{{:: 'ui.trackBuilder.rotateTrackToTrackVehicleToolTip' | translate }}</md-tooltip>
+              {{:: 'ui.trackBuilder.rotateTrackToTrackVehicle' | translate }}
+            </md-button>
+        </div>
+
         <md-subheader class="md-no-sticky">Drive</md-subheader>
         <div layout="row">
           <md-button ng-click="drive()" layout-align="end end" md-no-ink class="md-raised md-primary md-accent" aria-label="Settings" flex ng-disabled="clearedTrack">
@@ -401,7 +349,6 @@
     <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
       <bng-pane-header>
         <span>Save/Load</span>
-        <!-- <md-icon class="material-icons">save</md-icon> -->
         <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
       </bng-pane-header>
 
@@ -417,6 +364,22 @@
             </md-button></div>
           </div>
         </div>
+        <div layout="row" layout-align="center center">
+          <span style="padding-right: 10px;" >{{:: 'ui.trackBuilder.defaultLaps' | translate }}</span>
+          <md-input-container ng-show="trackClosed" style="padding-bottom:0px; max-width:20%"> 
+            <input  ng-change="setDefaultLaps()" type="number" ng-model="defaultLaps.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+            <md-tooltip>{{:: 'ui.trackBuilder.defaultLapsTooltip' | translate }}</md-tooltip>
+          </md-input-container>
+          <md-input-container ng-show="!trackClosed" style="padding-bottom:0px; max-width:20%"> 
+            <input type="number" ng-model="1" aria-label="red" aria-controls="red-slider"  ng-disabled="true" value="1" >
+            <md-tooltip>{{:: 'ui.trackBuilder.notClosedTooltip' | translate }}</md-tooltip>
+          </md-input-container>
+          <span style="padding-right: 10px; padding-left:30px" >{{:: 'ui.trackBuilder.reversible' | translate }}</span>
+          <md-checkbox md-no-ink ng-change="setReversible()" ng-model="reversible.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+            <md-tooltip>{{:: 'ui.trackBuilder.reverseTooltip' | translate }}</md-tooltip>
+          </md-checkbox>
+        </div>
+
         <p>{{ :: 'ui.trackBuilder.howToDrive' | translate}}</p>
 
         <md-list layout="column" style="overflow: auto;">
@@ -436,7 +399,5 @@
 
       </bng-pane-body>
     </bng-accordion-pane>
-
   </bng-accordion>
-
 </md-content>

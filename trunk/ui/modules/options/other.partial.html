@@ -70,6 +70,12 @@
     </md-input-container>
   </md-list-item>
 
+  <md-list-item md-no-ink>
+    <p>{{:: 'ui.options.utilities.highPerformancePlan' | translate }}</p>
+    <md-checkbox ng-model="options.data.values.HighPerformancePlan" ng-change="options.applyState()"></md-checkbox>
+    <md-tooltip md-direction="right">This will force your PC to enable the High Performance Plan of your OS on startup.</md-tooltip>
+  </md-list-item>
+
   <md-list-item md-no-ink ng-show="false"> <!-- hidden from view until logitech fix their drivers -->
     <p>{{:: 'ui.options.utilities.g27ShiftLed' | translate }}</p>
     <md-checkbox ng-model="options.data.values.rpmLedsEnabled" ng-change="options.applyState()"></md-checkbox>
@@ -78,5 +84,63 @@
       <strong style="color:#dd3333">WARNING:</strong>
       <span>Steering angle and force feedback may behave unpredictably in conjunction with LEDs. Use at your own risk.</span>
   </div>
+  
+  <md-divider></md-divider>
+  <md-subheader class="md-no-sticky">{{:: 'ui.options.motionSim' | translate }}</md-subheader>
+
+  <md-list-item md-no-ink>
+    <p>{{:: 'ui.options.motionSim.enabled' | translate }}</p>
+    <md-checkbox ng-model="options.data.values.motionSimEnabled" ng-change="options.applyState()"></md-checkbox>
+    <md-tooltip md-direction="right">Enable to make the game send motion platform data</md-tooltip>
+  </md-list-item>
+  <md-list-item md-no-ink ng-show="options.data.values.motionSimEnabled">
+    <md-input-container>
+      <label>IP</label>
+      <input flex type="text" ng-model="options.data.values.motionSimIP" ng-change="options.applyState()">
+    </md-input-container>
+    <md-input-container>
+      <label>Port</label>
+      <input flex type="text" ng-model="options.data.values.motionSimPort" ng-change="options.applyState()">
+    </md-input-container>
+  </md-list-item>
+  
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.updateRate' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimHz" min="50" max="2000" step="50" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimHz }}</span>
+  </md-list-item>
+  
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="300">{{:: 'ui.options.motionSim.accelerationSmoothing' | translate }}</p>
+ 
+  </md-list-item>
+  
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingX' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimAccelerationSmoothingX" min="0" max="200" step="5" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimAccelerationSmoothingX }}</span>
+  </md-list-item>
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingY' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimAccelerationSmoothingY" min="0" max="200" step="5" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimAccelerationSmoothingY }}</span>
+  </md-list-item>
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingZ' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimAccelerationSmoothingZ" min="0" max="200" step="5" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimAccelerationSmoothingZ }}</span>
+  </md-list-item>
 
 </md-content>

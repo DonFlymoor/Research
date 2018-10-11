@@ -1,5 +1,5 @@
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 M.defaultOrder = 50
 

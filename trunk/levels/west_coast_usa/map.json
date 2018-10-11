@@ -1,85 +1,303 @@
 {
-    "segments" : {
+  "segments" : {
 
-        "bridge1" : {
-            "nodes" : ["Bridge1_A", "Bridge1_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge2" : {
-            "nodes" : ["Bridge2_A", "Bridge2_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge3" : {
-            "nodes" : ["Bridge3_A", "Bridge3_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge4" : {
-            "nodes" : ["Bridge4_A", "Bridge4_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge5" : {
-            "nodes" : ["Bridge5_A", "Bridge5_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge6" : {
-            "nodes" : ["Bridge6_A", "Bridge6_B", "Bridge6_C", "Bridge6_D", "Bridge6_E", "Bridge6_F", "Bridge6_G"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge7" : {
-            "nodes" : ["Bridge7_A", "Bridge7_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge8" : {
-            "nodes" : ["Bridge8_A", "Bridge8_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge9" : {
-            "nodes" : ["Bridge9_A", "Bridge9_B", "Bridge9_C", "Bridge9_D", "Bridge9_E", "Bridge9_F"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge10" : {
-            "nodes" : ["Bridge10_A", "Bridge10_B", "Bridge10_C"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge11" : {
-            "nodes" : ["Bridge11_A", "Bridge11_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge12" : {
-            "nodes" : ["Bridge12_A", "Bridge12_B"],
-            "drivability" : 1 ,
-        }
-        
-        //"bridge13" : {
-            //"nodes" : ["Bridge13_A", "Bridge13_B", "Bridge13_C", "Bridge13_D", "Bridge13_E", "Bridge13_F", "Bridge13_G", "Bridge13_H", "Bridge13_I", "Bridge13_J"],
-            //"drivability" : 1 ,
-        //}
-        
-        "bridge14" : {
-            "nodes" : ["Bridge14_A", "Bridge14_B"],
-            "drivability" : 1 ,
-        }
-        
-        "bridge15" : {
-            "nodes" : ["Bridge15_A", "Bridge15_B"],
-            "drivability" : 1 ,
-        }
-        
-        "dirttrack" : {
-            "nodes" : ["dirttrack_1", "dirttrack_2", "dirttrack_3", "dirttrack_4", "dirttrack_5", "dirttrack_6", "dirttrack_7", "dirttrack_8", "dirttrack_9", "dirttrack_10","dirttrack_11", "dirttrack_12", "dirttrack_13", "dirttrack_14", "dirttrack_15", "dirttrack_16", "dirttrack_17", "dirttrack_18", "dirttrack_19", "dirttrack_20","dirttrack_21", "dirttrack_22", "dirttrack_23", "dirttrack_24", "dirttrack_25", "dirttrack_26", "dirttrack_27", "dirttrack_28", "dirttrack_29", "dirttrack_30","dirttrack_31", "dirttrack_32"],
-            "drivability" : 1 ,
-        }
-        
+    "bridge1" : {
+      "nodes" : ["Bridge1_A", "Bridge1_B"],
+      "drivability" : 1
+    },
+
+    "bridge2" : {
+      "nodes" : ["Bridge2_A", "Bridge2_B"],
+      "drivability" : 1
+    },
+
+    "bridge2a" : {
+      "nodes" : ["Bridge2_A2", "Bridge2_A3"],
+      "drivability" : 1
+    },
+
+    "bridge2b" : {
+      "nodes" : ["Bridge2_A2", "Bridge2_A4"],
+      "drivability" : 1
+    },
+
+    "bridge2c" : {
+      "nodes" : ["Bridge2_A1", "Bridge2_A2"],
+      "drivability" : 1
+    },
+
+    "bridge3" : {
+      "nodes" : ["Bridge3_A", "Bridge3_B"],
+      "drivability" : 1
+    },
+
+    "bridge4" : {
+      "nodes" : ["Bridge4_A", "Bridge4_B"],
+      "drivability" : 1
+    },
+
+    "bridge4b" : {
+      "nodes" : ["Bridge4_B1", "Bridge4_A1"],
+      "drivability" : 1
+    },
+
+    "bridge5" : {
+      "nodes" : ["Bridge5_A", "Bridge5_B"],
+      "drivability" : 1
+    },
+
+    "bridge6" : {
+      "nodes" : ["Bridge6_A", "Bridge6_B", "Bridge6_C", "Bridge6_D", "Bridge6_E", "Bridge6_F", "Bridge6_G"],
+      "drivability" : 1,
+      "oneWay": true,
+      "flipDirection": false
+    },
+
+    "bridge7" : {
+      "nodes" : ["Bridge7_A", "Bridge7_B", "Bridge7_C", "Bridge7_D", "Bridge7_E"],
+      "drivability" : 1
+    },
+
+    "bridge7a" : {
+      "nodes" : ["Bridge7b_A", "Bridge7b_B", "Bridge7b_C", "Bridge7b_D"],
+      "drivability" : 1
+    },
+
+    "bridge7b" : {
+      "nodes" : ["Bridge7_D", "Bridge7_F"],
+      "drivability" : 1
+    },
+
+    "bridge8" : {
+      "nodes" : ["Bridge8_A", "Bridge8_B"],
+      "drivability" : 1
+    },
+
+    "bridge8a" : {
+      "nodes" : ["Bridge8a_A", "Bridge8a_B"],
+      "drivability" : 1
+    },
+
+    "bridge9" : {
+      "nodes" : ["Bridge9_A", "Bridge9_B", "Bridge9_C", "Bridge9_D", "Bridge9_E", "Bridge9_F"],
+      "drivability" : 1
+    },
+
+    "bridge10" : {
+      "nodes" : ["Bridge10_A", "Bridge10_B", "Bridge10_C"],
+      "drivability" : 1
+    },
+
+    "bridge11" : {
+      "nodes" : ["Bridge11_A", "Bridge11_B"],
+      "drivability" : 1
+    },
+
+    "bridge12" : {
+      "nodes" : ["Bridge12_A", "Bridge12_B", "Bridge12_C"],
+      "drivability" : 1
+    },
+
+    "bridge13" : {
+      "nodes" : ["Bridge13_A", "Bridge13_B", "Bridge13_C1", "Bridge13_C", "Bridge13_D1", "Bridge13_D", "Bridge13_E", "Bridge13_F1", "Bridge13_F", "Bridge13_G", "Bridge13_G1", "Bridge13_H", "Bridge13_I", "Bridge13_J"],
+      "drivability" : 1
+    },
+
+    "bridge14" : {
+      "nodes" : ["Bridge14_A", "Bridge14_B"],
+      "drivability" : 1
+    },
+
+    "bridge15" : {
+      "nodes" : ["Bridge15_A", "Bridge15_B", "Bridge15_C"],
+      "drivability" : 1
+    },
+
+    "bridge16" : {
+      "nodes" : ["Bridge16_A", "Bridge16_B", "Bridge16_C"],
+      "drivability" : 1
+    },
+
+    "bridge17a" : {
+      "nodes" : ["Bridge17_A", "Bridge17_B", "Bridge17_E"],
+      "drivability" : 1
+    },
+
+    "bridge17b" : {
+      "nodes" : ["Bridge17_A", "Bridge17_C", "Bridge17_D"],
+      "drivability" : 1
+    },
+
+    "bridge17c" : {
+      "nodes" : ["Bridge17b_A", "Bridge17b_A3", "Bridge17b_A4"],
+      "drivability" : 1
+    },
+
+    "bridge17d" : {
+      "nodes" : ["Bridge17b_A1", "Bridge17b_A2", "Bridge17b_A5"],
+      "drivability" : 1
+    },
+    
+    "bridge17e" : {
+      "nodes" : ["Bridge17b_A", "Bridge17b_A2", "Bridge17b_A4"],
+      "drivability" : 1
+    },
+
+    "bridge17f" : {
+      "nodes" : ["Bridge17b_A1", "Bridge17b_A3", "Bridge17b_A5"],
+      "drivability" : 1
+    },
+
+    "bridge18" : {
+      "nodes" : ["Bridge18_1", "Bridge18_2"],
+      "drivability" : 1
+    },
+
+    "bridge19" : {
+      "nodes" : ["Bridge19_1", "Bridge19_2"],
+      "drivability" : 1
+    },
+
+    "bridge20" : {
+      "nodes" : ["Bridge20_1", "Bridge20_2"],
+      "drivability" : 1
+    },
+
+    "bridge20-21" : {
+      "nodes" : ["Bridge20_2", "Bridge21_1"],
+      "drivability" : 1
+    },
+
+    "bridge21" : {
+      "nodes" : ["Bridge21_1", "Bridge21_2"],
+      "drivability" : 1
+    },
+
+    "bridge22" : {
+      "nodes" : ["Bridge22_1", "Bridge22_2", "Bridge22_3"],
+      "drivability" : 1
+    },
+
+    "bridge23" : {
+      "nodes" : ["Bridge23_1", "Bridge23_2"],
+      "drivability" : 1
+    },
+
+    "bridge24" : {
+      "nodes" : ["Bridge24_1", "Bridge24_2", "Bridge24_3", "Bridge24_4", "Bridge24_5", "Bridge24_6", "Bridge24_7", "Bridge24_8", "Bridge24_9", "Bridge24_10", "Bridge24_11", "Bridge24_12", "Bridge24_13"],
+      "drivability" : 1
+    },
+
+    "bridge25" : {
+      "nodes" : ["Bridge25_1", "Bridge25_2", "Bridge25_3", "Bridge25_4", "Bridge25_5", "Bridge25_6", "Bridge25_7", "Bridge25_8", "Bridge25_9", "Bridge25_10", "Bridge25_11", "Bridge25_12", "Bridge25_13", "Bridge25_14"],
+      "drivability" : 1,
+      "oneWay": true,
+      "flipDirection": false
+    },
+
+    "bridge26" : {
+      "nodes" : ["Bridge26_1", "Bridge26_2", "Bridge26_3", "Bridge26_4", "Bridge26_5", "Bridge26_6", "Bridge26_7", "Bridge26_8", "Bridge26_9", "Bridge26_10"],
+      "drivability" : 1,
+      "oneWay": true,
+      "flipDirection": true
+    },
+
+    "bridge27" : {
+      "nodes" : ["Bridge27_1", "Bridge27_2", "Bridge27_3", "Bridge27_4", "Bridge27_5", "Bridge27_6", "Bridge27_7", "Bridge26_9"],
+      "oneWay": true,
+      "flipDirection": true,
+      "drivability" : 1
+    },
+
+    "bridge28" : {
+      "nodes" : ["Bridge28_1", "Bridge28_2", "Bridge28_3", "Bridge28_4", "Bridge29_2"],
+      "drivability" : 1,
+      "oneWay": true,
+      "flipDirection": false
+    },
+
+    "bridge29" : {
+      "nodes" : ["Bridge29_1", "Bridge29_2", "Bridge29_3"],
+      "drivability" : 1
+    },
+
+    "bridge30" : {
+      "nodes" : ["Bridge30_1", "Bridge30_2"],
+      "drivability" : 1
+    },
+
+    "bridge31" : {
+      "nodes" : ["Bridge31_1", "Bridge31_2"],
+      "drivability" : 1
+    },
+
+    "bridge32-33" : {
+      "nodes" : ["Bridge32_3", "Bridge33_1"],
+      "drivability" : 1
+    },
+
+    "bridge32" : {
+      "nodes" : ["Bridge32_1", "Bridge32_2", "Bridge32_3", "Bridge32_4", "Bridge32_5", "Bridge32_6", "Bridge32_7", "Bridge32_8", "Bridge32_9", "Bridge32_10", "Bridge32_11", "Bridge32_12", "Bridge32_13", "Bridge32_14"],
+      "drivability" : 1
+    },
+
+    "bridge33" : {
+      "nodes" : ["Bridge33_1", "Bridge33_2", "Bridge33_3", "Bridge33_4", "Bridge33_5", "Bridge33_6", "Bridge33_7"],
+      "drivability" : 1,
+      "oneWay": true,
+      "flipDirection": false
+    },
+
+    "bridge34" : {
+      "nodes" : ["Bridge10_B", "Bridge34_1", "Bridge34_2"],
+      "drivability" : 1 ,
+      "oneWay": true,
+      "flipDirection": false
+    },
+
+    "bridge35" : {
+      "nodes" : ["Bridge35_1", "Bridge35_2", "Bridge35_3"],
+      "drivability" : 1
+    },
+
+    "bridge36" : {
+      "nodes" : ["Bridge36_1", "Bridge36_2", "Bridge36_3"],
+      "drivability" : 1
+    },
+
+    "bridge36b" : {
+      "nodes" : ["Bridge36_1", "Bridge36b_1", "Bridge36b_2"],
+      "drivability" : 1
+    },
+
+    "dirttrack" : {
+      "nodes" : ["dirttrack_1", "dirttrack_2", "dirttrack_3", "dirttrack_4", "dirttrack_5", "dirttrack_6", "dirttrack_7", "dirttrack_8", "dirttrack_9", "dirttrack_10","dirttrack_11", "dirttrack_12", "dirttrack_13", "dirttrack_14", "dirttrack_15", "dirttrack_15a", "dirttrack_15b", "dirttrack_15c", "dirttrack_16", "dirttrack_17", "dirttrack_18", "dirttrack_19", "dirttrack_19a", "dirttrack_19b", "dirttrack_19c", "dirttrack_19d", "dirttrack_20","dirttrack_21", "dirttrack_22", "dirttrack_23", "dirttrack_23a", "dirttrack_23b", "dirttrack_23c", "dirttrack_23d", "dirttrack_23e", "dirttrack_24", "dirttrack_25", "dirttrack_26", "dirttrack_27", "dirttrack_28", "dirttrack_29", "dirttrack_30","dirttrack_31", "dirttrack_32"],
+      "drivability" : 1
+    },
+
+    "dirttrack1" : {
+      "nodes" : ["dirttrack_32","dirttrack_1"],
+      "drivability" : 1
+    },
+
+    "junction1a" : {
+      "nodes" : ["junction1_wp1", "junction1_wp4", "junction1_wp5", "junction1_wp17", "junction1_wp27", "junction1_wp24"],
+      "drivability" : 1
+    },
+
+    "junction1b" : {
+      "nodes" : ["junction1_wp25", "junction1_wp19", "junction1_wp18", "junction1_wp8", "junction1_wp3", "junction1_wp23"],
+      "drivability" : 1
+    },
+
+    "junction1c" : {
+      "nodes" : ["junction1_wp11", "junction1_wp10", "junction1_wp12"],
+      "drivability" : 1
+    },
+
+    "junction1d" : {
+      "nodes" : ["junction1_wp21", "junction1_wp10", "junction1_wp17"],
+      "drivability" : 1
     }
-}CS
+  }
+}

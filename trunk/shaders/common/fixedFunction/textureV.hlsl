@@ -11,7 +11,9 @@ struct Conn
    float4 color            : COLOR;
    float2 texCoord         : TEXCOORD0;
 };
-Conn main( Appdata In, uniform float4x4 modelview : register(C0) )
+uniform float4x4 modelview;
+
+Conn main( Appdata In )
 {
    Conn Out;
    Out.HPOS = mul(modelview, float4(In.position,1));

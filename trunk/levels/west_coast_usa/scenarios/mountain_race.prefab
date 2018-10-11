@@ -1,0 +1,213 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      groupPosition = "0.000000 0.000000 0.000000";
+
+   new BeamNGVehicle(scenario_player0) {
+      JBeam = "hatch";
+      color = "0.99 0.99 0.99 1.6";
+      colorPalette0 = "1 0 0 1.2";
+      colorPalette1 = "Red";
+      partConfig = "vehicles/hatch/race.pc";
+      renderDistance = "500";
+      renderFade = "0.1";
+      dataBlock = "default_vehicle";
+      position = "976.62 -733.044 166.613";
+      rotation = "0 0 -1 18.8384";
+      scale = "1 1 1";
+      annotation = "CAR";
+      mode = "Override";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         colorPalette2 = "Fire Red";
+         colorPalette3 = "Fire Red";
+         isAIControlled = "0";
+         licenseText = "JNJ-6918";
+   };
+   new BeamNGVehicle(scenario_opponent) {
+      JBeam = "sunburst";
+      color = "3.36312e-041 5.32646e-039 1.34525e-043 1";
+      colorPalette0 = "3.36312e-041 5.32646e-039 1.34525e-043 1";
+      colorPalette1 = "3.36312e-041 5.32646e-039 1.34525e-043 1";
+      partConfig = "vehicles/sunburst/race_DCT.pc";
+      renderDistance = "500";
+      renderFade = "0.1";
+      dataBlock = "default_vehicle";
+      position = "974.147 -734.185 166.63";
+      rotation = "0 0 -1 19.7129";
+      scale = "1 1 1";
+      annotation = "CAR";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "scenario_player0";
+         colorPalette2 = "Bumblebee Yellow";
+         colorPalette3 = "Bumblebee Yellow";
+         isAIControlled = "0";
+         licenseText = "FJT-5860";
+   };
+   
+   new TSStatic() {
+      shapeName = "levels/Utah/art/shapes/race/sign_finish.dae";
+      playAmbient = "1";
+      meshCulling = "0";
+      originSort = "0";
+      useInstanceRenderData = "0";
+      instanceColor = "White";
+      collisionType = "Collision Mesh";
+      decalType = "Collision Mesh";
+      prebuildCollisionData = "0";
+      renderNormals = "0";
+      forceDetail = "-1";
+      position = "969.06897 -720.984985 166.653";
+      scale = "1 1 1";
+      rotationMatrix = "-0.994827747 -0.101577178 0 0.101577178 -0.994827747 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         allowPlayerStep = "1";
+   };
+   new BeamNGWaypoint(mrace_01) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "962.136902 -952.343445 166.992188";
+      scale = "8.34016132 8.34016132 8.34016132";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "scenario_finish1";
+   };
+   new BeamNGWaypoint(mrace_02) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "535.115479 -892.486389 153";
+      scale = "5.93830013 5.93830013 5.93830013";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_1";
+   };
+   new BeamNGWaypoint(mrace_03) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "158.68869 -816.387878 143.066406";
+      scale = "6.17410374 6.17410374 6.17410374";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_03";
+   };
+   new BeamNGWaypoint(mrace_04) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "531.832336 -578.733154 179.65625";
+      scale = "6.66119289 6.66119289 6.66119289";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_04";
+   };
+   new BeamNGWaypoint(mrace_05) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "432.492676 -753.588196 191.113281";
+      scale = "6.27819586 6.27819586 6.27819586";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_05";
+   };
+   new BeamNGWaypoint(mrace_06) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "754.335876 -696.740112 197.132813";
+      scale = "4.69184113 4.69184113 4.69184113";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_06";
+   };
+   new BeamNGWaypoint(mrace_07) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "741.90741 -511.573547 175.707031";
+      scale = "5.8844676 5.8844676 5.8844676";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_07";
+   };
+   new BeamNGWaypoint(mrace_08) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "864.987549 -682.244568 169.71875";
+      scale = "5.03858471 5.03858471 5.03858471";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_08";
+   };
+   new BeamNGWaypoint(mrace_09) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "946.22229 -477.798126 162.242188";
+      scale = "5.21864462 5.21864462 5.21864462";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_09";
+   };
+   new BeamNGWaypoint(widenRoad) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "975.363953 -736.082764 166.445313";
+      scale = "4 4 4";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "mrace_09";
+   };
+   new TSStatic() {
+      shapeName = "levels/west_coast_usa/art/shapes/race/sign_finish.dae";
+      playAmbient = "1";
+      meshCulling = "0";
+      originSort = "0";
+      useInstanceRenderData = "0";
+      instanceColor = "White";
+      collisionType = "Collision Mesh";
+      decalType = "Collision Mesh";
+      prebuildCollisionData = "0";
+      renderNormals = "0";
+      forceDetail = "-1";
+      position = "975.171021 -719.051025 166.653";
+      scale = "1 1 1";
+      rotationMatrix = "-0.965139985 -0.261734426 0 0.261734426 -0.965139985 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         allowPlayerStep = "1";
+   };
+   new BeamNGWaypoint(scenario_finish1) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "969.427002 -718.554016 166.653";
+      scale = "4 4 4";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "ut_wp_51";
+   };
+};
+//--- OBJECT WRITE END ---

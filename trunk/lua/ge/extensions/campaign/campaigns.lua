@@ -100,8 +100,6 @@ local function startScenarioFromKey(key, processedScenario)
   processedScenario.whiteListActions = processedScenario.whiteListActions or {"default_whitelist_campaign"}
 
   --dump(campaign)  
-  campaign_campaignsLoader.saveCampaign(campaign)
-
   scenario_scenarios.executeScenario(processedScenario)
 end
 
@@ -162,13 +160,6 @@ local function isLocationCompleted(locationKey)
   return locationStatus and (locationStatus.state == 'completed')
 end
 
-local function canImproveResult(locationKey)
-  local locationStatusTable = campaign.state.locationStatus
-  local subsection = getOwningSubsection(locationKey)
-  local locationStatus = subsection and locationStatusTable[subsection.key..'.'..locationKey]
-  return locationStatus and locationStatus.medal ~= 'gold'
-end
-
 local function execEndCallback()
   if campaign and campaign.meta.endCampaignCallback then
     campaign.meta.endCampaignCallback()
@@ -179,8 +170,6 @@ end
 local function isOverallResultFail()
   -- log('E', logTag, 'isOverallResultFail called....')
   local campaignFailed = false
-  
-
   return campaignFailed
 end
 
@@ -255,10 +244,6 @@ local function processNextScenario()
 
   local ownerSubsection = getOwningSubsection(campaign.state.scenarioKey)  
 
-  if campaign.state.selectedRewardIndex then
-    campaign_rewards.processUserSelection(scenario.scenarioKey, campaign.state.selectedRewardIndex)
-  end
-
   local nextKey = getKeyForNextScenario(ownerSubsection, scenario)
 
   if campaign_exploration.isValidSubsection(campaign, nextKey) then
@@ -297,7 +282,7 @@ local function buildEndScreenButtons(sc, scenarioData)
     end
 
     if tableFindKey(scenarioData.endOptions, "retry") then
-      table.insert(sc.stats.buttons, {label='ui.common.retry', cmd='campaign_campaigns.uiEventRetry()',  active = defaultToRetry} )
+      table.insert(sc.stats.buttons, {label='ui.common.retry', cmd='scenario_scenarios.uiEventRetry()',  active = defaultToRetry} )
     end
     
     if not sc.result.failed and tableFindKey(scenarioData.endOptions, "next") then
@@ -339,9 +324,8 @@ local function processScenarioOnEvent(scenario, onEventData)
     local controlRefs = (scenario.state == 'post' and 'displayEndUIRefs') or 'displayStartUIRefs'
     
     scenario[controlRefs] = scenario[controlRefs] + 1
-
     local comicFinishedCallback = function()
-      log('I', logTag, 'comicFinishedCallback called...')
+      -- log('I', logTag, 'comicFinishedCallback called...')
       scenario[controlRefs] = scenario[controlRefs] - 1
     
       if scenario.state == 'post' and scenario.displayEndUIRefs == 0 then
@@ -351,12 +335,6 @@ local function processScenarioOnEvent(scenario, onEventData)
       end
       
       guihooks.trigger('ShowApps', true)
-
-      -- if controlRefs == 'displayStartUIRefs' then
-      --   guihooks.trigger('ChangeState', 'scenario-start')
-      -- else
-      --   guihooks.trigger('ChangeState', {state = 'menu'})
-      -- end
     end
 
     campaign_comics.playComic(onEventData.comic, comicFinishedCallback)
@@ -375,7 +353,7 @@ local function processScenarioOnEvent(scenario, onEventData)
         elseif onEventData.endOptions[1] == "skip" then
           M.uiEventNext()
         elseif onEventData.endOptions[1] == "retry" then
-          M.uiEventRetry()
+          scenario_scenarios.uiEventRetry()
         end
       end
   end
@@ -391,6 +369,11 @@ local function scenarioStarted(scenario)
     local owningSubsection = getOwningSubsection(campaign.state.scenarioKey)
     local  entry = owningSubsection and owningSubsection.locations[campaign.state.scenarioKey]
     processScenarioOnEvent(scenario, entry.onEvent.onIntro)
+  end
+  
+  local locationStatus = campaign.state.currentLocation and campaign.state.locationStatus[campaign.state.currentLocation]
+  if locationStatus then
+    locationStatus.attempts = locationStatus.attempts + 1
   end
 end
 
@@ -472,34 +455,14 @@ local function scenarioFinished(scenario)
     if scenarioData.info.subtype ~= 'timeTrial' then
       if locationStatus.state == 'ready' or (stateValue < medalValue) then
         locationStatus.state = (scenario.result.failed and 'failed') or 'completed'
-        locationStatus.medal = scenario.stats.overall.medal
+        locationStatus.medal = (locationStatus.state == 'completed' and 'gold') or nil
       end
-    end
-    
-    if locationStatus.state ~= 'ready' and locationStatus.state ~= 'failed' then
-      locationStatus.attempts = locationStatus.attempts + 1
-    end
-
-    campaign.state.scenarioRewards = campaign_rewards.processRewards(scenario.scenarioKey, scenarioData, scenario.result, scenario.stats.overall.medal)
-
-    if campaign.state.scenarioRewards then
-      scenario.scenarioRewards = campaign.state.scenarioRewards
-      scenario.scenarioRewards.callback="campaign_campaigns.rewardSelectionCallback"
-      campaign.state.selectedRewardIndex = nil
     end
 
     buildEndScreenButtons(scenario, onEventData)
     processCampaignAchievements(0, scenario.result, scenarioData)
     processScenarioOnEvent(scenario, onEventData)
   end 
-end
-
-local function rewardSelectionCallback(itemIndex)
-  log('I', logTag, 'rewardSelectionCallback call...'..tostring(itemIndex))
-  local vehReward = campaign.state.scenarioRewards.choices.vehicles[itemIndex]
-  if vehReward then
-    campaign.state.selectedRewardIndex = itemIndex    
-  end
 end
 
 local function uiEventCancel()
@@ -516,12 +479,6 @@ local function uiEventNext()
   guihooks.trigger('ChangeState', 'menu')
   
   processNextScenario()
-end
-
-local function uiEventRetry()
-    log('D', logTag, 'uiEventRetry Triggered')
-    be:resetVehicle(0);
-    scenario_scenarios.prepareStartUI()
 end
 
 local function getCampaignActive()
@@ -554,6 +511,13 @@ local function getActiveSubsectionLocationData(locationKey)
   return getLocationData(campaign.state.activeSubsection, locationKey)
 end
 
+local function getCurrentLocation()
+  if getCampaignActive() then
+    return campaign.state.currentLocation
+  end
+  return nil
+end
+
 local function onSerialize()
   -- log('D', logTag, 'onSerialize called...')
   local data = {}
@@ -572,7 +536,7 @@ local function onDeserialized(data)
   -- dump(data)
   if data.campaignActive then
     --load the campaign in the data
-    local campaignToStart = loadCampaign("game:"..data.sourceFile)
+    local campaignToStart = loadCampaign(data.sourceFile)
     -- dump(campaignToStart)
     campaign = processCampaignStartInternal(campaignToStart)
     
@@ -600,48 +564,8 @@ local function onDeserialized(data)
   end
 end
 
-local function isTransitionPoint(subsectionKey, locationKey)
-  local locationData = getLocationData(subsectionKey, locationKey)    
-  return locationData and locationData.info.type == 'site' and locationData.info.subtype == 'transitionPoint'
-end
-
-local function isPlayerHQ(subsectionKey, locationKey)
-  local locationData = getLocationData(subsectionKey, locationKey)    
-  return locationData and locationData.info.type == 'site' and locationData.info.subtype == 'playerHQ'
-end
-
-local function isMissionGiver(subsectionKey, locationKey)
-  local locationData = getLocationData(subsectionKey, locationKey)    
-  return locationData and locationData.info.type == 'site' and locationData.info.subtype == 'missionGiver'
-end
-
-local function isSiteLocation(subsectionKey, locationKey)
-  local locationData = getLocationData(subsectionKey, locationKey)    
-  return locationData and locationData.info.type == 'site'
-end
-
-local function isScenarioLocation(subsectionKey, locationKey)
-  local locationData = getLocationData(subsectionKey, locationKey)    
-  return locationData and locationData.info.type ~= 'site' and locationData.info.subtype ~= 'timeTrial'
-end
-
-local function isTimeTrialLocation(subsectionKey, locationKey)
-  local locationData = getLocationData(subsectionKey, locationKey)    
-  return locationData and locationData.info.type == 'race' and locationData.info.subtype == 'timeTrial'
-end
-
-local function isSubsectionMarker(subsectionKey, markerName)
-  local locations = campaign.meta.subsections[subsectionKey].locations
-  for key,location in pairs(locations) do
-    if location.entryMarker == markerName or location.exitLocation == markerName then
-      return true
-    end
-  end
-  return false
-end
-
 local function getDefaultVehicle()
-  local defaultVehicle = campaign.meta.defaultVehicle or {model="pickup", color="0.99 0.99 0.99 1.60", config="v8_4wd_rusty", licenseText=nil}
+  local defaultVehicle = campaign.meta.defaultVehicle or {model=defaultVehicleModel, color="0.99 0.99 0.99 1.60", config="v8_4wd_rusty", licenseText=nil}
   return defaultVehicle
 end
 
@@ -665,21 +589,7 @@ local function startExecution()
     end
         
     local spawningData = createPlayerSpawningData(vehicleData.model, vehicleData.config, vehicleData.color, vehicleData.licenseText)  
-
-    -- If we are trying to start a time trial directly, change the entry target to be the starting marker so we go through the correct flow
-    if entryTarget and isTimeTrialLocation(subsectionKey, entryTarget) then
-      local locationData = getLocationData(subsectionKey, entryTarget)    
-      entryTarget = locationData.entryMarker
-    end
-
-    if not entryTarget or isSubsectionMarker(subsectionKey, entryTarget) then      
-      campaign_exploration.startSubsectionExploration(subsectionKey, entryTarget, spawningData)
-    elseif isSiteLocation(subsectionKey, entryTarget) then
-      local locationData = getLocationData(subsectionKey, entryTarget)
-      campaign_exploration.startSubsectionExploration(subsectionKey, locationData.entryMarker, spawningData)
-    else
-      startScenarioFromKey(entryTarget)
-    end
+    startScenarioFromKey(entryTarget)
   else
       log('E', logTag, 'Starting location format wrong. Correct format is startingLocation = <subsection name> OR <subsection name>.<location name> OR <subsection name>.<entry marker name>')
   end  
@@ -704,46 +614,30 @@ local function onExtensionUnloaded()
   stop()
 end
 
-local function onScenarioChange()
+local function onScenarioChange(scenario)
   if not getCampaignActive() then
     extensions.unload("campaign_campaigns")
-  end
-end
-
-local function resumeCampaign(campaignInProgress, data)
-  log('I', logTag, 'resume campaign called.....')
-  if data then 
-    campaign = campaignInProgress    
-    campaign.state = data
-    --dump(campaign.state)
-    startExecution()
-  end
+  end  
 end
 
 local function getLocationStatusTable()
   return campaign.state.locationStatus
 end
 
-local function onSaveCampaign(saveCallback)
-  local data = {}  
-  data = campaign.state
-  data.sourceFile = campaign.meta.sourceFile
-  saveCallback(M.__globalAlias__, data)
+local function onResetGameplay(playerID)
+  if not getCampaignActive() then return end
+  if campaign_exploration.getExplorationActive() then
+    be:resetVehicle(playerID)
+  end
 end
 
 -- public interface
 M.markCompleted           = markCompleted
-M.rewardSelectionCallback = rewardSelectionCallback
-M.isSubsectionMarker      = isSubsectionMarker
-M.isTransitionPoint       = isTransitionPoint
-M.isMissionGiver          = isMissionGiver
-M.isPlayerHQ              = isPlayerHQ
-M.isSiteLocation          = isSiteLocation
-M.isScenarioLocation      = isScenarioLocation
 M.startCampaign           = startCampaign
 M.getLocationData         = getLocationData
 M.isCampaignOver          = isCampaignOver
 M.getCampaign             = getCampaign
+M.getCurrentLocation      = getCurrentLocation
 M.getCampaignTitle        = getCampaignTitle
 M.canStartScenario        = canStartScenario
 M.scenarioFinished        = scenarioFinished
@@ -751,14 +645,11 @@ M.scenarioStarted         = scenarioStarted
 M.stop                    = stop
 M.uiEventCancel           = uiEventCancel
 M.uiEventNext             = uiEventNext
-M.uiEventRetry            = uiEventRetry
 M.getCampaignActive       = getCampaignActive
 M.getActiveSubsectionLocationData       = getActiveSubsectionLocationData
 M.getActiveSubsection     = getActiveSubsection
 M.getSubsection           = getSubsection
-M.onVehicleSpawned        = onVehicleSpawned
 M.isLocationCompleted     = isLocationCompleted
-M.canImproveResult        = canImproveResult
 M.startScenarioFromKey    = startScenarioFromKey
 M.execEndCallback         = execEndCallback
 M.onSerialize             = onSerialize
@@ -766,8 +657,8 @@ M.onDeserialized          = onDeserialized
 M.onExtensionUnloaded     = onExtensionUnloaded
 M.onScenarioChange        = onScenarioChange
 M.getOwningSubsection     = getOwningSubsection
-M.resumeCampaign          = resumeCampaign
 M.getLocationStatusTable  = getLocationStatusTable
-M.onSaveCampaign          = onSaveCampaign
+M.onResetGameplay         = onResetGameplay
+
 return M
 

@@ -18,21 +18,21 @@ local function updateGFX(device, dt)
   local tEnv = obj:getEnvTemperature() + kelvinToCelsius
 
   local energyToClutch = device.frictionLossPerUpdate * device.clutchThermalsCoef * device.clutchThermalsEnabledCoef
-  local energyClutchToBellHousing = (device.clutchTemperature - tEnv) * kClutchToBellHousing * dt
+  local energyClutchToBellHousing = (device.clutchTemperature - tEnv) * kClutchToBellHousing * device.clutchCoolingCoef * dt
 
   device.clutchTemperature = min(max(device.clutchTemperature + (energyToClutch - energyClutchToBellHousing) * device.clutchEnergyCoef, tEnv), device.clutchPermanentDamageTempThreshold)
-  local thermalEfficiency = min(max(-0.5 * (device.clutchTemperature - 300) / 100 + 1, 0.5), 1)
+  local thermalEfficiency = min(max(-0.5 * (device.clutchTemperature - device.clutchMaxSafeTemp) * device.clutchInvOverheatRange + 1, 0.5), 1)
   device.thermalEfficiency = device.clutchPermanentlyDamaged and 0.25 or thermalEfficiency
 
   device.clutchSmokeTimer = device.clutchSmokeTimer > 1 and 0 or device.clutchSmokeTimer + dt * (1 - thermalEfficiency) * 50
   if device.clutchSmokeTimer >= 1 and device.children[1].transmissionNodeID then
-    obj:addParticleByNodesRelative(device.children[1].transmissionNodeID, device.children[1].transmissionNodeID, 1 , 35, 0, 1)
+    obj:addParticleByNodesRelative(device.children[1].transmissionNodeID, device.children[1].transmissionNodeID, 1, 35, 0, 1)
   end
 
   local clutchMessage = nil
   local messageTime = 1
 
-  if device.clutchTemperature >= 200 and not device.clutchPermanentlyDamaged then
+  if device.clutchTemperature >= device.clutchWarningTemp and not device.clutchPermanentlyDamaged then
     clutchMessage = "High clutch temperature..."
   end
   if device.thermalEfficiency < 1 and not device.clutchPermanentlyDamaged then
@@ -52,12 +52,25 @@ local function updateGFX(device, dt)
       device.clutchThermalsMessageTimer = 0.9
     end
   end
-  --print(device.clutchTemperature)
-  --print(device.thermalEfficiency)
 
   device.clutchPermanentlyDamaged = device.clutchPermanentlyDamaged or device.clutchTemperature >= device.clutchPermanentDamageTempThreshold
 
   device.frictionLossPerUpdate = 0
+
+  if streams.willSend("clutchThermalData") then
+    gui.send(
+      "clutchThermalData",
+      {
+        clutchTemperature = device.clutchTemperature,
+        thermalEfficiency = device.thermalEfficiency,
+        energyToClutch = energyToClutch,
+        energyClutchToBellHousing = energyClutchToBellHousing,
+        maxSafeTemp = device.clutchMaxSafeTemp,
+        efficiencyScaleEnd = device.clutchEfficiencyScaleEnd,
+        permanentDamageTemp = device.clutchPermanentDamageTempThreshold
+      }
+    )
+  end
 end
 
 local function updateVelocity(device, dt)
@@ -144,7 +157,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -155,39 +167,40 @@ local function new(jbeamData)
     cumulativeGearRatio = 1,
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
-
     outputAV1 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     clutchAngle = 0,
     clutchRatio = 1,
     torqueDiff = 0,
-
     thermalEfficiency = 1,
     frictionLossPerUpdate = 0,
     clutchTemperature = obj:getEnvTemperature() + kelvinToCelsius,
-    clutchPermanentDamageTempThreshold = jbeamData.maxClutchTemp or 500,
     clutchPermanentlyDamaged = false,
     clutchSmokeTimer = 0,
     clutchThermalsCoef = 1,
     clutchThermalsEnabledCoef = 1,
     clutchThermalsMessageTimer = 0,
-
     electricsClutchRatioName = jbeamData.electricsClutchRatioName or "clutchRatio",
     clutchStiffness = jbeamData.clutchStiffness or 1,
-
     reset = reset,
     validate = validate,
     calculateInertia = calculateInertia,
     setLock = setLock,
-    updateGFX = updateGFX,
+    updateGFX = updateGFX
   }
 
   local thermalsEnabled = jbeamData.thermalsEnabled or true
   device.clutchThermalsEnabledCoef = thermalsEnabled and 1 or 0
+  device.clutchCoolingCoef = jbeamData.coolingCoef or 1
+  device.clutchPermanentDamageTempThreshold = jbeamData.maxClutchTemp or 500
+  device.clutchWarningTemp = jbeamData.warningTemp or 200
+  device.clutchMaxSafeTemp = jbeamData.maxSafeClutchTemp or 300
+  device.clutchInvOverheatRange = 1 / (jbeamData.clutchOverheatRange or 100)
+  device.clutchEfficiencyScaleEnd = device.clutchMaxSafeTemp + 1 / device.clutchInvOverheatRange
   local mass = jbeamData.clutchMass or 10
   local specificHeat = jbeamData.clutchSpecificHeat or 490
-  device.clutchEnergyCoef = 1 /  (mass * specificHeat)
+  device.clutchEnergyCoef = 1 / (mass * specificHeat)
 
   device.jbeamData = jbeamData
 

@@ -10,6 +10,93 @@ local moveNext = false
 local timer = 0
 local frameCounter = 1
 
+local helper = require('scenario/scenariohelper')
+
+local vehicles = {
+  'barstow',
+  'burnside',
+  'cannon',
+  'citybus',
+  'coupe',
+  'etk800',
+  'etkc',
+  'etki',
+  'fullsize',
+  'hatch',
+  'hopper',
+  'idealcar',
+  -- 'idealcar2',
+  'legran',
+  'midsize',
+  'miramar',
+  'moonhawk',
+  'pessima',
+  'pickup',
+  'pigeon',
+  'roamer',
+  'sbr',
+  'semi',
+  'sunburst',
+  'super',
+  'van'
+}
+
+local excludedConfigs = {
+  "guineapig_hatch"
+}
+
+local trailers = {
+  'boxutility',
+  'boxutility_large',
+  'caravan',
+  'cargotrailer',
+  'dryvan',
+  'flatbed',
+  'tanker',
+  'tsfb'
+}
+
+local props = {
+  'ball',
+  'barrels',
+  'barrier',
+  'blockwall',
+  'bollard',
+  'christmas_tree',
+  'cones',
+  'flail',
+  'flipramp',
+  'haybale',
+  'inflated_mat',
+  'kickplate',
+  'large_angletester',
+  'large_bridge',
+  'large_cannon',
+  'large_crusher',
+  'large_hamster_wheel',
+  'large_metal_ramp',
+  'large_roller',
+  'large_spinner',
+  'large_tilt',
+  'metal_box',
+  'metal_ramp',
+  'piano',
+  'roadsigns',
+  'rocks',
+  'rollover',
+  'sawhorse',
+  'streetlight',
+  'suspensionbridge',
+  'tirestacks',
+  'tirewall',
+  'trafficbarrel',
+  'tube',
+  'wall',
+  'weightpad',
+  'woodcrate',
+  'woodplanks'
+}
+
 local function wait(seconds)
   local start = timer
   while timer <= start + seconds do
@@ -56,11 +143,16 @@ local function onExtensionLoaded()
     wait(5)
 
     local filteredConfigs = {}
-    for k,v in pairs(configs) do
-      -- if v.model_key ~= "box" or v.model_key == "bigramp" then
-      if v.model_key ~= "box" then
-        filteredConfigs[k] = v
-      end           
+    for _,vehicle in pairs(vehicles) do
+      for k,v in pairs(configs) do
+        if v.model_key == vehicle then
+          if tableContains(excludedConfigs, v.key) then
+            log('I', logTag, v.key .. " is excluded!")
+          else
+            filteredConfigs[k] = v
+          end
+        end
+      end
     end
 
     local counter = 0
@@ -77,8 +169,21 @@ local function onExtensionLoaded()
         coroutine.yield()
         newVehicle = be:getPlayerVehicle(0)
       end
+
+      local startPosition = vec3(newVehicle:getPosition())
+      newVehicle:queueLuaCommand("controller.mainController.setGearboxMode('arcade')")
+      newVehicle:queueLuaCommand("input.event('throttle', 0.3, 1)")
+
+
       -- Wait a few frames for everything to settle down
-      wait(1.5)
+      wait(10.0)
+
+      local endPosition = vec3(newVehicle:getPosition())
+      local distance = endPosition:distance(startPosition)
+
+      if distance <= 10 then
+        log('E', logTag, 'vehicle: ' .. tostring(v.model_key) .. ' config: ' .. tostring(v.key) .. ' did not move')
+      end
 
       local timeoutStart = timer
       while (timer - timeoutStart) < 20 and moveNext == false do
@@ -90,6 +195,14 @@ local function onExtensionLoaded()
       ::continue::
     end
   end)
+end
+
+local function getDistance (pos1, pos2)
+  local distance = math.sqrt((pos1.x-pos2.x)*(pos1.x-pos2.x)+(pos1.y-pos2.y)*(pos1.y-endPosition.y)+(pos1.z-endPosition.z)*(pos1.z-endPosition.z))
+  if distance ~= distance then
+    distance = 0
+  end
+  return distance
 end
 
 local function onExtensionUnloaded()

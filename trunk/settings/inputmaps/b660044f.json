@@ -1,0 +1,30 @@
+{
+"name" : "T500 RS Gear Shift", "version" : 1, "devicetype" : "joystick", "vidpid" : "B660044F", "bindings" :   [
+    {
+"action" : "gear3", "control" : "button2"
+
+},     {
+"action" : "gearR", "control" : "button7"
+
+},     {
+"action" : "gear2", "control" : "button1"
+
+},     {
+"action" : "gear7", "control" : "button6"
+
+},     {
+"action" : "gear5", "control" : "button4"
+
+},     {
+"action" : "gear6", "control" : "button5"
+
+},     {
+"action" : "gear1", "control" : "button0"
+
+},     {
+"action" : "gear4", "control" : "button3"
+
+}]
+, "guid" : "{B660044F-0000-0000-0000-504944564944}"
+
+}

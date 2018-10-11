@@ -40,13 +40,13 @@ local function init()
 
   if not availableStorageFactories then
     availableStorageFactories = {}
-    local directory = 'lua/vehicle/energyStorage'
+    local directory = "lua/vehicle/energyStorage"
     local files = FS:findFiles(directory, "*.lua", -1, true, false)
     if files then
       for _, file in ipairs(files) do
         local dirname, file, ext = path.split(file)
-        local fileName = file:sub(1,-5)
-        local storageFactoryPath = "energyStorage/"..fileName
+        local fileName = file:sub(1, -5)
+        local storageFactoryPath = "energyStorage/" .. fileName
         availableStorageFactories[fileName] = storageFactoryPath
       end
     else
@@ -56,7 +56,7 @@ local function init()
 
   --dump(availableStorageFactories)
 
-  for _,jbeamData in pairs(deepcopy(v.data.energyStorage or {})) do
+  for _, jbeamData in pairs(deepcopy(v.data.energyStorage or {})) do
     tableMergeRecursive(jbeamData, v.data[jbeamData.name] or {})
 
     if availableStorageFactories[jbeamData.type] and not storageFactories[jbeamData.type] then
@@ -69,7 +69,7 @@ local function init()
       local storage = storageFactories[jbeamData.type].new(jbeamData)
       energyStorages[storage.name] = storage
     else
-      log("E", "powertrain.init", "Found unknown powertrain device type: "..jbeamData.type)
+      log("E", "powertrain.init", "Found unknown powertrain device type: " .. jbeamData.type)
       log("E", "powertrain.init", "Powertrain will not work!")
       return
     end
@@ -78,31 +78,28 @@ local function init()
   --dump(storageFactories)
   --dump(energyStorages)
 
-  for _,device in pairs(powertrain.getDevices()) do
+  for _, device in pairs(powertrain.getDevices()) do
     if device.energyStorage then
       if device.energyStorage and type(device.energyStorage) ~= "table" then
         device.energyStorage = {device.energyStorage}
       end
-      for _,s in pairs(device.energyStorage) do
+      for _, s in pairs(device.energyStorage) do
         local storage = energyStorages[s]
         if storage then
-          if not storage.energyType or storage.energyType == device.requiredEnergyType then
-            storage:registerDevice(device)
-            device:registerStorage(storage.name)
-          end
+          device:registerStorage(storage.name)
         end
       end
     end
   end
 
-  for _,storage in pairs(energyStorages) do
+  for _, storage in pairs(energyStorages) do
     table.insert(orderedStorages, storage)
   end
 
   storageCount = tableSize(energyStorages)
 
   local beamTriggers = {}
-  for _,storage in pairs(energyStorages) do
+  for _, storage in pairs(energyStorages) do
     if storage.breakTriggerBeam then
       beamTriggers[storage.breakTriggerBeam] = storage
     end
@@ -111,7 +108,7 @@ local function init()
 
   --dump(beamTriggers)
 
-  for _,v in pairs(v.data.beams) do
+  for _, v in pairs(v.data.beams) do
     if v.name and v.name ~= "" and beamTriggers[v.name] then
       breakTriggerBeams[v.cid] = beamTriggers[v.name]
     end
@@ -125,7 +122,7 @@ local function init()
 end
 
 local function reset()
-  for _,v in pairs(orderedStorages) do
+  for _, v in pairs(orderedStorages) do
     if v.reset then
       v:reset()
     end
@@ -155,20 +152,19 @@ local function getStorage(name)
 end
 
 local function onDeserialize(data)
---  if not data or type(data) ~= "table" then
---    return
---  end
-
---  for name, storageData in pairs(data) do
---    if name and energyStorages[name] then
---      energyStorages[name]:deserialize(storageData)
---    end
---  end
+  --  if not data or type(data) ~= "table" then
+  --    return
+  --  end
+  --  for name, storageData in pairs(data) do
+  --    if name and energyStorages[name] then
+  --      energyStorages[name]:deserialize(storageData)
+  --    end
+  --  end
 end
 
 local function onSerialize()
   local data = {}
-  for _,storage in pairs(energyStorages) do
+  for _, storage in pairs(energyStorages) do
     if storage.serialize then
       data[storage.name] = storage:serialize()
     end
@@ -180,8 +176,8 @@ M.init = init
 M.reset = init
 M.updateGFX = nop
 
-M.onDeserialize  = onDeserialize
-M.onSerialize  = onSerialize
+M.onDeserialize = onDeserialize
+M.onSerialize = onSerialize
 
 M.beamBroke = beamBroke
 
@@ -189,4 +185,3 @@ M.getStorages = getStorages
 M.getStorage = getStorage
 
 return M
-

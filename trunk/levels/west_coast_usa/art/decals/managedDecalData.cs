@@ -40,7 +40,7 @@ datablock DecalData(decal_graffiti)
 {
     Material = "graffiti";
     textureCoordCount = "15";
-    size = "5";
+    size = "6";
     textureCoords[0] = "0 0 0.25 0.25";
     textureCoords[1] = "0.25 0 0.25 0.25";
     fadeStartPixelSize = "50";
@@ -68,12 +68,12 @@ datablock DecalData(decal_graffiti)
 
 datablock DecalData(decal_damage)
 {
-   size = "6";
+   size = "7";
    Material = "damage";
    fadeStartPixelSize = "2";
    fadeEndPixelSize = "60";
    renderPriority = "8";
-   frame = "3";
+   frame = "15";
    randomize = "1";
    textureCoordCount = "15";
    texRows = "4";

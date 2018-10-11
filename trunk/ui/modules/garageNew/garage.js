@@ -24,7 +24,7 @@ angular.module('beamng.garage')
         <gp-gradient ng-if="middle && !stripped" style="position: absolute; {{:: right}}: 0; top: 20px; bottom: 50%; max-height: 250px;" orientation="vertical"></gp-gradient>
 
         <div style="{{:: left}}: -55px;" layout="column" class="tabContainer" ng-if="tabs.length > 1">
-          <gp-menu-btn fallback="{{iconFallback}}" class="tabItem" ng-mouseover="activateTab($index)" ng-repeat="tab in tabs track by $index" icon="tab.scope.icon" active="openTab === $index && active"></gp-menu-btn>
+          <gp-menu-btn class="tabItem" ng-mouseover="activateTab($index)" ng-repeat="tab in tabs track by $index" icon="tab.scope.icon" active="openTab === $index && active"></gp-menu-btn>
         </div>
       </div>`,
     transclude: true,
@@ -109,6 +109,7 @@ angular.module('beamng.garage')
         if ($scope.tabs.length === $scope.openTab + 1) {
           tabScope.open = true;
         }
+
         return {
           cmd: () => {$element[0].children[0].focus()},
           name: 'ui.actions.exit'
@@ -184,24 +185,16 @@ angular.module('beamng.garage')
   return {
     template: `
       <div class="btn filler" style="position: relative;" ng-class="{'active': active}" bng-blur radius="30px" layout layout-align="center center">
-        <md-icon class="material-icons menu-icon" ng-if="!isSvg(icon)">{{icon}}</md-icon>
-        <svg class="material-icons menu-icon" ng-if="isSvg(icon)"><use xlink:href="{{checkIcon(icon)}}"/></svg>
-        <div ng-if="active && title" style="position: absolute; bottom: -24pt; left: 0; right: 0; font-size: 13pt;" layout="row" layout-align="center center" class="color1 font2">{{title | translate}}</div>
+        <div style="width: 85%; height: 85%; position: relative;">
+          <bng-icon type="sprite" src="icon"></bng-icon>
+        </div>
+        <div ng-if="active && title" style="position: absolute; bottom: -24pt; left: -100%; right: -100%; font-size: 13pt; text-align: center" class="color1 font2">{{title | translate}}</div>
       </div>
     `,
     scope: {
       icon: '=',
       active: '=',
-      title: '@?',
-      fallback: '@'
-    },
-    link: function (scope) {
-      scope.isSvg = (icon) => icon && icon.charAt(0) === '#';
-      var exists = ["alignment", "brakes", "differentials", "suspension", "wheels", "transmission", "engine"].map((elem) => '#garage_' + elem);
-
-      scope.checkIcon = (icon) => {
-        return exists.indexOf(icon) !== -1 || scope.fallback !== 'true' ? icon : '#garage_random';
-      };
+      title: '@?'
     }
   };
 })
@@ -355,7 +348,7 @@ angular.module('beamng.garage')
   };
 })
 
-.directive('gpImgList', function () {
+.directive('gpImgList', function (RateLimiter) {
   return {
     template: `
     <div class="container" bng-nav-item nav-item-disabled="{{navigatable}}" class="animateAwesomeThings">
@@ -382,11 +375,11 @@ angular.module('beamng.garage')
               <gp-gradient ng-if="$index === getActive()" width="{{borderDim}}" style="position: absolute; bottom: 5px; left: -{{active ? borderDim + 3 : borderDim}}px; top: 50%;" orientation="vertical" reverse="true"></gp-gradient>
             </div>
 
-            <div layout="row" layout-align="{{horizontal ? 'end' : 'start'}} {{!horizontal ? 'end' : 'start'}}" class="container" ng-if="!hideItemNum && (reverse ? $first : $last)">
-              <div style="position: relative; {{reverse ? 'bottom' : 'top'}}: {{boxHeight + 5}}px; font-size: 1.3em;" class="font1 color3"><{{selected + 1}}/{{list.length}}></div>
+            <div layout="row" layout-align="start start" class="container" ng-if="!hideItemNum && (reverse ? $first : $last)">
+              <div style="position: relative; {{reverse ? 'bottom' : 'top'}}: {{boxHeight}}px; font-size: 1.3em;" class="font1 color3"><{{selected + 1}}/{{list.length}}></div>
             </div>
-            <div layout="row" layout-align="center center" ng-mouseover="oLeft = true" ng-mouseleave="oLeft = false" ng-class="{'color3': left || oLeft, 'color2': !left || !oLeft}" class="container" ng-if="$first"><gp-arrow ng-click="swallowCLick($event, -1)" bng-sound="{click: 'event:>UI>Garage>Select Vehicle'}" direction="{{getDir($last)}}" style="cursor: pointer; position: relative; {{getDir($last)}}: -{{(horizontal ? boxWidth : boxHeight) * 0.5 + 30}}px;"></gp-arrow></div>
-            <div layout="row" layout-align="center center" ng-mouseover="oRight = true" ng-mouseleave="oRight = false" ng-class="{'color3': right || oRight, 'color2': !right || !oRight}" class="container" ng-if="$last"><gp-arrow ng-click="swallowCLick($event, 1)" bng-sound="{click: 'event:>UI>Garage>Select Vehicle'}" direction="{{getDir($last)}}" style="cursor: pointer; position: relative; {{getDir($last)}}: -{{(horizontal ? boxWidth : boxHeight) * 0.5 + 30}}px;"></gp-arrow></div>
+            <div layout="row" layout-align="center center" ng-mouseover="oLeft = true" ng-mouseleave="oLeft = false" ng-class="{'color3': left || oLeft, 'color2': !left || !oLeft}" class="container" ng-if="$first"><gp-arrow ng-click="swallowCLick($event, -1)" bng-sound="{click: 'event:>UI>Garage>Select Vehicle'}" direction="{{directions[1]}}" style="cursor: pointer; position: relative; {{directions[1]}}: -{{(horizontal ? boxWidth : boxHeight) * 0.5 + 30}}px;"></gp-arrow></div>
+            <div layout="row" layout-align="center center" ng-mouseover="oRight = true" ng-mouseleave="oRight = false" ng-class="{'color3': right || oRight, 'color2': !right || !oRight}" class="container" ng-if="$last"><gp-arrow ng-click="swallowCLick($event, 1)" bng-sound="{click: 'event:>UI>Garage>Select Vehicle'}" direction="{{directions[0]}}" style="cursor: pointer; position: relative; {{directions[0]}}: -{{(horizontal ? boxWidth : boxHeight) * 0.5 + 30}}px;"></gp-arrow></div>
           </div>
         </div>
       </div>
@@ -406,81 +399,87 @@ angular.module('beamng.garage')
       sortBy: '&?',
       left: '=?',
       right: '=?',
-      // clickSelected: '=?' // todo - yh
+      // clickSelected: '=?' // TODO: - yh
     },
-    link: function(scope, elem, attr) {
+    controller: function($scope, $element) {
+      "use strict";
       var fits;
 
       function checkSelected () {
-        scope.selected = (scope.selected !== undefined ? scope.selected : 0);
+        $scope.selected = ($scope.selected !== undefined ? $scope.selected : 0);
       }
 
       function animationFun () {
-        elem.addClass('animateAwesomeThings');
+        $element.addClass('animateAwesomeThings');
         // very very important: the timout should not be much longar than the actuall animation, since otherwise the animations won't be triggered correctly
-        setTimeout(function() {elem.removeClass('animateAwesomeThings');}, 1000);
+        setTimeout(function() {$element.removeClass('animateAwesomeThings');}, 1000);
       }
 
-      scope.getActive = function () {
-        if (scope.reverse && scope.newList && scope.newList.length -2 >= 0) {
-          return scope.newList.length - 2;
-        } else {
-          return 1;
+      // TODO: do not have this as function, or at least cache the result, this is called far to frequently for this to be performant
+      $scope.getActive = function () {
+        var res = 1
+        if ($scope.reverse && $scope.newList && $scope.newList.length -2 >= 0) {
+          res = $scope.newList.length - 2;
         }
+        if (res >= $scope.newList.length) {
+          res = $scope.newList.length -1;
+        }
+        return res;
       };
 
-      scope.scaleUp = function (i, exlSucc) {
-        if (!scope.active) return false;
-        if (scope.allTheFun !== undefined && !exlSucc) return i === scope.allTheFun;
-        return i === scope.getActive();
+      $scope.scaleUp = function (i, exlSucc) {
+        if (!$scope.active) return false;
+        if ($scope.allTheFun !== undefined && !exlSucc) return i === $scope.allTheFun;
+        return i === $scope.getActive();
       }
 
-      scope.swallowCLick = (ev, num) => {
-        scope.updateSelected(num);
+      $scope.swallowCLick = (ev, num) => {
+        $scope.updateSelected(num);
         ev.stopPropagation();
       };
 
       // hack, but the other possibilites are worse
-      if (scope.increaseFunc) {
-        scope.increaseFunc()(() => scope.updateSelected(1));
+      if ($scope.increaseFunc) {
+        $scope.increaseFunc()(() => $scope.updateSelected(1));
       }
 
-      if (scope.decreaseFunc) {
-        scope.decreaseFunc()(() => scope.updateSelected(-1));
+      if ($scope.decreaseFunc) {
+        $scope.decreaseFunc()(() => $scope.updateSelected(-1));
       }
 
       checkSelected();
 
       var origListLength;
+      var updateListDimDebounced = RateLimiter.debounce(updateListDim, 50)
       // window.addEventListener('resize', updateListDim);
-      scope.$watch(
+      $scope.$watch(
         function () {
-          help = elem[0].getBoundingClientRect();
+          help = $element[0].getBoundingClientRect();
           return [help.width, help.height, help.left, help.top].join('x');
         },
-        updateListDim
+        updateListDimDebounced
       );
-      scope.$watch(() => scope.selected, updateListDim);
-      scope.$watch(() => scope.list, () => {
-        if (scope.list && scope.sortBy !== undefined) {
-          scope.list.sort(scope.sortBy());
+      $scope.$watch(() => $scope.selected, updateListDimDebounced);
+      $scope.$watch(() => $scope.list, () => {
+        if ($scope.list && $scope.sortBy !== undefined) {
+          $scope.list.sort($scope.sortBy());
         }
-        origListLength = (scope.list || []).length;
-        updateListDim();
+        origListLength = ($scope.list || []).length;
+        updateListDimDebounced();
         checkSelected();
       });
 
-      scope.shortcut = (val) => scope.updateSelected(scope.reverse ? (val - scope.newList.length + 2) : val - 1);
+      $scope.shortcut = (val) => $scope.updateSelected($scope.reverse ? (val - $scope.newList.length + 2) : val - 1);
 
-      var domElem = angular.element(elem[0])[0];
+      var domElem = angular.element($element[0])[0];
       var movingPixels = domElem.getElementsByClassName('movingPixels')[0];
 
       var animationInProg = false;
-      scope.updateSelected = (val) => {
+      $scope.updateSelected = (val) => {
         if (val === 0) return;
-        scope.successor = scope.getActive() + val;
+        $scope.successor = $scope.getActive() + val;
 
-        var newVal = ((scope.selected + (scope.reverse ? -val : val) + scope.list.length) % scope.list.length) % origListLength;
+        var newVal = (($scope.selected + ($scope.reverse ? -val : val) + $scope.list.length) % $scope.list.length) % origListLength;
 
         var doc = domElem.getElementsByClassName('activeBox');
         var doc2;
@@ -492,23 +491,23 @@ angular.module('beamng.garage')
               case 'wrongSizeOne':
                 doc2 = domElem.getElementsByClassName('followActiveBox')[0];
                 if (doc2 !== undefined) {
-                  var direction = scope.getDir(val > 0);
+                  var direction = $scope.directions[val > 0 ? 0 : 1];
                   var move = doc2.getBoundingClientRect()[direction] - doc[0].parentNode.getBoundingClientRect()[direction];
-                  scope.$evalAsync(() => {
-                    scope.allTheFun = scope.successor;
-                    elem.addClass('animateAwesomeThings');
-                    movingPixels.style[scope.getDir(true)] = move + 'px';
+                  $scope.$evalAsync(() => {
+                    $scope.allTheFun = $scope.successor;
+                    $element.addClass('animateAwesomeThings');
+                    movingPixels.style[$scope.directions[0]] = move + 'px';
                     doc2.addEventListener('webkitAnimationEnd', eventHandler);
-                    elem.removeClass('animateAwesomeThings2');
+                    $element.removeClass('animateAwesomeThings2');
                   });
                 } else {
                   doc[0].removeEventListener('webkitAnimationEnd', eventHandler);
-                  elem.removeClass('animateAwesomeThings2');
-                  scope.$evalAsync(() => {
-                    movingPixels.style[scope.getDir(true)] = '0px';
-                    scope.selected = newVal;
-                    scope.successor = undefined;
-                    scope.allTheFun = undefined;
+                  $element.removeClass('animateAwesomeThings2');
+                  $scope.$evalAsync(() => {
+                    movingPixels.style[$scope.directions[0]] = '0px';
+                    $scope.selected = newVal;
+                    $scope.successor = undefined;
+                    $scope.allTheFun = undefined;
                     animationInProg = false;
                   });
                 }
@@ -516,12 +515,12 @@ angular.module('beamng.garage')
               case 'rightSizeOne':
                 doc[0].removeEventListener('webkitAnimationEnd', eventHandler);
                 doc2.removeEventListener('webkitAnimationEnd', eventHandler);
-                scope.$evalAsync(() => {
-                  elem.removeClass('animateAwesomeThings');
-                  movingPixels.style[scope.getDir(true)] = '0px';
-                  scope.selected = newVal;
-                  scope.successor = undefined;
-                  scope.allTheFun = undefined;
+                $scope.$evalAsync(() => {
+                  $element.removeClass('animateAwesomeThings');
+                  movingPixels.style[$scope.directions[0]] = '0px';
+                  $scope.selected = newVal;
+                  $scope.successor = undefined;
+                  $scope.allTheFun = undefined;
                   animationInProg = false;
                 });
                 break;
@@ -533,48 +532,50 @@ angular.module('beamng.garage')
           if (!animationInProg) {
             animationInProg = true;
             doc[0].addEventListener('webkitAnimationEnd', eventHandler);
-            elem.addClass('animateAwesomeThings2');
+            $element.addClass('animateAwesomeThings2');
           }
         } else {
-          scope.$evalAsync(() => {
-            scope.selected = newVal;
+          $scope.$evalAsync(() => {
+            $scope.selected = newVal;
           });
         }
       };
 
+      $scope.directions = ['bottom', 'top']
+
       function updateListDim () {
-        if (scope.list !== undefined) {
-          var width = elem[0].offsetWidth
-            , height = elem[0].offsetHeight
+        if ($scope.list !== undefined) {
+          var width = $element[0].offsetWidth
+            , height = $element[0].offsetHeight
             , boxHeight
             , boxWidth
             , borderDim
+            , paddingDim
             , dir
             , startId
             , newList
             , helperList = []
-            , yetAnotherList = [{emptyFiller: true}].concat(scope.list);
+            , yetAnotherList = [{emptyFiller: true}].concat($scope.list);
           ;
 
-          if (height > width) {
-
+          if ((!$scope.horizontal !== undefined && $scope.horizontal === false) || height > width) {
             // vertical
-            var invertedRatio = Math.pow(scope.ratio || 1, -1);
+            var invertedRatio = Math.pow($scope.ratio || 1, -1);
             dir = 'column';
             boxHeight = invertedRatio * width * 0.6;
-            boxWidth = (scope.ratio || 1) * boxHeight;
-            borderDim = (scope.active ? 4 : 3);
+            boxWidth = ($scope.ratio || 1) * boxHeight;
+            borderDim = ($scope.active ? 4 : 3);
             paddingDim = `0 ${0.16 * width}px 0 ${0.16 * width}px`;
-            scope.getDir = (first) => first ? 'bottom' : 'top';
+            $scope.directions = ['bottom', 'top']
             fits = Math.floor(height / (boxHeight + 0.05 * width)); // added some buffer, so the elements don't stich together if they would fit perfectly otherwise
           } else {
             // horizontal
             dir = 'row'
             boxHeight = 0.6 * height;
-            boxWidth = (scope.ratio || 1) * boxHeight;
-            borderDim = (scope.active ? 4 : 3);
+            boxWidth = ($scope.ratio || 1) * boxHeight;
+            borderDim = ($scope.active ? 4 : 3);
             paddingDim = `${0.16 * height}px 0 ${0.16 * height}px 0`;
-            scope.getDir = (first) => first ? 'right' : 'left';
+            $scope.directions = ['right', 'left'];
             fits = Math.floor(width / (boxWidth + 0.05 * height)); // added some buffer, so the elements don't stich together if they would fit perfectly otherwise
           }
 
@@ -583,19 +584,21 @@ angular.module('beamng.garage')
             helperList = helperList.concat([{emptyFiller: true}]);
           }
 
-          startId = (scope.selected + scope.list.length) % scope.list.length;
-          newList = yetAnotherList.slice(startId, startId + fits);
+          startId = ($scope.selected + $scope.list.length) % $scope.list.length;
+          var startSlice = fits > 1 ? startId : startId + 1;
+          newList = yetAnotherList.slice(startSlice, startSlice + fits);
 
           if (newList.length !== fits) {
             newList = newList.concat(helperList.slice(0, fits - newList.length));
           }
-
-          scope.newList = newList;
-          scope.dir = dir;
-          scope.boxHeight = boxHeight;
-          scope.boxWidth = boxWidth;
-          scope.borderDim = borderDim;
-          scope.paddingDim = paddingDim;
+          $scope.$evalAsync(() => {
+            $scope.newList = newList;
+            $scope.dir = dir;
+            $scope.boxHeight = boxHeight;
+            $scope.boxWidth = boxWidth;
+            $scope.borderDim = borderDim;
+            $scope.paddingDim = paddingDim;
+          });
         }
       }
     }
@@ -651,12 +654,13 @@ angular.module('beamng.garage')
   }
 }])
 
-.directive('bngBlur', ['BlurGame', function (BlurGame) {
+.directive('bngBlur', ['BlurGame', 'RateLimiter', function (BlurGame, RateLimiter) {
   return {
     restrict: 'A',
     link: function (scope, elem, attrs) {
       var id;
       var active = true;
+      var blurUpdateWrapper = RateLimiter.debounce(updateBlur, 50);
 
       // dim change?
       scope.$watch(
@@ -664,13 +668,13 @@ angular.module('beamng.garage')
           help = elem[0].getBoundingClientRect();
           return [help.width, help.height, help.left, help.top].join('x');
         },
-        updateBlur
+        blurUpdateWrapper
       )
 
       scope.$watch(attrs.bngBlur, (val) => {
         if (val !== undefined) {
           active = val;
-          updateBlur();
+          blurUpdateWrapper();
         }
       });
 
@@ -821,31 +825,31 @@ angular.module('beamng.garage')
 
   vm.menus =
   [
-    { icon: '#garage_wheels'
+    { icon: 'garage_wheels'
     , name: 'ui.garage.tabs.load'
     , href: 'garage.menu.load'
     }
-  , { icon: 'directions_car'
+  , { icon: 'material_directions_car'
     , name: 'ui.garage.tabs.vehicles'
     , href: 'garage.menu.select'
     }
-  , { icon: 'settings'
+  , { icon: 'material_settings'
     , name: 'ui.garage.tabs.parts'
     , href: 'garage.menu.parts'
     }
-  , { icon: 'tune'
+  , { icon: 'material_tune'
     , name: 'ui.garage.tabs.tune'
     , href: 'garage.menu.tune'
     }
-  , { icon: 'brush'
+  , { icon: 'material_brush'
     , name: 'ui.garage.tabs.paint'
     , href: 'garage.menu.paint'
     }
-  , { icon: 'photo_camera'
+  , { icon: 'material_photo_camera'
     , name: 'ui.garage.tabs.photo'
     , href: 'garage.menu.photo'
     }
-  , { icon: 'save'
+  , { icon: 'material_save'
     , href: 'garage.save'
     }
   ]

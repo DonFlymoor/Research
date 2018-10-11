@@ -60,7 +60,7 @@
         {"brakeInputSplit":0.6},
         {"brakeSplitCoef":0.1},
         {"parkingTorque":2500},
-        {"brakeSpring":175},
+        {"brakeSpring":150},
 
         //brake thermals
         {"enableBrakeThermals":true},
@@ -132,7 +132,7 @@
         {"brakeInputSplit":0.50},
         {"brakeSplitCoef":0.25},
         {"parkingTorque":6000},
-        {"brakeSpring":175},
+        {"brakeSpring":125},
 
         //brake thermals
         {"enableBrakeThermals":true},
@@ -169,7 +169,7 @@
         {"brakeInputSplit":0.50},
         {"brakeSplitCoef":0.25},
         {"parkingTorque":6000},
-        {"brakeSpring":175},
+        {"brakeSpring":125},
 
         //brake thermals
         {"enableBrakeThermals":true},
@@ -241,7 +241,7 @@
         {"brakeInputSplit":0.65},
         {"brakeSplitCoef":0.0},
         {"parkingTorque":3500},
-        {"brakeSpring":175},
+        {"brakeSpring":150},
 
         //brake thermals
         {"enableBrakeThermals":true},

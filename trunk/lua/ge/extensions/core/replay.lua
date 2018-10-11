@@ -4,7 +4,7 @@
 
 local M = { state = {} }
 M.state.speed = 1 -- playback speed indicator
-local speeds = {1/100, 1/16, 1/8, 1/4, 1/2, 1.0, 1.5, 2, 4, 8}
+local speeds = {1/1000, 1/500, 1/200, 1/100, 1/50, 1/32, 1/16, 1/8, 1/4, 1/2, 3/4, 1.0, 1.5, 2, 4, 8}
 M.state.jumpOffset = 0 -- how many seconds the replay will jump (when the user stops requesting for more jumps)
 local jumpStart = 0 -- reference point, on top of which we will apply whatever jump length is decided after the timeout
 local jumpTimeout = 0.35 -- time to perform jump after user stopped pressing buttons
@@ -93,13 +93,16 @@ local function pause(v)
   be.nodeStream:setPaused(v)
 end
 
+local function displayMsg(level, msg, context)
+  -- level is a toastr category name ("error", "info", "warning"...)
+  guihooks.trigger("toastrMsg", {type=level, title="Replay "..level, msg=msg, context=context})
+  log(string.gsub(level, "^(.).*", string.upper), "", "Replay msg: "..dumps(level, msg, context))
+end
 local function togglePlay()
   if M.state.state == 'idle' then
     be.nodeStream:setPaused(false)
     local ret = be.nodeStream:play(M.state.loadedFile)
-    -- messages app can be obscured (by dashboard) or not exist (in main menu). so show a toastr too, just in case
-    if ret ~= 0 then ui_message({txt="replay.playError", context={filename=M.state.loadedFile}}, 7, "replay", "local_movies") end
-    if ret ~= 0 then guihooks.trigger("toastrMsg", {type="error", title="Replay error", msg="Cannot play file. Check the log file for details"}) end
+    if ret ~= 0 then displayMsg("error", "replay.playError", {filename=M.state.loadedFile}) end
   elseif M.state.state == 'playing' then
     be.nodeStream:setPaused(not M.state.paused)
   else
@@ -112,9 +115,7 @@ local function loadFile(filename)
   be.nodeStream:stop()
   be.nodeStream:setPaused(true)
   local ret = be.nodeStream:play(filename)
-  -- messages app can be obscured (by dashboard) or not exist (in main menu). so show a toastr too, just in case
-  if ret ~= 0 then ui_message({txt="replay.playError", context={filename=filename}}, 7, "replay", "local_movies") end
-  if ret ~= 0 then guihooks.trigger("toastrMsg", {type="error", title="Replay error", msg="Cannot play file. Check the log file for details"}) end
+  if ret ~= 0 then displayMsg("error", "replay.playError", {filename=filename}) end
 end
 
 local function stop()
@@ -147,10 +148,14 @@ local function toggleRecording(autoplayAfterStopping)
   else
     local date = os.date("%Y-%m-%d_%H-%M-%S")
     local map = getMissionFilename():match('levels/([%w|_|%-|%s]+)/')
-    local filename = "replays/"..date.." "..map..".rpl"
-    log("D","",'record to: '..filename)
-    ui_message("replay.startRecording", 5, "replay", "local_movies")
-    be.nodeStream:record(filename)
+    if map == nil then
+      log("E", "", "Cannot start recording replay. Map filename: "..dumps(getMissionFilename()))
+    else
+      local filename = "replays/"..date.." "..map..".rpl"
+      log("D","",'record to: '..filename)
+      ui_message("replay.startRecording", 5, "replay", "local_movies")
+      be.nodeStream:record(filename)
+    end
   end
 end
 
@@ -181,6 +186,16 @@ local function onUpdate(dtReal, dtSim, dtRaw)
   end
 end
 
+local function onUiChangedState (cur, prev)
+  -- automatically stop replay when user opens main menu
+  if cur ~= "menu.mainmenu" then return end
+  if M.state.state == 'recording' then
+    toggleRecording()
+  elseif M.state.state == 'playing' then
+    stop()
+  end
+end
+
 local function openReplayFolderInExplorer()
   if not fileExistsOrNil('/replays/') then  -- create dir if it doesnt exist
     writeFile('/replays/', '')
@@ -191,6 +206,7 @@ end
 -- public interface
 M.onInit = onInit
 M.onUpdate = onUpdate
+M.onUiChangedState            = onUiChangedState
 
 M.stateChanged = stateChanged
 M.getRecordings = getRecordings
@@ -204,5 +220,6 @@ M.pause = pause
 M.seek = seek -- [0..1] normalized position to seek to
 M.jump = jump -- how many integer steps back/forth to seek ahead/back
 M.openReplayFolderInExplorer = openReplayFolderInExplorer
+M.displayMsg = displayMsg
 
 return M

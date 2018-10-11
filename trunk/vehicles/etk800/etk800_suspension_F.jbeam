@@ -39,26 +39,27 @@
          {"nodeMaterial":"|NM_METAL"},
          {"frictionCoef":0.5},
          //front hub
-         {"nodeWeight":6.5},
+         {"nodeWeight":6.25},
          {"selfCollision":true},
          ["fh1r",-0.680, -1.415, 0.229{"group":["etk800_lowerarm_F_a","etk800_tierod_F","etk800_hub_F"]}],
          ["fh1l", 0.680, -1.415, 0.229{"group":["etk800_lowerarm_F_a","etk800_tierod_F","etk800_hub_F"]}],
          {"selfCollision":false},
-         {"nodeWeight":5.0},
+         {"nodeWeight":4.5},
          ["fh4r",-0.602, -1.351, 0.65{"group":["etk800_strut_F","etk800_hub_F","etk800_swaybar_F"]}],
          ["fh4l", 0.602, -1.351, 0.65{"group":["etk800_strut_F","etk800_hub_F","etk800_swaybar_F"]}],
          ["fh5r",-0.76, -1.23, 0.36{"group":["etk800_caliper_F","etk800_hub_F"]}],
          ["fh5l", 0.76, -1.23, 0.36{"group":["etk800_caliper_F","etk800_hub_F"]}],
          {"selfCollision":true},
+         {"nodeWeight":5.0},
          ["fw2r",-0.686, -1.441, 0.283{"group":["etk800_wheelarm_F","etk800_lowerarm_F_b","etk800_hub_F"]}],
          ["fw2l", 0.686, -1.441, 0.283{"group":["etk800_wheelarm_F","etk800_lowerarm_F_b","etk800_hub_F"]}],
          {"selfCollision":false},
          //tie rod end
-         {"nodeWeight":5.5},
+         {"nodeWeight":5.75},
          ["fh3r",-0.691, -1.537, 0.262{"group":["etk800_tierod_F","etk800_hub_F"]}],
          ["fh3l", 0.691, -1.537, 0.262{"group":["etk800_tierod_F","etk800_hub_F"]}],
          //strut flexbody help
-         {"nodeWeight":0.5},
+         {"nodeWeight":0.25},
          {"group":"etk800_strut_F"},
          ["fs2l", 0.63, -1.38, 0.4],
          ["fs2r", -0.63, -1.38, 0.4],
@@ -72,8 +73,8 @@
     },
     "slidenodes": [
         ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
-        ["fh4r", "strut_FR", true, true, 0.0, 18001000, 500000, 500000],
-        ["fh4l", "strut_FL", true, true, 0.0, 18001000, 500000, 500000],
+        ["fh4r", "strut_FR", true, true, 0.0, 20001000, 500000, 500000],
+        ["fh4l", "strut_FL", true, true, 0.0, 20001000, 500000, 500000],
     ],
     "beams": [
           ["id1:", "id2:"],
@@ -81,7 +82,7 @@
           //double wishbone suspension
           {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamDeform":95000,"beamStrength":350000},
-          {"beamSpring":8001000,"beamDamp":125},
+          {"beamSpring":7801000,"beamDamp":150},
           //front hub
           ["fh1r","fh3r"],
           ["fh1l","fh3l"],
@@ -103,7 +104,7 @@
           ["fw2l","fh3l"],
           ["fw2l","fh4l"],
           ["fw2l","fh5l"],
-          {"beamSpring":8001000,"beamDamp":125},
+          {"beamSpring":7801000,"beamDamp":150},
           {"optional":true},
           //attach to wheel
           {"breakGroup":"wheel_FR"},
@@ -123,7 +124,7 @@
           ["fh5l","fw1l"],
           ["fw2l","fw1l"],
           ["fh1l","fw1ll"],
-          ["fh3l","fw1ll"{"beamSpring":12001000,"beamDamp":20}],
+          ["fh3l","fw1ll"{"beamSpring":12001000,"dampCutoffHz":500,"beamDamp":500}],
           ["fh5l","fw1ll"],
           ["fw2l","fw1ll"],
           //camber
@@ -136,23 +137,31 @@
 
           //lower arm
           {"beamDeform":55000,"beamStrength":550000},
-          {"beamSpring":18001000,"beamDamp":2000},
+          {"beamSpring":20001000,"beamDamp":2000},
           ["fx2r","fh1r"{"dampCutoffHz":500}],
           ["fx2l","fh1l"{"dampCutoffHz":500}],
 
           {"beamDeform":85000,"beamStrength":750000},
-          {"beamSpring":14001000,"beamDamp":4000},
+          {"beamSpring":15001000,"beamDamp":4000},
           ["fx1r","fw2r"{"beamPrecompression":"$caster_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
           ["fx1l","fw2l"{"beamPrecompression":"$caster_FR","beamPrecompressionTime":0.5,"dampCutoffHz":500}],
 
           //strut structure stuff
-          {"beamSpring":2501000,"beamDamp":125,"beamDeform":37500,"beamStrength":127500},
+          {"beamSpring":1501000,"beamDamp":125,"beamDeform":37500,"beamStrength":127500},
           ["fh4r","fs2r"],
           ["fh4l","fs2l"],
           ["fh3r","fs2r"],
           ["fh3l","fs2l"],
           ["fh5r","fs2r"],
           ["fh5l","fs2l"],
+          
+          //damper
+          {"beamSpring":0,"beamDamp":5000},
+          ["f1rr","fh1r"{"dampCutoffHz":500}],
+          ["f1ll","fh1l"{"dampCutoffHz":500}],
+          ["f5rr","fh4r"{"dampCutoffHz":500}],
+          ["f5ll","fh4l"{"dampCutoffHz":500}],
+          
 
           //front limiters
           {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.28, "beamShortBound":0.34},
@@ -258,11 +267,11 @@
         {"hubcapBreakGroup":"hubcap_FR"},
         {"hubcapGroup":"hubcap_FR"},
         {"axleBeams":["axle_FR"]},
-        ["FR", "wheel_FR", "tire_FR", "fw1rr", "fw1r", 9999, "fh5r", 1, {"speedo" : true,"torqueCoupling:":"fh5r", "torqueArm:":"fh3r"}],
+        ["FR", "wheel_FR", "tire_FR", "fw1rr", "fw1r", 9999, "fh5r", 1, {"torqueCoupling:":"fh1r", "torqueArm:":"fh4r", "torqueArm2:":"fw1rr"}],
         {"hubcapBreakGroup":"hubcap_FL"},
         {"hubcapGroup":"hubcap_FL"},
         {"axleBeams":["axle_FL"]},
-        ["FL", "wheel_FL", "tire_FL",  "fw1ll", "fw1l", 9999, "fh5l", -1, {"torqueCoupling:":"fh5l", "torqueArm:":"fh3l"}],
+        ["FL", "wheel_FL", "tire_FL",  "fw1ll", "fw1l", 9999, "fh5l", -1, {"torqueCoupling:":"fh1l", "torqueArm:":"fh4l", "torqueArm2:":"fw1ll"}],
         {"selfCollision":true}
         {"axleBeams":[]},{"disableMeshBreaking":false,"disableTriangleBreaking":false},
         {"hubcapBreakGroup":""},
@@ -306,7 +315,7 @@
           {"beamDeform":137500,"beamStrength":172500},
           {"beamSpring":43000,"beamDamp":0},
           {"beamLimitSpring":201000,"beamLimitDamp":0},
-          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
+          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
           ["fh4l","fs1l",{"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5300}],
           //dampers
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
@@ -346,7 +355,7 @@
           {"beamDeform":137500,"beamStrength":172500},
           {"beamSpring":38000,"beamDamp":0},
           {"beamLimitSpring":201000,"beamLimitDamp":0},
-          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
+          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
           ["fh4l","fs1l",{"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5300}],
           //dampers
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
@@ -386,7 +395,7 @@
           {"beamDeform":137500,"beamStrength":172500},
           {"beamSpring":52000,"beamDamp":0},
           {"beamLimitSpring":251000,"beamLimitDamp":0},
-          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":24000}],
+          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":24000}],
           ["fh4l","fs1l",{"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5600}],
           //dampers
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
@@ -437,7 +446,7 @@
          //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
          //To change the base ride height, edit the springheight_F offset in the expression.
          ["fh4r","fs1r"{"beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=case($rideheight_F == nil, $springheight_F + 0.03, '')",
-             "soundFile":"art/sound/spring_creak.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
+             "soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
          ["fh4l","fs1l"{"beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=case($rideheight_F == nil, $springheight_F + 0.03, '')",
              "soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.7,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":4500}],
          //dampers
@@ -661,20 +670,20 @@
     "beams": [
           ["id1:","id2:"],
           {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-          {"beamSpring":14001000,"beamDamp":250,"beamDeform":100000,"beamStrength":275000},
+          {"beamSpring":10001000,"beamDamp":250,"beamDeform":100000,"beamStrength":275000},
           ["fh6r","fh6l"],
           //toe out
-          {"beamSpring":16001000,"beamDamp":250,"beamDeform":55000,"beamStrength":225000},
+          {"beamSpring":20001000,"beamDamp":250,"beamDeform":55000,"beamStrength":225000},
           ["fh3r","fh6r"{"beamPrecompression":"$=$toe_FR+$steer_center_F","beamPrecompressionTime":0.5}],
           ["fh3l","fh6l"{"beamPrecompression":"$=$toe_FR-$steer_center_F","beamPrecompressionTime":0.5}],
           //steering damper
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
           {"beamSpring":0,"beamDeform":16800,"beamStrength":42000},
           {"beamLimitSpring":0,"beamLimitDamp":0},
-          ["fh3r","fx2r",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
-          ["fh3l","fx2l",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
-          ["fh5r","fx1r",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
-          ["fh5l","fx1l",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
+          ["fh3r","fx2r",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
+          ["fh3l","fx2l",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
+          ["fh5r","fx1r",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
+          ["fh5l","fx1l",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
           {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
     "triangles": [
@@ -689,13 +698,13 @@
     "hydros": [
         ["id1:","id2:"],
         {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-        {"beamSpring":6001000,"beamDamp":50,"beamDeform":"FLT_MAX","beamStrength":125000},
+        {"beamSpring":8001000,"beamDamp":50,"beamDeform":"FLT_MAX","beamStrength":125000},
         ["fh6r","fx5l",{"factor":0.127,"steeringWheelLock":510,"inRate":1.25,"outRate":1.25}],
         ["fh6l","fx5r",{"factor":-0.127,"steeringWheelLock":510,"inRate":1.25,"outRate":1.25}],
         {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
     "input": {
-        "FFBcoef":2.75,
+        "FFBcoef":3.67,
     },
 },
 "etk800_power_steering": {

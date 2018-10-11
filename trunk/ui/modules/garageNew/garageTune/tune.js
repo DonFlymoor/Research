@@ -4,6 +4,8 @@ angular.module('beamng.garage')
   var vm = this;
 
   var streams = ['advancedWheelDebugData'];
+  var iconsExisting =  ["alignment", "brakes", "differentials", "suspension", "wheels", "transmission", "engine"];
+  $scope.iconMap = {};
   StreamsManager.add(streams);
 
   vm.liveVariablesUpdate = false;
@@ -28,6 +30,7 @@ angular.module('beamng.garage')
       if (tuning[v.category] === undefined) {
         tuning[v.category] = [];
         categories.push(v.category);
+        $scope.iconMap[v.category] = iconsExisting.indexOf(v.category.toLowerCase()) !== -1 ? v.category.toLowerCase() : 'random';
       }
       v.valDis = VehicleConfig.varValToDisVal(v);
       tuning[v.category].push(v);

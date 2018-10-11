@@ -2,12 +2,12 @@ local M = {}
 
 local defaultLayoutsFile = 'settings/uiapps-layouts-default.json'
 local userLayoutsFile = 'settings/uiapps-layouts.json'
-local currentVersion = 0.40
+local currentVersion = 0.43
 local appsDir = 'ui/modules/apps'
 
 
 local function getList()
-  local jsonFiles = FS:findFilesByRootPattern('game:/ui/modules/apps/', 'app.json', 1, false, false)
+  local jsonFiles = FS:findFilesByRootPattern('/ui/modules/apps/', 'app.json', 1, false, false)
   local data = {}
   local appDirRegex = 'ui/modules/apps/([%w|_|%-|%s]+)/app.json'
 
@@ -62,11 +62,11 @@ local function resetLayouts()
 end
 
 local function getSettings(appDir)
-  return readJsonFile('game:/ui/modules/apps/'..appDir..'/settings.json') or nil
+  return readJsonFile('/ui/modules/apps/'..appDir..'/settings.json') or nil
 end
 
 local function saveSettings(appDir, settings)
-  local settingsFile = 'game:/ui/modules/apps/'..appDir..'/settings.json'
+  local settingsFile = '/ui/modules/apps/'..appDir..'/settings.json'
   print('saving to '..settingsFile)
   serializeJsonToFile(settingsFile, settings, true)
 end

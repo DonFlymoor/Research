@@ -57,9 +57,8 @@ angular.module('beamng.apps')
 
         <g id="jatoGrp">
           <circle r="17.5" cx="17.5" cy="17.5" fill="#343434"/>
-          <use id="jatoIcon" width="35" height="35" style="transform-origin: 17.5px 17.5px; transform: scale(0.85) rotate(-20deg)" fill="#FFF" xlink:href="#powertrain_jato" />
-          <circle id="jatoLightBackground" style="transform-origin: 50% 50%; transform: rotate(-90deg)" cx="17.5" cy="17.5" r="17.5" fill="transparent" stroke="#7da7d9" stroke-width="4px" stroke-dasharray="109.95"/>
-          <circle id="jatoLight" style="transform-origin: 50% 50%; transform: rotate(-90deg)" cx="17.5" cy="17.5" r="17.5" fill="transparent" stroke="#0072bc" stroke-width="4px" stroke-dasharray="109.95"/>
+          <use id="jatoIcon" width="35" height="35" style="transform-origin: 17.5px 17.5px; transform: scale(0.70) rotate(-20deg)" fill="#FFF" xlink:href="#powertrain_jato" />
+          <circle id="jatoLight" style="transform-origin: 50% 50%; transform: rotate(-90deg)" cx="17.5" cy="17.5" r="13.5" fill="transparent" stroke-width="3px" stroke-dasharray="84.78"/>
         </g>
       </defs>
     </svg>`,
@@ -212,7 +211,10 @@ angular.module('beamng.apps')
           if (data.electrics.jato !== undefined) {
             svgIcons.push(hu('<use>', svg).attr({
               id: 'Jato',
-              'xlink:href': '#jatoGrp'
+              'xlink:href': '#jatoGrp',
+              cursor: 'pointer',
+            }).on('mousedown', function () {
+              bngApi.activeObjectLua("electrics.values.jatoInput = 1 - (electrics.values.jatoInput or 0)");
             }))
           }
 
@@ -279,9 +281,11 @@ angular.module('beamng.apps')
         }
 
         // updating jato light
-        if (data.electrics.jato !== undefined) {
-          hu('#jatoLight', svg).attr({ stroke: "#" + (data.electrics.jato === 1 ? '0072bc' : '0072bc') });
-          hu('#jatoLight', svg).attr({ 'stroke-dashoffset': ((1 - data.electrics.jatofuel) * - 84.78) });
+        if (data.electrics) {
+          if (data.electrics.jato !== undefined) {
+            hu('#jatoLight', svg).attr({ stroke: "#" + (data.electrics.jato === 1 ? '0072bc' : '0072bc') });
+            hu('#jatoLight', svg).attr({ 'stroke-dashoffset': ((1 - data.electrics.jatofuel) * - 84.78) });
+          }
         }
 
         if (data.powertrainDeviceData) {

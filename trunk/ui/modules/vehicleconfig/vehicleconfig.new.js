@@ -165,16 +165,17 @@ function ($filter, logger, $scope, $window, bngApi, RateLimiter, VehicleConfig, 
     });
 
     var flattenedParts = [];
-
     for (var key in vm.d.data) {
       processPart(vm.d.data[key], function(obj) {
         flattenedParts.push(obj);
       })
     }
-
     bngApi.activeObjectLua(`partmgmt.highlightParts(${bngApi.serializeToLua(flattenedParts)})`);
-    
   };
+
+  $scope.$on('VehicleFocusChanged', function(event, data) {
+    bngApi.activeObjectLua('partmgmt.vehicleResetted()');
+  })
 
   // LICENSE PLATE STUFF
   vm.licensePlate = '';

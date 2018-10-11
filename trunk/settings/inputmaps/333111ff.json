@@ -1,0 +1,87 @@
+{
+"name" : "SPEEDLINK PHANTOM HAWK Flightstick", "version" : 1, "devicetype" : "gamepad", "vidpid" : "333111FF", "bindings" :   [
+    {
+"action" : "toggle_headlights", "control" : "button4"
+
+},     {
+"action" : "activateStarterMotor", "control" : "button6"
+
+},     {
+"action" : "rotate_camera_up", "control" : "upov"
+
+},     {
+"action" : "menu_item_back", "control" : "button1"
+
+},     {
+"action" : "menu_item_select", "control" : "button0"
+
+},     {
+"action" : "accept", "control" : "button0"
+
+},     {
+"action" : "decrease_zoom", "control" : "button11"
+
+},     {
+"action" : "reset_physics", "control" : "button5"
+
+},     {
+"action" : "rotate_camera_right", "control" : "rpov"
+
+},     {
+"action" : "increase_zoom", "control" : "button10"
+
+},     {
+"action" : "menu_item_radial_x", "control" : "xaxis"
+
+},     {
+"action" : "menu_item_left", "control" : "button3"
+
+},     {
+"action" : "recover_vehicle", "control" : "button3"
+
+},     {
+"action" : "decline", "control" : "button1"
+
+},     {
+"action" : "menu_item_down", "control" : "button6"
+
+},     {
+"action" : "parkingbrake", "control" : "button10"
+
+},     {
+"action" : "rotate_camera_left", "control" : "lpov"
+
+},     {
+"action" : "steering", "control" : "xaxis"
+
+},     {
+"action" : "rotate_camera_down", "control" : "dpov"
+
+},     {
+"action" : "toggleMenues", "control" : "button8"
+
+},     {
+"action" : "pause", "control" : "button7"
+
+},     {
+"action" : "menu_item_up", "control" : "button4"
+
+},     {
+"action" : "menu_item_radial_y", "control" : "yaxis"
+
+},     {
+"action" : "accelerate", "control" : "button0"
+
+},     {
+"action" : "menu_item_right", "control" : "button5"
+
+},     {
+"action" : "brake", "control" : "button1"
+
+},     {
+"action" : "center_camera", "control" : "button2"
+
+}]
+, "guid" : "{333111FF-0000-0000-0000-504944564944}"
+
+}

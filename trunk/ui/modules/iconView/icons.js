@@ -7,7 +7,14 @@
   var vm = this
     , color = 'white'
     // , list = [{type: 'svg', color: color, src: 'Components/Shapes/arrow.svg'}]
-    , list = []
+    , list = [
+      // [ {type: 'svg', color: 'blue', src: 'Assets/logo.svg'}
+      // , {type: 'img', color: 'blue', src: 'Assets/logo.svg'}
+      // , {type: 'sprite', color: 'blue', src: 'automation_logo'}
+      // , {type: 'sprite', color: 'blue', src: 'automation_logo_origcolor'}
+      // , {type: 'svg', color: 'blue', src: 'Assets/beamng_logo.svg'}
+      // , {type: 'img', color: 'blue', src: 'Assets/beamng_logo.svg'}
+      ]
     ;
   vm.config = {};
 
@@ -124,7 +131,10 @@
 .directive('bngIconSvg', function () {
   return {
     restrict: 'E',
-    template: `<div ng-include="src" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);" class="{{color ? 'fill-' + color : ''}}"></div>`,
+    // template: `<img ng-src="{{src}}" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);" class="{{color ? 'fill-' + color : ''}}"></img>`,
+    // template: `<object data="{{src}}" type="image/svg+xml">`,
+    // template: `<div class="filler" style="background: url('{{src}}')"></div>`,
+    template: `<div ng-include="src" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);" class="filler {{color ? 'fill-' + color : ''}}"></div>`,
     scope: {
       src: '=',
       color: '=',
@@ -137,7 +147,7 @@
 .directive('bngIconSvgSprite', function (spriteDuplicates) {
   return {
     restrict: 'E',
-    template: `<svg class="{{color ? 'fill-' + color : ''}} filler" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);"><use xlink:href="{{getPath(src)}}"/></svg>`,
+    template: `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="{{color ? 'fill-' + color : ''}} filler" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);"><use xlink:href="{{getPath(src)}}"/></svg>`,
     scope: {
       src: '=',
       color: '=',

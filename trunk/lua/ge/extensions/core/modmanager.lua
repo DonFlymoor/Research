@@ -314,8 +314,8 @@ local function updateZIPEntry(filename)
       mods[modname].modInfoPath = '/mod_info/'..modID..'/'
       local jsonContent = zip:readFileEntryByIdx(k2)
       if jsonContent then
-      mods[modname].modData = readJsonData(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
-      -- fix the relative paths to be absolute paths for the UI
+        mods[modname].modData = readJsonData(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
+        -- fix the relative paths to be absolute paths for the UI
         if type(mods[modname].modData.attachments) == 'table' then
           mods[modname].modData.imgs = {}
           for k2,v2 in pairs(mods[modname].modData.attachments) do
@@ -337,16 +337,85 @@ end
 local function checkDuplicatedMods(filelist)
   local outFilelist = {}
   local uniqueModList = {}
+  local idModList = {}
+  local oldModToDelete = {}
   for _, filepath in ipairs(filelist) do
     local modname = getModNameFromPath(filepath)
     if not uniqueModList[modname] then
       table.insert(outFilelist, filepath)
       uniqueModList[modname] = filepath
+      if string.endswith(filepath, ".zip" ) and FS:fileExists(filepath) then
+        local zip = ZipArchive()
+        zip:openArchiveName( filepath, "R" )
+        local filesInZIP = zip:getFileList()
+        for k2, v2 in pairs(filesInZIP) do
+          v2 = string.lower(v2)
+          local modID = string.match(tostring(v2), '^mod_info/([0-9a-zA-Z]*)/info%.json')
+          if modID then
+            local jsonContent = zip:readFileEntryByIdx(k2)
+            if jsonContent then
+              local modInfo = readJsonData(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
+              -- log('D', 'modmanager.checkDuplicatedMods', modInfo.filename.."  "..modID.."  "..tostring(modInfo.last_update).."  res="..tostring(modInfo.resource_date).."  rel="..tostring(modInfo.release_date).."")
+              if idModList[modID] ~= nil then
+                local oldFilepath = ""
+                local oldModName = ""
+                if idModList[modID].lastUpdate == nil or modInfo.last_update == nil then
+                  log('E', 'modmanager.checkDuplicatedMods', "One of the mods have an invalid data !")
+                  log('D', 'modmanager.checkDuplicatedMods', "modID = "..tostring(modInfo.modID or modinfo.tagid or filepath).." => "..tostring(modInfo.lastUpdate) )
+                  log('D', 'modmanager.checkDuplicatedMods', "modID = "..tostring(modID).." => "..tostring(idModList[modID].lastUpdate) )
+                  break
+                end
+                if idModList[modID].lastUpdate >= (modInfo.last_update or modInfo.release_date) then
+                  log('D', 'modmanager.checkDuplicatedMods', "caseid1 "..modname.."("..filepath.." | "..tostring(modInfo.last_update)..") is older than "..idModList[modID].modname.. "("..idModList[modID].fp.." | "..tostring(idModList[modID].lastUpdate)..")")
+                  oldFilepath = filepath
+                  uniqueModList[modname] = nil
+                  oldModName = modname
+                  table.remove(outFilelist)
+                else
+                  log('D', 'modmanager.checkDuplicatedMods', "caseid2 "..idModList[modID].modname.."("..idModList[modID].fp.." | "..tostring(idModList[modID].lastUpdate)..") is older than "..modname.."("..filepath.." | "..tostring(modInfo.last_update)..")")
+                  oldFilepath = idModList[modID].fp
+                  oldModName = idModList[modID].modname
+                  uniqueModList[idModList[modID].modname] = nil
+                  idModList[modID] = {fp=filepath,lastUpdate=(modInfo.last_update or modInfo.release_date),modname=modname}
+                  for kf,of in pairs(outFilelist) do
+                    if of == oldFilepath then table.remove( outFilelist, kf ); break end
+                  end
+                end
+                local errMsgID = ""
+                local needManualAction = true
+                if string.sub(oldFilepath,1,10) == "mods/repo/" then
+                  zip:close()
+                  zip = nil
+                  table.insert(oldModToDelete,{name=oldModName,path=oldFilepath})
+                  needManualAction = false
+                end
+                if needManualAction then
+                  errMsgID = "Duplicate mod id="..modID.."\n Delete this old file ["..oldFilepath.."]"
+                end
+                log('E', 'modmanager.initDB', errMsgID)
+                guihooks.trigger('modmanagerError', errMsgID)
+              else
+                idModList[modID] = {fp=filepath,lastUpdate=(modInfo.last_update or modInfo.release_date),modname=modname}
+              end
+            end
+            break
+          end
+        end
+      end
     else
       local errMsg = 'Duplicated mod[ '..modname..' ]\n['..uniqueModList[modname]..']\n - ['..filepath..']'
       log('E', 'modmanager.initDB', errMsg)
       guihooks.trigger('modmanagerError', errMsg)
       mods[modname] = nil -- force update DB
+    end
+  end
+  for _,v in pairs(oldModToDelete) do
+    M.deleteMod(v.name)
+    if FS:fileExists(v.path) then log('E', 'modmanager.checkDuplicatedMods', "delete '"..tostring(v.path).."' = "..dumps(FS:removeFile(v.path)) ) end
+    if FS:fileExists(v.path) then 
+      log('E', 'modmanager.checkDuplicatedMods', "failed to delete "..tostring(v.path))
+      local errMsgID = "Duplicate mod id="..v.name.."\n Delete this old file ["..v.path.."]"
+      guihooks.trigger('modmanagerError', errMsgID)
     end
   end
   return outFilelist
@@ -409,9 +478,9 @@ local initDB = extensions.core_jobsystem.wrap(function(job)
   stateChanged()
   extensions.load('core_repository') -- load core_repository if not loaded to make sure event gets fired
   if ready ~= true then
+    ready = true
     extensions.hook('onModManagerReady')
   end
-  ready = true
 
   -- execute modScripts
   -- TODO deprecated: some modScripts are used to load extensions, added backward compatibility
@@ -598,6 +667,15 @@ local function activateMod(modname)
   mods[modname].active = true
   extensions.hook('onModActivated', deepcopy(mods[modname]))
   stateChanged()
+end
+
+local function activateModId(modID)
+  local name = getModNameFromID(modID)
+  if name then
+    activateMod(name)
+  else
+    log('I', 'modmanager.activateModId', 'mod not existing ' .. tostring(modID))
+  end
 end
 
 local function activateAllMods()
@@ -942,6 +1020,59 @@ local function enableAutoMount()
   initDB()
 end
 
+local function getStats()
+  local r = {zip=0, unpacked=0, disabled=0}
+  for modname,mdata in pairs(mods) do
+    if not mdata.active then 
+      r.disabled = r.disabled+1
+    elseif mdata.stat.filetype == "file" then
+      r.zip = r.zip+1
+    elseif mdata.stat.filetype == "dir" then
+      r.unpacked = r.unpacked+1
+    end
+
+  end
+  return r
+end
+
+local function updateZipMod(oldFileName,newFileName)
+  local oldMod = nil
+  oldMod = getModDB( getModNameFromPath(oldFileName) )
+  if oldMod == nil then
+    for mn,md in pairs(mods) do
+      if m.filename == oldFileName then
+        oldMod = md
+        break
+      end
+    end
+    if oldMod == nil and not FS:fileExists("mods/"..oldFileName) then
+      guihooks.trigger('modmanagerError', "updateZipMod: Old ZIP not found")
+      log("E","modmgmt.updateZipMod","Old file not found ")
+      return
+    end
+  end
+  
+  if oldMod then
+    deleteMod(getModNameFromPath(oldFileName))
+  else
+    if FS:isMounted("mods/"..oldFileName) then
+      FS:unmount("mods/"..oldFileName)
+      log("E","modmgmt.updateZipMod","Unmounting a mod that is not in the mod DB. This is Wrong!. Zip="..oldFileName)
+    end
+    if FS:removeFile("mods/"..oldFileName) ~= 0 then
+      guihooks.trigger('modmanagerError', "updateZipMod: Failed to delete old ZIP")
+      log("E","modmgmt.updateZipMod","Failed to delete old ZIP "..tostring(oldFileName))
+      return
+    end
+  end
+
+  if FS:renameFile("mods/"..newFileName,"mods/"..oldFileName) ~= 0 then
+    guihooks.trigger('modmanagerError', "updateZipMod: Failed to rename ZIP")
+    log("E","modmgmt.updateZipMod","Failed to rename ZIP ''"..tostring(oldFileNamex).."' > '"..newFileName.."'")
+    return
+  end
+end
+
 -- public interface
 M.isReady = isReady
 M.onFileChanged = onFileChanged
@@ -955,13 +1086,16 @@ M.packMod = packMod
 M.onUiReady = onUiReady
 M.requestState = sendGUIState
 M.requestTranslations = updateTranslations
+M.updateZipMod = updateZipMod
 
 M.getModNameFromID = getModNameFromID
+M.getStats = getStats
 
 M.deleteMod = deleteMod
 M.deactivateMod = deactivateMod
 M.deactivateModId = deactivateModId
 M.activateMod = activateMod
+M.activateModId = activateModId
 
 M.deactivateAllMods = deactivateAllMods
 M.activateAllMods = activateAllMods

@@ -1,0 +1,45 @@
+{
+"name" : "Saitek Side Panel Control Deck", "version" : 1, "devicetype" : "joystick", "vidpid" : "22180738", "bindings" :   [
+    {
+"isInverted" : true, "control" : "ryaxis", "action" : "rotate_camera_vertical"
+
+},     {
+"action" : "toggle_right_signal", "control" : "button4"
+
+},     {
+"action" : "toggle_headlights", "control" : "button11"
+
+},     {
+"action" : "toggle_right_signal", "control" : "button19"
+
+},     {
+"action" : "activateStarterMotor", "control" : "button15"
+
+},     {
+"action" : "toggle_lightbar_signal", "control" : "button10"
+
+},     {
+"action" : "rotate_camera_horizontal", "control" : "rxaxis"
+
+},     {
+"action" : "increase_zoom", "control" : "button25"
+
+},     {
+"action" : "toggle_left_signal", "control" : "button3"
+
+},     {
+"action" : "toggle_left_signal", "control" : "button18"
+
+},     {
+"action" : "decrease_zoom", "control" : "button26"
+
+},     {
+"action" : "toggle_foglights", "control" : "button13"
+
+},     {
+"action" : "center_camera", "control" : "button27"
+
+}]
+, "guid" : "{22180738-0000-0000-0000-504944564944}"
+
+}

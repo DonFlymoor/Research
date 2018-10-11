@@ -155,42 +155,6 @@ local function getCmdLineScenario()
   return nil
 end
 
--- starts everything off by loading the level or scenario
-local function start(automatic)
-  if automatic == nil then automatic = true end
-
-  -- guard against multiple start calls
-  if config.started then return end
-  config.started = true
-
-  -- overwrite automatic mode
-  config.automatic = automatic
-
-  -- load level
-  if config.automatic then
-    if not config.scenario then
-      -- actively change the level
-      local levelName = tostring(config.map.name)
-      local levelFullPath = 'levels/'..levelName..'/main.level.json'
-      -- set the spawnpoint to be used
-      setSpawnpoint.setDefaultSP(config.map.spawnpoint, levelName)
-      -- load the level
-      
-      loadGameModeModules()
-      beamng_cef.startLevel(levelFullPath)
-    else
-      local scenarioPath = 'levels/'..tostring(config.map.name)..'/'..config.scenario
-      if not FS:fileExists(scenarioPath) then
-        log('E', 'annotation', 'configuration invalid... scenario file is not existing: '.. scenarioPath)
-        quit()
-      end
-      scenario_scenariosLoader.startByPath(scenarioPath)
-    end
-  else
-    onClientPostStartMission(TorqueScript.getVar("$Server::MissionPath"))
-  end
-end
-
 local function reloadConfig()
   -- parse the args
   local cmdArgs = Engine.getStartingArgs()
@@ -231,9 +195,52 @@ local function reloadConfig()
   config.loaded = true
 end
 
+-- starts everything off by loading the level or scenario
+local function start(automatic)
+  if automatic == nil then automatic = true end
+
+  if not config.loaded then
+    registerCoreModule('util_annotation')
+    reloadConfig()
+  end
+
+  -- guard against multiple start calls
+  if config.started then return end
+  config.started = true
+
+  -- overwrite automatic mode
+  config.automatic = automatic
+
+  -- load level
+  if config.automatic then
+    if not config.scenario then
+      -- actively change the level
+      dump(config)
+      local levelName = tostring(config.map.name)
+      local levelFullPath = 'levels/'..levelName..'/main.level.json'
+      -- set the spawnpoint to be used
+      setSpawnpoint.setDefaultSP(config.map.spawnpoint, levelName)
+      -- load the level
+      
+      loadGameModeModules()
+      beamng_cef.startLevel(levelFullPath)
+    else
+      local scenarioPath = 'levels/'..tostring(config.map.name)..'/'..config.scenario
+      if not FS:fileExists(scenarioPath) then
+        log('E', 'annotation', 'configuration invalid... scenario file is not existing: '.. scenarioPath)
+        quit()
+      end
+      scenario_scenariosLoader.startByPath(scenarioPath)
+    end
+  else
+    onClientPostStartMission(TorqueScript.getVar("$Server::MissionPath"))
+  end
+end
+
 local function onExtensionUnloaded()
   log('I', 'annotation', "module unloaded")
   heatmap.destroy()
+  be:setPhysicsSpeedFactor(0)
 end
 
 
@@ -354,7 +361,7 @@ local function onPreRender(dt)
     local veh = be:getPlayerVehicle(0)
     if veh then
       if config.session.fastForward == true then
-        be.physicsMaxSpeed = true
+        be:setPhysicsSpeedFactor(1)
       end
       if config.session.dynamicCollision == false then
         settings.setValue('disableDynamicCollision', true)

@@ -1,3 +1,18 @@
+singleton Material(garbage)
+{
+    mapTo = "garbage";
+    diffuseMap[0] = "garbage_d.dds";
+    normalMap[0] = "garbage_n.dds";
+    specularMap[0] = "garbage_s.dds";
+    specularPower[0] = "8";
+    pixelSpecular[0] = "1";
+    useAnisotropic[0] = "1";
+    materialTag0 = "beamng";
+    materialTag1 = "garbage";
+    specular[0] = "1 1 1 1";
+    diffuseColor[0] = "1 1 1 1";
+	annotation = "OBSTACLES";
+};
 
 singleton Material(trafficlight)
 {
@@ -87,9 +102,31 @@ singleton Material(catchfence)
 
 singleton Material(chainlink)
 {
+    vertColor[0] = "1";
     mapTo = "chainlink";
     diffuseMap[0] = "levels/west_coast_usa/art/shapes/objects/chainlink_d.dds";
     normalMap[0] = "levels/west_coast_usa/art/shapes/objects/chainlink_n.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "1";
+    emissive[0] = "0";
+    glow[0] = "0";
+    translucentBlendOp = "lerpAlpha";
+    alphaTest = "0";
+    alphaRef = "40";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+    annotation = "BUILDINGS";
+};
+
+singleton Material(fencewire)
+{
+    vertColor[0] = "1";
+    mapTo = "fencewire";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/objects/fencewire_d.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/objects/fencewire_n.dds";
     specularPower[0] = "32";
     pixelSpecular[0] = "1";
     diffuseColor[0] = "1 1 1 1";
@@ -107,6 +144,7 @@ singleton Material(chainlink)
 
 singleton Material(wirefence)
 {
+    vertColor[0] = "1";
     mapTo = "wirefence";
     diffuseMap[0] = "levels/west_coast_usa/art/shapes/objects/wirefence_d.dds";
     specularMap[0] = "levels/west_coast_usa/art/shapes/objects/wirefence_s.dds";
@@ -222,6 +260,54 @@ singleton Material(wca_objects_construction)
     translucentBlendOp = "None";
     cubemap = "global_cubemap_metalblurred";
     alphaTest = "1";
+    alphaRef = "64";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+    annotation = "OBSTACLES";
+};
+
+singleton Material(roadworks_objects)
+{
+    mapTo = "roadworks_objects";
+    vertColor[0] = "1";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/objects/construction_equipment_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/objects/construction_equipment_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/objects/construction_equipment_n.dds";
+    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/objects/construction_equipment_r.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "0";
+    emissive[0] = "0";
+    glow[0] = "0";
+    translucentBlendOp = "None";
+    cubemap = "cubemap_city";
+    alphaTest = "0";
+    alphaRef = "64";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+    annotation = "OBSTACLES";
+};
+
+singleton Material(filmset)
+{
+    mapTo = "filmset";
+    vertColor[0] = "1";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/objects/filmset_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/objects/filmset_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/objects/filmset_n.dds";
+    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/objects/filmset_r.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "0";
+    emissive[0] = "0";
+    glow[0] = "0";
+    translucentBlendOp = "None";
+    cubemap = "cubemap_city";
+    alphaTest = "0";
     alphaRef = "64";
     materialTag0 = "beamng"; materialTag1 = "vehicle";
     annotation = "OBSTACLES";

@@ -154,14 +154,16 @@ local function highlightParts(parts)
   if v.data.flexbodies then
     for _, flexbody in pairs (v.data.flexbodies) do
       for _, part in pairs(parts) do
-        if flexbody.partOrigin == part.val and part.highlight == true then
-          if flexbody.id ~= nil then
-            local f = obj.ibody:getFlexmesh(flexbody.fid)
-            if f then
-              obj:setMeshAlpha(f, 1)
+        if flexbody.partOrigin == part.val then
+          if part.highlight == true then
+            if flexbody.fid then
+              local f = obj.ibody:getFlexmesh(flexbody.fid)
+              if f then
+                obj:setMeshAlpha(f, 1)
+              end
+            else
+              obj:setMeshNameAlpha(1, flexbody.mesh, false)
             end
-          else 
-            obj:setMeshNameAlpha(1, flexbody.mesh, false) -- sets mesh to visibile if flexmesh doesn't exist
           end
         elseif flexbody.partOrigin == nil then
           obj:setMeshNameAlpha(1, flexbody.mesh, false) -- if part doesnt have an origin, we just set the mesh to visible

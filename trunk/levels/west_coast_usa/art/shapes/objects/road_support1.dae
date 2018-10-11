@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <asset>
     <contributor>
       <author>Blender User</author>
-      <authoring_tool>Blender 2.77.0 commit date:2016-04-05, commit time:18:12, hash:abf6f08</authoring_tool>
+      <authoring_tool>Blender 2.79.0 commit date:2017-09-11, commit time:10:43, hash:5bd8ac9</authoring_tool>
     </contributor>
-    <created>2016-09-13T17:37:00</created>
-    <modified>2016-09-13T17:37:00</modified>
+    <created>2018-02-28T15:43:27</created>
+    <modified>2018-02-28T15:43:27</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -14,6 +14,16 @@
   <library_effects>
     <effect id="concrete_plain-effect">
       <profile_COMMON>
+        <newparam sid="concrete_stained_n-surface">
+          <surface type="2D">
+            <init_from>concrete_stained_n</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="concrete_stained_n-sampler">
+          <sampler2D>
+            <source>concrete_stained_n-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -23,7 +33,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <texture texture="concrete_stained_n-sampler"/>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -79,13 +89,12 @@
         <vertices id="Circle_115-mesh-vertices">
           <input semantic="POSITION" source="#Circle_115-mesh-positions"/>
         </vertices>
-        <polylist material="concrete_plain-material" count="128">
+        <triangles material="concrete_plain-material" count="128">
           <input semantic="VERTEX" source="#Circle_115-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Circle_115-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Circle_115-mesh-map-0" offset="2" set="0"/>
-          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
           <p>93 0 0 140 1 1 141 0 2 101 2 3 106 3 4 29 3 5 142 4 6 85 5 7 86 6 8 52 7 9 97 8 10 133 8 11 64 9 12 39 10 13 60 11 14 111 12 15 25 13 16 68 14 17 119 15 18 88 16 19 120 17 20 86 6 21 5 18 22 6 18 23 17 19 24 15 20 25 8 20 26 36 21 27 31 22 28 33 21 29 96 23 30 36 21 31 33 21 32 78 24 33 100 25 34 102 26 35 77 27 36 90 28 37 50 29 38 107 30 39 87 31 40 108 31 41 101 2 42 138 32 43 134 33 44 71 34 45 138 32 46 28 35 47 130 36 48 94 37 49 103 38 50 72 39 51 135 40 52 73 41 53 48 42 54 110 43 55 145 43 56 113 44 57 146 12 58 111 12 59 132 45 60 91 46 61 155 47 62 35 23 63 95 48 64 14 48 65 20 49 66 84 4 67 142 4 68 24 50 69 137 51 70 22 51 71 93 0 72 21 52 73 18 52 74 54 53 75 52 7 76 51 54 77 127 55 78 63 56 79 47 57 80 117 58 81 0 59 82 118 59 83 32 60 84 12 61 85 13 62 86 89 15 87 153 63 88 156 63 89 18 52 90 19 30 91 107 30 92 20 49 93 74 64 94 75 49 95 144 65 96 150 66 97 115 67 98 99 68 99 27 69 100 106 3 101 130 36 102 37 19 103 17 19 104 80 70 105 92 71 106 64 9 107 80 70 108 7 72 109 123 73 110 22 51 111 40 74 112 158 74 113 148 75 114 91 46 115 90 28 116 106 3 117 121 76 118 29 3 119 104 77 120 94 37 121 16 78 122 23 79 123 136 50 124 24 50 125 47 57 126 65 80 127 49 81 128 122 60 129 151 82 130 30 82 131 23 79 132 11 83 133 26 79 134 151 82 135 139 84 136 30 82 137 68 14 138 27 69 139 67 85 140 82 72 141 16 78 142 7 72 143 126 86 144 129 87 145 46 88 146 139 84 147 159 89 148 157 89 149 98 90 150 135 40 151 114 90 152 143 91 153 48 42 154 44 92 155 128 93 156 39 10 157 37 19 158 62 94 159 44 92 160 124 95 161 61 96 162 147 97 163 45 98 164 79 99 165 70 100 166 72 39 167 113 44 168 28 35 169 3 12 170 69 101 171 51 54 172 66 102 173 88 16 174 117 58 175 120 17 176 31 22 177 1 103 178 2 103 179 57 104 180 4 105 181 56 106 182 109 107 183 65 80 184 83 107 185 59 108 186 42 109 187 58 110 188 116 111 189 150 66 190 147 97 191 93 0 192 149 1 193 140 1 194 101 2 195 99 68 196 106 3 197 142 4 198 84 4 199 85 5 200 52 7 201 55 7 202 97 8 203 64 9 204 92 71 205 39 10 206 111 12 207 146 12 208 25 13 209 119 15 210 89 15 211 88 16 212 86 6 213 85 5 214 5 18 215 17 19 216 37 19 217 15 20 218 36 21 219 34 22 220 31 22 221 96 23 222 35 23 223 36 21 224 78 24 225 76 112 226 100 25 227 77 27 228 148 75 229 90 28 230 107 30 231 19 30 232 87 31 233 101 2 234 29 3 235 138 32 236 71 34 237 134 33 238 138 32 239 130 36 240 17 19 241 94 37 242 72 39 243 70 100 244 135 40 245 48 42 246 154 42 247 110 43 248 113 44 249 3 12 250 146 12 251 132 45 252 112 45 253 91 46 254 35 23 255 96 23 256 95 48 257 20 49 258 75 49 259 84 4 260 24 50 261 136 50 262 137 51 263 93 0 264 141 0 265 21 52 266 54 53 267 55 7 268 52 7 269 127 55 270 131 113 271 63 56 272 117 58 273 38 58 274 0 59 275 32 60 276 122 60 277 12 61 278 89 15 279 119 15 280 153 63 281 18 52 282 21 52 283 19 30 284 20 49 285 9 114 286 74 64 287 144 65 288 81 65 289 150 66 290 99 68 291 67 85 292 27 69 293 130 36 294 128 93 295 37 19 296 80 70 297 123 73 298 92 71 299 80 70 300 82 72 301 7 72 302 22 51 303 137 51 304 40 74 305 148 75 306 155 47 307 91 46 308 106 3 309 105 76 310 121 76 311 104 77 312 103 38 313 94 37 314 23 79 315 26 79 316 136 50 317 47 57 318 63 56 319 65 80 320 122 60 321 32 60 322 151 82 323 23 79 324 10 115 325 11 83 326 151 82 327 152 116 328 139 84 329 68 14 330 25 13 331 27 69 332 82 72 333 104 77 334 16 78 335 126 86 336 125 117 337 129 87 338 139 84 339 152 116 340 159 89 341 98 90 342 73 41 343 135 40 344 143 91 345 154 42 346 48 42 347 128 93 348 60 11 349 39 10 350 62 94 351 143 91 352 44 92 353 61 96 354 116 111 355 147 97 356 79 99 357 53 118 358 70 100 359 113 44 360 71 34 361 28 35 362 69 101 363 54 53 364 51 54 365 88 16 366 38 58 367 117 58 368 31 22 369 34 22 370 1 103 371 57 104 372 41 119 373 4 105 374 109 107 375 49 81 376 65 80 377 59 108 378 43 120 379 42 109 380 116 111 381 115 67 382 150 66 383</p>
-        </polylist>
+        </triangles>
       </mesh>
     </geometry>
     <geometry id="Circle_116-mesh" name="Circle.116">
@@ -122,13 +131,12 @@
         <vertices id="Circle_116-mesh-vertices">
           <input semantic="POSITION" source="#Circle_116-mesh-positions"/>
         </vertices>
-        <polylist material="concrete_plain-material" count="48">
+        <triangles material="concrete_plain-material" count="48">
           <input semantic="VERTEX" source="#Circle_116-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Circle_116-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Circle_116-mesh-map-0" offset="2" set="0"/>
-          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
           <p>54 0 0 47 1 1 48 0 2 14 2 3 57 3 4 34 3 5 34 3 6 4 4 7 35 4 8 40 5 9 21 6 10 37 5 11 29 7 12 5 8 13 31 8 14 40 5 15 36 9 16 11 9 17 16 10 18 17 11 19 15 11 20 23 12 21 43 13 22 42 13 23 22 14 24 9 15 25 10 15 26 56 16 27 53 17 28 58 17 29 54 0 30 13 7 31 29 7 32 14 2 33 32 18 34 33 2 35 15 11 36 51 19 37 61 19 38 39 10 39 7 20 40 38 20 41 22 14 42 46 21 43 45 14 44 46 21 45 62 22 46 59 22 47 50 23 48 3 24 49 27 24 50 20 25 51 50 23 52 18 25 53 25 26 54 55 27 55 26 27 56 56 16 57 23 12 58 24 16 59 21 6 60 1 28 61 2 28 62 20 25 63 8 29 64 52 29 65 26 27 66 60 30 67 0 30 68 28 26 69 12 31 70 63 31 71 54 0 72 30 1 73 47 1 74 14 2 75 33 2 76 57 3 77 34 3 78 57 3 79 4 4 80 40 5 81 41 6 82 21 6 83 29 7 84 13 7 85 5 8 86 40 5 87 37 5 88 36 9 89 16 10 90 39 10 91 17 11 92 23 12 93 44 12 94 43 13 95 22 14 96 45 14 97 9 15 98 56 16 99 24 16 100 53 17 101 54 0 102 48 0 103 13 7 104 14 2 105 6 18 106 32 18 107 15 11 108 17 11 109 51 19 110 39 10 111 16 10 112 7 20 113 22 14 114 49 21 115 46 21 116 46 21 117 49 21 118 62 22 119 50 23 120 19 23 121 3 24 122 20 25 123 19 23 124 50 23 125 25 26 126 28 26 127 55 27 128 56 16 129 44 12 130 23 12 131 21 6 132 41 6 133 1 28 134 20 25 135 18 25 136 8 29 137 26 27 138 55 27 139 60 30 140 28 26 141 25 26 142 12 31 143</p>
-        </polylist>
+        </triangles>
       </mesh>
     </geometry>
     <geometry id="Circle_117-mesh" name="Circle.117">
@@ -165,13 +173,12 @@
         <vertices id="Circle_117-mesh-vertices">
           <input semantic="POSITION" source="#Circle_117-mesh-positions"/>
         </vertices>
-        <polylist material="concrete_plain-material" count="48">
+        <triangles material="concrete_plain-material" count="48">
           <input semantic="VERTEX" source="#Circle_117-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Circle_117-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Circle_117-mesh-map-0" offset="2" set="0"/>
-          <vcount>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 </vcount>
           <p>54 0 0 47 1 1 48 0 2 14 2 3 57 3 4 34 3 5 34 3 6 4 4 7 35 4 8 40 5 9 21 6 10 37 5 11 29 7 12 5 8 13 31 8 14 40 5 15 36 9 16 11 9 17 16 10 18 17 11 19 15 11 20 23 12 21 43 13 22 42 13 23 22 14 24 9 15 25 10 15 26 56 16 27 53 17 28 58 17 29 54 0 30 13 7 31 29 7 32 14 2 33 32 18 34 33 2 35 15 11 36 51 19 37 61 19 38 39 10 39 7 20 40 38 20 41 22 14 42 46 21 43 45 14 44 46 21 45 62 22 46 59 22 47 50 23 48 3 24 49 27 24 50 20 25 51 50 23 52 18 25 53 25 26 54 55 27 55 26 27 56 56 16 57 23 12 58 24 16 59 21 6 60 1 28 61 2 28 62 20 25 63 8 29 64 52 29 65 26 27 66 60 30 67 0 30 68 28 26 69 12 31 70 63 31 71 54 0 72 30 1 73 47 1 74 14 2 75 33 2 76 57 3 77 34 3 78 57 3 79 4 4 80 40 5 81 41 6 82 21 6 83 29 7 84 13 7 85 5 8 86 40 5 87 37 5 88 36 9 89 16 10 90 39 10 91 17 11 92 23 12 93 44 12 94 43 13 95 22 14 96 45 14 97 9 15 98 56 16 99 24 16 100 53 17 101 54 0 102 48 0 103 13 7 104 14 2 105 6 18 106 32 18 107 15 11 108 17 11 109 51 19 110 39 10 111 16 10 112 7 20 113 22 14 114 49 21 115 46 21 116 46 21 117 49 21 118 62 22 119 50 23 120 19 23 121 3 24 122 20 25 123 19 23 124 50 23 125 25 26 126 28 26 127 55 27 128 56 16 129 44 12 130 23 12 131 21 6 132 41 6 133 1 28 134 20 25 135 18 25 136 8 29 137 26 27 138 55 27 139 60 30 140 28 26 141 25 26 142 12 31 143</p>
-        </polylist>
+        </triangles>
       </mesh>
     </geometry>
   </library_geometries>
@@ -180,43 +187,37 @@
     <visual_scene id="Scene" name="Scene">
       <node id="base00" name="base00" type="NODE">
         <matrix sid="transform">1 0 0 9.54475e-5 0 1 0 2.05673e-4 0 0 1 6.57132e-5 0 0 0 1</matrix>
-        <node id="bb_autobillboard25" name="bb_autobillboard25" type="NODE">
-          <matrix sid="transform">1 0 0 -9.54475e-5 0 1 0 -2.05673e-4 0 0 1 -6.57132e-5 0 0 0 1</matrix>
-        </node>
         <node id="start01" name="start01" type="NODE">
           <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
-          <node id="road_support1_a100" name="road_support1_a100" type="NODE">
-            <matrix sid="transform">1 0 0 -9.54475e-5 0 1 0 -2.05673e-4 0 0 1 -6.57132e-5 0 0 0 1</matrix>
-            <instance_geometry url="#Circle_115-mesh" name="road_support1_a100">
+          <node id="nulldetail25" name="nulldetail25" type="NODE">
+            <matrix sid="transform">1 0 0 3.7346e-6 0 1 0 3.20375e-7 0 0 1 2.95136e-6 0 0 0 1</matrix>
+          </node>
+          <node id="road_support1_a200" name="road_support1_a200" type="NODE">
+            <matrix sid="transform">1 0 0 3.7346e-6 0 1 0 3.20375e-7 0 0 1 -8.63336e-7 0 0 0 1</matrix>
+            <instance_geometry url="#Circle_115-mesh" name="road_support1_a200">
               <bind_material>
                 <technique_common>
-                  <instance_material symbol="concrete_plain-material" target="#concrete_plain-material">
-                    <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-                  </instance_material>
+                  <instance_material symbol="concrete_plain-material" target="#concrete_plain-material"/>
                 </technique_common>
               </bind_material>
             </instance_geometry>
           </node>
-          <node id="road_support1_a050" name="road_support1_a050" type="NODE">
-            <matrix sid="transform">1 0 0 -9.54475e-5 0 1 0 -2.05673e-4 0 0 1 -6.57132e-5 0 0 0 1</matrix>
-            <instance_geometry url="#Circle_116-mesh" name="road_support1_a050">
+          <node id="road_support1_a100" name="road_support1_a100" type="NODE">
+            <matrix sid="transform">1 0 0 3.7346e-6 0 1 0 3.20375e-7 0 0 1 -8.63336e-7 0 0 0 1</matrix>
+            <instance_geometry url="#Circle_116-mesh" name="road_support1_a100">
               <bind_material>
                 <technique_common>
-                  <instance_material symbol="concrete_plain-material" target="#concrete_plain-material">
-                    <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-                  </instance_material>
+                  <instance_material symbol="concrete_plain-material" target="#concrete_plain-material"/>
                 </technique_common>
               </bind_material>
             </instance_geometry>
           </node>
           <node id="Colmesh-1" name="Colmesh-1" type="NODE">
-            <matrix sid="transform">1 0 0 -9.54475e-5 0 1 0 -2.05673e-4 0 0 1 -6.57132e-5 0 0 0 1</matrix>
+            <matrix sid="transform">1 0 0 3.7346e-6 0 1 0 3.20375e-7 0 0 1 2.95136e-6 0 0 0 1</matrix>
             <instance_geometry url="#Circle_117-mesh" name="Colmesh-1">
               <bind_material>
                 <technique_common>
-                  <instance_material symbol="concrete_plain-material" target="#concrete_plain-material">
-                    <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-                  </instance_material>
+                  <instance_material symbol="concrete_plain-material" target="#concrete_plain-material"/>
                 </technique_common>
               </bind_material>
             </instance_geometry>

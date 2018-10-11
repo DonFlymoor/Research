@@ -68,6 +68,7 @@ local function updateGFX(device, dt)
   device.misShiftPenaltyTimer = max(device.misShiftPenaltyTimer - dt, 0)
   if lastMisShiftTimer > 0 and device.misShiftPenaltyTimer <= 0 then
     device.gearRatio = device.gearRatios[device.gearIndex]
+    powertrain.calculateTreeInertia()
     selectUpdates(device)
   end
 end
@@ -84,14 +85,14 @@ local function setGearIndex(device, index)
       obj:playSFXOnce(device.gearGrindSoundFile, device.transmissionNodeID or sounds.engineNode, min(max(avDifference / 80, 0), 5), min(max(avDifference / 20, 0.95), 1.1))
     end
     if damage > device.gearDamageThreshold * 0.01 and device.gearDamages[device.gearIndex] < device.gearDamageThreshold then
-      gui.message({txt=string.format("Gear %g damaged (%d%%), please use the clutch!", device.gearIndex, device.gearDamages[device.gearIndex] / device.gearDamageThreshold * 100), context = { }}, 5, "vehicle.damage.gears")
+      gui.message({txt = string.format("Gear %g damaged (%d%%), please use the clutch!", device.gearIndex, device.gearDamages[device.gearIndex] / device.gearDamageThreshold * 100), context = {}}, 5, "vehicle.damage.gears")
     end
   end
 
   if device.gearDamages[device.gearIndex] >= device.gearDamageThreshold and device.gearRatios[device.gearIndex] ~= 0 then
     --gear broken...
     device.gearRatios[device.gearIndex] = 0
-    gui.message({txt=string.format("Gear %g permanently broken", device.gearIndex), context = { }}, 5, "vehicle.damage.gears")
+    gui.message({txt = string.format("Gear %g permanently broken", device.gearIndex), context = {}}, 5, "vehicle.damage.gears")
     damageTracker.setDamage("powertrain", device.name, true)
   end
 
@@ -148,7 +149,7 @@ local function calculateInertia(device)
     maxCumulativeGearRatio = child.maxCumulativeGearRatio
   end
 
-  local gearRatio = device.gearRatio ~= 0 and abs(device.gearRatio) or device.maxGearRatio
+  local gearRatio = device.gearRatio ~= 0 and abs(device.gearRatio) or (device.maxGearRatio * 2)
   device.cumulativeInertia = outputInertia / gearRatio / gearRatio
   device.invCumulativeInertia = 1 / device.cumulativeInertia
 
@@ -192,11 +193,11 @@ local function reset(device)
   device.gearIndex = 1
   device.gearDamages = {}
 
-  for k,v in pairs(device.initialGearRatios) do
+  for k, v in pairs(device.initialGearRatios) do
     device.gearRatios[k] = v
   end
 
-  for k,v in pairs(device.initialGearDamages) do
+  for k, v in pairs(device.initialGearDamages) do
     device.gearDamages[k] = v
   end
 
@@ -210,7 +211,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -221,21 +221,17 @@ local function new(jbeamData)
     cumulativeGearRatio = 1,
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
-
     outputAV1 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     virtualMassAV = 0,
     isBroken = false,
-
     lockCoef = 1,
     misShiftPenaltyTimer = 0,
-
     gearIndex = 1,
     gearRatios = {},
     gearDamages = {},
     gearDamageThreshold = jbeamData.gearDamageThreshold or 3000,
-
     reset = reset,
     updateGFX = updateGFX,
     initSounds = initSounds,
@@ -245,18 +241,18 @@ local function new(jbeamData)
     validate = validate,
     setLock = setLock,
     calculateInertia = calculateInertia,
-    setGearIndex = setGearIndex,
+    setGearIndex = setGearIndex
   }
 
   local forwardGears = {}
   local reverseGears = {}
   local forwardGearDamages = {}
   local reverseGearDamages = {}
-  for _,v in pairs(jbeamData.gearRatios) do
+  for _, v in pairs(jbeamData.gearRatios) do
     table.insert(v >= 0 and forwardGears or reverseGears, v)
   end
 
-  for _,v in pairs(jbeamData.gearDamages or {}) do
+  for _, v in pairs(jbeamData.gearDamages or {}) do
     table.insert(v >= 0 and forwardGearDamages or reverseGearDamages, abs(v))
   end
 
@@ -294,7 +290,7 @@ local function new(jbeamData)
 
   device.straightCutGearIndexes = {}
   if jbeamData.straightCutGearIndexes and type(jbeamData.straightCutGearIndexes) == "table" then
-    for _,v in pairs(jbeamData.straightCutGearIndexes) do
+    for _, v in pairs(jbeamData.straightCutGearIndexes) do
       device.straightCutGearIndexes[v] = true
     end
   else
@@ -305,7 +301,7 @@ local function new(jbeamData)
     device.transmissionNodeID = jbeamData.gearboxNode_nodes[1]
   end
 
-  device.shiftDenialMinimumAVDifference = (jbeamData.shiftDenialMinimumAVDifference or 200) * rpmToAV
+  device.shiftDenialMinimumAVDifference = (jbeamData.shiftDenialMinimumRPMDifference or 200) * rpmToAV
 
   device:setGearIndex(0)
 

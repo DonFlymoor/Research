@@ -1,8 +1,8 @@
 <link type="text/css" rel="stylesheet" href="modules/garageNew/garagePaint/paint.css">
 
-<div style="max-height: 570px; height: 50%; width: 400px; color: currentColor; position: absolute; top: 15%; left: 5%;">
+<div style="max-height: 60%; min-height: 200px; width: 400px; color: currentColor; position: absolute; top: 15%; left: 5%; bottom: 0;">
   <gp-panel rotated="true" open-tab="gpPaint.currentPalette" default-active="true">
-    <gp-panel-tab icon="{{::$index === 0 ? '#garage_spray_can_color' : '#garage_spray_can_' + $index }}" ng-repeat="i in gpPaint.color track by $index" ng-init="paletteIndex = $index" bng-nav-root rotated="true">
+    <gp-panel-tab icon="{{::$index === 0 ? 'garage_spray_can_color' : 'garage_spray_can_' + $index }}" ng-repeat="i in gpPaint.color track by $index" ng-init="paletteIndex = $index" bng-nav-root rotated="true">
       <gp-panel-tab-header>
         <span translate="ui.garage.paint.base" ng-if=":: $index === 0"></span>
         <span translate="ui.garage.paint.decals" translate-values="{id: $index}" ng-if=":: $index !== 0"></span>
@@ -26,10 +26,10 @@
   </gp-panel>
 </div>
 
-<div style="height: 570px; width: 400px; color: currentColor; position: absolute; top: 15%; right: 5%;">
+<div style="max-height: 600px; min-height: 200px; width: 400px; color: currentColor; position: absolute; top: 15%; right: 5%; bottom: 60px;">
   <gp-panel open-tab="gpPaint.currentDetails">
 
-    <gp-panel-tab icon="#garage_color_drop" bng-nav-root>
+    <gp-panel-tab icon="garage_color_drop" bng-nav-root>
       <gp-panel-tab-header>
         {{:: 'ui.garage.paint.customize' | translate}}
       </gp-panel-tab-header>
@@ -67,7 +67,7 @@
       </gp-panel-tab-footer>
     </gp-panel-tab>
 
-    <gp-panel-tab icon="#garage_plate" bng-nav-root>
+    <gp-panel-tab icon="garage_plate" bng-nav-root>
       <gp-panel-tab-header>
         {{:: 'ui.garage.paint.licensePlate' | translate}}
       </gp-panel-tab-header>

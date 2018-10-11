@@ -144,11 +144,3 @@ singleton Material(race_wood)
     materialTag1 = "Race";
     materialTag1 = "rally";
 };
-
-singleton Material(race_rally_gate_finish_race_checkered)
-{
-    mapTo = "race_checkered";
-    diffuseColor[0] = "0.64 0.64 0.64 1";
-    doubleSided = "1";
-    translucentBlendOp = "None";
-};

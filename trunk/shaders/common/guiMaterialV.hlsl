@@ -7,11 +7,12 @@ struct MaterialDecoratorConnectV
    float2 uv0 : TEXCOORD0;
 };
 
+uniform float4x4 modelview;
+
 //-----------------------------------------------------------------------------
 // Main                                                                        
 //-----------------------------------------------------------------------------
-MaterialDecoratorConnectV main( VertexIn_PCT IN,
-                                    uniform float4x4 modelview : register(C0) )
+MaterialDecoratorConnectV main( VertexIn_PCT IN )
 {
    MaterialDecoratorConnectV OUT;
 

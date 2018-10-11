@@ -3,11 +3,8 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
-
-local min = math.min
-local max = math.max
 
 local hasRegisteredQuickAccess = false
 
@@ -18,7 +15,7 @@ local lastLightbarElectric = -1
 
 local function updateGFX(dt)
   if lastLightbarElectric ~= electrics.values.lightbar then
-    for k,v in pairs(currentMode.electrics) do
+    for k, v in pairs(currentMode.electrics) do
       v.timer = 0
       v.stateIndex = 1
       electrics.values[k] = 0
@@ -26,8 +23,10 @@ local function updateGFX(dt)
     lastLightbarElectric = electrics.values.lightbar
   end
 
-  if not currentMode or electrics.values.lightbar <= 0 then return end
-  for k,v in pairs(currentMode.electrics) do
+  if not currentMode or electrics.values.lightbar <= 0 then
+    return
+  end
+  for k, v in pairs(currentMode.electrics) do
     if electrics.values.lightbar > 0 then
       v.timer = v.timer + dt
       if v.timer >= v.states[v.stateIndex].duration then
@@ -50,16 +49,16 @@ local function setModeIndex(index)
   currentModeIndex = index
   currentMode = modes[currentModeIndex]
 
-  for k,v in pairs(currentMode.electrics) do
+  for k, v in pairs(currentMode.electrics) do
     v.timer = 0
     v.stateIndex = 1
     electrics.values[k] = 0
   end
 
-  gui.message("Lightbar Mode: "..currentMode.name, 5, "vehicle.lightbar.mode")
+  gui.message("Lightbar Mode: " .. currentMode.name, 5, "vehicle.lightbar.mode")
 end
 
-local function toggleMode(value)
+local function toggleMode()
   currentModeIndex = currentModeIndex + 1
   if currentModeIndex > #modes then
     currentModeIndex = 1
@@ -69,11 +68,11 @@ end
 
 local function init(jbeamData)
   modes = tableFromHeaderTable(jbeamData.modes)
-  for k,v in pairs(modes) do
+  for _, v in pairs(modes) do
     local configEntries = tableFromHeaderTable(deepcopy(v.config))
     v.config = nil
     v.electrics = {}
-    for i,j in pairs(configEntries) do
+    for _, j in pairs(configEntries) do
       if not v.electrics[j.electric] then
         v.electrics[j.electric] = {states = {}, timer = 0, stateIndex = 1}
       end
@@ -86,20 +85,33 @@ local function init(jbeamData)
   lastLightbarElectric = electrics.values.lightbar
 
   if not hasRegisteredQuickAccess and #modes > 1 then
-    core_quickAccess.addEntry({ level = '/electrics/', generator = function(entries)
-          if controller.getController('lightbar') then
-            table.insert(entries, { title = 'Lightbar Modes', priority = 40, ["goto"] = '/electrics/lightbarmodes/', icon = 'settings' })
+    core_quickAccess.addEntry(
+      {
+        level = "/electrics/",
+        generator = function(entries)
+          if controller.getController("lightbar") then
+            table.insert(entries, {title = "Lightbar Modes", priority = 40, ["goto"] = "/electrics/lightbarmodes/", icon = "settings"})
           end
-        end})
-    core_quickAccess.addEntry({ level = '/electrics/lightbarmodes/', generator = function(entries)
-          for k,v in pairs(modes) do
-            local entry = { title = v.name, onSelect = function() setModeIndex(k) return {'reload'} end}
+        end
+      }
+    )
+    core_quickAccess.addEntry(
+      {
+        level = "/electrics/lightbarmodes/",
+        generator = function(entries)
+          for k, v in pairs(modes) do
+            local entry = {title = v.name, onSelect = function()
+                setModeIndex(k)
+                return {"reload"}
+              end}
             if currentModeIndex == k then
-              entry.color = '#ff6600'
+              entry.color = "#ff6600"
             end
             table.insert(entries, entry)
           end
-        end})
+        end
+      }
+    )
     hasRegisteredQuickAccess = true
   end
 end

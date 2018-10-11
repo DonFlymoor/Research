@@ -10,6 +10,11 @@
         ["type", "default", "description"]
         ["soundscape_siren","soundscape_siren_10", "Siren Audio"],
     ],
+    "soundscape": [
+        ["name", "src"],
+        //affects siren location because siren soundscape part is loaded after
+        {"node:":"etk800_lightbar_1"},
+    ],
     "controller": [
         ["fileName"],
         ["lightbar", {

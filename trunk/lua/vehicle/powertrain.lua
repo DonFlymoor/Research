@@ -31,7 +31,7 @@ local canResetDevices = false
 
 local deviceFactories = nil
 local availableDeviceFactories = nil
-local factoryBlackList = {combustionEngineThermals = true, supercharger = true, turbocharger = true, nitrousOxideInjection = true }
+local factoryBlackList = {combustionEngineThermals = true, supercharger = true, turbocharger = true, nitrousOxideInjection = true}
 local powertrainDevices = {} --keeps track of all available powertrain devices, also used as LUT
 local orderedDevices = {}
 local deviceCount = 0
@@ -54,7 +54,7 @@ local function dumpsDeviceData(device)
     local data = deepcopy(device)
     if data.children then
       data.children = {}
-      for _,v in pairs(device.children) do
+      for _, v in pairs(device.children) do
         table.insert(data.children, v.name or "unknown")
       end
     end
@@ -72,18 +72,18 @@ end
 
 local function sendDeviceData()
   if streams.willSend("powertrainDeviceData") then
-    for _,v in pairs(powertrainDevices) do
+    for _, v in pairs(powertrainDevices) do
       deviceStream[v.name] = deviceStream[v.name] or {outputTorque = {}, outputAV = {}}
       local di = 1
-      for i,_ in pairs(v.outputPorts) do
-        deviceStream[v.name].outputTorque[di] = v["outputTorque"..tostring(i)]
-        deviceStream[v.name].outputAV[di] = v["outputAV"..tostring(i)]
+      for i, _ in pairs(v.outputPorts) do
+        deviceStream[v.name].outputTorque[di] = v["outputTorque" .. tostring(i)]
+        deviceStream[v.name].outputAV[di] = v["outputAV" .. tostring(i)]
         di = di + 1
       end
       deviceStream[v.name].currentMode = (v.availableModes and #v.availableModes > 1) and v.mode or nil
     end
     -- dump(deviceStream)
-    gui.send('powertrainDeviceData', {devices = deviceStream})
+    gui.send("powertrainDeviceData", {devices = deviceStream})
   end
 end
 
@@ -147,7 +147,7 @@ local function sendDeviceTree()
       for _, d1 in pairs(d.children) do
         inverseMap[d1.inputIndex] = d1.name
       end
-      for i,_ in pairs(d.outputPorts) do
+      for i, _ in pairs(d.outputPorts) do
         table.insert(device.children, inverseMap[i])
       end
     end
@@ -198,10 +198,10 @@ local function buildDeviceTree(t)
   M.cumulativeGearRatio = max(M.cumulativeGearRatio, t.cumulativeGearRatio)
 
   if t.requiredExternalInertiaOutputs then
-    for _,index in pairs(t.requiredExternalInertiaOutputs) do
+    for _, index in pairs(t.requiredExternalInertiaOutputs) do
       local hasMatchingChild = false
-      for _,child in pairs(t.children or {}) do
-        if child.inputIndex == index  then
+      for _, child in pairs(t.children or {}) do
+        if child.inputIndex == index then
           hasMatchingChild = true
           break
         end
@@ -213,7 +213,7 @@ local function buildDeviceTree(t)
         end
         log("W", "powertrain.buildDeviceTree", string.format("Adding a dummy shaft to device '%s' on output '%d'", t.name, index))
         t.children = t.children or {}
-        local dummyShaft = deviceFactories["shaft"].new(makeDummyShaft("dummyShaft"..tostring(dummyShaftCounter), t.name, index))
+        local dummyShaft = deviceFactories["shaft"].new(makeDummyShaft("dummyShaft" .. tostring(dummyShaftCounter), t.name, index))
         dummyShaftCounter = dummyShaftCounter + 1
         dummyShaft.parent = t
         table.insert(t.children, dummyShaft)
@@ -224,7 +224,7 @@ local function buildDeviceTree(t)
   --check how many of our children ARE actually connected properly and adjust their parent if they aren't
   t.connectedChildrenCount = tableSize(t.children)
   if t.children then
-    for _,v in pairs(t.children) do
+    for _, v in pairs(t.children) do
       if not t.outputPorts[v.inputIndex] then
         v.parent = nil
         t.connectedChildrenCount = t.connectedChildrenCount - 1
@@ -248,7 +248,7 @@ local function buildDeviceTree(t)
   table.insert(orderedDevices, t)
 
   if t.children then
-    for _,v in pairs(t.children) do
+    for _, v in pairs(t.children) do
       buildDeviceTree(v)
     end
   end
@@ -272,17 +272,17 @@ local function init()
 
   if not availableDeviceFactories then
     availableDeviceFactories = {}
-    local globalDirectory = 'lua/vehicle/powertrain'
-    local vehicleDirectory = vehiclePath..'lua/powertrain'
+    local globalDirectory = "lua/vehicle/powertrain"
+    local vehicleDirectory = vehiclePath .. "lua/powertrain"
     local globalFiles = FS:findFiles(globalDirectory, "*.lua", -1, true, false)
     local vehicleFiles = FS:findFiles(vehicleDirectory, "*.lua", -1, true, false)
     local files = tableMerge(globalFiles, vehicleFiles)
     if files then
       for _, filePath in ipairs(files) do
         local _, file, _ = path.split(filePath)
-        local fileName = file:sub(1,-5)
+        local fileName = file:sub(1, -5)
         if not factoryBlackList[fileName] then
-          local deviceFactoryPath = "powertrain/"..fileName
+          local deviceFactoryPath = "powertrain/" .. fileName
           availableDeviceFactories[fileName] = deviceFactoryPath
         end
       end
@@ -294,11 +294,11 @@ local function init()
   --dump(availableDeviceFactories)
 
   M.wheels = {}
-  for _,wd in pairs(wheels.wheelRotators) do
+  for _, wd in pairs(wheels.wheelRotators) do
     M.wheels[wd.name] = wd
   end
 
-  if not v.data.powertrain and (v.data.differentials or v.data.engine)  then
+  if not v.data.powertrain and (v.data.differentials or v.data.engine) then
     log("D", "powertrain.init", "Found old drivetrain data, creating compatibility powertrain")
     local result = backwardsCompatibility.createCompatibilityPowertrain()
     if not result then
@@ -315,7 +315,7 @@ local function init()
     end
 
     local deviceLookup = {}
-    for _,jbeamData in pairs(deepcopy(v.data.powertrain)) do
+    for _, jbeamData in pairs(deepcopy(v.data.powertrain)) do
       tableMergeRecursive(jbeamData, v.data[jbeamData.name] or {})
 
       --we need these during the tree building, so we need to init them right now
@@ -335,7 +335,7 @@ local function init()
         device.uiName = jbeamData.uiName or device.name
         deviceLookup[device.name] = device
       else
-        log("E", "powertrain.init", "Found unknown powertrain device type: "..jbeamData.type)
+        log("E", "powertrain.init", "Found unknown powertrain device type: " .. jbeamData.type)
         log("E", "powertrain.init", "Powertrain will not work!")
         return
       end
@@ -343,9 +343,9 @@ local function init()
 
     --dump(deviceFactories)
 
-    for _,device in pairs(deviceLookup) do
+    for _, device in pairs(deviceLookup) do
       if device.name == device.inputName then
-        log("E", "powertrain.init", "You can't link a device to itself. Device name: "..device.name)
+        log("E", "powertrain.init", "You can't link a device to itself. Device name: " .. device.name)
         log("E", "powertrain.init", "Powertrain will not work!")
         return
       end
@@ -356,7 +356,7 @@ local function init()
       end
     end
 
-    for _,device in pairs(deviceLookup) do
+    for _, device in pairs(deviceLookup) do
       if not device.parent then
         buildDeviceTree(device)
       end
@@ -366,16 +366,16 @@ local function init()
 
     local beamTriggers = {}
     beamBrokenEvents = {}
-    for _,device in pairs(powertrainDevices) do
+    for _, device in pairs(powertrainDevices) do
       device.parent = device.parent or {isFake = true, outputTorque0 = 0, outputTorque1 = 0, outputTorque2 = 0, deviceCategories = {}}
-      device.parentOutputAVName = "outputAV"..tostring(device.inputIndex)
-      device.parentOutputTorqueName = "outputTorque"..tostring(device.inputIndex)
+      device.parentOutputAVName = "outputAV" .. tostring(device.inputIndex)
+      device.parentOutputTorqueName = "outputTorque" .. tostring(device.inputIndex)
 
       if device.breakTriggerBeam then
         if type(device.breakTriggerBeam) ~= "table" then
-          device.breakTriggerBeam = { device.breakTriggerBeam }
+          device.breakTriggerBeam = {device.breakTriggerBeam}
         end
-        for _,name in pairs(device.breakTriggerBeam) do
+        for _, name in pairs(device.breakTriggerBeam) do
           beamTriggers[name] = device.name
         end
       end
@@ -385,9 +385,9 @@ local function init()
       end
     end
 
---    for _,device in pairs(powertrainDevices) do
---      print(device.name)
---    end
+    --    for _,device in pairs(powertrainDevices) do
+    --      print(device.name)
+    --    end
 
     beamBrokenEventCount = #beamBrokenEvents
 
@@ -396,13 +396,13 @@ local function init()
 
     --dump(beamTriggers)
     --dump(beamBrokenEvents)
---    for k,v in pairs(powertrainDevices) do
---      print(v.name)
---      print(dumpsDeviceData(v))
---    end
+    --    for k,v in pairs(powertrainDevices) do
+    --      print(v.name)
+    --      print(dumpsDeviceData(v))
+    --    end
     --dump(speedOrderedDevices)
 
-    for _,v in pairs(v.data.beams) do
+    for _, v in pairs(v.data.beams) do
       if v.name and v.name ~= "" and beamTriggers[v.name] then
         breakTriggerBeams[v.cid] = beamTriggers[v.name]
       end
@@ -412,7 +412,7 @@ local function init()
 
     hasPowertrain = true
     canResetDevices = true
-    for _,device in pairs(powertrainDevices) do
+    for _, device in pairs(powertrainDevices) do
       local hasReset = device.reset ~= nil
       local hasResetSounds = device.initSounds ~= nil and device.resetSounds ~= nil or true
       canResetDevices = canResetDevices and hasReset and hasResetSounds
@@ -421,7 +421,7 @@ local function init()
     end
 
     if tableSize(previousDeviceModes) > 0 then
-      for k,v in pairs(previousDeviceModes) do
+      for k, v in pairs(previousDeviceModes) do
         powertrainDevices[k]:setMode(v)
       end
     end
@@ -437,7 +437,7 @@ local function init()
   torqueReactionCoefs2 = {}
   torsionReactorCount = 0
   torsionReactorIndexes = {}
-  for _,rotator in pairs(wheels.wheelRotators) do
+  for _, rotator in pairs(wheels.wheelRotators) do
     if rotator.torsionReactor then
       if not torsionReactorIndexes[rotator.torsionReactor.name] then
         torsionReactorCount = torsionReactorCount + 1
@@ -458,7 +458,7 @@ local function initSounds()
     return
   end
 
-  for _,device in pairs(powertrainDevices) do
+  for _, device in pairs(powertrainDevices) do
     if device.initSounds then
       device:initSounds()
     end
@@ -476,7 +476,7 @@ local function reset()
     return
   end
 
-  for _,device in pairs(powertrainDevices) do
+  for _, device in pairs(powertrainDevices) do
     device:reset()
     damageTracker.setDamage("powertrain", device.name, device.isBroken or false)
   end
@@ -486,7 +486,7 @@ local function reset()
 
   M.torqueReactionCoefs = {}
   torqueReactionCoefs2 = {}
-  for _,rotator in pairs(wheels.wheelRotators) do
+  for _, rotator in pairs(wheels.wheelRotators) do
     if rotator.torsionReactor then
       local trIdx = torsionReactorIndexes[rotator.torsionReactor.name]
       M.torqueReactionCoefs[trIdx] = 0
@@ -506,7 +506,7 @@ local function resetSounds()
     return
   end
 
-  for _,device in pairs(powertrainDevices) do
+  for _, device in pairs(powertrainDevices) do
     if device.resetSounds then
       device:resetSounds()
     end
@@ -525,7 +525,7 @@ local function beamBroke(id)
   local device = powertrainDevices[breakTriggerBeams[id]]
   device:onBreak()
 
-  gui.message({txt = "vehicle.drivetrain.deviceBroken", context = {deviceName = device.uiName}}, 10, "vehicle.damage.device."..device.uiName)
+  gui.message({txt = "vehicle.drivetrain.deviceBroken", context = {deviceName = device.uiName}}, 10, "vehicle.damage.device." .. device.uiName)
   damageTracker.setDamage("powertrain", device.name, true)
 end
 
@@ -547,7 +547,7 @@ local function toggleDeviceMode(name)
 
   local found = false
   local newMode = device.mode
-  for _,v in pairs(device.availableModes) do
+  for _, v in pairs(device.availableModes) do
     if found then
       newMode = v
       found = false
@@ -567,13 +567,13 @@ end
 
 local function toggleDefaultDiffs()
   local mode = nil
-  for _,v in pairs(powertrainDevices) do
+  for _, v in pairs(powertrainDevices) do
     if v.type == "differential" and v.defaultToggle then
       mode = toggleDeviceMode(v.name)
     end
   end
   if mode ~= nil then
-    gui.message("Differential Mode: "..mode, 10, "vehicle.powertrain.diffmode")
+    gui.message("Differential Mode: " .. mode, 10, "vehicle.powertrain.diffmode")
   end
 end
 
@@ -591,7 +591,7 @@ end
 
 local function getDevicesByType(deviceType)
   local result = {}
-  for _,v in pairs(powertrainDevices) do
+  for _, v in pairs(powertrainDevices) do
     if v.type == deviceType then
       table.insert(result, v)
     end
@@ -601,7 +601,7 @@ end
 
 local function getDevicesByCategory(category)
   local result = {}
-  for _,v in pairs(powertrainDevices) do
+  for _, v in pairs(powertrainDevices) do
     if v.deviceCategories[category] then
       table.insert(result, v)
     end
@@ -649,7 +649,7 @@ function startProfile()
   --require("extensions/p").start("Fl-99sm0")
   --require("extensions/p").start("am0i0","report.txt")
   --require("extensions/p").start("Flp9-9m0i0","report.txt")
-  require("extensions/p").start("Fplm0i0","beam-profiler.log")
+  require("extensions/p").start("Fplm0i0", "beam-profiler.log")
 end
 
 function endProfile()
@@ -657,9 +657,6 @@ function endProfile()
 end
 
 return M
-
-
-
 
 -------------------------------------------------------------
 ------ Don't remove, left it here for future reference ------

@@ -37,13 +37,14 @@ addNodeWithOptions  add the node with options
 void addNodeWithOptions(string vehicle, table parentSection, number pos, number ntype, table options);
 --]]
 function addNodeWithOptions(vehicle, parentSection, pos, ntype, options)
-  local nextID = increaseMax(vehicle, 'nodes')
-
-  local n = {}
+  local n
   if type(options) == 'table' then
     n = deepcopy(options)
+  else
+    n = {}
   end
 
+  local nextID = increaseMax(vehicle, 'nodes')
   n.cid     = nextID
   n.pos     = pos
   n.ntype   = ntype
@@ -78,32 +79,35 @@ addBeamWithOptions add beams with options
 table addBeamWithOptions(table vehicle, string parentSection, string id1, string id2, number beamType, table options);
 --]]
 function addBeamWithOptions(vehicle, parentSection, id1, id2, beamType, options, id3)
-  if id1 == nil and options.id1 ~= nil then id1 = options.id1 end
-  if id2 == nil and options.id2 ~= nil then id2 = options.id2 end
+  id1 = id1 or options.id1
+  id2 = id2 or options.id2
 
   -- check if nodes are valid
   local node1 = vehicle.nodes[id1]
-  if node1 == nil then
-    log_jbeam('W', "jbeam.addBeamWithOptions","invalid node "..tostring(id1).." for new beam between "..tostring(id1).."->"..tostring(id2))
-    return
-  end
   local node2 = vehicle.nodes[id2]
-  if node2 == nil then
-    log_jbeam('W', "jbeam.addBeamWithOptions","invalid node "..tostring(id2).." for new beam between "..tostring(id1).."->"..tostring(id2))
-    return
+  if node1 == nil or node2 == nil then
+    if node1 == nil then
+      log_jbeam('W', "jbeam.addBeamWithOptions","invalid node "..tostring(id1).." for new beam between "..tostring(id1).."->"..tostring(id2))
+      return
+    end
+    if node2 == nil then
+      log_jbeam('W', "jbeam.addBeamWithOptions","invalid node "..tostring(id2).." for new beam between "..tostring(id1).."->"..tostring(id2))
+      return
+    end
   end
 
   -- increase counters
   local nextID = increaseMax(vehicle, 'beams')
 
-  local b = {}
-  if options ~= nil and type(options) == 'table' then
+  local b
+  if type(options) == 'table' then
     b = deepcopy(options)
+  else
+    b = {}
   end
 
-  local node3
   if id3 ~= nil then
-    node3 = vehicle.nodes[id3]
+    local node3 = vehicle.nodes[id3]
     if node3 == nil then
       log_jbeam('W', "jbeam.addBeamWithOptions","invalid node "..tostring(id3).." for new beam between "..tostring(id1).."->"..tostring(id2))
       return

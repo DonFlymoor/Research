@@ -30,24 +30,24 @@
         {"tireWidth":0.145},
 
         //tire options
-        {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":10},
-        {"wheelSideBeamSpringExpansion":301000,"wheelSideBeamDampExpansion":25},
-        {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
+        {"wheelSideBeamSpring":1000,"wheelSideBeamDamp":15},
+        {"wheelSideBeamSpringExpansion":301000,"wheelSideBeamDampExpansion":15},
+        {"wheelSideTransitionZone":0.05,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":40},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":16000,"wheelReinfBeamDamp":120},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":1},
 
-        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":22},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":60},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":22},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":1.01},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":16},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":101000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
 
-        {"wheelPeripheryReinfBeamSpring":61000,"wheelPeripheryReinfBeamDamp":16},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.01},
 
         //general tire values
         {"nodeWeight":0.105},
@@ -62,8 +62,8 @@
         {"treadCoef":0.6},
 
         //advanced friction values
-        {"noLoadCoef":1.4},
-        {"loadSensitivitySlope":0.00022}
+        {"noLoadCoef":1.33},
+        {"loadSensitivitySlope":0.00016}
         {"fullLoadCoef":0.4},
         {"softnessCoef":0.7},
 
@@ -106,24 +106,24 @@
         {"tireWidth":0.145},
 
         //tire options
-        {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":10},
-        {"wheelSideBeamSpringExpansion":301000,"wheelSideBeamDampExpansion":25},
-        {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
+        {"wheelSideBeamSpring":1000,"wheelSideBeamDamp":15},
+        {"wheelSideBeamSpringExpansion":301000,"wheelSideBeamDampExpansion":15},
+        {"wheelSideTransitionZone":0.05,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":16000,"wheelReinfBeamDamp":40},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":12000,"wheelReinfBeamDamp":100},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":1},
 
-        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":22},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":60},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":22},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":1.01},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":16},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":101000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
 
-        {"wheelPeripheryReinfBeamSpring":61000,"wheelPeripheryReinfBeamDamp":16},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.01},
 
         //general tire values
         {"nodeWeight":0.105},
@@ -186,20 +186,20 @@
         {"wheelSideBeamSpringExpansion":341000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.07,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":50},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":150},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":20},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":60},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":161000,"wheelTreadReinfBeamDamp":20},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":161000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":15},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1},
 
-        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":15},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1},
 
         //general tire values
         {"nodeWeight":0.12},
@@ -262,20 +262,20 @@
         {"wheelSideBeamSpringExpansion":331000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":50},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":140},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":20},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":55},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":20},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":55},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":101000,"wheelPeripheryBeamDamp":15},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":101000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1},
 
-        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":15},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1},
 
         //general tire values
         {"nodeWeight":0.11},
@@ -338,20 +338,20 @@
         {"wheelSideBeamSpringExpansion":341000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.07,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":50},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":150},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":20},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":60},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":161000,"wheelTreadReinfBeamDamp":20},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":161000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":15},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1},
 
-        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":15},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1},
 
         //general tire values
         {"nodeWeight":0.12},
@@ -414,20 +414,20 @@
         {"wheelSideBeamSpringExpansion":331000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":50},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":140},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":20},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":151000,"wheelTreadBeamDamp":55},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":20},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":151000,"wheelTreadReinfBeamDamp":55},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":101000,"wheelPeripheryBeamDamp":15},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":101000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1},
 
-        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":15},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1},
 
         //general tire values
         {"nodeWeight":0.11},
@@ -490,20 +490,20 @@
         {"wheelSideBeamSpringExpansion":341000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.07,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":50},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":150},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":20},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":60},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":161000,"wheelTreadReinfBeamDamp":20},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":161000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":15},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1},
 
-        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":15},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1},
 
         //general tire values
         {"nodeWeight":0.12},
@@ -566,20 +566,20 @@
         {"wheelSideBeamSpringExpansion":401000,"wheelSideBeamDampExpansion":35},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":60},
-        {"wheelReinfBeamPrecompression":1},
+        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":180},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":1},
 
-        {"wheelTreadBeamSpring":201000,"wheelTreadBeamDamp":40},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":201000,"wheelTreadBeamDamp":80},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":201000,"wheelTreadReinfBeamDamp":40},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":201000,"wheelTreadReinfBeamDamp":80},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":25},
-        {"wheelPeripheryBeamPrecompression":0.99},
+        {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":35},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
 
-        {"wheelPeripheryReinfBeamSpring":141000,"wheelPeripheryReinfBeamDamp":25},
-        {"wheelPeripheryReinfBeamPrecompression":0.99},
+        {"wheelPeripheryReinfBeamSpring":141000,"wheelPeripheryReinfBeamDamp":35},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
 
         //general tire values
         {"nodeWeight":0.16},
@@ -642,20 +642,20 @@
         {"wheelSideBeamSpringExpansion":341000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":50},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":160},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":301000,"wheelTreadBeamDamp":24},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":301000,"wheelTreadBeamDamp":45},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":61000,"wheelTreadReinfBeamDamp":24},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":61000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":161000,"wheelPeripheryBeamDamp":15},
-        {"wheelPeripheryBeamPrecompression":1},
+        {"wheelPeripheryBeamSpring":161000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1},
 
-        {"wheelPeripheryReinfBeamSpring":41000,"wheelPeripheryReinfBeamDamp":15},
-        {"wheelPeripheryReinfBeamPrecompression":1},
+        {"wheelPeripheryReinfBeamSpring":41000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1},
 
         //general tire values
         {"nodeWeight":0.13},
@@ -718,20 +718,20 @@
         {"wheelSideBeamSpringExpansion":401000,"wheelSideBeamDampExpansion":35},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":60},
-        {"wheelReinfBeamPrecompression":1},
+        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":180},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":1},
 
-        {"wheelTreadBeamSpring":201000,"wheelTreadBeamDamp":40},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":201000,"wheelTreadBeamDamp":80},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":201000,"wheelTreadReinfBeamDamp":40},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":201000,"wheelTreadReinfBeamDamp":80},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":25},
-        {"wheelPeripheryBeamPrecompression":0.99},
+        {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":35},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
 
-        {"wheelPeripheryReinfBeamSpring":141000,"wheelPeripheryReinfBeamDamp":25},
-        {"wheelPeripheryReinfBeamPrecompression":0.99},
+        {"wheelPeripheryReinfBeamSpring":141000,"wheelPeripheryReinfBeamDamp":35},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
 
         //general tire values
         {"nodeWeight":0.16},
@@ -794,20 +794,20 @@
         {"wheelSideBeamSpringExpansion":441000,"wheelSideBeamDampExpansion":40},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":24000,"wheelReinfBeamDamp":60},
-        {"wheelReinfBeamPrecompression":1},
+        {"wheelReinfBeamSpring":21000,"wheelReinfBeamDamp":200},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":1},
 
-        {"wheelTreadBeamSpring":231000,"wheelTreadBeamDamp":44},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":231000,"wheelTreadBeamDamp":100},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":241000,"wheelTreadReinfBeamDamp":44},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":241000,"wheelTreadReinfBeamDamp":100},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":161000,"wheelPeripheryBeamDamp":30},
-        {"wheelPeripheryBeamPrecompression":0.99},
+        {"wheelPeripheryBeamSpring":161000,"wheelPeripheryBeamDamp":35},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
 
-        {"wheelPeripheryReinfBeamSpring":161000,"wheelPeripheryReinfBeamDamp":30},
-        {"wheelPeripheryReinfBeamPrecompression":0.99},
+        {"wheelPeripheryReinfBeamSpring":161000,"wheelPeripheryReinfBeamDamp":35},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
 
         //general tire values
         {"nodeWeight":0.18},
@@ -871,20 +871,20 @@
         {"wheelSideBeamSpringExpansion":421000,"wheelSideBeamDampExpansion":30},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":26000,"wheelReinfBeamDamp":65},
-        {"wheelReinfBeamPrecompression":0.99},
+        {"wheelReinfBeamSpring":26000,"wheelReinfBeamDamp":175},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":35},
-        {"wheelTreadBeamPrecompression":0.99},
+        {"wheelTreadBeamSpring":161000,"wheelTreadBeamDamp":75},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":221000,"wheelTreadReinfBeamDamp":35},
-        {"wheelTreadReinfBeamPrecompression":0.99},
+        {"wheelTreadReinfBeamSpring":221000,"wheelTreadReinfBeamDamp":75},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":161000,"wheelPeripheryBeamDamp":20},
-        {"wheelPeripheryBeamPrecompression":1.00},
+        {"wheelPeripheryBeamSpring":161000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":1.00},
 
-        {"wheelPeripheryReinfBeamSpring":161000,"wheelPeripheryReinfBeamDamp":20},
-        {"wheelPeripheryReinfBeamPrecompression":1.00},
+        {"wheelPeripheryReinfBeamSpring":161000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.00},
 
         //general tire values
         {"nodeWeight":0.15},

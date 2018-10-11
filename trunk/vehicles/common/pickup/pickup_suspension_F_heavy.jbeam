@@ -79,11 +79,12 @@
          {"selfCollision":true},
          ["fh3r",-0.695, -1.475, 0.215{"group":["pickup_hub_F","pickup_axle_F"]}],
          ["fh3l", 0.695, -1.475, 0.215{"group":["pickup_hub_F","pickup_axle_F"]}],
-
          ["fh4r",-0.84, -1.24, 0.3277{"group":["pickup_hub_F","pickup_tierod_F"]}],
          ["fh4l", 0.84, -1.24, 0.3277{"group":["pickup_hub_F","pickup_tierod_F"]}],
          //tie rod
+         {"nodeWeight":7.5},
          ["fh1r",-0.73, -1.63, 0.39{"group":["pickup_hub_F","pickup_tierod_F"]}],
+         {"nodeWeight":6.5},
          ["fh1l", 0.73, -1.63, 0.39{"group":["pickup_hub_F","pickup_tierod_F"]}],
          {"selfCollision":false},
          {"nodeWeight":5.0},
@@ -117,7 +118,7 @@
           ["al1l","fr3"],
           ["al1r","fr3"],
           //--FRONT LIVE AXLE--
-          {"beamSpring":12001000,"beamDamp":150},
+          {"beamSpring":12001000,"beamDamp":100},
           {"beamDeform":267500,"beamStrength":621000},
           ["fax1", "fax2"],
           ["fax1", "fax4"],
@@ -148,7 +149,7 @@
           ["fax2r", "fax4"],
 
           //to shock mount
-          {"beamSpring":5001000,"beamDamp":150},
+          {"beamSpring":5001000,"beamDamp":100},
           ["fsh1r","fax1r"],
           ["fsh1l","fax1l"],
           ["fsh1r","fax2r"],
@@ -174,7 +175,7 @@
           ["fh3l","fsh1l"],
 
           //to hub
-          {"beamSpring":12001000,"beamDamp":150},
+          {"beamSpring":12001000,"beamDamp":100},
           ["fh2l", "fax1l"],
           ["fh2r", "fax1r"],
           ["fh3l", "fax2l"],
@@ -199,7 +200,7 @@
           ["fh3r", "fax2"],
 
           //hub
-          {"beamSpring":8501000,"beamDamp":150},
+          {"beamSpring":9501000,"beamDamp":100},
           {"beamDeform":267500,"beamStrength":621000},
           ["fh2r","fh3r"],
           ["fh2r","fh1r"],
@@ -219,7 +220,7 @@
           ["fh3r", "fh3l"],
 
           {"optional":true},
-          {"beamSpring":8501000,"beamDamp":150},
+          {"beamSpring":9501000,"beamDamp":100},
           {"beamDeform":267500,"beamStrength":408400},
           {"breakGroup":"wheel_FR"},
           ["fh2r","fw1r"{"name":"axle_a_FR"}],
@@ -228,8 +229,8 @@
           ["fh3r","fw1rr"],
           ["fh4r","fw1r"],
           ["fh4r","fw1rr"],
-          ["fh1r","fw1r"{"beamSpring":12001000,"beamDamp":50}],
-          ["fh1r","fw1rr"{"beamSpring":12001000,"beamDamp":50}],
+          ["fh1r","fw1r"{"beamSpring":14001000,"beamDamp":40}],
+          ["fh1r","fw1rr"{"beamSpring":14001000,"beamDamp":40}],
           {"breakGroup":"wheel_FL"},
           ["fh2l","fw1l"{"name":"axle_a_FL"}],
           ["fh2l","fw1ll"],
@@ -237,13 +238,13 @@
           ["fh3l","fw1ll"],
           ["fh4l","fw1l"],
           ["fh4l","fw1ll"],
-          ["fh1l","fw1l"{"beamSpring":12001000,"beamDamp":50}],
-          ["fh1l","fw1ll"{"beamSpring":12001000,"beamDamp":50}],
+          ["fh1l","fw1l"{"beamSpring":14001000,"beamDamp":40}],
+          ["fh1l","fw1ll"{"beamSpring":14001000,"beamDamp":40}],
           {"breakGroup":""},
           {"optional":false},
 
           //extra collision node
-          {"beamSpring":2501000,"beamDamp":150},
+          {"beamSpring":2501000,"beamDamp":100},
           {"beamDeform":67500,"beamStrength":621000},
           ["fax5r", "fax2r"],
           ["fax5r", "fax1r"],
@@ -731,7 +732,7 @@
           {"beamDeform":250000,"beamStrength":356000},
           {"beamLimitSpring":1001000,"beamLimitDamp":2500},
           {"beamSpring":500,"beamDamp":0},
-          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
+          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak1c.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
           ["fsh1l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":4,"maxStress":1500}],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
@@ -889,7 +890,7 @@
           {"beamDeform":250000,"beamStrength":356000},
           {"beamLimitSpring":1001000,"beamLimitDamp":2500},
           {"beamSpring":500,"beamDamp":0},
-          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
+          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak1c.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
           ["fsh1l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":4,"maxStress":1500}],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
@@ -1047,7 +1048,7 @@
           {"beamDeform":250000,"beamStrength":356000},
           {"beamLimitSpring":2001000,"beamLimitDamp":2500},
           {"beamSpring":500,"beamDamp":0},
-          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
+          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak1c.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
           ["fsh1l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":4,"maxStress":1500}],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
@@ -1220,7 +1221,7 @@
           {"beamDeform":250000,"beamStrength":356000},
           {"beamLimitSpring":1001000,"beamLimitDamp":2500},
           {"beamSpring":500,"beamDamp":0},
-          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
+          ["fsh1r","sh1r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak1c.ogg", "volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1500}],
           ["fsh1l","sh1l"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":20,"decayMode":1,"decayFactor":4,"pitchFactor":4,"maxStress":1500}],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
@@ -1259,6 +1260,7 @@
          ["st3", 0.337, -1.63, 0.4{"group":["pickup_pitman","pickup_link_SFA"]}],
          {"group":"pickup_tierod_F"},
          //tie rod
+         {"nodeWeight":5.5},
          ["st4",-0.34, -1.63, 0.39],
          {"group":""},
     ],
@@ -1269,7 +1271,7 @@
     },
     "slidenodes": [
         ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
-        ["st4", "steeringrack", true, true, 0.0, 16001000, 330000, 330000],
+        ["st4", "steeringrack", true, true, 0.0, 16001000, "FLT_MAX", "FLT_MAX"],
     ],
     "beams": [
             ["id1:","id2:"],
@@ -1299,14 +1301,14 @@
             ["st2","fr7l"],
             ["st2","fr7"],
 
-            {"beamSpring":16001000,"beamDamp":150},
+            {"beamSpring":14001000,"beamDamp":150},
             {"beamDeform":172000,"beamStrength":445000},
             //tie rod
             //toe in meters of tie rod length change, with small offset for default position
             ["fh1r","fh1l"{"precompressionRange":"$=$toe_F2-0.0012","beamPrecompressionTime":0.5}],
             //drag link
-            {"beamSpring":12001000,"beamDamp":150},
-            //adds toe change polrtion to steering center to prevent too much shift in steering
+            {"beamSpring":15001000,"beamDamp":150},
+            //adds toe change portion to steering center to prevent too much shift in steering
             ["st4","fh1r"{"precompressionRange":"$=$steer_center_F2+$toe_F2*0.5-0.0005","beamPrecompressionTime":0.5}],
             ["st3","st4"],
             //steering damper
@@ -1329,12 +1331,12 @@
     "hydros": [
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-            {"beamSpring":12001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":311300},
+            {"beamSpring":24001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":311300},
             ["al1r","st3",{"factor":-0.15,"steeringWheelLock":720,"inRate":1.25,"outRate":1.25}],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
     "input": {
-        "FFBcoef":3.25,
+        "FFBcoef":7,
     },
 },
 "pickup_steering_SFA_offroad": {
@@ -1371,6 +1373,7 @@
          ["st3", 0.337, -1.63, 0.3{"group":["pickup_pitman","pickup_link_SFA"]}],
          {"group":"pickup_tierod_F"},
          //tie rod
+         {"nodeWeight":5.5},
          ["st4",-0.34, -1.63, 0.39],
          {"group":""},
     ],
@@ -1381,7 +1384,7 @@
     },
     "slidenodes": [
         ["id:", "railName", "attached", "fixToRail", "tolerance", "spring", "strength", "capStrength"],
-        ["st4", "steeringrack", true, true, 0.0, 16001000, 330000, 330000],
+        ["st4", "steeringrack", true, true, 0.0, 16001000, "FLT_MAX", "FLT_MAX"],
     ],
     "beams": [
             ["id1:","id2:"],
@@ -1411,12 +1414,12 @@
             ["st2","fr7l"],
             ["st2","fr7"],
 
-            {"beamSpring":16001000,"beamDamp":200},
+            {"beamSpring":14001000,"beamDamp":150},
             {"beamDeform":272000,"beamStrength":645000},
             //tie rod
             //toe in meters of tie rod length change, with small offset for default position
             ["fh1r","fh1l"{"precompressionRange":"$=$toe_F2-0.0014","beamPrecompressionTime":0.5}],
-            {"beamSpring":12001000,"beamDamp":200},
+            {"beamSpring":15001000,"beamDamp":200},
             //drag link
             //adds toe change polrtion to steering center to prevent too much shift in steering
             ["st4","fh1r"{"precompressionRange":"$=$steer_center_F2+$toe_F2*0.5-0.0036","beamPrecompressionTime":0.5}],
@@ -1443,12 +1446,12 @@
     "hydros": [
             ["id1:","id2:"],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
-            {"beamSpring":12001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":351300},
+            {"beamSpring":24001000,"beamDamp":100,"beamDeform":"FLT_MAX","beamStrength":351300},
             ["al1r","st3",{"factor":-0.135,"steeringWheelLock":720,"inRate":1.25,"outRate":1.25}],
             {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
     "input": {
-        "FFBcoef":2.5,
+        "FFBcoef":5,
     },
 },
 "pickup_differential_SFA": {

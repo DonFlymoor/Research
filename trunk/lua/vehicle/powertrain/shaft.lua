@@ -139,7 +139,7 @@ local function onBreak(device)
 end
 
 local function calculateInertia(device)
-  local outputInertia = 0
+  local outputInertia
   local cumulativeGearRatio = 1
   local maxCumulativeGearRatio = 1
   if device.children and #device.children > 0 then
@@ -153,7 +153,7 @@ local function calculateInertia(device)
     local hubNode1 = vec3(v.data.nodes[wheel.node1].pos)
     local hubNode2 = vec3(v.data.nodes[wheel.node2].pos)
 
-    for _, nid in pairs (wheel.nodes) do
+    for _, nid in pairs(wheel.nodes) do
       local n = v.data.nodes[nid]
       local distanceToAxis = vec3(n.pos):distanceToLine(hubNode1, hubNode2)
       axisInertia = axisInertia + (n.nodeWeight * (distanceToAxis * distanceToAxis))
@@ -199,7 +199,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -213,19 +212,16 @@ local function new(jbeamData)
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
     electricsName = jbeamData.electricsName,
-
     inputAV = 0,
     visualShaftAngle = 0,
     virtualMassAV = 0,
     isBroken = false,
-
     torsionReactor = nil,
-
     reset = reset,
     onBreak = onBreak,
     setMode = setMode,
     validate = validate,
-    calculateInertia = calculateInertia,
+    calculateInertia = calculateInertia
   }
 
   if jbeamData.connectedWheel and powertrain.wheels[jbeamData.connectedWheel] then
@@ -243,14 +239,14 @@ local function new(jbeamData)
   local outputPortIndex = 1
   if jbeamData.outputPortOverride then
     device.outputPorts = {}
-    for _,v in pairs(jbeamData.outputPortOverride) do
+    for _, v in pairs(jbeamData.outputPortOverride) do
       device.outputPorts[v] = true
       outputPortIndex = v
     end
   end
 
-  device.outputTorqueName = "outputTorque"..tostring(outputPortIndex)
-  device.outputAVName = "outputAV"..tostring(outputPortIndex)
+  device.outputTorqueName = "outputTorque" .. tostring(outputPortIndex)
+  device.outputAVName = "outputAV" .. tostring(outputPortIndex)
   device[device.outputTorqueName] = 0
   device[device.outputAVName] = 0
 

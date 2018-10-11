@@ -47,8 +47,15 @@ end
 
 local function _end()
   core_camera.setMaxDistance(vehicleID, nil)
-  inputActionFilter.clear(0) 
-  serverConnection.disconnect() 
+  inputActionFilter.clear(0)
+
+  -- delete sounds
+  if ambientSoundIdGeneral then
+    Engine.Audio.deleteSource(ambientSoundIdGeneral)
+    ambientSoundIdGeneral = nil
+  end
+
+  serverConnection.disconnect()  
 end
 
 local function activate()
@@ -107,14 +114,7 @@ local function onClientStartMission(missionFile)
 end
 
 local function onClientEndMission(missionFile)
-  if missionFile == garageLevel then
-
-    -- delete sounds
-    if ambientSoundIdGeneral then
-      Engine.Audio.deleteSource(ambientSoundIdGeneral)
-      ambientSoundIdGeneral = nil
-    end
-  end
+  
 end
 
 local dayValue = newTemporalSmoothing(0.5, 0.5)

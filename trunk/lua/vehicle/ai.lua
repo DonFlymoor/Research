@@ -2,18 +2,6 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
-local M = {}
-
-M.mode = 'disabled' -- this is the main mode
-M.manualTargetName = nil
-M.debugMode = 'off'
-M.targetObjectID = -1
-M.speedMode = nil
-M.routeSpeed = nil
-M.driveInLaneFlag = 'off'
-M.extAggression = 1
-M.cutOffDrivability = 0
-
 -- [[ STORE FREQUENTLY USED FUNCTIONS IN UPVALUES ]] --
 local max = math.max
 local min = math.min
@@ -26,6 +14,19 @@ local tableInsert = table.insert
 local tableRemove = table.remove
 local strFormat = string.format
 ---------------------------------
+
+local M = {}
+
+M.mode = 'disabled' -- this is the main mode
+local previousMode = M.mode
+M.manualTargetName = nil
+M.debugMode = 'off'
+M.targetObjectID = -1
+M.speedMode = nil
+M.routeSpeed = nil
+M.extAggression = 1
+M.cutOffDrivability = 0
+M.driveInLaneFlag = 'off'
 
 -- [[ ENVIRONMENT VARIABLES ]] --
 local g = abs(obj:getGravity())
@@ -74,13 +75,14 @@ local brake = 0
 local threewayturn = 0
 local lastCommand = {steering = 0, throttle = 0, brake = 0, parkingbrake = 0}
 
-local targetPos = nil
-local targetAiMidPos = nil
-local targetstatus = nil
+local targetPos
+local targetAiMidPos
+local targetstatus
 
 local driveInLaneFlag = false
 
 local internalState = 'onroad'
+
 local validateInput = nop
 ------------------------------
 
@@ -88,35 +90,32 @@ local validateInput = nop
 local crashTime = 0
 local crashManeuver = 0
 local crashDir = nil
----------------------
 
 -- [[ OPPONENT DATA ]] --
-local player = nil
-local plPrevVel = nil
-----------------------
+local player
+local plPrevVel
 
 -- [[ SETTINGS, PARAMETERS, AUXILIARY DATA ]] --
-local map = nil
-local targetName = nil
-local currentRoute = nil
-local minPlanSize = 18
+local map
+local targetName
+local currentRoute
+local minPlanCount = 18
 
 local wpList
 local speedList
-local routeSpeed = nil
-local limitSpeed = nil
+local routeSpeed
+local limitSpeed
 local race
 local noOfLaps
 
-local targetObjectSelectionMode = nil
+local targetObjectSelectionMode
 
-local edgeDict = nil
-local tau = nil
+local edgeDict
 -----------------------
 
 -- [[ HEAVY DEBUG MODE ]] --
 local speedRecordings = {}
-local trajectoryRec = {last = 0}
+local trajecRec = {last = 0}
 local routeRec = {last = 0}
 local labelRenderDistance = 10
 local targetSpeed
@@ -136,6 +135,30 @@ local function stateChanged()
   if playerInfo.anyPlayerSeated then
     guihooks.trigger("AIStateChange", getState())
   end
+end
+
+local function setSpeed(speed)
+  -- both routeSpeed and limitSpeed have to be ~= nil for the set speed (either in limit mode or in set mode) to be effective
+  if type(speed) ~= 'number' then routeSpeed = nil else routeSpeed = speed end
+  M.routeSpeed = routeSpeed
+end
+
+local function setSpeedMode(speedMode)
+  if speedMode == 'set' then
+    limitSpeed = false
+  elseif speedMode == 'limit' then
+    limitSpeed = true
+  else
+    limitSpeed = nil
+  end
+  M.speedMode = speedMode
+end
+
+local function resetSpeedModeAndValue()
+  routeSpeed = nil
+  limitSpeed = nil
+  M.speedMode = nil -- maybe this should be 'off'
+  M.routeSpeed = nil
 end
 
 local function setAggressionInternal(v)
@@ -210,7 +233,7 @@ local function driveCar(steering, throttle, brake, parkingbrake)
 end
 
 local function aimToTarget()
-  if targetPos == nil then return end
+  if not targetPos then return end
 
   local targetVec = (targetPos - aiPos):normalized()
   local dirTarget = aiDirVec:dot(targetVec)
@@ -223,11 +246,11 @@ local function aimToTarget()
     crashManeuver = 0
   end
 
-  if dirTarget < 0 and currentRoute ~= nil then
+  if dirTarget < 0 and currentRoute then
     local plan = currentRoute.plan
     local edgeDist = min((plan[2] or plan[1]).radiusOrig, plan[1].radiusOrig) -
     aiPos:z0():distanceToLine((plan[3] or plan[2]).posOrig:z0(), plan[2].posOrig:z0())
-    if edgeDist > aiWidth and threewayturn == 0 then -- edgeDist > 0 and -> this is not needed aiWidth condition is stricter!!!
+    if edgeDist > aiWidth and threewayturn == 0 then
       driveCar(fsign(dirDiff), 0.5, 0, min(max(aiSpeed - 3, 0), 1))
     else
       threewayturn = 1
@@ -237,138 +260,24 @@ local function aimToTarget()
     threewayturn = 0
     local pbrake
     if aiVel:dot(aiDirVec) * max(aiVel:squaredLength() - 1e-2, 0) < 0 then
-      if aiSpeed < 0.15 and targetSpeed and targetSpeed <= 1e-5 then pbrake = 1 else pbrake = 0 end
+      if aiSpeed < 0.15 and targetSpeed and targetSpeed <= 1e-5 then
+        pbrake = 1
+      else
+        pbrake = 0
+      end
       driveCar(dirDiff, 0.5, 0, pbrake)
     else
-      if aiSpeed > 4 and aiSpeed < 30 and abs(dirDiff) > 0.8 and brake == 0 or (aiSpeed < 0.15 and targetSpeed and targetSpeed <= 1e-5) then pbrake = 1 else pbrake = 0 end
+      if aiSpeed > 4 and aiSpeed < 30 and abs(dirDiff) > 0.8 and brake == 0 or (aiSpeed < 0.15 and targetSpeed and targetSpeed <= 1e-5) then
+        pbrake = 1
+      else
+        pbrake = 0
+      end
       driveCar(dirDiff, throttle, brake, pbrake)
     end
   end
 end
 
--- http://cnx.org/contents/--TzKjCB@8/Projectile-motion-on-an-inclin
-local function projectileSquareSpeedToRangeRatio(pos1, pos2, pos3)
-  local sinTheta = (pos2.z - pos1.z) / pos1:distance(pos2)
-  local sinAlpha = (pos3.z - pos2.z) / pos2:distance(pos3)
-  local cosAlphaSquared = max(1 - sinAlpha * sinAlpha, 0)
-  local cosTheta = sqrt(max(1 - sinTheta * sinTheta, 0)) -- in the interval theta = {-pi/2, pi/2} cosTheta is always positive
-  return g * 0.5 * cosAlphaSquared / max(cosTheta * (sinTheta*sqrt(cosAlphaSquared) - cosTheta*sinAlpha), 0)
-end
-
-local function buildNextRoute(plan, planLen, path)
-  local nextpathId, n1
-  if planLen == 0 then -- TODO: maybe in this case it would be better to call findClosest road rather that just using a radius from the vehicle width
-    nextpathId = 1
-    if path[nextpathId] == nil then return end
-    n1 = {pos = vec3(aiPos), radius = aiWidth * 0.5}
-  else
-    nextpathId = plan[planLen].pathidx + 1
-    local prevpathId = nextpathId - 1
-    if race == true and noOfLaps and noOfLaps > 1 and nextpathId > #path then
-      local loopPathId
-      local lastWayPoint = path[#path]
-      for i, wayPoint in ipairs(path) do
-        if lastWayPoint == wayPoint then
-          loopPathId = i
-          break
-        end
-      end
-      nextpathId = 1 + loopPathId -- nextpathId % #path
-      noOfLaps = noOfLaps - 1
-    end
-    if path[nextpathId] == nil then return end
-    n1 = map.nodes[path[prevpathId]] -- this might be a bug, try this -> route.plan[planLen].posOrig
-  end
-
-  local n2 = map.nodes[path[nextpathId]]
-
-  if n2 == nil then return end
-
-  local nodeName = path[nextpathId]
-
-  if driveInLaneFlag and n2.radius > 2.75 then -- TODO: (and n1.radius > 2.75) the second check might be problematic when n1.radius falls to the vehicle radius... i.e. planLen == 0 above
-    local n2Pos = n2.pos
-    local n1Pos = n1.pos
-
-    local nVec1 = (n1Pos - n2Pos):z0():normalized():cross(gravityDir) -- vector normal to direction vector for current segment
-    local n2HalfRadius = n2.radius * 0.5
-
-    if path[nextpathId+1] ~= nil then -- if this is not the last segment in the path
-      local n3Pos = map.nodes[path[nextpathId+1]].pos
-      local nVec2 = (n2Pos - n3Pos):z0():normalized():cross(gravityDir) -- vector normal to direction vector of lookAhead segment
-      n2 = {pos = n2Pos + n2HalfRadius * (1 - nVec1:dot(nVec2)*0.5) * (nVec1 + nVec2), radius = n2HalfRadius} -- the position calculation is p2 + r * ( v2 + (1 - v1.v2) * v1 )
-    else
-      n2 = {pos = n2Pos + n2HalfRadius * nVec1, radius = n2HalfRadius}
-    end
-
-    local n1HalfRadius = n1.radius * 0.5
-
-    n1 = {pos = n1Pos + min(planLen, 1) * nVec1 * n1HalfRadius, radius = n1HalfRadius}
-  end
-
-  local vec = (n1.pos - n2.pos):z0()
-  local manualSpeed = speedList and speedList[nodeName]
-
-  return {pos = vec3(n2.pos), posOrig = vec3(n2.pos), radius = n2.radius, radiusOrig = n2.radius,
-          posz0 = n2.pos:z0(), vec = vec, dirVec = vec:normalized(), turnDir = vec3(0,0,0), manualSpeed = manualSpeed, pathidx = nextpathId}
-end
-
-local function createPlan(route, planIdx)
-  local i = planIdx or 2
-  local newPlan = {{radius = 2, radiusOrig = 2, pos = vec3(aiPos), posz0 = aiPos:z0(), posOrig = vec3(aiPos), turnDir = vec3(0,0,0), speed = 0}} -- speed here is might not be need to be defined
-  local midTargetSegIdx = route.midTargetSegIdx
-  local path = route.path
-  local plan = route.plan
-  local planLen = #plan
-  local n = plan[i] or buildNextRoute(plan, planLen, path)
-  if n == nil then
-    route.plan = newPlan
-    return 1
-  end
-  newPlan[2] = n
-  if n.pos:squaredDistance(newPlan[1].pos) > 1e+10 then route.plan = 0; return 0 end
-  local newPlanLen = 2
-  local dist = 0
-  local j = 1
-  local minDist = min(max(250, 0.5*aiSpeed*aiSpeed/g), 550)
-  repeat
-    local curDist = newPlan[j].pos:distance(newPlan[j+1].pos)
-    local xSq = square(dist+curDist)
-    if curDist > min(220, (0.00000001*xSq + 0.0013)*xSq + 4.5) and j >= midTargetSegIdx then
-      local node1 = newPlan[j]
-      local node2 = newPlan[j+1]
-      local pos = (node1.pos + node2.pos)*0.5
-      local vec = (node1.pos - node2.pos):z0()
-      tableInsert(newPlan, j+1, {posOrig = (node1.posOrig + node2.posOrig)*0.5,
-                                pos = pos,
-                                radiusOrig = (node1.radiusOrig + node2.radiusOrig)*0.5,
-                                radius = (node1.radius + node2.radius)*0.5,
-                                posz0 = pos:z0(),
-                                vec = vec,
-                                dirVec = vec:normalized(),
-                                turnDir = vec3(0,0,0),
-                                pathidx = node2.pathidx})
-      newPlanLen = newPlanLen + 1
-    else
-      j = j + 1
-      if j >= newPlanLen then
-        i = i + 1
-        local n = plan[i] or buildNextRoute(newPlan, newPlanLen, path)
-        if n == nil then break end
-        newPlanLen = newPlanLen + 1
-        newPlan[newPlanLen] = n
-      end
-      dist = dist + curDist
-    end
-    -- 'and i >= planLen' ensures all previous plan nodes have been processed
-    -- and inserted into the newPlan. solves the issue of having one very long edge.
-  until dist > minDist and newPlanLen >= minPlanSize and i >= planLen or newPlanLen > 100
-  newPlan[1].pathidx = newPlan[2].pathidx
-  route.plan = newPlan
-  return newPlanLen
-end
-
-local function calculateTarget(plan, meanSegRadius)
+local function calculateTarget(plan)
   targetstatus = 1
 
   local targetLength = max(aiSpeed * 0.65, 6.5)
@@ -408,6 +317,125 @@ local function calculateTarget(plan, meanSegRadius)
   end
 
   return targetSegIdx, midTargetSegIdx
+end
+
+-- http://cnx.org/contents/--TzKjCB@8/Projectile-motion-on-an-inclin
+local function projectileSqSpeedToRangeRatio(pos1, pos2, pos3)
+  local sinTheta = (pos2.z - pos1.z) / pos1:distance(pos2)
+  local sinAlpha = (pos3.z - pos2.z) / pos2:distance(pos3)
+  local cosAlphaSquared = max(1 - sinAlpha * sinAlpha, 0)
+  local cosTheta = sqrt(max(1 - sinTheta * sinTheta, 0)) -- in the interval theta = {-pi/2, pi/2} cosTheta is always positive
+  return 0.5 * g * cosAlphaSquared / max(cosTheta * (sinTheta*sqrt(cosAlphaSquared) - cosTheta*sinAlpha), 0)
+end
+
+local function buildNextRoute(plan, planCount, path)
+  local nextPathId, n1
+  if planCount == 0 then
+    -- TODO: maybe in this case it would be better to call findClosest road rather than just using a radius from the vehicle width
+    nextPathId = 1
+    if not path[nextPathId] then return end
+    n1 = {pos = vec3(aiPos), radius = aiWidth * 0.5}
+  else
+    nextPathId = plan[planCount].pathidx + 1
+    local prevPathId = nextPathId - 1
+    if race == true and noOfLaps and noOfLaps > 1 and nextPathId > #path then
+      local loopPathId
+      local lastWayPoint = path[#path]
+      for i, wayPoint in ipairs(path) do
+        if lastWayPoint == wayPoint then
+          loopPathId = i
+          break
+        end
+      end
+      nextPathId = 1 + loopPathId -- nextPathId % #path
+      noOfLaps = noOfLaps - 1
+    end
+    if not path[nextPathId] then return end
+    n1 = map.nodes[path[prevPathId]] -- this might be a bug, try this -> route.plan[planCount].posOrig
+  end
+
+  local n2 = map.nodes[path[nextPathId]]
+
+  if not n2 then return end
+
+  local nodeName = path[nextPathId]
+
+  if driveInLaneFlag and n2.radius > 2.75 then -- TODO: (and n1.radius > 2.75) the second check might be problematic when n1.radius falls to the vehicle radius... i.e. planLen == 0 above
+    local n2Pos = n2.pos
+    local n1Pos = n1.pos
+
+    local nVec1 = (n1Pos - n2Pos):z0():normalized():cross(gravityDir) -- vector normal to direction vector for current segment
+    local n2HalfRadius = n2.radius * 0.5
+
+    if path[nextPathId+1] then -- if this is not the last segment in the path
+      local n3Pos = map.nodes[path[nextPathId+1]].pos
+      local nVec2 = (n2Pos - n3Pos):z0():normalized():cross(gravityDir) -- vector normal to direction vector of lookAhead segment
+      n2 = {pos = n2Pos + n2HalfRadius * (1 - nVec1:dot(nVec2)*0.5) * (nVec1 + nVec2), radius = n2HalfRadius} -- the position calculation is p2 + r * ( v2 + (1 - v1.v2) * v1 )
+    else
+      n2 = {pos = n2Pos + n2HalfRadius * nVec1, radius = n2HalfRadius}
+    end
+
+    local n1HalfRadius = n1.radius * 0.5
+
+    n1 = {pos = n1Pos + min(planCount, 1) * nVec1 * n1HalfRadius, radius = n1HalfRadius}
+  end
+
+  local vec = (n1.pos - n2.pos):z0()
+  local manSpeed = speedList and speedList[nodeName]
+
+  return {pos = vec3(n2.pos), posOrig = vec3(n2.pos), radius = n2.radius, radiusOrig = n2.radius,
+          posz0 = n2.pos:z0(), vec = vec, dirVec = vec:normalized(), turnDir = vec3(0,0,0),
+          manSpeed = manSpeed, pathidx = nextPathId}
+end
+
+local function createPlan(route, planIdx)
+  local i = planIdx or 2
+  local newPlan = {{radius = 2, radiusOrig = 2, pos = vec3(aiPos), posz0 = aiPos:z0(), posOrig = vec3(aiPos), turnDir = vec3(0,0,0), speed = 0}} -- speed here is might not be need to be defined
+  local midTargetSegIdx = route.midTargetSegIdx
+  local path = route.path
+  local plan = route.plan
+  local planCount = #plan
+  local n = plan[i] or buildNextRoute(plan, planCount, path)
+  if n == nil then
+    route.plan = newPlan
+    return 1
+  end
+  newPlan[2] = n
+  if n.pos:squaredDistance(newPlan[1].pos) > 1e+10 then route.plan = 0; return 0 end
+  local newPlanCount = 2
+  local newPlanLen = 0
+  local j = 1
+  local minPlanLen = min(max(250, 0.5*aiSpeed*aiSpeed/g), 550)
+  repeat
+    local curDist = newPlan[j].pos:distance(newPlan[j+1].pos)
+    local xSq = square(newPlanLen+curDist)
+    if curDist > min(220, (1e-8*xSq + 0.0013)*xSq + 4.5) and j >= midTargetSegIdx then
+      local n1 = newPlan[j]
+      local n2 = newPlan[j+1]
+      local pos = (n1.pos + n2.pos)*0.5
+      local vec = (n1.pos - n2.pos):z0()
+      tableInsert(newPlan, j+1, {posOrig = (n1.posOrig + n2.posOrig)*0.5, pos = pos, posz0 = pos:z0(),
+                                vec = vec, dirVec = vec:normalized(), turnDir = vec3(0,0,0),
+                                radiusOrig = (n1.radiusOrig + n2.radiusOrig)*0.5, radius = (n1.radius + n2.radius)*0.5,
+                                pathidx = n2.pathidx})
+      newPlanCount = newPlanCount + 1
+    else
+      j = j + 1
+      if j >= newPlanCount then
+        i = i + 1
+        local n = plan[i] or buildNextRoute(newPlan, newPlanCount, path)
+        if not n then break end
+        newPlanCount = newPlanCount + 1
+        newPlan[newPlanCount] = n
+      end
+      newPlanLen = newPlanLen + curDist
+    end
+    -- 'and i >= planCount' ensures all previous plan nodes have been processed
+    -- and inserted into the newPlan. solves the issue of having one very long edge.
+  until newPlanLen > minPlanLen and newPlanCount >= minPlanCount and i >= planCount or newPlanCount > 100
+  newPlan[1].pathidx = newPlan[2].pathidx
+  route.plan = newPlan
+  return newPlanCount
 end
 
 local function planAhead(route, baseRoute)
@@ -539,7 +567,7 @@ local function planAhead(route, baseRoute)
     n.speed = -1
   end
 
-  targetSegIdx, midTargetSegIdx = calculateTarget(plan, meanSegRadius)
+  targetSegIdx, midTargetSegIdx = calculateTarget(plan)
   route.midTargetSegIdx = midTargetSegIdx
 
   local coneIdx = min(math.floor(targetSegIdx), planCount)
@@ -569,9 +597,9 @@ local function planAhead(route, baseRoute)
   local rLast = plan[planCount]
 
   if rLast.pathidx ~= #route.path or M.mode == 'chase' or (race and noOfLaps and noOfLaps > 1) then
-    rLast.speed = rLast.manualSpeed or 200
+    rLast.speed = rLast.manSpeed or 200
   else
-    rLast.speed = rLast.manualSpeed or 0
+    rLast.speed = rLast.manSpeed or 0
   end
 
   local traffic
@@ -661,87 +689,85 @@ local function planAhead(route, baseRoute)
   local nextCos = 1
   local totalAccel = learned_total_accel
 
-  for i = planCount - 1, targetSegIdx+1, -1 do
-    local node1 = plan[i]
-    local node2 = plan[i+1]
+  for i = planCount-1, targetSegIdx+1, -1 do
+    local n1 = plan[i]
+    local n2 = plan[i+1]
 
     -- inclination calculation
-    local v12d = node2.pos - node1.pos
+    local v12d = n2.pos - n1.pos
     local dist = v12d:length() + 1e-30
     v12d = v12d / dist
-    local Gf = gravityVec:dot(v12d) -- acceleration due to gravity parallel to raod segment, positive when downhill
+    local Gf = gravityVec:dot(v12d) -- acceleration due to gravity parallel to road segment, positive when downhill
     local Gt = (gravityVec - v12d * Gf):length() / g -- gravity vec normal to road segment
 
-    local node2SpeedSq = square(node2.speed)
+    local n2SpeedSq = square(n2.speed)
 
-    local curvature = 2 * sqrt(node1.vec:cross(node2.vec):squaredLength() /
-                               (node1.vec:squaredLength() * node2.vec:squaredLength() * (node1.vec + node2.vec):squaredLength())) + 1.6e-7
+    local curvature = 2 * sqrt(n1.vec:cross(n2.vec):squaredLength() /
+                               (n1.vec:squaredLength() * n2.vec:squaredLength() * (n1.vec + n2.vec):squaredLength())) + 1.6e-7
 
     local turnSpeedSq = totalAccel * Gt / curvature -- available centripetal acceleration * radius
 
     -- https://physics.stackexchange.com/questions/312569/non-uniform-circular-motion-velocity-optimization
-    --local deltaPhi = 2 * asin(0.5 * node2.vec:length() * curvature) -- phi = phi2 - phi1 = 2 * asin(halfcord / radius)
-    local node1SpeedSq = turnSpeedSq * sin(min(asin(min(node2SpeedSq/turnSpeedSq), 1) + 2*curvature*dist, pi*0.5))
+    --local deltaPhi = 2 * asin(0.5 * n2.vec:length() * curvature) -- phi = phi2 - phi1 = 2 * asin(halfcord / radius)
+    local n1SpeedSq = turnSpeedSq * sin(min(asin(min(n2SpeedSq/turnSpeedSq), 1) + 2*curvature*dist, pi*0.5))
 
     -- average tangential acceleration -- THIS IS PROBLEMATIC FOR VERY LOW TO ZERO CURVATURES
-    local acct = max((node1SpeedSq - min(node2SpeedSq, turnSpeedSq)) * 0.5 / dist, 0) - Gf
+    local acct = max((n1SpeedSq - min(n2SpeedSq, turnSpeedSq)) * 0.5 / dist, 0) - Gf
     -- average centripetal acceleration
-    local accn = square((sqrt(min(node2SpeedSq, turnSpeedSq)) + sqrt(node1SpeedSq)) * 0.5) * curvature
+    local accn = square((sqrt(min(n2SpeedSq, turnSpeedSq)) + sqrt(n1SpeedSq)) * 0.5) * curvature
     local acc = sqrt(accn * accn + acct * acct)
 
     turnSpeedSq = acc / curvature
-    node1SpeedSq = turnSpeedSq * sin(min(asin(min(node2SpeedSq/turnSpeedSq), 1) + 2*curvature*dist, pi*0.5))
+    n1SpeedSq = turnSpeedSq * sin(min(asin(min(n2SpeedSq/turnSpeedSq), 1) + 2*curvature*dist, pi*0.5))
 
     if i > 1 then
-      local node0 = plan[i-1]
-      local bumpSqSpeedToRangeRatio = projectileSquareSpeedToRangeRatio(node0.pos, node1.pos, node2.pos)
-      if bumpSqSpeedToRangeRatio ~= math.huge then -- i.e. the projectile angle is greater than the incline angle so a jump is possible
-        if node2.posz0:distanceToLine(node0.posz0, node1.posz0) < node2.radius then -- the next node is ~ alligned with the current segment
-          -- the ratio times the range gives the square speed of the projectile lauch speed for which we will not ecceed the given range
-          local bumpSpeedSq = bumpSqSpeedToRangeRatio * max(node2.vec:length(), node1.radiusOrig)
-          if node1SpeedSq > bumpSpeedSq then
-            if bumpSpeedSq > node2SpeedSq then
-              node1SpeedSq = (node2SpeedSq + 2 * node2.vec:length() * acc ) / (1 + 2 * (1/bumpSqSpeedToRangeRatio) * acc)
+      local n0 = plan[i-1]
+      local bumpSqSpeedToRangeRatio = projectileSqSpeedToRangeRatio(n0.pos, n1.pos, n2.pos)
+      if bumpSqSpeedToRangeRatio ~= math.huge then -- i.e. projectile angle (theta) > incline angle (alpha). Jump is theoretically possible.
+        if n2.posz0:distanceToLine(n0.posz0, n1.posz0) < n2.radius then -- the next node is ~ alligned with the current segment
+          -- the ratio times the range gives the square speed of the projectile lauch speed for which we will not exceed the given range
+          local bumpSpeedSq = bumpSqSpeedToRangeRatio * max(n2.vec:length(), n1.radiusOrig)
+          if n1SpeedSq > bumpSpeedSq then
+            if bumpSpeedSq > n2SpeedSq then
+              n1SpeedSq = (n2SpeedSq + 2 * n2.vec:length() * acc) / (1 + 2 * (1/bumpSqSpeedToRangeRatio) * acc)
             else
               if nextCos < -0.999 then
-                -- segment starting at node3speed is almost aligned with segment ending at node3speed
-                node1SpeedSq = node2SpeedSq
+                -- segment starting at node3 is almost aligned with segment ending at node3
+                n1SpeedSq = n2SpeedSq
               else
                 -- so as not to go beyond node3 and also reach there with less speed than node3.speed (no room to brake, no need to brake)
-                node1SpeedSq = bumpSpeedSq
+                n1SpeedSq = bumpSpeedSq
               end
             end
-          else -- node1SpeedSq <= bumpSpeedSq (will jump but how far and how much distance will there be to brake)
+          else -- n1SpeedSq <= bumpSpeedSq (will jump but how far and how much distance will there be to brake)
             -- at this speed there will be some flight but it will not reach node3
-            if node1SpeedSq > node2SpeedSq then
+            if n1SpeedSq > n2SpeedSq then
               -- some braking will be required and some traction is lost because of the distance we travel while in flight (how much?)
               -- find range of flight calculate distance that is available for braking and recalculate speed
-              node1SpeedSq = (node2SpeedSq + 2 * node2.vec:length() * acc) / (1 + 2 * (1/bumpSqSpeedToRangeRatio) * acc)
+              n1SpeedSq = (n2SpeedSq + 2 * n2.vec:length() * acc) / (1 + 2 * (1/bumpSqSpeedToRangeRatio) * acc)
             end
           end
         else -- do not take off
-          node1SpeedSq = min(node1SpeedSq, bumpSqSpeedToRangeRatio * min(node2.vec:length(), node1.radiusOrig))
+          n1SpeedSq = min(n1SpeedSq, bumpSqSpeedToRangeRatio * min(n2.vec:length(), n1.radiusOrig))
         end
       end
     end
 
     if traffic then
       for _, data in ipairs(traffic[i]) do
-        local plPosOnPlan = linePointFromXnorm(node1.pos, node2.pos, data[2])
+        local plPosOnPlan = linePointFromXnorm(n1.pos, n2.pos, data[2])
         local plAIColDist = (plPosOnPlan - aiPos):length()
-        local plID = data[1]
-        local v = mapmgr.objects[plID]
-        node1SpeedSq = min(square(max(data[3], 0)) + 2 * acc * (plPosOnPlan - node1.pos):length() * max(plAIColDist - 5, 0) / (plAIColDist + 10), node1SpeedSq)
+        n1SpeedSq = min(square(max(data[3], 0)) + 2 * acc * (plPosOnPlan - n1.pos):length() * max(plAIColDist - 5, 0) / (plAIColDist + 10), n1SpeedSq)
       end
     end
 
-    nextCos = node1.dirVec:dot(-node2.dirVec)
-    node1SpeedSq = sqrt(node1SpeedSq)
+    nextCos = n1.dirVec:dot(-n2.dirVec)
+    n1SpeedSq = sqrt(n1SpeedSq)
 
-    -- if manualSpeed or routeSpeed are nil/false then fall back to the calculated node1SpeedSq.
+    -- if manSpeed or routeSpeed are nil/false then fall back to the calculated n1SpeedSq.
     -- if routeSpeed is true (has a value) and limitSpeed == false then impose routeSpeed on entire route
     -- if routeSpeed is true (has a value) and limitSpeed == true then cap route speed (set max speed limit) to routeSpeed
-    node1.speed = node1.manualSpeed or ((routeSpeed and limitSpeed) and min(routeSpeed, node1SpeedSq) ) or (limitSpeed ~= nil and routeSpeed) or node1SpeedSq
+      n1.speed = n1.manSpeed or ((routeSpeed and limitSpeed) and min(routeSpeed, n1SpeedSq) ) or (limitSpeed ~= nil and routeSpeed) or n1SpeedSq
   end
 
   do
@@ -806,34 +832,10 @@ local function planAhead(route, baseRoute)
 
     node1SpeedSq = sqrt(node1SpeedSq)
 
-    node1.speed = node1.manualSpeed or ((routeSpeed and limitSpeed) and min(routeSpeed, node1SpeedSq)) or (limitSpeed ~= nil and routeSpeed) or node1SpeedSq
+    node1.speed = node1.manSpeed or ((routeSpeed and limitSpeed) and min(routeSpeed, node1SpeedSq)) or (limitSpeed ~= nil and routeSpeed) or node1SpeedSq
   end
 
   return plan
-end
-
-local function setSpeed(speed)
-  -- both routeSpeed and limitSpeed have to be ~= nil for the set speed (either in limit mode or in set mode) to be effective
-  if type(speed) ~= 'number' then routeSpeed = nil else routeSpeed = speed end
-  M.routeSpeed = routeSpeed
-end
-
-local function setSpeedMode(speedMode)
-  if speedMode == 'set' then
-    limitSpeed = false
-  elseif speedMode == 'limit' then
-    limitSpeed = true
-  else
-    limitSpeed = nil
-  end
-  M.speedMode = speedMode
-end
-
-local function resetSpeedModeAndValue()
-  routeSpeed = nil
-  limitSpeed = nil
-  M.speedMode = nil -- maybe this should be 'off'
-  M.routeSpeed = nil
 end
 
 local function resetMapAndRoute()
@@ -845,192 +847,14 @@ local function resetMapAndRoute()
   resetAggression()
 end
 
-local function fleePlan()
-  local wp1, wp2 = mapmgr.findClosestRoad(aiPos)
-
-  if wp1 == nil or wp2 == nil then
-    internalState = 'offroad'
-    return
-  else
-    internalState = 'onroad'
-  end
-
-  if aiDirVec:dot(map.nodes[wp2].pos - aiPos) > 0 then -- map.nodes[wp1].pos
-    wp1, wp2 = wp2, wp1
-  end
-
-  local newRoute
-  if targetName == nil then -- flee without target
-    newRoute = mapmgr.getFleePath(wp1, mapmgr.objects[aiID], player) -- TODO: Why do i use mapmgr.objects here???
-  else -- flee to target
-    newRoute = mapmgr.getPathAwayFrom(wp1, targetName, aiPos, player.pos)
-  end
-
-  local newRouteLen = #newRoute
-
-  if newRouteLen == 0 then
-    internalState = 'offroad'
-    return
-  else
-    internalState = 'onroad'
-  end
-
-  if newRouteLen == 1 and currentRoute ~= nil then
-    planAhead(currentRoute)
-    return
-  end
-
-  if newRouteLen >= 3 and newRoute[2] == wp2 then
-    tableRemove(newRoute, 1)
-    newRouteLen = newRouteLen - 1
-  end
-
-  if currentRoute == nil then
-    if planAhead(newRoute) == nil then return end
-    currentRoute = newRoute
-    return
-  end
-
-  if newRouteLen == #currentRoute.path and newRoute[1] == currentRoute.path[1] and newRoute[newRouteLen] == currentRoute.path[#currentRoute.path] then
-    planAhead(currentRoute)
-    return
-  end
-
-  local tempPlan = planAhead(newRoute, currentRoute)
-
-  if tempPlan == nil then
-    planAhead(currentRoute)
-    return
-  else
-    local ai2pl = player.pos - aiPos
-    if (tempPlan[1].speed >= aiSpeed and (tempPlan[2].pos - aiPos):dot(aiDirVec) >= 0.4) or #currentRoute.plan < minPlanSize
-    or (ai2pl:normalized():dot(aiDirVec) > 0.4 and ai2pl:squaredLength() < 3600) then
-      currentRoute = newRoute
-    else
-      planAhead(currentRoute)
-    end
-  end
-end
-
-local function chasePlan()
-  local mapNodes = map.nodes
-
-  local wp1, wp2, dist1 = mapmgr.findClosestRoad(aiPos)
-
-  if (wp1 == nil or wp2 == nil) then
-    internalState = 'offroad'
-    return
-  end
-
-  if aiDirVec:dot(mapNodes[wp2].pos - mapNodes[wp1].pos) > 0 then wp1, wp2 = wp2, wp1 end
-
-  local plwp1, plwp2, dist2 = mapmgr.findClosestRoad(player.pos)
-
-  if (plwp1 == nil or plwp2 == nil) then
-    internalState = 'offroad'
-    return
-  end
-
-  if dist1 > max(mapNodes[wp1].radius, mapNodes[wp2].radius) * 2 and dist2 > max(mapNodes[plwp1].radius, mapNodes[plwp2].radius) * 2 then
-    internalState = 'offroad'
-    return
-  end
-
-  internalState = 'onroad'
-
-  if player.dirVec:dot(mapNodes[plwp2].pos - mapNodes[plwp1].pos) > 0 then plwp1, plwp2 = plwp2, plwp1 end
-
-  if wp1 == plwp1 and plPrevVel ~= nil then
-    local playerNodePos1 = mapNodes[plwp1].pos
-
-    local segDir = (playerNodePos1 - mapNodes[plwp2].pos)
-    local targetLineDir = vec3(-segDir.y, segDir.x, 0)
-    local l1xn = closestLinePoints(playerNodePos1, playerNodePos1 + targetLineDir, player.pos, player.pos + player.dirVec)
-    local tarPos = playerNodePos1 + targetLineDir * l1xn
-
-    local p2Target = (tarPos - player.pos):normalized()
-    local plVel2Target = player.vel:dot(p2Target)
-    local plAccel = (plVel2Target - plPrevVel:dot(p2Target)) / tau
-    local plTimeToTarget = (sqrt(max(plVel2Target * plVel2Target + 2 * plAccel * (tarPos - player.pos):length(), 0)) - plVel2Target) / (plAccel + 1e-30)
-
-    local aiVel2Target = aiVel:dot((tarPos - aiPos):normalized())
-    local aiTimeToTarget = (tarPos - aiPos):length() / (aiVel2Target + 1e-30)
-
-    if aiTimeToTarget < plTimeToTarget then
-      internalState = 'tail'
-      return
-    else
-      local newRoute = {}
-
-      newRoute.midTargetSegIdx = 1
-      newRoute.path = {}
-
-      local segRadius = mapNodes[plwp1].radius
-      local playerPos = player.pos
-      local playerDirVec = player.dirVec
-      local vec1 = (aiPos - playerPos):z0()
-      local vec2 = -playerDirVec:z0()
-
-      newRoute.plan = { {radius = 2, radiusOrig = 2, pos = vec3(aiPos), posz0 = aiPos:z0(), posOrig = vec3(aiPos), turnDir = vec3(0,0,0), speed = 0, pathidx = 1},
-        {radius = segRadius, radiusOrig = segRadius, pos = vec3(playerPos), posz0 = playerPos:z0(), posOrig = vec3(playerPos),
-        vec = vec1, dirVec = vec1:normalized(), turnDir = vec3(0,0,0), pathidx = 1},
-        {radius = segRadius, radiusOrig = segRadius, pos = playerPos + 15*playerDirVec, posz0 = (playerPos + 15*playerDirVec):z0(),
-          posOrig = playerPos + 15 * playerDirVec, vec = vec2, dirVec = vec2:normalized(), turnDir = vec3(0,0,0), pathidx = 2} }
-
-      if planAhead(newRoute) == nil then return end
-      currentRoute = newRoute
-      return
-    end
-  end
-
-  if currentRoute ~= nil and currentRoute.path[1] == wp1 and currentRoute.path[#currentRoute.path] == plwp1 then
-    planAhead(currentRoute)
-    return
-  end
-
-  local newRoute = mapmgr.getPath(wp1, plwp1, driveInLaneFlag and 10e7 or 1)
-
-  if #newRoute >= 3 and newRoute[2] == wp2 then
-    tableRemove(newRoute, 1)
-  end
-
-  if currentRoute ~= nil then
-    -- new plan same as old return
-    if #currentRoute.path >= #newRoute and plwp1 == currentRoute.path[#currentRoute.path]
-    and currentRoute.plan[2] ~= nil and wp1 == currentRoute.path[currentRoute.plan[2].pathidx] then
-      local j = #currentRoute.path
-      local curPathid = currentRoute.path[currentRoute.plan[#currentRoute.plan].pathidx]
-      for i = #newRoute, 1, -1 do
-        if newRoute[i] ~= currentRoute.path[j] then
-          break
-        end
-        if currentRoute.path[j] == curPathid then
-          planAhead(currentRoute)
-          return
-        end
-        j = j - 1
-      end
-    end
-
-    local tempplan = planAhead(newRoute, currentRoute)
-    if tempplan == nil then return end
-
-    if (tempplan[1].speed > aiSpeed and (tempplan[2].pos - aiPos):dot(aiDirVec) > 0) or #currentRoute.plan < minPlanSize then
-      currentRoute = newRoute
-    end
-  else
-    if planAhead(newRoute) == nil then return end
-    currentRoute = newRoute
-  end
-end
-
 local function getMapEdges(cutOffDrivability, node)
   -- creates a table (edgeDict) with map edges with drivability > cutOffDrivability
   if map.nodes ~= nil then
-    local allSCC = mapmgr.getSCC(node) -- returns all scc's reachable from 'node'. an array of dicts
+    local allSCC = mapmgr.getSCC(node) -- An array of dicts containing all strongly connected components reachable from 'node'.
     local maxSccLen = 0
     local sccIdx
     for i, scc in ipairs(allSCC) do
+      -- finds the scc with the most nodes
       local sccLen = scc[0] -- position at which the number of nodes in currentSCC is stored
       if sccLen > maxSccLen then
         sccIdx = i
@@ -1065,25 +889,25 @@ local function getMapEdges(cutOffDrivability, node)
 end
 
 local function newManualPath()
-  local newRoute, node1, node2, dist
+  local newRoute, n1, n2, dist
   local offRoad = false
-  if currentRoute ~= nil and currentRoute.path ~= nil then
+  if currentRoute and currentRoute.path then
     newRoute = {plan = currentRoute.plan, path = currentRoute.path, midTargetSegIdx = currentRoute.midTargetSegIdx}
   else
-    node1, node2, dist = mapmgr.findClosestRoad(aiPos)
-    if node1 == nil or node2 == nil then
+    n1, n2, dist = mapmgr.findClosestRoad(aiPos)
+    if n1 == nil or n2 == nil then
       gui.message("Could not find a road network, or closest road is too far", 5, "AI debug")
       return
     end
-    offRoad = dist > 2 * max(map.nodes[node1].radius, map.nodes[node2].radius)
-    if offRoad then
-      local vec1 = map.nodes[node1].pos - aiPos
-      local vec2 = map.nodes[node2].pos - aiPos
+    if dist > 2 * max(map.nodes[n1].radius, map.nodes[n2].radius) then
+      offRoad = true
+      local vec1 = map.nodes[n1].pos - aiPos
+      local vec2 = map.nodes[n2].pos - aiPos
       if aiDirVec:dot(vec1) > 0 and aiDirVec:dot(vec2) > 0 then
-        if vec1:length() > vec2:length() then node1, node2 = node2, node1 end
-      elseif aiDirVec:dot(map.nodes[node2].pos - map.nodes[node1].pos) > 0 then node1, node2 = node2, node1 end
-    elseif aiDirVec:dot(map.nodes[node2].pos - map.nodes[node1].pos) > 0 then node1, node2 = node2, node1 end
-    newRoute = {plan = {}, path = {node1}, midTargetSegIdx = 1}
+        if vec1:length() > vec2:length() then n1, n2 = n2, n1 end
+      elseif aiDirVec:dot(map.nodes[n2].pos - map.nodes[n1].pos) > 0 then n1, n2 = n2, n1 end
+    elseif aiDirVec:dot(map.nodes[n2].pos - map.nodes[n1].pos) > 0 then n1, n2 = n2, n1 end
+    newRoute = {plan = {}, path = {n1}, midTargetSegIdx = 1}
   end
   for i = 0, #wpList-1 do
     local wp1 = wpList[i] or newRoute.path[#newRoute.path]
@@ -1099,7 +923,7 @@ local function newManualPath()
     end
   end
   wpList = nil
-  if not offRoad and #newRoute.path >= 3 and newRoute.path[2] == node2 then
+  if not offRoad and #newRoute.path >= 3 and newRoute.path[2] == n2 then
     tableRemove(newRoute.path, 1)
   end
   currentRoute = newRoute
@@ -1117,7 +941,7 @@ local function validateUserInput()
       else
         if isValid then
           gui.message("One or more of the waypoints were not found on the map. Check the game console for more info.", 6, "AI debug")
-          print('The waypoints with the following names could not be found on the Map: ')
+          print('The waypoints with the following names could not be found on the Map')
           isValid = false
         end
         print(wpList[i])
@@ -1125,6 +949,185 @@ local function validateUserInput()
     end
   end
   return isValid
+end
+
+local function fleePlan()
+  local wp1, wp2 = mapmgr.findClosestRoad(aiPos)
+
+  if wp1 == nil or wp2 == nil then
+    internalState = 'offroad'
+    return
+  else
+    internalState = 'onroad'
+  end
+
+  if aiDirVec:dot(map.nodes[wp2].pos - aiPos) > 0 then -- map.nodes[wp1].pos
+    wp1, wp2 = wp2, wp1
+  end
+
+  local newRoute
+  if not targetName then -- flee without target
+    newRoute = mapmgr.getFleePath(wp1, mapmgr.objects[aiID], player) -- TODO: Why do i use mapmgr.objects here???
+  else -- flee to target
+    newRoute = mapmgr.getPathAwayFrom(wp1, targetName, aiPos, player.pos)
+  end
+
+  local newRouteLen = #newRoute
+
+  if newRouteLen == 0 then
+    internalState = 'offroad'
+    return
+  else
+    internalState = 'onroad'
+  end
+
+  if newRouteLen == 1 and currentRoute then
+    planAhead(currentRoute)
+    return
+  end
+
+  if newRouteLen >= 3 and newRoute[2] == wp2 then
+    tableRemove(newRoute, 1)
+    newRouteLen = newRouteLen - 1
+  end
+
+  if currentRoute == nil then
+    if planAhead(newRoute) == nil then return end
+    currentRoute = newRoute
+    return
+  end
+
+  if newRouteLen == #currentRoute.path and newRoute[1] == currentRoute.path[1] and newRoute[newRouteLen] == currentRoute.path[#currentRoute.path] then
+    planAhead(currentRoute)
+    return
+  end
+
+  local tempPlan = planAhead(newRoute, currentRoute)
+
+  if tempPlan == nil then
+    planAhead(currentRoute)
+    return
+  else
+    local ai2pl = player.pos - aiPos
+    if (tempPlan[1].speed >= aiSpeed and (tempPlan[2].pos - aiPos):dot(aiDirVec) >= 0.4) or #currentRoute.plan < minPlanCount
+    or (ai2pl:normalized():dot(aiDirVec) > 0.4 and ai2pl:squaredLength() < 3600) then
+      currentRoute = newRoute
+    else
+      planAhead(currentRoute)
+    end
+  end
+end
+
+local function chasePlan(dt)
+  local mapNodes = map.nodes
+
+  local wp1, wp2, dist1 = mapmgr.findClosestRoad(aiPos)
+
+  if wp1 == nil or wp2 == nil then
+    internalState = 'offroad'
+    return
+  end
+
+  if aiDirVec:dot(mapNodes[wp2].pos - mapNodes[wp1].pos) > 0 then wp1, wp2 = wp2, wp1 end
+
+  local plwp1, plwp2, dist2 = mapmgr.findClosestRoad(player.pos)
+
+  if plwp1 == nil or plwp2 == nil then
+    internalState = 'offroad'
+    return
+  end
+
+  if dist1 > max(mapNodes[wp1].radius, mapNodes[wp2].radius) * 2 and dist2 > max(mapNodes[plwp1].radius, mapNodes[plwp2].radius) * 2 then
+    internalState = 'offroad'
+    return
+  end
+
+  internalState = 'onroad'
+
+  if player.dirVec:dot(mapNodes[plwp2].pos - mapNodes[plwp1].pos) > 0 then plwp1, plwp2 = plwp2, plwp1 end
+
+  if plPrevVel and wp1 == plwp1 then
+    local playerNodePos1 = mapNodes[plwp1].pos
+
+    local segDir = (playerNodePos1 - mapNodes[plwp2].pos)
+    local targetLineDir = vec3(-segDir.y, segDir.x, 0)
+    local l1xn = closestLinePoints(playerNodePos1, playerNodePos1 + targetLineDir, player.pos, player.pos + player.dirVec)
+    local tarPos = playerNodePos1 + targetLineDir * l1xn
+
+    local p2Target = (tarPos - player.pos):normalized()
+    local plVel2Target = player.vel:dot(p2Target)
+    local plAccel = (plVel2Target - plPrevVel:dot(p2Target)) / dt
+    local plTimeToTarget = (sqrt(max(plVel2Target * plVel2Target + 2 * plAccel * (tarPos - player.pos):length(), 0)) - plVel2Target) / (plAccel + 1e-30)
+
+    local aiVel2Target = aiVel:dot((tarPos - aiPos):normalized())
+    local aiTimeToTarget = (tarPos - aiPos):length() / (aiVel2Target + 1e-30)
+
+    if aiTimeToTarget < plTimeToTarget then
+      internalState = 'tail'
+      return
+    else
+      local newRoute = {}
+
+      newRoute.midTargetSegIdx = 1
+      newRoute.path = {}
+
+      local segRadius = mapNodes[plwp1].radius
+      local playerPos = player.pos
+      local playerDirVec = player.dirVec
+      local vec1 = (aiPos - playerPos):z0()
+      local vec2 = -playerDirVec:z0()
+
+      newRoute.plan = { {radius = 2, radiusOrig = 2, pos = vec3(aiPos), posz0 = aiPos:z0(), posOrig = vec3(aiPos), turnDir = vec3(0,0,0), speed = 0, pathidx = 1},
+        {radius = segRadius, radiusOrig = segRadius, pos = vec3(playerPos), posz0 = playerPos:z0(), posOrig = vec3(playerPos),
+        vec = vec1, dirVec = vec1:normalized(), turnDir = vec3(0,0,0), pathidx = 1},
+        {radius = segRadius, radiusOrig = segRadius, pos = playerPos + 15*playerDirVec, posz0 = (playerPos + 15*playerDirVec):z0(),
+          posOrig = playerPos + 15 * playerDirVec, vec = vec2, dirVec = vec2:normalized(), turnDir = vec3(0,0,0), pathidx = 2} }
+
+      if planAhead(newRoute) == nil then return end
+      currentRoute = newRoute
+      return
+    end
+  end
+
+  if currentRoute and currentRoute.path[1] == wp1 and currentRoute.path[#currentRoute.path] == plwp1 then
+    planAhead(currentRoute)
+    return
+  end
+
+  local newRoute = mapmgr.getPath(wp1, plwp1, driveInLaneFlag and 10e7 or 1)
+
+  if #newRoute >= 3 and newRoute[2] == wp2 then
+    tableRemove(newRoute, 1)
+  end
+
+  if currentRoute then
+    -- new plan same as old return
+    if #currentRoute.path >= #newRoute and plwp1 == currentRoute.path[#currentRoute.path]
+    and currentRoute.plan[2] and wp1 == currentRoute.path[currentRoute.plan[2].pathidx] then
+      local j = #currentRoute.path
+      local curPathid = currentRoute.path[currentRoute.plan[#currentRoute.plan].pathidx]
+      for i = #newRoute, 1, -1 do
+        if newRoute[i] ~= currentRoute.path[j] then
+          break
+        end
+        if currentRoute.path[j] == curPathid then
+          planAhead(currentRoute)
+          return
+        end
+        j = j - 1
+      end
+    end
+
+    local tempPlan = planAhead(newRoute, currentRoute)
+    if not tempPlan then return end
+
+    if (tempPlan[1].speed > aiSpeed and (tempPlan[2].pos - aiPos):dot(aiDirVec) > 0) or #currentRoute.plan < minPlanCount then
+      currentRoute = newRoute
+    end
+  else
+    if planAhead(newRoute) == nil then return end
+    currentRoute = newRoute
+  end
 end
 
 local function warningAIDisabled(message)
@@ -1153,7 +1156,7 @@ local function updateGFX(dt)
 
   ------------------ RANDOM MODE ----------------
   if M.mode == 'random' then
-    if currentRoute == nil or currentRoute.plan[2].pathidx > #currentRoute.path * 0.75 then
+    if currentRoute == nil or currentRoute.plan[2].pathidx > #currentRoute.path * 0.5 then
       local wp1, wp2 = mapmgr.findClosestRoad(aiPos)
 
       if wp1 == nil or wp2 == nil then
@@ -1171,13 +1174,13 @@ local function updateGFX(dt)
 
       local newRoute = mapmgr.getRandomPath(wp1, wp2, driveInLaneFlag and 10e7 or 1) -- TODO: add check if this returns empty table!!
       if newRoute and #newRoute > 0 then
-        local tempplan = planAhead(newRoute, currentRoute)
+        local tempPlan = planAhead(newRoute, currentRoute)
 
-        if tempplan == nil then
+        if tempPlan == nil then
           if currentRoute == nil then return end
           planAhead(currentRoute)
         else
-          if currentRoute == nil or (tempplan[1].speed >= aiSpeed and (tempplan[2].pos - aiPos):dot(aiDirVec) >= 0) then
+          if currentRoute == nil or (tempPlan[1].speed >= aiSpeed and (tempPlan[2].pos - aiPos):dot(aiDirVec) >= 0) then
             currentRoute = newRoute
           else
             planAhead(currentRoute)
@@ -1187,11 +1190,13 @@ local function updateGFX(dt)
     else
       planAhead(currentRoute)
     end
-    if currentRoute == nil then return end
+
+    if not currentRoute then return end
 
   ------------------ MANUAL MODE ----------------
   elseif M.mode == 'manual' then
     if validateInput() then newManualPath() end
+
     if aggressionMode == 'rubberBand' then
       updatePlayerData()
       if player ~= nil then
@@ -1202,8 +1207,10 @@ local function updateGFX(dt)
         end
       end
     end
+
     planAhead(currentRoute)
-    if currentRoute == nil then return end
+
+    if not currentRoute then return end
 
   ------------------ SPAN MODE ----------------
   elseif M.mode == 'span' then
@@ -1295,7 +1302,7 @@ local function updateGFX(dt)
   ------------------ FLEE MODE ----------------
   elseif M.mode == 'flee' then
     updatePlayerData()
-    if player ~= nil then
+    if player then
 
       if validateInput() then
         targetName = wpList[1]
@@ -1319,17 +1326,16 @@ local function updateGFX(dt)
       return
     end
 
-    if currentRoute == nil then return end
+    if not currentRoute then return end
 
   ------------------ CHASE MODE ----------------
   elseif M.mode == 'chase' then
     updatePlayerData()
     if player ~= nil then
-      tau = dt
 
       setAggressionInternal(min(0.6 + (aiPos - player.pos):length() * 0.005, 1))
 
-      chasePlan()
+      chasePlan(dt)
 
       plPrevVel = vec3(player.vel)
 
@@ -1354,7 +1360,7 @@ local function updateGFX(dt)
       return
     end
 
-    if currentRoute == nil then return end
+    if not currentRoute then return end
 
   ------------------ STOP MODE ----------------
   elseif M.mode == 'stop' then
@@ -1378,7 +1384,7 @@ local function updateGFX(dt)
 
   throttle = 1
   brake = 0
-  if currentRoute ~= nil then
+  if currentRoute then
     targetSpeed = targetSpeedSmoother:get(currentRoute.plan[1].speed, dt)
     if targetstatus < 0 then
       if M.mode ~= 'chase' then
@@ -1417,7 +1423,6 @@ local function updateGFX(dt)
 
     local compTotalAccel = max(min(curTotalAccel * accelCoeff, maxTottalAccel), baseTurnAccel)
 
-    -- https://www.desmos.com/calculator/flajtwbld5 for the functions calculating the in/out rate below
     if compTotalAccel < totalAccelSmoother:value() then
       learned_total_accel = totalAccelSmoother:getWithRateUncapped(compTotalAccel, dt, 0.45 - 0.4 * aggression) --> in rate
     else
@@ -1466,32 +1471,18 @@ local function debugDraw(focusPos)
     debugDrawer:drawSphere(0.25, (aiPos - aiDirVec*aiLength):toFloat3(), color(0,255,0,255))
     debugDrawer:drawSphere(0.5, targetPos:toFloat3(), color(255,0,0,255))
     debugDrawer:drawSphere(0.3, targetAiMidPos:toFloat3(), color(255,0,0,255))
-
-
-    local xyz = math.sin(math.rad(170)*0.5)*vec3(obj:getDirectionVectorUp())
-    local q = quat(xyz.x, xyz.y, xyz.z, math.cos(math.rad(170)*0.5))
-    local vec = aiDirVec:rotated(q)
-    debugDrawer:drawCylinder(aiPos:toFloat3(), (aiPos+vec*50):toFloat3(), 0.02, color(0,0,255,200))
-
-    xyz = math.sin(math.rad(-170)*0.5)*vec3(obj:getDirectionVectorUp())
-    q = quat(xyz.x, xyz.y, xyz.z, math.cos(math.rad(-170)*0.5))
-    vec = aiDirVec:rotated(q)
-    debugDrawer:drawCylinder(aiPos:toFloat3(), (aiPos+vec*50):toFloat3(), 0.02, color(0,0,255,200))
-
   end
 
   if currentRoute then
     if M.debugMode == 'target' then
-      if map ~= nil and map.nodes ~= nil and currentRoute.path then
-        debugDrawer:drawCylinder(aiPos:toFloat3(), (aiPos+aiDirVec*50):toFloat3(), 0.02, color(0,0,255,200))
-
+      if map ~= nil and map.nodes and currentRoute.path then
         local p = map.nodes[currentRoute.path[#currentRoute.path]].pos:toFloat3()
         --debugDrawer:drawSphere(4, p, color(255,0,0,100))
         --debugDrawer:drawText(p + float3(0, 0, 4), color(0,0,0,255), 'Destination')
       end
 
     elseif M.debugMode == 'route' then
-      if currentRoute.path ~= nil and next(map) ~= nil then
+      if currentRoute.path and next(map) ~= nil then
         local p = map.nodes[currentRoute.path[#currentRoute.path]].pos:toFloat3()
         debugDrawer:drawSphere(4, p, color(255,0,0,100))
         debugDrawer:drawText(p + float3(0, 0, 4), color(0,0,0,255), 'Destination')
@@ -1507,24 +1498,26 @@ local function debugDraw(focusPos)
         routeRec.last = last
       end
 
-      local param = float3(0.7, aiWidth, 0.7)
+      local fl3 = float3(0.7, aiWidth, 0.7)
+      local col = color(0,0,0,128)
       for i = 1, len-1 do
-        debugDrawer:drawSquarePrism(routeRec[1+(last+i-1)%len], routeRec[1+(last+i)%len], param, param, color(0,0,0,128))
+        debugDrawer:drawSquarePrism(routeRec[1+(last+i-1)%len], routeRec[1+(last+i)%len], fl3, fl3, col)
       end
 
       if currentRoute.plan[1].pathidx then
         local mapNodes = map.nodes
         local path = currentRoute.path
-        local param = param + float3(0, aiWidth, 0)
+        fl3 = fl3 + float3(0, aiWidth, 0)
+        local col = color(255,0,0,120)
         for i = currentRoute.plan[1].pathidx, #path - 1 do
-          debugDrawer:drawSquarePrism(mapNodes[path[i]].pos:toFloat3(), mapNodes[path[i+1]].pos:toFloat3(), param, param, color(255,0,0,120))
+          debugDrawer:drawSquarePrism(mapNodes[path[i]].pos:toFloat3(), mapNodes[path[i+1]].pos:toFloat3(), fl3, fl3, col)
         end
       end
 
     elseif M.debugMode == 'speeds' then
       local plan = currentRoute.plan
       if plan and plan[1] then
-        local col = getContrastColor(aiID)
+        local red = color(255,0,0,200) -- getContrastColor(aiID)
         local prevPoint = plan[1].pos:toFloat3()
         local prevSpeed = -1
         for i = 1, #plan do
@@ -1536,18 +1529,18 @@ local function debugDraw(focusPos)
           local v = (n.speed >= 0 and n.speed) or prevSpeed
           local p1 = p + float3(0, 0, v*0.2)
           --debugDrawer:drawLine(p + float3(0, 0, v*0.2), (n.pos + n.turnDir):toFloat3() + float3(0, 0, v*0.2), col)
-          debugDrawer:drawCylinder(p, p1, 0.03, col)
-          debugDrawer:drawCylinder(prevPoint, p1, 0.05, col)
+          debugDrawer:drawCylinder(p, p1, 0.03, red)
+          debugDrawer:drawCylinder(prevPoint, p1, 0.05, red)
           debugDrawer:drawText(p1, color(0,0,0,255), strFormat("%2.0f", v*3.6) .. " kph")
           prevPoint = p1
           prevSpeed = v
         end
 
-        local aiPosFloat = aiPos:toFloat3()
+        local aiPosFlt = aiPos:toFloat3()
         local speedRecLen = #speedRecordings
 
-        if speedRecLen == 0 or (speedRecordings[speedRecLen][1] - aiPosFloat):length() > 0.25 then
-          tableInsert(speedRecordings, {aiPosFloat, aiSpeed, plan[1].speed, targetSpeed, brake, throttle})
+        if speedRecLen == 0 or (speedRecordings[speedRecLen][1] - aiPosFlt):length() > 0.25 then
+          tableInsert(speedRecordings, {aiPosFlt, aiSpeed, plan[1].speed, targetSpeed, brake, throttle})
           speedRecLen = speedRecLen + 1
         end
 
@@ -1570,7 +1563,7 @@ local function debugDraw(focusPos)
           lastEntry = v
         end
 
-        if speedRecLen > 250 then
+        if speedRecLen > 175 then
           tableRemove(speedRecordings, 1)
         end
       end
@@ -1613,19 +1606,19 @@ local function debugDraw(focusPos)
 
       -- Debug Throttle brake application
       local maxLen = 250
-      local len = min(#trajectoryRec, maxLen)
-      local last = trajectoryRec.last
-      if len == 0 or (trajectoryRec[last][1] - aiPos:toFloat3()):length() > 0.25 then
+      local len = min(#trajecRec, maxLen)
+      local last = trajecRec.last
+      if len == 0 or (trajecRec[last][1] - aiPos:toFloat3()):length() > 0.25 then
         last = 1 + last % maxLen
-        trajectoryRec[last] = {aiPos:toFloat3(), throttle, brake}
+        trajecRec[last] = {aiPos:toFloat3(), throttle, brake}
         len = min(len+1, maxLen)
-        trajectoryRec.last = last
+        trajecRec.last = last
       end
 
       local param = float3(0.7, aiWidth, 0.7)
       for i = 1, len-1 do
-        local rec = trajectoryRec[1+(last+i)%len]
-        debugDrawer:drawSquarePrism(trajectoryRec[1+(last+i-1)%len][1], rec[1], param, param, color(255*sqrt(abs(rec[3])), 255*sqrt(rec[2]), 0, 100))
+        local rec = trajecRec[1+(last+i)%len]
+        debugDrawer:drawSquarePrism(trajecRec[1+(last+i-1)%len][1], rec[1], param, param, color(255*sqrt(abs(rec[3])), 255*sqrt(rec[2]), 0, 100))
       end
     end
   end
@@ -1636,27 +1629,27 @@ local function init()
 end
 
 local function setMode(mode)
-  local previousMode = M.mode
-  M.mode = mode
+  if mode ~= nil then
+    M.mode = mode
+  end
 
   if M.mode ~= 'disabled' then
     resetMapAndRoute()
-    --mapmgr.enableTracking()
   end
 
-  if M.mode ~= 'disabled' and M.mode ~= 'stop' then -- TODO: this should be more explicit maybe?
+  if M.mode ~= 'disabled' then -- TODO: this should be more explicit maybe?
     mapmgr.requestMap()
     M.updateGFX = updateGFX
   end
 
   if M.mode == 'disabled' then
+    if previousMode ~= M.mode then
+      driveCar(0, 0, 0, 0)
+    end
     M.updateGFX = nop
-    driveCar(0,0,0,0)
     currentRoute = nil
     targetPos = nil
     wheels.resetABSBehavior()
-    --M.mode = 'stop'
-    --mapmgr.disableTracking('AI')
   elseif M.mode ~= 'stop' then
     if controller.mainController then
       controller.mainController.setGearboxMode("arcade")
@@ -1664,19 +1657,18 @@ local function setMode(mode)
     wheels.setABSBehavior("arcade")
   end
 
-  if M.mode == 'stop' then
-  end
-
+  previousMode = M.mode
   speedRecordings = {}
-  trajectoryRec = {last = 0}
+  trajecRec = {last = 0}
   routeRec = {last = 0}
 end
 
 local function reset() -- called when the user pressed I
   M.manualTargetName = nil
-  resetMapAndRoute()
-  driveCar(0, 0, 0, 0)
-  setMode(M.mode) -- some scenarios don't work if this is changed to setMode('disabled')
+  if M.mode ~= 'disabled' then
+    driveCar(0, 0, 0, 0)
+  end
+  setMode() -- some scenarios don't work if this is changed to setMode('disabled')
   stateChanged()
 end
 
@@ -1692,7 +1684,7 @@ end
 local function setVehicleDebugMode(newMode)
   tableMerge(M, newMode)
   if M.debugMode ~= 'trajectory' then
-    trajectoryRec = {last = 0}
+    trajecRec = {last = 0}
   end
   if M.debugMode ~= 'route' then
     routeRec = {last = 0}
@@ -1710,7 +1702,7 @@ end
 local function setState(newState)
   tableMerge(M, newState)
   setAggressionExternal(M.extAggression)
-  setMode(M.mode)
+  setMode()
   setVehicleDebugMode(M)
   setTargetObjectID(M.targetObjectID)
 end

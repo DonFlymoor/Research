@@ -266,7 +266,7 @@ angular.module('beamng.data', ['beamng.core'])
       removeAll:       () => { bngApi.engineLua('core_vehicles.removeAll()'); },
       removeOthers: () => { bngApi.engineLua('core_vehicles.removeAllExceptCurrent()'); },
       loadDefault: () => {bngApi.engineLua('core_vehicles.loadDefault()');},
-      resetAll:        () => { bngApi.engineScript('beamNGResetAllVehicles();'); },
+      resetAll:        () => { bngApi.engineScript('beamNGResetFlexMeshAllVehicles();beamNGResetAllVehicles();'); },
       reloadAll:       () => { bngApi.engineScript('beamNGReloadAllVehicles();'); },
     },
 

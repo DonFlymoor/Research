@@ -1,0 +1,110 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      groupPosition = "0.000000 0.000000 0.000000";
+
+   new SpawnSphere(cell_tower_standing_spawn) {
+      autoSpawn = "0";
+      spawnTransform = "0";
+      radius = "100";
+      dataBlock = "SpawnSphereMarker";
+      position = "651.558228 -621.411133 228.239655";
+      scale = "1 1 1";
+      rotationMatrix = "-0.103139788 -0.994667053 0 0.994667053 -0.103139788 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         autoplaceOnSpawn = "0";
+         enabled = "1";
+   };
+   new BeamNGWaypoint(cell_tower_b) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "-604.745728 -628.376953 186.464142";
+      scale = "10 10 10";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "cell_tower_a";
+   };
+   new BeamNGWaypoint(waypoint_4) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "-300.723511 -768.815857 137.569489";
+      scale = "7.85523558 7.85523558 7.85523558";
+      rotationMatrix = "1 0 0 0 0.999999762 -0.000690533896 0 0.000690533896 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new BeamNGWaypoint(waypoint_3) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "-170.906738 -931.574219 133.407303";
+      scale = "7.85523558 7.85523558 7.85523558";
+      rotationMatrix = "1 0 0 0 0.999999762 -0.000690533896 0 0.000690533896 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new BeamNGWaypoint(waypoint_2) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "150.296417 -669.881287 136.179642";
+      scale = "7.85523558 7.85523558 7.85523558";
+      rotationMatrix = "1 0 0 0 0.999999762 -0.000690533896 0 0.000690533896 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new BeamNGWaypoint(waypoint_1) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "553.980286 -732.098389 200.557053";
+      scale = "7.85523558 7.85523558 7.85523558";
+      rotationMatrix = "1 0 0 0 0.999999762 -0.000690533896 0 0.000690533896 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new BeamNGWaypoint(waypoint_5) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "-421.133972 -641.160461 134.562988";
+      scale = "7.85523558 7.85523558 7.85523558";
+      rotationMatrix = "1 0 0 0 0.999999762 -0.000690533896 0 0.000690533896 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new SpawnSphere(cell_tower_standingReverse_spawn) {
+      autoSpawn = "0";
+      spawnTransform = "0";
+      radius = "100";
+      dataBlock = "SpawnSphereMarker";
+      position = "-602.333679 -628.543579 187.072266";
+      scale = "1 1 1";
+      rotationMatrix = "0.161856368 -0.98681438 0 0.98681438 0.161856368 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         autoplaceOnSpawn = "0";
+         cloneOrigin = "cell_tower_a";
+         enabled = "1";
+   };
+   new BeamNGWaypoint(cell_tower_a) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "649.146179 -621.244507 227.631531";
+      scale = "10 10 10";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "scenario_finish1";
+   };
+};
+//--- OBJECT WRITE END ---
+

@@ -19,8 +19,17 @@ local function getMaterialIDByName(materials, s)
         end
     end
 
-    log('W', "particles.getMaterialIDByName", "unknown material: " .. tostring(s))
-    return 0
+    --log('W', "particles.getMaterialIDByName", "unknown material: " .. tostring(s))
+    -- creating temp definition
+    local m = {
+        colorB = 255,
+        colorG = 255,
+        colorR = 255,
+        dynamic = true,
+        name = s
+    }
+    table.insert(materials, m)
+    return #materials - 1
 end
 
 local function particleLoadStr(str, name)
@@ -30,29 +39,29 @@ end
 
 local function getMaterialsParticlesTable()
     local mix = readDictJSONTable("lua/common/particles.json")
-    
+
     --dump(mix)
 
     local particles = mix.particles
     local materials = mix.materials
     local materialsMap = {}
-    
+
     -- 0 = simple equals, 1 = expression
     --comparefields = {materialID1=0, materialID2=0, perpendicularVel=1, slipVel=1} -- material ids by the dict
     local comparefields = {perpendicularVel=1, slipVel=1}
-    
+
     -- fix the constants
     for k,v in pairs(particles) do
         v.materialID1 = getMaterialIDByName(materials, v.materialID1)
         v.materialID2 = getMaterialIDByName(materials, v.materialID2)
-        
+
         -- exchange in a clever way
-        if v.materialID2 > v.materialID1 then 
+        if v.materialID2 > v.materialID1 then
             local tmp = v.materialID1
             v.materialID1 = v.materialID2
             v.materialID2 = tmp
         end
-        
+
         -- construct the comparison string
         local fields = {}
         for kc,vc in pairs(comparefields) do
@@ -84,20 +93,20 @@ local function getMaterialsParticlesTable()
             log('W', "particles.getMaterialsParticlesTable", "### " .. tostring(err))
             return {}
         end
-        
-        
+
+
         local mKey = v.materialID1 .. "_" .. v.materialID2
         if materialsMap[mKey] == nil then
             materialsMap[mKey] = {}
         end
-        
+
         table.insert(materialsMap[mKey], v)
         --[[
         -- example call:
         p = {}
         p.slipVel = 12
         p.perpendicularVel = 1
-        
+
         print("###"..compareFuncStr.. " = " .. tostring(v.compareFunc(p)).."")
         ]]--
     end

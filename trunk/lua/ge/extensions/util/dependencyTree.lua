@@ -26,7 +26,7 @@ local function recurseFindAttribute(n, className, attributeName)
 end
 
 local function findFiles(pattern)
-  return FS:findFilesByRootPattern('game:' .. folder, pattern, -1, true, false)
+  return FS:findFilesByRootPattern(folder, pattern, -1, true, false)
 end
 
 local function add(type, category, value)

@@ -14,6 +14,7 @@ local max = math.max
 local min = math.min
 local abs = math.abs
 local fsign = fsign
+local sqrt = math.sqrt
 
 local function updateVelocity(device)
   --calculate input AV based on the two differential output AVs (weighted by base torque split as the split is created by different sized gears on each output)
@@ -70,8 +71,8 @@ local function viscousLSDUpdateTorque(device)
   local inputTorque = device.parent[device.parentOutputTorqueName] * (1 - min(overSpeedFriction * absMaxOutputAVdiff * absMaxOutputAVdiff * absMaxOutputAVdiff, 1)) * device.gearRatio - device.friction * inputAVthreshold
 
   --vlsd works with speed sensitive locking torque
-  local viscousTorque1 = min(max((device.viscousCoef * outputAV1diff),-device.viscousTorque), device.viscousTorque)
-  local viscousTorque2 = min(max((device.viscousCoef * outputAV2diff),-device.viscousTorque), device.viscousTorque)
+  local viscousTorque1 = min(max((device.viscousCoef * outputAV1diff), -device.viscousTorque), device.viscousTorque)
+  local viscousTorque2 = min(max((device.viscousCoef * outputAV2diff), -device.viscousTorque), device.viscousTorque)
   device.outputTorque1 = inputTorque * device.diffTorqueSplitA - device.viscousTorque1Smoother:get(viscousTorque1 - device.friction * outputAV1threshold)
   device.outputTorque2 = inputTorque * device.diffTorqueSplitB - device.viscousTorque2Smoother:get(viscousTorque2 - device.friction * outputAV2threshold)
 end
@@ -102,7 +103,7 @@ local function selectUpdates(device)
   elseif device.mode == "locked" then
     device.torqueUpdate = lockedUpdateTorque
   else
-    log("E", "differential.selectDeviceUpdates", "Found unknown differential type: '"..device.mode.."'")
+    log("E", "differential.selectDeviceUpdates", "Found unknown differential type: '" .. device.mode .. "'")
   end
 end
 
@@ -139,6 +140,13 @@ local function calculateInertia(device)
     end
     outputInertia = outputInertia * 2
   end
+
+  if device.lockSpringAutoCalc then
+    device.lockSpring = powertrain.stabilityCoef * powertrain.stabilityCoef * min(device.children[1].cumulativeInertia, device.children[2].cumulativeInertia)
+    device.lockTorque = device.lockSpring
+  end
+  device.lockDamp = device.lockSpring * 0.001
+  device.maxDiffAngle = sqrt(device.lockTorque / device.lockSpring)
 
   device.cumulativeInertia = outputInertia / device.gearRatio / device.gearRatio
   device.cumulativeGearRatio = cumulativeGearRatio * device.gearRatio
@@ -180,7 +188,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -191,18 +198,15 @@ local function new(jbeamData)
     cumulativeGearRatio = 1,
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
-
     defaultVirtualInertia = jbeamData.defaultVirtualInertia or nil, --meant to be nil if not specified manually
-
     outputAV1 = 0,
     outputAV2 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     outputTorque2 = 0,
-
     reset = reset,
     setMode = setMode,
-    calculateInertia = calculateInertia,
+    calculateInertia = calculateInertia
   }
 
   local diffTorqueSplit = jbeamData.diffTorqueSplit or 0.5
@@ -218,7 +222,7 @@ local function new(jbeamData)
     device.availableModes = {device.mode}
   end
 
-  device.visualType = "differential_"..device.mode
+  device.visualType = "differential_" .. device.mode
 
   device.invGearRatio = 1 / device.gearRatio
 
@@ -239,8 +243,8 @@ local function new(jbeamData)
   device.diffAngle = 0
   device.lockTorque = jbeamData.lockTorque or 500
   device.lockSpring = jbeamData.lockSpring or device.lockTorque
-  device.lockDamp = device.lockSpring / 1000
-  device.maxDiffAngle = math.sqrt(device.lockTorque / device.lockSpring)
+
+  device.lockSpringAutoCalc = jbeamData.lockSpring == nil and jbeamData.lockTorque == nil
 
   device.jbeamData = jbeamData
 

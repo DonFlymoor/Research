@@ -30,11 +30,11 @@ local function updateTorque(device, dt)
   local avDiff1 = device.inputAV - device.clutchAV1
   local avDiff2 = device.inputAV - device.clutchAV2
 
-  device.clutchAngle1 = min(max(device.clutchAngle1 + avDiff1 * dt * device.clutchStiffness, -device.maxClutchAngle), device.maxClutchAngle)
-  device.clutchAngle2 = min(max(device.clutchAngle2 + avDiff2 * dt * device.clutchStiffness, -device.maxClutchAngle), device.maxClutchAngle)
+  device.clutchAngle1 = min(max(device.clutchAngle1 + avDiff1 * dt * device.clutchStiffness, -device.maxClutchAngle1), device.maxClutchAngle1)
+  device.clutchAngle2 = min(max(device.clutchAngle2 + avDiff2 * dt * device.clutchStiffness, -device.maxClutchAngle2), device.maxClutchAngle2)
 
-  device.torqueDiff1 = (min(max(device.clutchAngle1 * device.lockSpring + device.lockDamp * avDiff1, -device.lockTorque), device.lockTorque)) * device.clutchRatio1
-  device.torqueDiff2 = (min(max(device.clutchAngle2 * device.lockSpring + device.lockDamp * avDiff2, -device.lockTorque), device.lockTorque)) * device.clutchRatio2
+  device.torqueDiff1 = (min(max(device.clutchAngle1 * device.lockSpring1 + device.lockDamp1 * avDiff1, -device.lockTorque), device.lockTorque)) * device.clutchRatio1
+  device.torqueDiff2 = (min(max(device.clutchAngle2 * device.lockSpring2 + device.lockDamp2 * avDiff2, -device.lockTorque), device.lockTorque)) * device.clutchRatio2
 
   device.torqueDiff = device.torqueDiff1 + device.torqueDiff2 - device.friction * min(max(device.inputAV, -1), 1)
 
@@ -103,12 +103,16 @@ local function setGearIndex1(device, index)
   device.gearIndex1 = min(max(index, device.minGearIndex), device.maxGearIndex)
   device.gearRatio1 = device.gearRatios[device.gearIndex1]
 
+  powertrain.calculateTreeInertia()
+
   selectUpdates(device)
 end
 
 local function setGearIndex2(device, index)
   device.gearIndex2 = min(max(index, device.minGearIndex), device.maxGearIndex)
   device.gearRatio2 = device.gearRatios[device.gearIndex2]
+
+  powertrain.calculateTreeInertia()
 
   selectUpdates(device)
 end
@@ -128,16 +132,28 @@ local function calculateInertia(device)
     maxCumulativeGearRatio = child.maxCumulativeGearRatio
   end
 
-  local gearRatio = device.clutchRatio1 > device.clutchRatio2 and device.gearRatio1 or device.gearRatio2
-  local divisionSafeGearRatio = device.gearRatio ~= 0 and abs(gearRatio) or device.maxGearRatio
+  local gearRatio1 = device.gearRatio1
+  local gearRatio2 = device.gearRatio2
+  local divisionSafeGearRatio1 = gearRatio1 ~= 0 and abs(gearRatio1) or (device.maxGearRatio * 2)
+  local divisionSafeGearRatio2 = gearRatio2 ~= 0 and abs(gearRatio2) or (device.maxGearRatio * 2)
 
-  device.cumulativeInertia = min(outputInertia / divisionSafeGearRatio / divisionSafeGearRatio, device.parent.inertia * 0.5)
+  device.cumulativeInertia1 = min(outputInertia / divisionSafeGearRatio1 / divisionSafeGearRatio1, device.parent.inertia * 0.5)
+  device.cumulativeInertia2 = min(outputInertia / divisionSafeGearRatio2 / divisionSafeGearRatio2, device.parent.inertia * 0.5)
 
-  device.lockSpring = device.jbeamData.lockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * device.cumulativeInertia) --Nm/rad
-  device.lockDamp = device.lockSpring / 1000
-  device.maxClutchAngle = device.lockTorque / device.lockSpring --rad
+  device.lockSpring1 = device.jbeamData.lockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * device.cumulativeInertia1) --Nm/rad
+  device.lockSpring2 = device.jbeamData.lockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * device.cumulativeInertia2) --Nm/rad
+  --print(device.gearRatio1..","..device.gearRatio2)
+  --print(device.lockSpring1..","..device.lockSpring2)
+  device.lockDamp1 = device.lockSpring1 / 1000
+  device.lockDamp2 = device.lockSpring2 / 1000
 
-  device.cumulativeGearRatio = cumulativeGearRatio * gearRatio
+  device.maxClutchAngle1 = device.lockTorque / device.lockSpring1 --rad
+  device.maxClutchAngle2 = device.lockTorque / device.lockSpring2 --rad
+
+  device.parkLockSpring = device.jbeamData.parkLockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * outputInertia * 0.5) --Nm/rad
+  device.maxParkClutchAngle = device.parkLockTorque / device.parkLockSpring
+
+  device.cumulativeGearRatio = cumulativeGearRatio * (device.clutchRatio1 > device.clutchRatio2 and gearRatio1 or gearRatio2)
   device.maxCumulativeGearRatio = maxCumulativeGearRatio * device.maxGearRatio
 end
 
@@ -169,10 +185,6 @@ local function reset(device)
 
   device.parkClutchAngle = 0
 
-  device.parkLockTorque = jbeamData.parkLockTorque or 1000 --Nm
-  device.parkLockSpring = jbeamData.parkLockSpring or device.parkLockTorque --Nm/rad
-  device.maxParkClutchAngle = device.parkLockTorque / device.parkLockSpring --rad
-
   device:setGearIndex1(1)
   device:setGearIndex2(2)
 
@@ -186,7 +198,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -196,21 +207,16 @@ local function new(jbeamData)
     cumulativeGearRatio = 1,
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
-
     outputAV1 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     isBroken = false,
-
     lockCoef = 1,
-
     electricsClutchRatio1Name = jbeamData.electricsClutchRatio1Name or "clutchRatio1",
     electricsClutchRatio2Name = jbeamData.electricsClutchRatio2Name or "clutchRatio2",
-
     gearRatios = {},
     gearRatio1 = 0,
     gearRatio2 = 0,
-
     clutchAngle1 = 0,
     clutchAngle2 = 0,
     clutchRatio1 = 1,
@@ -219,32 +225,27 @@ local function new(jbeamData)
     torqueDiff1 = 0,
     torqueDiff2 = 0,
     torqueDiff = 0,
-
     additionalEngineInertia = jbeamData.additionalEngineInertia or 0,
-
     reset = reset,
     setMode = setMode,
     validate = validate,
     setLock = setLock,
     calculateInertia = calculateInertia,
-
     setGearIndex1 = setGearIndex1,
-    setGearIndex2 = setGearIndex2,
+    setGearIndex2 = setGearIndex2
   }
 
   device.jbeamData = jbeamData
 
   device.clutchStiffness = jbeamData.clutchStiffness or 1
 
+  --gearbox park locking clutch
   device.parkClutchAngle = 0
-
   device.parkLockTorque = jbeamData.parkLockTorque or 1000 --Nm
-  device.parkLockSpring = jbeamData.parkLockSpring or device.parkLockTorque --Nm/rad
-  device.maxParkClutchAngle = device.parkLockTorque / device.parkLockSpring --rad
 
   local forwardGears = {}
   local reverseGears = {}
-  for _,v in pairs(jbeamData.gearRatios) do
+  for _, v in pairs(jbeamData.gearRatios) do
     table.insert(v >= 0 and forwardGears or reverseGears, v)
   end
 

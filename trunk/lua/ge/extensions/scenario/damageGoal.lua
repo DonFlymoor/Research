@@ -62,6 +62,7 @@ local function processState(scenario, state, stateData)
 end
 
 local function init(scenario)
+  M.instances = {}
   for _,instance in ipairs(scenario.goals.vehicles) do
     if instance.id == 'damage' then
       if instance.value.damageLimit and type(instance.value.damageLimit) ~= "number" then

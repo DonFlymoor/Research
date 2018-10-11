@@ -397,6 +397,13 @@ local function initialiseGoalStat(vehicle, vehicleName)
   end
 end
 
+local function initialiseArbitraryStat(statName, statLabel, vehicle, vehicleName, maxPoints, maxValue)
+  local data = {label=statLabel, value=0.0, decimals=2, unit=nil, enabled = true, source=vehicleName}
+  data.maxPoints = maxPoints
+  data.maxValue = maxValue
+  setStatProgress(vehicle:getID(), statName, vehicleName, data)
+end
+
 local function initialiseSpeedStat(vehicle, vehicleName)
   local vehicleID = vehicle:getID()
   local speedProperties = statsProperties['speed']
@@ -920,6 +927,7 @@ M.onUpdate                  = onUpdate
 M.getVehicleStat            = getVehicleStat
 M.getSummaryStats           = getSummaryStats
 M.getScenarioOverallStat    = getScenarioOverallStat
+M.initialiseArbitraryStat   = initialiseArbitraryStat
 M.stopStatsGathering        = stopStatsGathering
 M.onRaceInit                = onRaceInit
 M.onRaceTick                = onRaceTick

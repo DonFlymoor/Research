@@ -270,7 +270,7 @@ singleton Material(tire_01g)
 
 singleton Material(offroadtire_01a)
 {
-    mapTo = "offroadtire_01";
+    mapTo = "offroadtire";
     diffuseMap[1] = "vehicles/common/tires/offroadtire_01a_d.dds";
     specularMap[1] = "vehicles/common/tires/offroadtire_01a_s.dds";
     normalMap[1] = "vehicles/common/tires/offroadtire_01a_n.dds";

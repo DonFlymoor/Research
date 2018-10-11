@@ -17,7 +17,7 @@ local function vehicleCommand(id,cmd,arg)
   if id then
     local veh = be:getObjectByID(id)
     if veh then
-      veh:queueLuaCommand("controller.onGameplayEvent('"..cmd.."',"..dumps(arg)..")")
+      veh:queueLuaCommand("controller.onGameplayEvent('"..cmd.."',"..serialize(arg)..")")
     else
       log("E", logTag, "vehicle ID '"..tostring(id).."' is invalid  cmd='"..tostring(cmd).."'")
     end

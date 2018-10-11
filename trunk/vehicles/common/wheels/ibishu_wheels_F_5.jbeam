@@ -18,7 +18,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -64,7 +64,7 @@
         {"hubNodeWeight":0.40},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":68600, "hubBeamStrength":76000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 }
 "ibishu_wheel_04a_16x7_F": {
@@ -86,7 +86,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -132,7 +132,7 @@
         {"hubNodeWeight":0.42},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 }
 "ibishu_wheel_03a_15x7_F": {
@@ -155,7 +155,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -201,7 +201,7 @@
         {"hubNodeWeight":0.40},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 }
 "ibishu_wheel_05a_15x7_F": {
@@ -224,7 +224,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -270,7 +270,7 @@
         {"hubNodeWeight":0.40},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 }
 "ibishu_wheel_02a_15x7_F": {
@@ -293,7 +293,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -339,7 +339,7 @@
         {"hubNodeWeight":0.40},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 }
 "ibishu_wheel_07a_15x7_F": {
@@ -362,7 +362,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -408,7 +408,7 @@
         {"hubNodeWeight":0.40},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 }
 "ibishu_wheel_07b_15x7_F": {
@@ -431,7 +431,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":true},
+        {"collision":false},
         {"selfCollision":true},
         //front wheels
         {"nodeWeight":5.0},
@@ -477,7 +477,7 @@
         {"hubNodeWeight":0.40},
         {"hubNodeMaterial":"|NM_METAL"},
         {"hubFrictionCoef":0.5},
-        {"hubBeamDeform":55600, "hubBeamStrength":63000},
+        {"hubBeamDeform":36500, "hubBeamStrength":67000},
     ],
 },
 }

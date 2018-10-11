@@ -21,6 +21,51 @@ singleton Material(stucco1_white)
     annotation = "BUILDINGS";
 };
 
+singleton Material(busstop)
+{
+    mapTo = "busstop";
+    vertColor[0] = "1";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_n.dds";
+    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_r.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "0";
+    emissive[0] = "0";
+    glow[0] = "0";
+    translucentBlendOp = "None";
+    cubemap = "global_cubemap_metalblurred";
+    alphaTest = "1";
+    alphaRef = "64";
+};
+
+singleton Material(busstop_windows)
+{
+    mapTo = "busstop_windows";
+    vertColor[0] = "0";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_n.dds";
+    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/buildings/busstop_r.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "1";
+    emissive[0] = "0";
+    glow[0] = "0";
+    translucentBlendOp = "LerpAlpha";
+    translucentZWrite = "1";
+    cubemap = "global_cubemap_metalblurred";
+    alphaTest = "0";
+    alphaRef = "64";
+};
+
 singleton Material(stone_joins)
 {
     mapTo = "stone_joins";
@@ -141,6 +186,30 @@ singleton Material(slabs_brutalist)
     translucentBlendOp = "None";
     alphaTest = "0";
     alphaRef = "0";
+    materialTag0 = "beamng"; materialTag1 = "building";
+    annotation = "BUILDINGS";
+};
+
+singleton Material(canal)
+{
+    vertColor[0] = "1";
+    mapTo = "canal";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/buildings/canal_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/buildings/canal_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/buildings/canal_n.dds";
+    reflectivityMap[0] = "levels/west_coast_usa/art/shapes/buildings/canal_r.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "0";
+    translucentBlendOp = "None";
+    alphaTest = "0";
+    alphaRef = "0";
+    detailMap[0] = "levels/west_coast_usa/art/terrain/Concrete-04-diff";
+    detailScale[0] = "6 6";
+    cubemap = "global_cubemap_metalblurred";
     materialTag0 = "beamng"; materialTag1 = "building";
     annotation = "BUILDINGS";
 };
@@ -327,6 +396,27 @@ singleton Material(vertexColor)
     alphaRef = "0";
     //cubemap = "global_cubemap_metalblurred";
     materialTag0 = "beamng"; materialTag1 = "building";
+};
+
+singleton Material(tent)
+{
+    mapTo = "tent";
+    vertColor[0] = "1";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/buildings/tent_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/buildings/tent_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/buildings/tent_n.dds";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "0";
+    translucentBlendOp = "None";
+    alphaTest = "0";
+    alphaRef = "0";
+    //cubemap = "global_cubemap_metalblurred";
+    materialTag0 = "beamng"; materialTag1 = "building";
+    annotation = "BUILDINGS";
 };
 
 
@@ -527,6 +617,31 @@ singleton Material(highrise)
     alphaTest = "0";
     alphaRef = "0";
     cubemap = "cubemap_city";
+    materialTag0 = "beamng"; materialTag1 = "building";
+    annotation = "BUILDINGS";
+};
+
+singleton Material(tunnel)
+{
+    mapTo = "tunnel";
+    vertColor[0] = "1";
+    //reflectivityMap[0] = "levels/west_coast_usa/art/shapes/buildings/highrise_r.dds";
+    diffuseMap[0] = "levels/west_coast_usa/art/shapes/buildings/tunnel_d.dds";
+    specularMap[0] = "levels/west_coast_usa/art/shapes/buildings/tunnel_s.dds";
+    normalMap[0] = "levels/west_coast_usa/art/shapes/buildings/tunnel_n.dds";
+    diffuseMap[1] = "levels/west_coast_usa/art/shapes/buildings/tunnel_g.dds";
+    glow[1] = "0";
+    emissive[1] = "1";
+    specularPower[0] = "32";
+    pixelSpecular[0] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    useAnisotropic[0] = "1";
+    castShadows = "1";
+    translucent = "0";
+    translucentBlendOp = "None";
+    alphaTest = "0";
+    alphaRef = "0";
+    //cubemap = "cubemap_city";
     materialTag0 = "beamng"; materialTag1 = "building";
     annotation = "BUILDINGS";
 };

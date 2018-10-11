@@ -31,7 +31,9 @@ local function endMission()
     
   clientEndMission(missionFilename)
 
-  be:physicsStopSimulation()
+  if(scenetree.EditorGui) then
+    TorqueScript.eval("EditorGui.onClientEndMission();")
+  end
 
   if scenetree.AudioChannelEffects then
     scenetree.AudioChannelEffects:stop(-1.0, -1.0)
@@ -97,7 +99,7 @@ local function loadMission(levelPath, isFirstMission)
   end
   TorqueScript.setVar("$instantGroup", tostring(serverGroup:getID()))
 
-  local materialfiles = FS:findFilesByPattern("game:"..levelDir, "*.cs", -1, true, false)
+  local materialfiles = FS:findFilesByPattern(levelDir, "*.cs", -1, true, false)
   -- materials.cs files need to be executed first
   table.sort(materialfiles, sortFiles)
   --dump(materialfiles)

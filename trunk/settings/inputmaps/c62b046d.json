@@ -1,0 +1,12 @@
+{
+    "name": "SpaceMouse Pro"
+    "bindings":
+    [
+        {"control": "zaxis" ,   "action": "zAxisAbs"},
+        {"control": "xaxis" ,   "action": "xAxisAbs"    ,   "isInverted": true},
+        {"control": "yaxis" ,   "action": "yAxisAbs"},
+        {"control": "rzaxis"    ,   "action": "yawAbs"  ,   "isInverted": true},
+        {"control": "rxaxis"    ,   "action": "pitchAbs"},
+        {"control": "ryaxis"    ,   "action": "rollAbs"},
+    ]
+}

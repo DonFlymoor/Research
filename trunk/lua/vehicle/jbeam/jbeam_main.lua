@@ -8,7 +8,10 @@ This module contains a set of functions which manipulate behaviours of vehicles.
 require("jbeam_common")
 require("jbeam_wheels")
 
+local mainPartType = 'main'
+
 local min, max = math.min, math.max
+local str_byte, str_sub, str_len, str_find = string.byte, string.sub, string.len, string.find
 
 --[[
 table M;
@@ -41,6 +44,8 @@ M.slotDescriptions = {}
 M.materials, M.materialsMap = particles.getMaterialsParticlesTable()
 
 M.main = {}
+
+M.directoriesloaded = {}
 
 M.partMap = {}
 
@@ -87,7 +92,7 @@ local function _tableDeepestPath(tbl, path)
     return path
   end
   local pathidx = #path
-  for k, v in pairs (tbl) do
+  for k, v in pairs(tbl) do
     if type(v) == "table" then
       path[pathidx] = k
       pathidx = pathidx + 1
@@ -102,6 +107,26 @@ local function tableDeepestPath(tbl)
   return p
 end
 
+local specialVals = {FLT_MAX = math.huge, MINUS_FLT_MAX = -math.huge}
+local typeIds = {
+  NORMAL = NORMALTYPE,
+  HYDRO = BEAM_HYDRO,
+  ANISOTROPIC = BEAM_ANISOTROPIC,
+  TIRESIDE = BEAM_ANISOTROPIC,
+  BOUNDED = BEAM_BOUNDED,
+  PRESSURED = BEAM_PRESSURED,
+  SUPPORT = BEAM_SUPPORT,
+  LBEAM = BEAM_LBEAM,
+  FIXED = NODE_FIXED,
+  NONCOLLIDABLE = NONCOLLIDABLE,
+  SIGNAL_LEFT = GFX_SIGNAL_LEFT,
+  SIGNAL_RIGHT = GFX_SIGNAL_RIGHT,
+  HEADLIGHT = GFX_HEADLIGHT,
+  BRAKELIGHT = GFX_BRAKELIGHT,
+  RUNNINGLIGHT = GFX_RUNNINGLIGHT,
+  REVERSELIGHT = GFX_REVERSELIGHT
+}
+
 --[[doxygen
 replace the val with special values
 @param val the variable need to be replaced
@@ -109,80 +134,32 @@ replace the val with special values
 string replaceSpecialValues(string val);
 --]]
 local function replaceSpecialValues(val)
-  if type(val) == "table" then
+  local typeval = type(val)
+  if typeval == "table" then
     -- recursive replace
     for k, v in pairs(val) do
       val[k] = replaceSpecialValues(v)
     end
+    return val
   end
-  if type(val) ~= "string" then
+  if typeval ~= "string" then
     -- only replace strings
     return val
   end
 
-  if val == "FLT_MAX" then
-    return math.huge -- using lua instead FLT_MAX
-  end
-  if val == "MINUS_FLT_MAX" then
-    return -math.huge --MINUS_FLT_MAX
-  end
+  if specialVals[val] then return specialVals[val] end
 
-  local flagsStr = ""
-  if val:sub(1,6) == "flags|" then
-    flagsStr = val:sub(7)
-  elseif val:sub(1,1) == "|" then
-    flagsStr = val:sub(2)
-  end
-
-  if flagsStr ~= "" then
-    -- flags handling
-    local parts = split(flagsStr, "|", 999)
+  if str_find(val, '|', 1, true) then
+    local parts = split(val, "|", 999)
     local ival = 0
-    for keyPart, valuePart in pairs_safe(parts) do
-      --log_jbeam('D', "jbeam.replaceSpecialValues", "### replaceSpecialValues "..tostring(keyPart).." = "..tostring(valuePart))
-
+    for i = 2, #parts do
+      local valuePart = parts[i]
       -- is it a node material?
       if valuePart:sub(1,3) == "NM_" then
         ival = particles.getMaterialIDByName(M.materials, valuePart:sub(4))
         --log_jbeam('D', "jbeam.replaceSpecialValues", "replaced "..valuePart.." with "..ival)
       end
-
-      if valuePart == "NORMAL" then
-        ival = NORMALTYPE -- bit.bor(ival, NORMALTYPE)
-      elseif valuePart == "HYDRO" then
-        ival = BEAM_HYDRO
-      elseif valuePart == "ANISOTROPIC" then
-        ival = BEAM_ANISOTROPIC
-      elseif valuePart == "TIRESIDE" then
-        ival = BEAM_ANISOTROPIC
-      elseif valuePart == "BOUNDED" then
-        ival = BEAM_BOUNDED
-      elseif valuePart == "PRESSURED" then
-        ival = BEAM_PRESSURED
-      elseif valuePart == "SUPPORT" then
-        ival = BEAM_SUPPORT
-      elseif valuePart == "LBEAM" then
-        ival = BEAM_LBEAM
-      elseif valuePart == "FIXED" then
-        ival = NODE_FIXED
-      elseif valuePart == "NONCOLLIDABLE" then
-        ival = NONCOLLIDABLE
-      end
-
-      -- the bitmask types
-      if valuePart == "SIGNAL_LEFT" then
-        ival = bit.bor(ival, GFX_SIGNAL_LEFT)
-      elseif valuePart == "SIGNAL_RIGHT" then
-        ival = bit.bor(ival, GFX_SIGNAL_RIGHT)
-      elseif valuePart == "HEADLIGHT" then
-        ival = bit.bor(ival, GFX_HEADLIGHT)
-      elseif valuePart == "BRAKELIGHT" then
-        ival = bit.bor(ival, GFX_BRAKELIGHT)
-      elseif valuePart == "RUNNINGLIGHT" then
-        ival = bit.bor(ival, GFX_RUNNINGLIGHT)
-      elseif valuePart == "REVERSELIGHT" then
-        ival = bit.bor(ival, GFX_REVERSELIGHT)
-      end
+      ival = bit.bor(ival, typeIds[valuePart] or 0)
     end
     if ival ~= 0 then
       --log_jbeam('D', "jbeam.replaceSpecialValues", "### replaced special flags variable '"..val.."' with value '"..tostring(ival).."'")
@@ -214,8 +191,9 @@ local function processTableWithSchema(vehicle, keyEntry, entry, newList)
   end
 
   local headerSize = #header
+  local headerSize1 = headerSize + 1
   local newListSize = 0
-  local localOptions = deepcopy( vehicle.options )
+  local localOptions = replaceSpecialValues(deepcopy( vehicle.options ) )
 
   -- remove the header from the data, as we dont need it anymore
   table.remove(entry,1)
@@ -225,14 +203,14 @@ local function processTableWithSchema(vehicle, keyEntry, entry, newList)
   vehicle.validTables[keyEntry] = true
 
   -- walk the list entries
-  for rowKey, rowValue in pairs_safe(entry) do
+  for rowKey, rowValue in ipairs(entry) do
     if type(rowValue) ~= "table" then
       log_jbeam('W', "processTableWithSchema", "*** Invalid table row: "..dumps(rowValue))
       return false
     end
     if tableIsDict(rowValue) then
       -- case where options is a dict on its own, filling a whole line
-      localOptions = tableMerge( localOptions, deepcopy(rowValue) )
+      tableMerge( localOptions, replaceSpecialValues(rowValue))
     else
       local newID = rowKey
       --log_jbeam('D', "jbeam.processTableWithSchema", " *** "..tostring(rowKey).." = "..tostring(rowValue).." ["..type(rowValue).."]")
@@ -250,22 +228,19 @@ local function processTableWithSchema(vehicle, keyEntry, entry, newList)
       local newRow = deepcopy(localOptions)
 
       -- check if inline options are provided, merge them then
-      local rvcc = 0
-      for rk,rv in pairs(rowValue) do
-        if rvcc >= headerSize and type(rv) == 'table' and tableIsDict(rv) and #rowValue > headerSize then
-          tableMerge(newRow, rv)
+      for rk = headerSize1, #rowValue do
+        local rv = rowValue[rk]
+        if type(rv) == 'table' and tableIsDict(rv) and #rowValue > headerSize then
+          tableMerge(newRow, replaceSpecialValues(rv))
           -- remove the options
           rowValue[rk] = nil -- remove them for now
           header[rk] = "options" -- for fixing some code below - let it know those are the options
           break
         end
-        rvcc = rvcc  + 1
       end
 
-      newRow = replaceSpecialValues(newRow)
-
       -- now care about the rest
-      for rk,rv in pairs(rowValue) do
+      for rk,rv in ipairs(rowValue) do
         --log_jbeam('D', "jbeam.processTableWithSchema", "### "..header[rk].."//"..tostring(newRow[header[rk]]))
         -- if there is a local option named like a row key, use the option instead
         -- copy things
@@ -277,7 +252,6 @@ local function processTableWithSchema(vehicle, keyEntry, entry, newList)
           newRow[header[rk]] = replaceSpecialValues(rv)
         end
       end
-      --dump(newRow)
 
       if newRow.id ~= nil then
         newID = newRow.id
@@ -442,107 +416,118 @@ table prepareLinks(table vehicles);
 local function prepareLinks(vehicles)
   local links = {}
   local linksidx = 1
-  local keyVehicle, vehicle, keyEntry, entry, rowKey, rowValue, tKey, tValue
+  local entrykeys = {}
 
-  for keyVehicle, vehicle in pairs (vehicles) do
+  for _, vehicle in pairs (vehicles) do
     for keyEntry, entry in pairs (vehicle) do
       if type(entry) == "table" then
-        for rowKey, rowValue in pairs_safe(entry) do
+        local keysLen = 0
+        for k, _ in pairs(entry) do
+          keysLen = keysLen + 1
+          entrykeys[keysLen] = k
+        end
+        for i = 1, keysLen do
+          local rowKey = entrykeys[i]
+          local rowValue = entry[rowKey]
           -- Check for links of the form: "link:section":[1,2,3,4]
           if type(rowValue) == "table" then
-            local parts = split(rowKey, ":", 2)
-            if #parts == 2 then
-              local sectionName = "nodes"
-              if parts[2] ~= "" then
-                sectionName = parts[2]
-              end
-
-              if vehicle[sectionName] ~= nil then
-                for tKey, tValue in ipairs(rowValue) do
-                  if vehicle[sectionName][tValue] ~= nil then
-                    links[linksidx] = {
-                      rv = rowValue,
-                      kp = tKey, -- "id"
-                      kc = nil,
-                      ot = vehicle[sectionName][tValue]
-                    }
-                    linksidx = linksidx + 1
-                  else
-                    if not rowValue.optional or (type(rowValue.optional) == 'boolean' and rowValue.optional == false) then
-                      log_jbeam('W', "jbeam.prepareLinks", "link target not found: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - DATA DISCARDED: ' .. dumps(rowValue))
-                    else
-                      log_jbeam('D', "jbeam.prepareLinks", "optional link discarded: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - OPTIONAL DATA DISCARDED')
-                    end
-                    entry[rowKey] = nil
-                    break
-                  end
+            if str_find(rowKey, ':', 1, true) then
+              local parts = split(rowKey, ":", 2)
+              if #parts == 2 then
+                local sectionName = "nodes"
+                if parts[2] ~= "" then
+                  sectionName = parts[2]
                 end
-                entry[parts[1]..'_'..sectionName] = rowValue
-                entry[rowKey] = nil
+
+                if vehicle[sectionName] ~= nil then
+                  for tKey, tValue in ipairs(rowValue) do
+                    if vehicle[sectionName][tValue] ~= nil then
+                      links[linksidx] = {
+                        rv = rowValue,
+                        kp = tKey, -- "id"
+                        kc = nil,
+                        ot = vehicle[sectionName][tValue]
+                      }
+                      linksidx = linksidx + 1
+                    else
+                      if not rowValue.optional or (type(rowValue.optional) == 'boolean' and rowValue.optional == false) then
+                        log_jbeam('W', "jbeam.prepareLinks", "link target not found: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - DATA DISCARDED: ' .. dumps(rowValue))
+                      else
+                        log_jbeam('D', "jbeam.prepareLinks", "optional link discarded: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - OPTIONAL DATA DISCARDED')
+                      end
+                      entry[rowKey] = nil
+                      break
+                    end
+                  end
+                  entry[parts[1]..'_'..sectionName] = rowValue
+                  entry[rowKey] = nil
+                end
               end
             else
               for cellKey,cellValue in pairs(rowValue) do
                 --log_jbeam('D', "jbeam.prepareLinks"," * key:"..tostring(cellKey).." = "..tostring(cellValue)..".")
-                local parts = split(cellKey, ":", 5)
-                if #parts == 2 then
-                  if string.match(parts[1], '%[.*%]') == nil then
-                    -- its a link
-                    -- default, resolve to nodes
-                    local sectionName
-                    if parts[2] ~= "" then
-                      sectionName = parts[2]
-                    else
-                      sectionName = "nodes"
-                    end
+                if str_find(cellKey, ':', 1, true) then
+                  local parts = split(cellKey, ":", 3)
+                  if #parts == 2 then
+                    if string.match(parts[1], '%[.*%]') == nil then
+                      -- its a link
+                      -- default, resolve to nodes
+                      local sectionName
+                      if parts[2] ~= "" then
+                        sectionName = parts[2]
+                      else
+                        sectionName = "nodes"
+                      end
 
-                    if vehicle[sectionName] ~= nil then
-                      if type(cellValue) == "table" then
-                        for tKey, tValue in ipairs(cellValue) do
-                          if vehicle[sectionName][tValue] ~= nil then
+                      if vehicle[sectionName] ~= nil then
+                        if type(cellValue) == "table" then
+                          for tKey, tValue in ipairs(cellValue) do
+                            if vehicle[sectionName][tValue] ~= nil then
+                              links[linksidx] = {
+                                rv = cellValue,
+                                kp = tKey, -- "id"
+                                kc = nil,
+                                ot = vehicle[sectionName][tValue]
+                              }
+                              linksidx = linksidx + 1
+                            else
+                              if not rowValue.optional or (type(rowValue.optional) == 'boolean' and rowValue.optional == false) then
+                                log_jbeam('W', "jbeam.prepareLinks", "link target not found: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - DATA DISCARDED: ' .. dumps(rowValue))
+                              else
+                                log_jbeam('D', "jbeam.prepareLinks", "optional link discarded: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - OPTIONAL DATA DISCARDED')
+                              end
+                              entry[rowKey] = nil
+                              break
+                            end
+                          end
+                        else
+                          if vehicle[sectionName][cellValue] ~= nil then
                             links[linksidx] = {
-                              rv = cellValue,
-                              kp = tKey, -- "id"
-                              kc = nil,
-                              ot = vehicle[sectionName][tValue]
+                              rv = rowValue,
+                              kp = parts[1], -- "id"
+                              kc = cellKey,  -- "id:"
+                              ot = vehicle[sectionName][cellValue]
                             }
                             linksidx = linksidx + 1
                           else
-                            if not rowValue.optional or (type(rowValue.optional) == 'boolean' and rowValue.optional == false) then
-                              log_jbeam('W', "jbeam.prepareLinks", "link target not found: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - DATA DISCARDED: ' .. dumps(rowValue))
-                            else
-                              log_jbeam('D', "jbeam.prepareLinks", "optional link discarded: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..tValue .. ' - OPTIONAL DATA DISCARDED')
+                            if optionalLinks[cellKey] == nil then
+                              if not rowValue.optional or (type(rowValue.optional) == 'boolean' and rowValue.optional == false) then
+                                log_jbeam('W', "jbeam.prepareLinks", "link target not found: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..cellValue .. ' - DATA DISCARDED: ' .. dumps(rowValue))
+                              else
+                                log_jbeam('D', "jbeam.prepareLinks", "optional link discarded: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..cellValue .. ' - OPTIONAL DATA DISCARDED')
+                              end
+                              entry[rowKey] = nil
+                              break
                             end
-                            entry[rowKey] = nil
-                            break
-                          end
-                        end
-                      else
-                        if vehicle[sectionName][cellValue] ~= nil then
-                          links[linksidx] = {
-                            rv = rowValue,
-                            kp = parts[1], -- "id"
-                            kc = cellKey,  -- "id:"
-                            ot = vehicle[sectionName][cellValue]
-                          }
-                          linksidx = linksidx + 1
-                        else
-                          if optionalLinks[cellKey] == nil then
-                            if not rowValue.optional or (type(rowValue.optional) == 'boolean' and rowValue.optional == false) then
-                              log_jbeam('W', "jbeam.prepareLinks", "link target not found: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..cellValue .. ' - DATA DISCARDED: ' .. dumps(rowValue))
-                            else
-                              log_jbeam('D', "jbeam.prepareLinks", "optional link discarded: " .. keyEntry .. "/" .. rowKey .. " > "..sectionName.."/"..cellValue .. ' - OPTIONAL DATA DISCARDED')
-                            end
-                            entry[rowKey] = nil
-                            break
                           end
                         end
                       end
+                      -- else
+                      --     local sectionName = "nodes"
+                      --     if parts[2] ~= "" then
+                      --         sectionName = parts[2]
+                      --     end
                     end
-                    -- else
-                    --     local sectionName = "nodes"
-                    --     if parts[2] ~= "" then
-                    --         sectionName = parts[2]
-                    --     end
                   end
                 end
               end
@@ -586,58 +571,64 @@ local function resolveLinks(vehicles, links)
 end
 
 local function resolveGroupLinks(vehicle)
-  local linksResolved = 0
-  local optional = false
+  local journal = {}
+  local groupindex = {}
+  local table_clear = table.clear
   -- walk all sections
-  for keyEntry, entry in pairs(vehicle) do
+  for _, entry in pairs(vehicle) do
     -- walk all vehicle sections
     if type(entry) == "table" then
-      for rowKey, rowValue in pairs(entry) do
+      for _, rowValue in pairs(entry) do
         if type(rowValue) == "table" then
           -- walk all cells
-          local journal = {}
           for cellKey, groupvals in pairs(rowValue) do
-            if string.sub(cellKey,1,1) == '[' then
+            if str_byte(cellKey,1) == 91 then -- [
               local groupname
               local sectioname
               groupname, sectioname = string.match(cellKey, '%[(.*)%]:(.*)')
-              if groupname and groupvals ~= nil then
-                if sectioname == '' then sectioname = "nodes" end
+              if groupname then
                 if type(groupvals) == 'string' then
                   groupvals = {groupvals}
                 end
                 local cids = {}
-                local groupindex = {}
+                table_clear(groupindex)
                 -- Create groupvals index
                 for _, gvalname in pairs(groupvals) do
                   groupindex[gvalname] = 1
                 end
                 -- walk all specified groups
-                for key, val in pairs(vehicle[sectioname]) do
-                  if val[groupname] ~= nil then
-                    -- little fix for one group, gets transformed into a list
-                    if type(val[groupname]) == 'string' then
-                      val[groupname] = {val[groupname]}
-                    end
-                    for _, gvalname in pairs(val[groupname]) do
-                      if groupindex[gvalname] ~= nil then
+                if sectioname == '' then sectioname = "nodes" end
+                for _, val in pairs(vehicle[sectioname]) do
+                  local vgn = val[groupname]
+                  if vgn ~= nil then
+                    local typevgn = type(vgn)
+                    if typevgn == 'string' then
+                      if groupindex[vgn] ~= nil then
+                        val[groupname] = {vgn}
                         table.insert(cids, val.cid)
-                        break
+                      end
+                    elseif typevgn == 'table' then
+                      for _, gvalname in pairs(vgn) do
+                        if groupindex[gvalname] ~= nil then
+                          table.insert(cids, val.cid)
+                          break
+                        end
                       end
                     end
                   end
                 end
-                journal['_'..groupname..'_'..sectioname] = cids
+                table.insert(journal, {rowValue, '_'..groupname..'_'..sectioname, cids})
               end
             end
-          end
-          -- play journal
-          for key, val in pairs(journal) do
-            rowValue[key] = val
           end
         end
       end
     end
+  end
+
+  -- play journal
+  for _, val in ipairs(journal) do
+    val[1][val[2]] = val[3]
   end
   return true
 end
@@ -649,6 +640,15 @@ pushToPhysics  push lua data to c/c++
 table pushToPhysics(table object, number pos);
 --]]
 local function pushToPhysics(object)
+
+  -- make sure we use the same directories for the dae files, etc
+  if object.ibody then
+    object.ibody:clearResourceSearchPath()
+    for _, d in ipairs(M.directoriesloaded) do
+      object.ibody:addResourceSearchPath(d)
+    end
+  end
+
   if M.vehicles == nil then
     return
   end
@@ -721,7 +721,7 @@ local function pushToPhysics(object)
 
       --print (">>> " .. tostring(node.nodeWeight) .. " | " .. tostring(vehicle.options.nodeWeight))
       -- -1 = append
-      local id = object:setNode(-1, tableToFloat3(node.pos), nodeWeight, ntype, frictionCoef, slidingFrictionCoef, node.stribeckExponent or 1, node.stribeckVelMult or 1, noLoadCoef, fullLoadCoef, loadSensitivitySlope, node.softnessCoef or 0.5, node.treadCoef or 0.25, node.tag or '', node.couplerStrength or math.huge, node.firstGroup or -1, selfCollision, collision, nodeMaterialTypeID)
+      local id = object:setNode(-1, tableToFloat3(node.pos), nodeWeight, ntype, frictionCoef, slidingFrictionCoef, node.stribeckExponent or 1, node.stribeckVelMult or 1, noLoadCoef, fullLoadCoef, loadSensitivitySlope, node.softnessCoef or 0.5, node.treadCoef or 0.5, node.tag or '', node.couplerStrength or math.huge, node.firstGroup or -1, selfCollision, collision, nodeMaterialTypeID)
       if node.pairedNode then
         object:setNodePairWheelId(id, node.pairedNode, node.wheelID or -1)
       end
@@ -1104,6 +1104,7 @@ local function pushToPhysics(object)
     local pressureGroupCount = 0
 
     if vehicle.triangles ~= nil then
+      local n = vehicle.nodes
       for triangleKey, triangle in pairs (vehicle.triangles) do
         if triangle.breakGroup == '' then triangle.breakGroup = nil end
         if triangle.triangleType ~= nil and type(triangle.triangleType) == 'string' then
@@ -1131,6 +1132,13 @@ local function pushToPhysics(object)
 
         local dragCoef = triangle.dragCoef or 100
         local liftCoef = triangle.liftCoef or dragCoef
+        if triangle.id1 == triangle.id2 or triangle.id1 == triangle.id3 or triangle.id2 == triangle.id3 then
+          local t1, t2, t3 = n[triangle.id1].name, n[triangle.id2].name, n[triangle.id3].name
+          if t1 == t2 and t2 == t3 then
+            t1, t2, t3 = triangle.id1, triangle.id2, triangle.id3
+          end
+          log_jbeam('E', "jbeam.pushToPhysics","Degenerate collision triangle with nodes: "..t1..', '..t2..', '..t3)
+        end
         object:setTriangle(-1, triangle.id1, triangle.id2, triangle.id3, dragCoef/100, liftCoef/100,
           type(triangle.stallAngle) == 'number' and triangle.stallAngle or 0.58, pressure, pressureGroup, triangle.triangleType,
           triangle.groundModel or "asphalt")
@@ -1262,9 +1270,6 @@ local function pushToPhysics(object)
 
     table.insert(loadingTimes, {'2.10 finish hook', hp1:stopAndReset()})
 
-    -- set default license plate
-    obj:queueGameEngineLua("setPlateText( getVehicleLicenseName("..obj:getID().."), "..obj:getID()..",'')")
-
     -- find active parts
     local activeParts = {}
     local partArrayStack = {}
@@ -1289,13 +1294,20 @@ local function pushToPhysics(object)
     end
     partArrayStack = nil
 
+    -- set license plate
+    local useLicensePlate = false
+    local licenseplatePath = ''
+
     -- process active parts
     for i, data in ipairs(activeParts) do
+      if data.partType and not useLicensePlate and data.partType:find('_licenseplate') then
+        useLicensePlate = true
+      end
       -- license plates setup
       if data.partType and data.partType:find('licenseplate_design') then
         for i, v in ipairs(M.partMap[data.partType]) do
           if v.partName == data.partName and v.licenseplate_path then
-            obj:queueGameEngineLua("setPlateText( getVehicleLicenseName("..obj:getID().."), "..obj:getID()..",'"..v.licenseplate_path.. "')")
+            licenseplatePath = v.licenseplate_path
           end
         end
       end
@@ -1313,6 +1325,10 @@ local function pushToPhysics(object)
           end
         end
       end
+    end
+
+    if useLicensePlate then
+      obj:queueGameEngineLua("setPlateText( false, "..obj:getID()..",'"..licenseplatePath.. "')")
     end
 
     table.insert(loadingTimes, {'2.11 skin', hp1:stopAndReset()})
@@ -1400,6 +1416,64 @@ local function unifyParts(target, source, level, slotOptions)
     end
     ::continue::
   end
+end
+
+--[[
+LUA 5.1 compatible
+
+Ordered Table
+keys added will be also be stored in a metatable to recall the insertion oder
+metakeys can be seen with for i,k in ( <this>:ipairs()  or ipairs( <this>._korder ) ) do
+ipairs( ) is a bit faster
+
+variable names inside __index shouldn't be added, if so you must delete these again to access the metavariable
+or change the metavariable names, except for the 'del' command. thats the reason why one cannot change its value
+]]--
+local function newT( t )
+  local mt = {}
+  -- set methods
+  mt.__index = {
+    -- set key order table inside __index for faster lookup
+    _korder = {},
+    -- traversal of hidden values
+    hidden = function() return pairs( mt.__index ) end,
+    -- traversal of table ordered: returning index, key
+    ipairs = function( self ) return ipairs( self._korder ) end,
+    -- traversal of table
+    pairs = function( self ) return pairs( self ) end,
+    -- traversal of table ordered: returning key,value
+    opairs = function( self )
+      local i = 0
+      local function iter( self )
+        i = i + 1
+        local k = self._korder[i]
+        if k then
+          return k,self[k]
+        end
+      end
+      return iter,self
+    end,
+    -- to be able to delete entries we must write a delete function
+    del = function( self,key )
+      if self[key] then
+        self[key] = nil
+        for i,k in ipairs( self._korder ) do
+          if k == key then
+            table.remove( self._korder, i )
+            return
+          end
+        end
+      end
+    end,
+  }
+  -- set new index handling
+  mt.__newindex = function( self,k,v )
+    if k ~= "del" and v then
+      rawset( self,k,v )
+      table.insert( self._korder, k )
+    end
+  end
+  return setmetatable( t or {},mt )
 end
 
 --[[doxygen
@@ -1518,64 +1592,57 @@ scale values recursively
 table scaleValuesRecursive(table data);
 --]]
 local function scaleValuesRecursive(data)
-  local c = 0
-  if type(data) == 'table' then
-    for key, v in pairs(data) do
-      -- look for scaling key
-      if data['scale'..key] ~= nil and type(data[key]) == "number" then
-        data[key] = data[key] * data['scale'..key]
-        --log_jbeam('D', "jbeam.scaleValuesRecursive","scaled key "..tostring(key).." with factor "..tostring(data['scale'..key]).." to "..data[key])
-        -- remove scale key
-        data['scale'..key] = nil
-        c = c + 1
-      end
-      -- look for scaling keys without any value
-      if type(key) == 'string' and key ~= 'scale' and key:sub(1,5) == "scale" and data[key:sub(6)] == nil then
-        --log_jbeam('D', "jbeam.scaleValuesRecursive","unused scale found: "..key)
-        data[key] = nil
-      end
-
-      if type(v) == 'table' then
-        c = c + scaleValuesRecursive(data[key])
-      end
-    end
-  end
-  return c
-end
-
-local function applyVariablesRecursive(data, vars)
-  local c = 0
-  if type(data) ~= 'table' then return 0 end
   for key, v in pairs(data) do
     local typev = type(v)
-    -- if typev == "string" and v:sub(1,1) == '$' then
-    if typev == "string" and v:sub(1,2) == '$=' then
-      if not expressionParser then
-        expressionParser = require("expressionParser")
-        M.jbeamVariableEnv = expressionParser.buildEnvJbeamVariables(vars, M.userVars)
-      end
-      data[key] = expressionParser.parse(v, M.jbeamVariableEnv)
-      --log_jbeam('D', "jbeam.applyVariablesRecursive", "set variable "..tostring(key).." to ".. tostring(data[key]))
-      c = c + 1
-    elseif typev == "string" and v:sub(1,1) == '$' then
-      if vars[v] == nil then
-        log_jbeam('E', "jbeam.applyVariablesRecursive", "missing variable "..tostring(data[key]))
+    if typev == 'number' then
+      if type(key) == 'string' and str_sub(key,1,5) == "scale" and str_len(key) > 5 then
+        -- look for scaled key
+        local keytoscale = str_sub(key, 6)
+        if type(data[keytoscale]) == "number" then
+          data[keytoscale] = data[keytoscale] * v
+        end
         data[key] = nil
-        goto continue
       end
-      data[key] = vars[v].val
-      --log_jbeam('D', "jbeam.applyVariablesRecursive", "set variable "..tostring(key).." to ".. tostring(data[key]))
-      c = c + 1
     elseif typev == 'table' then
-      if key == 'variables' then
-        -- ignore the variables table
-        goto continue
-      end
-      c = c + applyVariablesRecursive(data[key], vars)
+      scaleValuesRecursive(v)
     end
-    ::continue::
   end
-  return c
+end
+
+local function applyVariables(data, vars)
+  local stackidx = 2
+  local stack = {data}
+  while stackidx > 1 do
+    stackidx = stackidx - 1
+    local d = stack[stackidx]
+    for key, v in pairs(d) do
+      local typev = type(v)
+      if typev == "string" then
+        if str_byte(v,1,1) == 36 then -- $
+          if str_sub(v,2,2) == '=' then
+            if not expressionParser then
+              expressionParser = require("expressionParser")
+              M.jbeamVariableEnv = expressionParser.buildEnvJbeamVariables(vars, M.userVars)
+            end
+            d[key] = expressionParser.parse(v, M.jbeamVariableEnv)
+            --log_jbeam('D', "jbeam.applyVariables", "set variable "..tostring(key).." to ".. tostring(data[key]))
+          else
+            if vars[v] == nil then
+              log_jbeam('E', "jbeam.applyVariables", "missing variable "..tostring(v))
+              d[key] = nil
+            else
+              d[key] = vars[v].val
+            end
+            --log_jbeam('D', "jbeam.applyVariables", "set variable "..tostring(key).." to ".. tostring(data[key]))
+          end
+        end
+      elseif typev == 'table' and key ~= 'variables' then
+        -- ignore the variables table
+        stack[stackidx] = v
+        stackidx = stackidx + 1
+      end
+    end
+  end
 end
 
 local function processWheel(vehicle, wheelSection, wheelCreationFunction)
@@ -1603,10 +1670,12 @@ Boolean postProcess(table vehicles);
 --]]
 local function postProcess(vehicles)
   --log_jbeam('D', "jbeam.postProcess","- post processing ...")
+
   for keyVehicle, vehicle in pairs (vehicles) do
     -- variables
     if vehicle.variables then
       M.variables = {}
+
       for kv,vv in pairs(vehicle.variables) do
         if vv.type == 'range' then
           if vv.unit == '' then vv.unit = nil end
@@ -1675,8 +1744,9 @@ local function postProcess(vehicles)
       end
       --print('known variables:')
       --dump(M.variables)
-      local variableReplacements = applyVariablesRecursive(vehicle, M.variables)
-      log_jbeam('D', "jbeam.postProcess"," - replaced "..variableReplacements.." variables")
+      if type(vehicle) == 'table' then
+        applyVariables(vehicle, M.variables)
+      end
       ::continue::
     end
 
@@ -1728,6 +1798,7 @@ local function postProcess(vehicles)
     if vehicle.wheels == nil then vehicle.wheels = {} end
 
     processWheel(vehicle, "wheels", addWheel)
+
     processWheel(vehicle, "monoHubWheels", addMonoHubWheel)
     processWheel(vehicle, "hubWheelsTSV", addHubWheelTSV)
     processWheel(vehicle, "hubWheelsTSI", addHubWheelTSI)
@@ -1737,13 +1808,23 @@ local function postProcess(vehicles)
     -- Add the hydros to beams section
     local hydroCount = 0
     if vehicle.hydros ~= nil then
-      for i, hydro in pairs (vehicle.hydros) do
+      for i, hydro in pairs(vehicle.hydros) do
         hydro.beamType = BEAM_HYDRO
         hydro.beam = addBeamWithOptions(vehicle, 'hydros', nil, nil, BEAM_HYDRO, hydro)
+        local bL = vec3(vehicle.nodes[hydro.id1].pos):distance(vehicle.nodes[hydro.id2].pos)
 
         hydro.inRate = hydro.inRate or 2
         hydro.outRate = hydro.outRate or hydro.inRate
         hydro.autoCenterRate = hydro.autoCenterRate or hydro.inRate
+
+        if type(hydro.inExtent) == 'number' then
+          hydro.inLimit = hydro.inExtent / (bL + 1e-30)
+        end
+
+        if type(hydro.outExtent) == 'number' then
+          hydro.outLimit = hydro.outExtent / (bL + 1e-30)
+        end
+
         hydro.inLimit = hydro.inLimit or 0
         hydro.outLimit = hydro.outLimit or 2
         hydro.inputSource = hydro.inputSource or "steering"
@@ -1751,10 +1832,15 @@ local function postProcess(vehicles)
         hydro.inputInLimit = hydro.inputInLimit or -1
         hydro.inputOutLimit = hydro.inputOutLimit or 1
         hydro.inputFactor = hydro.inputFactor or 1
-        if hydro.factor ~= nil then
+
+        if type(hydro.extentFactor) == 'number' then
+          hydro.factor = hydro.extentFactor / (bL + 1e-30)
+        end
+
+        if type(hydro.factor) == 'number' then
           hydro.inLimit = 1 - math.abs(hydro.factor)
           hydro.outLimit = 1 + math.abs(hydro.factor)
-          hydro.inputFactor = sign(hydro.factor)
+          hydro.inputFactor = sign2(hydro.factor)
         end
         hydro.analogue = false
 
@@ -2020,14 +2106,12 @@ local function postProcess(vehicles)
       --end
     end
 
-    -- scales
-    local scaleChanges = 0
+    -- scaling
     for keyEntry, entry in pairs (vehicle) do
       if type(entry) == "table" and tableIsDict(entry) and M.ignoreSections[keyEntry] == nil then
-        scaleChanges = scaleChanges + scaleValuesRecursive(entry)
+        scaleValuesRecursive(entry)
       end
     end
-    log_jbeam('D', "jbeam.postProcess"," - scaled "..scaleChanges.." entries")
 
     -- soundscape
     if vehicle.soundscape ~= nil then
@@ -2053,6 +2137,7 @@ local function postProcess(vehicles)
     if vehicle.options.beamStrength == nil then vehicle.options.beamStrength = math.huge end
     if vehicle.options.nodeWeight   == nil then vehicle.options.nodeWeight   = 25 end
   end
+
   --log_jbeam('D', "jbeam.postProcess","- post processing done.")
   return true
 end
@@ -2245,6 +2330,26 @@ local function compile(vehicles)
   return vehicles
 end
 
+-- cleans up some data that is not needed at runtime, but only during assembly of the vehicle
+local function removeKeysRecursive(d)
+  if type(d) ~= 'table' then return end
+  -- what to clean up now
+  if d.childParts then d.childParts = nil end
+  if d.originFilename then d.originFilename = nil end
+  if d.partName then d.partName = nil end
+  if d.partOrigin then d.partOrigin = nil end
+  if d.skinName then d.skinName = nil end
+  if d.slotType then d.slotType = nil end
+  -- recurse
+  for _, v in pairs(d) do
+    removeKeysRecursive(v)
+  end
+end
+
+local function cleanup()
+  removeKeysRecursive(M.vehicles)
+end
+
 --[[doxygen
 assemble vehicles
 @return no return if everything goes fine, otherwise false
@@ -2252,7 +2357,7 @@ void assemble();
 --]]
 local function assemble()
   local hp1 = HighPerfTimer()
-  local partsCopy = deepcopy(M.partMap)
+  local partsCopy = shallowcopy(M.partMap)
   local mainCopy = deepcopy(M.main)
 
   M.slotMap = fillSlots(partsCopy, mainCopy, 1)
@@ -2276,6 +2381,9 @@ local function assemble()
 
   --dumpTableToFile(self.vehicles, false, directory.."post_compiled.txt")
   --log_jbeam('D', "jbeam.assemble","* dumping to file: " .."post_compiled.txt")
+
+  -- TODO: commented for now, needs fixing
+  --cleanup()
 
   if M.vehicles == nil then
     return false
@@ -2312,7 +2420,7 @@ local function resolveBaseParts(allParts)
           end
         end
       elseif k ~= 'basePart' then
-        log_jbeam('E', "jbeam.loadDirectories","    "..k.." JBEAM property are not supportted by basePart")
+        log_jbeam('E', "jbeam.resolveBaseParts","    "..k.." JBEAM property are not supportted by basePart")
       end
     end
   end
@@ -2328,18 +2436,9 @@ local function resolveBaseParts(allParts)
   end
 end
 
---[[doxygen
-load the Directory
-@param directory  the path
-@return true if load successfully otherwise false
-Boolean loadDirectories(string directory);
---]]
-local function loadDirectories(directories)
-  local hp1 = HighPerfTimer()
-  M.vehicleDirectory = directories[#directories] -- assumes the vehicle dir is always last
-  log_jbeam('D', "jbeam.loadDirectories","set vehicle directory to "..tostring(M.vehicleDirectory))
-
-  local allParts = {}
+local function loadDirectories(directories, _allParts, _partMap)
+  local allParts = _allParts or {}
+  local partMap = _partMap or {}
   log_jbeam('D', "jbeam.loadDirectories","*** loading jbeam files ***")
 
   local hp2 = HighPerfTimer()
@@ -2351,6 +2450,7 @@ local function loadDirectories(directories)
       log_jbeam('W', "jbeam.loadDirectories", "error loading vehicle directory:"..directory.." / "..directory )
       goto continue
     end
+    table.insert(M.directoriesloaded, directory)
     --log_jbeam('D', "jbeam.loadDirectories","loading vehicle directory:"..directory)
     local folders = {}
     local basePath = directory
@@ -2364,7 +2464,6 @@ local function loadDirectories(directories)
 
   table.insert(loadingTimes, {'1.1.1 filesystem find', hp2:stopAndReset()})
 
-
   -- step 2: load them all from the Filesystem in one go - a lot more efficient to read all files first
   local fileContent = {}
   --dump(jbeamFiles)
@@ -2377,39 +2476,32 @@ local function loadDirectories(directories)
   --perf.enable(1)
   local json = require("json")
 
-  for _, filename in pairs(jbeamFiles) do
-    local content = fileContent[filename]
-    if content ~= nil then
-      local editing = false
-      local state, parts = pcall(json.decode, content, filename, editing)
-      if state == false then
-        log_jbeam('E', "jbeam.loadDirectories","unable to decode JSON: "..tostring(filename))
-        log_jbeam('E', "jbeam.loadDirectories","JSON decoding error: "..tostring(parts))
-        return nil
+  for filename, content in pairs(fileContent) do
+    local state, parts = pcall(json.decode, content)
+    if state == false then
+      log_jbeam('E', "jbeam.loadDirectories","unable to decode JSON: "..tostring(filename))
+      log_jbeam('E', "jbeam.loadDirectories","JSON decoding error: "..tostring(parts))
+      return nil
+    end
+    --log_jbeam('D', "jbeam.loadDirectories","  * " .. filename .. " - "..tableSize(parts).." parts")
+    for partName, part in pairs(parts) do
+      if allParts[partName] ~= nil then
+        log_jbeam('W', "jbeam.loadDirectories", "Duplicated part: "..tostring(partName) .. ' from file: ' .. tostring(filename) .. ' and ' .. (allParts[partName].originFilename or ''))
       end
-      --log_jbeam('D', "jbeam.loadDirectories","  * " .. filename .. " - "..tableSize(parts).." parts")
-      for partName, part in pairs(parts) do
-        if allParts[partName] ~= nil then
-          log_jbeam('W', "jbeam.loadDirectories", "Duplicated part: "..tostring(partName) .. ' from file: ' .. tostring(filename) .. ' and ' .. (allParts[partName].originFilename or ''))
-        end
-        if type(part) == 'table' then
-          part.originFilename = filename
-          allParts[partName] = part;
-        else
-          log_jbeam('W', "jbeam.loadDirectories","Ignoring invalid part: "..tostring(part))
-        end
+      if type(part) == 'table' then
+        part.originFilename = filename
+        allParts[partName] = part;
+      else
+        log_jbeam('W', "jbeam.loadDirectories","Ignoring invalid part: "..tostring(part))
       end
-    else
-      log_jbeam('W', "jbeam.loadDirectories", "unable to read file: "..tostring(filename))
     end
   end
 
   --perf.disable()
   --perf.saveDataToCSV('json_performance.csv')
 
-  -- no parts workaround :)
-  if tableSize(allParts) == 1 then
-    -- if there only one part, use that as main
+  -- if there only one part, use that as main
+  if next(allParts, next(allParts)) == nil then
     for partK,partV in pairs(allParts) do
       allParts[partK].slotType = "main"
     end
@@ -2417,47 +2509,66 @@ local function loadDirectories(directories)
 
   table.insert(loadingTimes, {'1.1.3 json parsing', hp2:stopAndReset()})
 
-  table.insert(loadingTimes, {'1.1.X files', hp1:stopAndReset()})
-
-  log_jbeam('D', "jbeam.loadDirectories","*** jbeam loading done, found "..tableSize(allParts) .. ' parts in '..#jbeamFiles.. ' jbeam files')
-
   --dumpTableToFile(allParts, false, "test-out.jbeamp")
+  partMap = {}
 
-  -- step 3: merge the parts
-  local mainPartType = 'main'
-
-  -- create a parts map first
-  M.partMap = {}
   for partK,partV in pairs(allParts) do
     local slotType = allParts[partK].slotType
     if slotType ~= nil then
-      if M.partMap[slotType] == nil then
-        M.partMap[slotType] = {}
+      if partMap[slotType] == nil then
+        partMap[slotType] = {}
       end
-      local tmpentry = {}
       partV.partName = partK
-      table.insert(M.partMap[slotType], partV)
+      table.insert(partMap[slotType], partV)
     else
       log_jbeam('W', "jbeam.loadDirectories","MISSING slotType for part: "..partK)
     end
   end
 
-  --serializeJsonToFile(M.vehicleDirectory .. "all_parts.json", allParts, true)
+  return allParts, partMap
+end
 
-  --dumpTableToFile(self.partMap, false, "test-out.jbeamp")
+local function loadVehicle(vehicleDir)
+  local hp1 = HighPerfTimer()
 
-  -- now, try to merge the main one
+  M.vehicleDirectory = vehicleDir -- assumes the vehicle dir is always last
+  log_jbeam('D', "jbeam.loadVehicle","set vehicle directory to "..tostring(M.vehicleDirectory))
 
-  if M.partMap[mainPartType] == nil or M.partMap[mainPartType][1] == nil then
-    log_jbeam('W', "jbeam.loadDirectories","main slot not found, unable to spawn")
+  -- 1st: load the vehicle dir:
+  local allParts, partMap = loadDirectories({M.vehicleDirectory})
+
+  -- 2nd: find the main part in the goo
+
+  if partMap[mainPartType] == nil or partMap[mainPartType][1] == nil then
+    log_jbeam('W', "jbeam.loadVehicle","main slot not found, unable to spawn")
     return false
   end
 
-  M.main = M.partMap[mainPartType][1]
+  M.main = partMap[mainPartType][1]
+  --dump(M.main)
+
+
+  --3rd: do we need to load more files?
+  if M.main.information == nil or M.main.information.includes == nil then
+    -- backward compatibility: load common folder
+    allParts, partMap = loadDirectories({'vehicles/common'}, allParts, partMap)
+  elseif type(M.main.information.includes) == 'table' then
+    -- yes, respect the order
+    allParts, partMap = loadDirectories(M.main.information.includes, allParts, partMap)
+  else
+    log_jbeam('D', "jbeam.loadVehicle","invalid include directive: " .. dumps(M.main.information.includes))
+  end
+
+  M.partMap = partMap
+
+  log_jbeam('D', "jbeam.loadDirectories","*** jbeam loading done, found "..tableSize(allParts) .. ' parts')
+
+  --serializeJsonToFile(M.vehicleDirectory .. "all_parts.json", allParts, true)
+  --dumpTableToFile(self.partMap, false, "test-out.jbeamp")
 
   table.insert(loadingTimes, {'1.2 partmap', hp1:stopAndReset()})
 
-  --log_jbeam('D', "jbeam.loadDirectories","* assembling main jbeam. " ..M.main.partName)
+  --log_jbeam('D', "jbeam.loadVehicle","* assembling main jbeam. " ..M.main.partName)
 
   local res = assemble()
   table.insert(loadingTimes, {'1.3.X.X assemble (sum)', hp1:stopAndReset()})
@@ -2476,13 +2587,8 @@ do part of changes of vehicles
   end
   -- public interface
 
-  --- loadDirectories
-  M.loadDirectories = loadDirectories
-
-  --- pushToPhysics
+  M.loadVehicle = loadVehicle
   M.pushToPhysics = pushToPhysics
-
-  --- doPartChanges
   M.doPartChanges = doPartChanges
 
   return M

@@ -37,25 +37,27 @@ local gearboxHandling = {
   availableLogic = {},
   arcadeAutoBrakeAmount = 0.2,
   arcadeAutoBrakeAVThreshold = 5,
+  isArcadeSwitched = nil,
+  useSmartAggressionCalculation = true
 }
 
 local energyStorageData = {
   ratio = 0,
   volume = 0,
   capacity = 0,
-  invEnergyStorageCount = 0,
+  invEnergyStorageCount = 0
 }
 
 local shiftPreventionData = {
   wheelSlipUpThreshold = 0,
   wheelSlipDownThreshold = 0,
   wheelSlipShiftDown = false,
-  wheelSlipShiftUp = false,
+  wheelSlipShiftUp = false
 }
 
 local shiftBehavior = {
   shiftUpAV = 0,
-  shiftDownAV = 0,
+  shiftDownAV = 0
 }
 
 local smoother = {
@@ -64,8 +66,8 @@ local smoother = {
   throttleInput = nil,
   brakeInput = nil,
   aggression = nil,
-  avgAV= nil,
-  wheelSlipShiftUp = nil,
+  avgAV = nil,
+  wheelSlipShiftUp = nil
 }
 
 --Used for decision logic, smoothed throttle is not actually used as the throttle value
@@ -76,37 +78,36 @@ local smoothedValues = {
   brakeInput = 0,
   drivingAggression = 0,
   throttleUpShiftThreshold = 0.05,
-  avgAV = 0,
+  avgAV = 0
 }
 
 M.engineInfo = {
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  "manual",
+  obj:getID(),
+  0,
+  0,
+  1,
+  0,
+  0,
   0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , 0
-  , "manual"
-  , obj:getID()
-  , 0
-  , 0
-  , 1
-  , 0
-  , 0
-  , 0
 }
 
 local engine = nil
 local gearbox = nil
 local gearboxType = nil
-local isArcadeSwitched = nil
 
 local timerConstants = {gearChangeDelay = 0, shiftDelay = 0, neutralSelectionDelay = 0, aggressionHoldOffThrottleDelay = 0}
 local timer = {
@@ -118,15 +119,15 @@ local timer = {
   aggressionHoldOffThrottleTimer = 0
 }
 
+local handBrakeHandling = {
+  smartParkingBrakeActive = false,
+  smartParkingBrakeSlip = 0
+}
+
 local shiftPoints = {}
 local currentGearIndex = 0
-local newDesiredGearIndex = 0
-local previousGearIndex = 0
-local isStartingEngine = false
-local engineWasStalled = false
-local engineManuallyTurnedOff = false
-local useSmartAggressionCalculation = true
 local lastAggressionThrottle = 0
+local topSpeedLimit = 0
 --local playWheelShiftLEDs = false
 
 local inputValues = {throttle = 0, clutch = 0}
@@ -151,12 +152,12 @@ local function setGearboxBehavior(behavior)
   end
 
   if not gearboxHandling.behaviorLookup[behavior] then
-    log("E", "vehicleController.setGearboxBehavior", "Unknown gearbox behavior: "..(behavior or "nil"))
+    log("E", "vehicleController.setGearboxBehavior", "Unknown gearbox behavior: " .. (behavior or "nil"))
     return
   end
 
   gearboxHandling.behavior = behavior
-  gui.message({txt="vehicle.drivetrain.shifterModeChanged", context = { shifterModeName = getGearboxBehaviorName()}}, 2, "vehicle.shiftermode")
+  gui.message({txt = "vehicle.drivetrain.shifterModeChanged", context = {shifterModeName = getGearboxBehaviorName()}}, 2, "vehicle.shiftermode")
   gearboxHandling.previousBehavior = gearboxHandling.behavior
 
   shiftLogicModule.gearboxBehaviorChanged(behavior)
@@ -199,7 +200,7 @@ local function handleStalling(dt)
     if not engine.starterDisabled then
       if gearboxHandling.behavior == "arcade" and timer.stalledEngineMessageTimer <= 0 then
         engine:activateStarter()
-        gui.message({txt="vehicle.drivetrain.stalledStarting"}, 2, "vehicle.engine.isStalling")
+        gui.message({txt = "vehicle.drivetrain.stalledStarting"}, 2, "vehicle.engine.isStalling")
         timer.stalledEngineMessageTimer = 1.8
       elseif timer.stalledEngineMessageTimer <= 0 then
         local message
@@ -219,18 +220,21 @@ local function updateWheelSlip(dt)
   local overallWheelSlip = 0
   local wheelSlipCount = 0
   local lostGroundContact = false
-  for _,wi in pairs(wheels.wheels) do
+  for _, wi in ipairs(wheels.wheels) do
     if wi.isPropulsed then
-      if wi.contactMaterialID1 >= 0 then
+      if wi.contactMaterialID1 >= 0 and wi.contactDepth == 0 then
         overallWheelSlip = overallWheelSlip + wi.slipEnergy
         wheelSlipCount = wheelSlipCount + 1
       end
-      lostGroundContact = wi.downForceRaw == 0 or lostGroundContact
+      lostGroundContact = wi.downForceRaw < 1 or lostGroundContact
     end
+
+    handBrakeHandling.smartParkingBrakeSlip = handBrakeHandling.smartParkingBrakeSlip + wi.slipEnergy
   end
 
   overallWheelSlip = smoother.wheelSlipShiftUp:get(overallWheelSlip, dt)
   local averagePropulsedWheelSlip = wheelSlipCount > 0 and overallWheelSlip / wheelSlipCount or 0
+  handBrakeHandling.smartParkingBrakeSlip = handBrakeHandling.smartParkingBrakeSlip / wheels.wheelCount
 
   shiftPreventionData.wheelSlipShiftDown = true
   if (averagePropulsedWheelSlip > shiftPreventionData.wheelSlipDownThreshold or lostGroundContact) and M.throttle <= 0.5 then
@@ -242,18 +246,18 @@ local function updateWheelSlip(dt)
 end
 
 local function updateAggression(dt)
-  local throttle = (isArcadeSwitched and inputValues.brake or inputValues.throttle) or 0 --read our actual throttle input value, depending on which input is currently used for throttle
+  local throttle = (gearboxHandling.isArcadeSwitched and inputValues.brake or inputValues.throttle) or 0 --read our actual throttle input value, depending on which input is currently used for throttle
 
-  if useSmartAggressionCalculation then --use the new smart aggression logic for newer cars and all manuals
-    local usesKeyboard = input.state.throttle.filter == input.FILTER_KBD or input.state.throttle.filter == input.FILTER_KBD2
-    local aggression = smoothedValues.drivingAggression
-    local brakeUse = M.brake > 0.25
-
+  if gearboxHandling.useSmartAggressionCalculation then --use the new smart aggression logic for newer cars and all manuals
     if throttle <= 0 then
       timer.aggressionHoldOffThrottleTimer = max(timer.aggressionHoldOffThrottleTimer - dt, 0)
     else
       timer.aggressionHoldOffThrottleTimer = timerConstants.aggressionHoldOffThrottleDelay
     end
+
+    local usesKeyboard = input.state.throttle.filter == input.FILTER_KBD or input.state.throttle.filter == input.FILTER_KBD2
+    local brakeUse = M.brake > 0.25
+    local aggression
 
     if usesKeyboard then
       aggression = brakeUse and smoothedValues.drivingAggression or throttle * 1.333
@@ -261,13 +265,14 @@ local function updateAggression(dt)
       aggression = smoother.aggressionKey:get(aggression, dt)
       smoother.aggressionAxis:set(aggression) --keep the other smoother in sync
     else
+      --keep the other smoother in sync
       local throttleHold = throttle <= 0 and electrics.values.wheelspeed > 2 and (timer.aggressionHoldOffThrottleTimer > 0 or shiftLogicModule.isSportModeActive)
       local holdAggression = brakeUse or throttleHold
       local dThrottle = min(max((throttle - lastAggressionThrottle) / dt, 1), 20)
       aggression = holdAggression and smoothedValues.drivingAggression or throttle * 1.333 * dThrottle
       aggression = electrics.values.wheelspeed < 1 and 0.75 or aggression
       aggression = smoother.aggressionAxis:get(aggression, dt)
-      smoother.aggressionKey:set(aggression)--keep the other smoother in sync
+      smoother.aggressionKey:set(aggression)
     end
     smoothedValues.drivingAggression = min(aggression, 1) --previous smoother outputs max out at 1.333 to give some headroom, but now we cap them to 1 for the rest of the code
   else --use old logic for old manuals
@@ -275,6 +280,29 @@ local function updateAggression(dt)
   end
 
   lastAggressionThrottle = throttle
+end
+
+-- will smartly decide whether the user is actually parking the car (toggle), or just drifting around (temporary brake)
+local function smartParkingBrake(ivalue, filter)
+  local speed = electrics.values.wheelspeed
+  if not speed then -- not a typical car, so just set the pbrake as instructed
+    input.event("parkingbrake", ivalue, filter)
+  end
+
+  -- are we sliding or rolling?
+  local isAxis = filter == M.FILTER_DIRECT or filter == M.FILTER_PAD
+  local rolling = abs(speed) > 2.8
+  -- ~10km/h
+  local skidding = handBrakeHandling.smartParkingBrakeSlip > 10000
+
+  -- decide what to do, based on context
+  if rolling or skidding or isAxis then
+    input.event("parkingbrake", ivalue, filter) -- transparent use / temporary pbrake
+  elseif ivalue > 0.5 then -- car is parked, use onDown to toggle pbrake
+    input.toggleEvent("parkingbrake")
+  elseif input.state.parkingbrake.val > 0.5 then
+    handBrakeHandling.smartParkingBrakeActive = true
+  end
 end
 
 local function updateGFX(dt)
@@ -301,12 +329,16 @@ local function updateGFX(dt)
   M.throttle = shiftLogicModule.throttle
   M.brake = shiftLogicModule.brake
   M.clutchRatio = shiftLogicModule.clutchRatio
-  isArcadeSwitched = shiftLogicModule.isArcadeSwitched
+  gearboxHandling.isArcadeSwitched = shiftLogicModule.isArcadeSwitched
   currentGearIndex = shiftLogicModule.currentGearIndex
   local gearName = shiftLogicModule.getGearName()
   local gearPosition = shiftLogicModule.getGearPosition()
 
   handleStalling(dt)
+
+  local vehicleSpeed = electrics.values.wheelspeed or 0
+  local throttleCoef = clamp(-(vehicleSpeed - 1) + (topSpeedLimit - 1), 0, 1)
+  M.throttle = M.throttle * throttleCoef
 
   smoothedValues.throttle = smoother.throttle:getUncapped(M.throttle, dt)
   smoothedValues.brake = smoother.brake:getUncapped(M.brake, dt)
@@ -321,10 +353,15 @@ local function updateGFX(dt)
     M.brake = 1
   end
 
+  if handBrakeHandling.smartParkingBrakeActive and electrics.values.parkingbrake > 0 and M.throttle > 0 then
+    smartParkingBrake(1, input.FILTER_DIRECT)
+    handBrakeHandling.smartParkingBrakeActive = false
+  end
+
   energyStorageData.ratio = 0
   energyStorageData.volume = 0
 
-  for _,s in pairs(engine.energyStorage or {}) do
+  for _, s in pairs(engine.energyStorage or {}) do
     local energyStorage = energyStorage.getStorage(s)
     if energyStorage and energyStorage.type ~= "n2oTank" then
       energyStorageData.ratio = energyStorageData.ratio + energyStorage.remainingRatio
@@ -359,15 +396,15 @@ local function updateGFX(dt)
   if streams.willSend("engineInfo") then
     M.engineInfo[1] = (engine.idleAV or 0) * constants.avToRPM
     M.engineInfo[2] = engine.maxAV * constants.avToRPM
-    M.engineInfo[3] = 0--v.data.engine.shiftUpRPM
-    M.engineInfo[4] = 0--v.data.engine.shiftDownRPM
+    M.engineInfo[3] = 0 --v.data.engine.shiftUpRPM
+    M.engineInfo[4] = 0 --v.data.engine.shiftDownRPM
     M.engineInfo[5] = electrics.values.rpm
     M.engineInfo[6] = electrics.values.gear
     M.engineInfo[7] = gearbox.maxGearIndex
     M.engineInfo[8] = abs(gearbox.minGearIndex)
     M.engineInfo[9] = engine.combustionTorque
     M.engineInfo[10] = gearbox.outputTorque1
-    M.engineInfo[11] = obj:getGroundSpeed()  -- airspeed
+    M.engineInfo[11] = obj:getGroundSpeed() -- airspeed
     M.engineInfo[12] = electrics.values.fuelVolume
     M.engineInfo[13] = electrics.values.fuelCapacity
     M.engineInfo[16] = drivetrain.brakeSpecificFuelConsumption or 0
@@ -384,24 +421,30 @@ local function updateGFX(dt)
   --end
 
   if streams.willSend("gearboxData") then
-    gui.send('gearboxData', {
+    gui.send(
+      "gearboxData",
+      {
         gearIndex = gearbox.gearIndex or "",
         clutchRatio = M.clutchRatio or "",
         dctGearIndex1 = gearbox.gearIndex1 or "",
         dctGearIndex2 = gearbox.gearIndex2 or "",
         dctClutchRatio1 = gearbox.clutchRatio1 or "",
-        dctClutchRatio2 = gearbox.clutchRatio2 or "",
-      })
+        dctClutchRatio2 = gearbox.clutchRatio2 or ""
+      }
+    )
   end
 
   if streams.willSend("shiftDecisionData") then
-    gui.send('shiftDecisionData', {
+    gui.send(
+      "shiftDecisionData",
+      {
         shiftUpRPM = shiftBehavior.shiftUpAV * constants.avToRPM,
         shiftDownRPM = shiftBehavior.shiftDownAV * constants.avToRPM,
         aggression = smoothedValues.drivingAggression,
         wheelSlipDown = shiftPreventionData.wheelSlipShiftDown,
-        wheelSlipUp = shiftPreventionData.wheelSlipShiftUp,
-      })
+        wheelSlipUp = shiftPreventionData.wheelSlipShiftUp
+      }
+    )
   end
 end
 
@@ -422,7 +465,7 @@ local function updateGFXNoGearbox()
   energyStorageData.ratio = 0
   energyStorageData.volume = 0
 
-  for _,s in pairs(engine.energyStorage or {}) do
+  for _, s in pairs(engine.energyStorage or {}) do
     local energyStorage = energyStorage.getStorage(s)
     if energyStorage and energyStorage.type ~= "n2oTank" then
       energyStorageData.ratio = energyStorageData.ratio + energyStorage.remainingRatio
@@ -459,7 +502,7 @@ local function updateGFXNoGearbox()
     M.engineInfo[5] = electrics.values.rpm
     M.engineInfo[6] = electrics.values.gear
     M.engineInfo[9] = engine.combustionTorque
-    M.engineInfo[11] = obj:getGroundSpeed()  -- airspeed
+    M.engineInfo[11] = obj:getGroundSpeed() -- airspeed
     M.engineInfo[16] = drivetrain.brakeSpecificFuelConsumption or 0
     M.engineInfo[18] = engine.isStalled and 0 or 1
     M.engineInfo[19] = electrics.values.engineLoad
@@ -503,7 +546,7 @@ local function updateGFXNoEngine()
 
   if streams.willSend("engineInfo") then
     M.engineInfo[6] = electrics.values.gear
-    M.engineInfo[11] = obj:getGroundSpeed()  -- airspeed
+    M.engineInfo[11] = obj:getGroundSpeed() -- airspeed
   end
 end
 
@@ -538,7 +581,7 @@ local function cycleGearboxBehaviors()
 
   local found = false
   local newBehavior = gearboxHandling.behavior
-  for _,v in pairs(gearboxHandling.behaviors) do
+  for _, v in pairs(gearboxHandling.behaviors) do
     if found then
       newBehavior = v
       found = false
@@ -572,13 +615,14 @@ local function setFreeze(mode)
   end
 end
 
-local function setEngineIgnition(value)
-  engineManuallyTurnedOff = not value
-  engine:setIgnition(value and 1 or 0)
+local function setEngineIgnition(enabled)
+  engine:setIgnition(enabled and 1 or 0)
 end
 
 local function sendTorqueData()
-  if not playerInfo.firstPlayerSeated then return end
+  if not playerInfo.firstPlayerSeated then
+    return
+  end
   if engine then
     engine:sendTorqueData()
   end
@@ -594,23 +638,23 @@ local function sendShiftPointDebugData()
       local gearRatio = gearbox.gearRatios[i]
       if i > 0 then
         shiftPointData.forward[i] = {
-          wheelSpeedCoef = postTransmissionGearRatioCoef *  (1 / gearRatio) * wheelRadius * constants.rpmToAV,
+          wheelSpeedCoef = postTransmissionGearRatioCoef * (1 / gearRatio) * wheelRadius * constants.rpmToAV,
           shiftUpHigh = shiftPoints[i].highShiftUpAV * constants.avToRPM,
           shiftDownHigh = shiftPoints[i].highShiftDownAV * constants.avToRPM,
           shiftUpLow = shiftPoints[i].lowShiftUpAV * constants.avToRPM,
           shiftDownLow = shiftPoints[i].lowShiftDownAV * constants.avToRPM,
           minRPM = engine.idleRPM or 0,
-          maxRPM = engine.maxRPM,
+          maxRPM = engine.maxRPM
         }
       elseif i < 0 then
         shiftPointData.reverse[i] = {
-          wheelSpeedCoef = postTransmissionGearRatioCoef *  (1 / gearRatio) * wheelRadius * constants.rpmToAV,
+          wheelSpeedCoef = postTransmissionGearRatioCoef * (1 / gearRatio) * wheelRadius * constants.rpmToAV,
           shiftUpHigh = shiftPoints[i].highShiftUpAV * constants.avToRPM,
           shiftDownHigh = shiftPoints[i].highShiftDownAV * constants.avToRPM,
           shiftUpLow = shiftPoints[i].lowShiftUpAV * constants.avToRPM,
           shiftDownLow = shiftPoints[i].lowShiftDownAV * constants.avToRPM,
           minRPM = engine.idleRPM or 0,
-          maxRPM = engine.maxRPM,
+          maxRPM = engine.maxRPM
         }
       end
     end
@@ -625,24 +669,24 @@ local function settingsChanged(noRefresh)
     --log('D', "vehicleController.settingsChanged", "Refreshing settings before access")
     settings.refresh()
   else
-    log('D', "vehicleController.settingsChanged", "NOT refreshing settings before access")
+    log("D", "vehicleController.settingsChanged", "NOT refreshing settings before access")
   end
 
   gearboxHandling.autoClutch = settings.getValue("autoClutch", nil)
   if gearboxHandling.autoClutch == nil then
-    log('W', "vehicleController.settingsChanged", "Got no autoClutch value from settings system, using default...")
+    log("W", "vehicleController.settingsChanged", "Got no autoClutch value from settings system, using default...")
     gearboxHandling.autoClutch = true
   end
 
   gearboxHandling.autoThrottle = settings.getValue("autoThrottle", nil)
   if gearboxHandling.autoThrottle == nil then
-    log('W', "vehicleController.settingsChanged", "Got no autoThrottle value from settings system, using default...")
+    log("W", "vehicleController.settingsChanged", "Got no autoThrottle value from settings system, using default...")
     gearboxHandling.autoThrottle = true
   end
 
   gearboxHandling.gearboxSafety = settings.getValue("gearboxSafety", nil)
   if gearboxHandling.gearboxSafety == nil then
-    log('W', "vehicleController.settingsChanged", "Got no gearboxSafety value from settings system, using default...")
+    log("W", "vehicleController.settingsChanged", "Got no gearboxSafety value from settings system, using default...")
     gearboxHandling.gearboxSafety = true
   end
 
@@ -650,15 +694,14 @@ local function settingsChanged(noRefresh)
   --log('D', "vehicleController.settingsChanged", "AutoThrottle: "..tostring(gearboxHandling.autoThrottle))
   --log('D', "vehicleController.settingsChanged", "GearboxSafety: "..tostring(gearboxHandling.gearboxSafety))
 
-
   --playWheelShiftLEDs = settings.getValue('rpmLedsEnabled', false)
 end
 
 local function calculateOptimalLoadShiftPoints(shiftDownRPMOffsetCoef)
   local torqueCurve = engine.torqueData.curves[engine.torqueData.finalCurveName].torque
-  for k,v in pairs(gearbox.gearRatios) do
-    local shiftUp = nil
-    local shiftDown = nil
+  for k, v in pairs(gearbox.gearRatios) do
+    local shiftUpRPM = nil
+    local shiftDownRPM = nil
     if v ~= 0 then
       local currentGearRatio = v
       local nextGearRatio = gearbox.gearRatios[k + fsign(k)] or 0
@@ -666,28 +709,28 @@ local function calculateOptimalLoadShiftPoints(shiftDownRPMOffsetCoef)
 
       for i = 100, engine.maxRPM - 100, 50 do
         local currentWheelTorque = torqueCurve[i] * currentGearRatio
-        local nextGearRPM = min(max(floor(i * ( nextGearRatio / currentGearRatio)), 1), engine.maxRPM)
+        local nextGearRPM = min(max(floor(i * (nextGearRatio / currentGearRatio)), 1), engine.maxRPM)
         local previousGearRPM = min(max(floor(i * (previousGearRatio / currentGearRatio)), 1), engine.maxRPM)
         local nextWheelTorque = torqueCurve[nextGearRPM] * nextGearRatio
         local previousWheelTorque = torqueCurve[previousGearRPM] * previousGearRatio
 
-        if currentWheelTorque * fsign(currentGearRatio) < nextWheelTorque * fsign(currentGearRatio) and not shiftUp and currentWheelTorque * currentGearRatio > 0 and currentGearRatio * nextGearRatio > 0 then
-          shiftUp = i
+        if currentWheelTorque * fsign(currentGearRatio) < nextWheelTorque * fsign(currentGearRatio) and not shiftUpRPM and currentWheelTorque * currentGearRatio > 0 and currentGearRatio * nextGearRatio > 0 then
+          shiftUpRPM = i
         end
 
         if previousWheelTorque * fsign(currentGearRatio) > currentWheelTorque * 1.05 * fsign(currentGearRatio) and previousGearRPM < engine.maxRPM * 0.9 and currentWheelTorque * currentGearRatio > 0 and currentGearRatio * previousGearRatio > 0 then
-          shiftDown = i
+          shiftDownRPM = i
         end
       end
 
-      if shiftDown and shiftPoints[k - fsign(k)] and shiftPoints[k - fsign(k)].highShiftUpAV > 0 then
+      if shiftDownRPM and shiftPoints[k - fsign(k)] and shiftPoints[k - fsign(k)].highShiftUpAV > 0 then
         local offsetCoef = shiftDownRPMOffsetCoef * (currentGearRatio / previousGearRatio)
-        shiftDown = min(shiftDown, max(floor(shiftPoints[k - fsign(k)].highShiftUpAV / previousGearRatio * currentGearRatio * offsetCoef * constants.avToRPM), (engine.idleRPM or 0) * 1.05))
+        shiftDownRPM = min(shiftDownRPM, max(floor(shiftPoints[k - fsign(k)].highShiftUpAV / previousGearRatio * currentGearRatio * offsetCoef * constants.avToRPM), (engine.idleRPM or 0) * 1.05))
       end
     end
 
-    shiftPoints[k].highShiftUpAV = (shiftUp or engine.maxRPM * 0.97) * constants.rpmToAV
-    shiftPoints[k].highShiftDownAV = (shiftDown or 0) * constants.rpmToAV
+    shiftPoints[k].highShiftUpAV = (shiftUpRPM or engine.maxRPM * 0.97) * constants.rpmToAV
+    shiftPoints[k].highShiftDownAV = (shiftDownRPM or 0) * constants.rpmToAV
 
     --print(string.format("Gear %d: Up: %d, Down: %d", k, shiftPoints[k].highShiftUpAV * constants.avToRPM, shiftPoints[k].highShiftDownAV * constants.avToRPM))
   end
@@ -697,7 +740,7 @@ local function init(jbeamData)
   M.throttle = 0
   M.brake = 0
   M.clutchRatio = 0
-  isArcadeSwitched = false
+  gearboxHandling.isArcadeSwitched = false
 
   timer = {
     gearChangeDelayTimer = 0,
@@ -708,14 +751,7 @@ local function init(jbeamData)
     aggressionHoldOffThrottleTimer = 0
   }
 
-  newDesiredGearIndex = 0
-  previousGearIndex = 0
   lastAggressionThrottle = 0
-
-  engineManuallyTurnedOff = false
-  engineWasStalled = false
-  isStartingEngine = false
-  isStartingEngine = false
 
   settingsChanged(true)
 
@@ -726,19 +762,24 @@ local function init(jbeamData)
     brakeInput = 0,
     drivingAggression = 0.75,
     throttleUpShiftThreshold = 0.05,
-    avgAV = 0,
+    avgAV = 0
   }
 
   shiftPreventionData = {
     wheelSlipShiftDown = false,
-    wheelSlipShiftUp = false,
+    wheelSlipShiftUp = false
   }
 
   energyStorageData = {
     ratio = 0,
     volume = 0,
     capacity = 0,
-    invEnergyStorageCount = 0,
+    invEnergyStorageCount = 0
+  }
+
+  handBrakeHandling = {
+    smartParkingBrakeActive = false,
+    smartParkingBrakeSlip = 0
   }
 
   local throttleSmoothingIn = jbeamData.gearboxDecisionSmoothingDown or 2
@@ -762,10 +803,12 @@ local function init(jbeamData)
   smoother.aggressionAxis:set(smoothedValues.drivingAggression)
   smoother.aggressionKey:set(smoothedValues.drivingAggression)
 
-  useSmartAggressionCalculation = (jbeamData.useSmartAggressionCalculation == nil or jbeamData.useSmartAggressionCalculation)
+  gearboxHandling.useSmartAggressionCalculation = (jbeamData.useSmartAggressionCalculation == nil or jbeamData.useSmartAggressionCalculation)
 
-  shiftPreventionData.wheelSlipUpThreshold = jbeamData.wheelSlipUpThreshold or 7000
-  shiftPreventionData.wheelSlipDownThreshold = jbeamData.wheelSlipDownThreshold or 10000
+  topSpeedLimit = jbeamData.topSpeedLimit or 999999
+
+  shiftPreventionData.wheelSlipUpThreshold = jbeamData.wheelSlipUpThreshold or 20000
+  shiftPreventionData.wheelSlipDownThreshold = jbeamData.wheelSlipDownThreshold or 30000
 
   engine = powertrain.getDevice(expectedDeviceNames.engine)
   gearbox = powertrain.getDevice(expectedDeviceNames.gearbox)
@@ -779,7 +822,7 @@ local function init(jbeamData)
     local shiftRPMNames = {"lowShiftDownRPM", "highShiftDownRPM", "lowShiftUpRPM", "highShiftUpRPM"}
     local defaultShiftPoints = {lowShiftDownRPM = 2000, highShiftDownRPM = 3500, lowShiftUpRPM = 2500, highShiftUpRPM = 5000}
     local gearCount = gearbox.gearCount + 1
-    for _,v in pairs(shiftRPMNames) do
+    for _, v in pairs(shiftRPMNames) do
       if type(jbeamData[v]) ~= "table" then
         local shiftRPM = jbeamData[v] or defaultShiftPoints[v]
         jbeamData[v] = {}
@@ -790,7 +833,7 @@ local function init(jbeamData)
         if tableSize(jbeamData[v]) ~= gearCount then
           for i = 1, gearCount, 1 do
             if not jbeamData[v][i] then
-              jbeamData[v][i] = jbeamData[v][i-1] or 0
+              jbeamData[v][i] = jbeamData[v][i - 1] or 0
             end
           end
         end
@@ -799,8 +842,7 @@ local function init(jbeamData)
 
     local gearCounter = 1
     for i = gearbox.minGearIndex, gearbox.maxGearIndex, 1 do
-      shiftPoints[i] =
-      {
+      shiftPoints[i] = {
         lowShiftDownAV = jbeamData.lowShiftDownRPM[gearCounter] * constants.rpmToAV,
         highShiftDownAV = (jbeamData.highShiftDownRPM[gearCounter] or 0) * constants.rpmToAV,
         lowShiftUpAV = jbeamData.lowShiftUpRPM[gearCounter] * constants.rpmToAV,
@@ -826,11 +868,11 @@ local function init(jbeamData)
     timerConstants.aggressionHoldOffThrottleDelay = jbeamData.aggressionHoldOffThrottleDelay or 2.25
 
     gearboxHandling.behaviorLookup = {}
-    for  _,v in pairs(gearboxHandling.behaviors) do
+    for _, v in pairs(gearboxHandling.behaviors) do
       gearboxHandling.behaviorLookup[v] = true
     end
 
-    local shiftLogicModuleName = "controller/shiftLogic-"..(jbeamData.shiftLogicName or gearboxType)
+    local shiftLogicModuleName = "controller/shiftLogic-" .. (jbeamData.shiftLogicName or gearboxType)
     shiftLogicModule = require(shiftLogicModuleName)
 
     shiftLogicModule.init(jbeamData, expectedDeviceNames, sharedFunctions, shiftPoints, engine, gearbox)
@@ -847,7 +889,7 @@ local function init(jbeamData)
 
   if hasEngine then
     local energyStorageCount = 0
-    for _,s in pairs(engine.energyStorage or {}) do
+    for _, s in pairs(engine.energyStorage or {}) do
       local energyStorage = energyStorage.getStorage(s)
       if energyStorage and energyStorage.type ~= "n2oTank" then
         energyStorageData.capacity = energyStorageData.capacity + energyStorage.capacity
@@ -869,8 +911,20 @@ local function init(jbeamData)
   end
 end
 
+local function initLastStage()
+  input.state.parkingbrake.val = 1
+  handBrakeHandling.smartParkingBrakeActive = true
+end
+
+local function resetLastStage()
+  input.state.parkingbrake.val = 1
+  handBrakeHandling.smartParkingBrakeActive = true
+end
+
 local function vehicleActivated()
-  if not playerInfo.firstPlayerSeated then return end
+  if not playerInfo.firstPlayerSeated then
+    return
+  end
   sendTorqueData()
   sendShiftPointDebugData()
 end
@@ -882,17 +936,17 @@ local function onDeserialize(data)
 end
 
 local function onSerialize()
-  return { previousGearboxBehavior = gearboxHandling.behavior }
+  return {previousGearboxBehavior = gearboxHandling.behavior}
 end
 
 M.init = init
+M.initLastStage = initLastStage
+M.resetLastStage = resetLastStage
 M.updateGFX = nop
 M.settingsChanged = settingsChanged
 
-M.onDeserialize  = onDeserialize
-M.onSerialize  = onSerialize
-
-
+M.onDeserialize = onDeserialize
+M.onSerialize = onSerialize
 
 --Mandatory main controller API
 M.shiftUp = shiftUp
@@ -900,6 +954,7 @@ M.shiftDown = shiftDown
 M.shiftToGearIndex = shiftToGearIndex
 M.cycleGearboxModes = cycleGearboxBehaviors
 M.setGearboxMode = setGearboxBehavior
+M.smartParkingBrake = smartParkingBrake
 M.setStarter = setStarter
 M.setEngineIgnition = setEngineIgnition
 M.setFreeze = setFreeze

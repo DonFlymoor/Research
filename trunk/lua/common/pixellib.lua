@@ -2,7 +2,7 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
--- Usage: see testPixelBuffer
+-- Usage: see M.test()
 
 local M = {}
 
@@ -40,7 +40,7 @@ function LuaPixelBuffer:init(width, height)
 end
 
 function LuaPixelBuffer:saveFile(filename)
-  --return ffi.C.saveRGBABufferToFile(self.width, self.height, self.buf, filename)
+  return ffi.C.saveRGBABufferToFile(self.width, self.height, self.buf, filename)
 end
 
 function LuaPixelBuffer:_allocate_buffer(n)
@@ -224,9 +224,9 @@ function LuaPixelBuffer:drawLine(pos1, pos2, color, lineWidth)
   end
 end
 
--- require('pixellib') ; testPixelBuffer()
-local function testPixelBuffer()
-  local pb = newLuaPixelBuffer()
+-- require('pixellib').test()
+M.test = function()
+  local pb = create()
   pb:init(250, 250)
   print(tostring(pb))
 

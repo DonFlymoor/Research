@@ -35,8 +35,34 @@ local isEditorEnabled
 local visualLog = {}
 local gp = nil
 local qt = nil
-local delayedLoad = newSingleEventTimer()
 local allManualWaypoints
+
+local singleEventTimer = {}
+singleEventTimer.__index = singleEventTimer
+
+local function newSingleEventTimer()
+  local data = {waitDt = -1, update = nop, eventFun = nop}
+  setmetatable(data, singleEventTimer)
+  return data
+end
+
+function singleEventTimer:update(dt)
+  local waitDt = max(0, self.waitDt - dt)
+  self.waitDt = waitDt
+  if waitDt == 0 then
+    self.update = nop
+    self.eventFun(unpack(self.params))
+  end
+end
+
+function singleEventTimer:callAfter(dt, eventFun, ...)
+  self.waitDt = dt
+  self.eventFun = eventFun
+  self.params = {...}
+  self.update = singleEventTimer.update
+end
+
+local delayedLoad = newSingleEventTimer()
 
 local function visLog(type, pos, msg)
   tableInsert(visualLog, {type=type, pos=pos, msg=msg})
@@ -1100,7 +1126,7 @@ local function getTrackedObjects()
 end
 
 -- recieves vehicle data from vehicles
-local function objectData(objId, isactive, vel, dirVec, dirVecUp, damage, objectCollisions)
+local function objectData(objId, isactive, vel, damage, objectCollisions)
   if objectsReset then
     table.clear(M.objects)
     objectsReset = false
@@ -1108,7 +1134,7 @@ local function objectData(objId, isactive, vel, dirVec, dirVecUp, damage, object
   local object = be:getObjectByID(objId)
   if object and M.objects[objId] == nil then
     M.objects[objId] = {id = objId, active = isactive, pos = vec3(object:getPosition()), vel = vel,
-        dirVec = dirVec, dirVecUp = dirVecUp, damage = damage, objectCollisions = objectCollisions}
+        dirVec = vec3(object:getDirectionVector()), dirVecUp = vec3(object:getDirectionVectorUp()), damage = damage, objectCollisions = objectCollisions}
   end
 end
 

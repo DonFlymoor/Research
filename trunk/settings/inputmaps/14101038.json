@@ -1,0 +1,98 @@
+{
+"bindings" :   [
+    {
+    "control"           : "slider"            , 
+    "action"            : "accelerate"        , 
+    }, 
+    {
+    "control"           : "rzaxis"            , 
+    "action"            : "brake"             , 
+    }, 
+    {
+    "control"           : "button3"           , 
+    "action"            : "toggle_headlights" 
+    }, 
+    {
+    "control"           : "button12"          , 
+    "action"            : "decrease_zoom"
+    }, 
+    {
+    "control"           : "button13"          , 
+    "action"            : "increase_zoom"
+    }, 
+    {
+    "control"           : "button9"           , 
+    "action"            : "switch_camera_next"     
+    }, 
+    {
+    "control"           : "button10"          , 
+    "action"            : "rotate_camera_right"
+    }, 
+    {
+    "control"           : "button2"           , 
+    "action"            : "rotate_camera_left"
+    }, 
+    {
+    "control"           : "button4"           , 
+    "action"            : "look_back"         
+    }, 
+    {
+    "action"            : "rotate_camera_left", 
+    "control"           : "lpov"              , 
+    }, 
+    {
+    "action"            : "rotate_camera_right", 
+    "control"           : "rpov"              , 
+    }, 
+    {
+    "deadzone" :       {"end"               : "0.05"              }, 
+    "control"           : "upov"              , 
+    "action"            : "rotate_camera_up"  
+    }, 
+    {
+    "action"            : "rotate_camera_down", 
+    "control"           : "dpov"              , 
+    }, 
+    {
+    "action"            : "recover_vehicle"    , 
+    "control"           : "button0"           , 
+    }, 
+    {
+    "action"            : "shiftUp"           , 
+    "control"           : "button16"          , 
+    }, 
+    {
+    "action"            : "shiftDown"         , 
+    "control"           : "button8"           , 
+    }, 
+    {
+    "action" : "parkingbrake", "control" : "button15"
+    },
+    {
+    "action"            : "toggleShifterMode" , 
+    "control"           : "button14"          , 
+    }, 
+    {
+    "action"            : "reset_physics"     , 
+    "control"           : "button7"           , 
+    }, 
+    {
+    "action"            : "steering"      , 
+    "filterType"        : 2,
+    "control"           : "xaxis"             , 
+    }, 
+    {
+    "action"            : "handle_escape"     , 
+    "control"           : "button1"           , 
+    }, 
+    { "action"            : "menu_item_select"    , "control"           : "button10"             }, 
+    { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+    { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+    { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+    { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+  ], 
+"vidpid"            : "14101038"          , 
+"name"              : "SRWheel"           , 
+"guid"              : "{14101038-0000-0000-0000-504944564944}",
+"version"           : 1,
+}, 

@@ -444,6 +444,7 @@ function (logger, $scope, $state, $timeout, $stateParams, $rootScope, bngApi, In
   var orderedCategories = [
     'car',
     'truck',
+    'automation',
     'trailer',
     'aircraft',
     'boat',

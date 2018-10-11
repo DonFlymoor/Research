@@ -68,7 +68,7 @@ local function onExtensionLoaded()
 --[=[
   local docEntries = {}
 
-  local luaFiles = FS:findFilesByRootPattern('game:lua', '*.lua', -1, true, false)
+  local luaFiles = FS:findFilesByRootPattern('lua', '*.lua', -1, true, false)
   for _, luaFilename in pairs(luaFiles) do
     --print(luaFilename)
     local content = readFile(luaFilename)

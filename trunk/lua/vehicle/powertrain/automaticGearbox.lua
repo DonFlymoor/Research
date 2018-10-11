@@ -18,38 +18,43 @@ local function updateVelocity(device, dt)
   device.parent[device.parentOutputAVName] = device.inputAV
 end
 
-local function updateTorque(device)
+local function updateTorque(device, dt)
   local signGearRatio = fsign(device.gearRatio)
 
   local oneWayTorque = device.oneWayTorqueSmoother:get(min(max(device.oneWayViscousCoef * device.outputAV1, -device.oneWayViscousTorque), device.oneWayViscousTorque))
   device.oneWayTorqueSmoother:set(device.outputAV1 * signGearRatio < 0 and oneWayTorque or 0)
   oneWayTorque = device.oneWayTorqueSmoother:value() * signGearRatio
 
-  device.outputTorque1 = ((device.parent[device.parentOutputTorqueName] * device.shiftLossCoef - device.friction * min(max(device.inputAV, -1), 1)) * device.gearRatio - oneWayTorque * signGearRatio) * device.lockCoef
+  --reused for transbrake
+  device.parkClutchAngle = min(max(device.parkClutchAngle + device.outputAV1 * dt, -device.maxParkClutchAngle), device.maxParkClutchAngle)
+  device.outputTorque1 = ((device.parent[device.parentOutputTorqueName] * device.shiftLossCoef - device.friction * min(max(device.inputAV, -1), 1)) * device.gearRatio - oneWayTorque * signGearRatio) * device.lockCoef - device.parkClutchAngle * device.parkLockSpring * (1 - device.lockCoef)
 end
 
 local function neutralUpdateVelocity(device, dt)
-  device.inputAV = device.virtualMassAV
+  device.inputAV = device.virtualMassAV * device.lockCoef
   device.parent[device.parentOutputAVName] = device.inputAV
 end
 
 local function neutralUpdateTorque(device, dt)
   local outputTorque = device.parent[device.parentOutputTorqueName] - device.friction * min(max(device.inputAV, -1), 1)
-  device.virtualMassAV = device.virtualMassAV + outputTorque * device.invCumulativeInertia * dt
-  device.outputTorque1 = 0
+  device.virtualMassAV = device.virtualMassAV + outputTorque * device.invCumulativeInertia * dt * device.lockCoef
+
+  --reused for transbrake
+  device.parkClutchAngle = min(max(device.parkClutchAngle + device.outputAV1 * dt, -device.maxParkClutchAngle), device.maxParkClutchAngle)
+  device.outputTorque1 = -device.parkClutchAngle * device.parkLockSpring * (1 - device.lockCoef)
 end
 
 local function parkUpdateVelocity(device, dt)
-  device.inputAV = device.virtualMassAV
+  device.inputAV = device.virtualMassAV * device.lockCoef
   device.parent[device.parentOutputAVName] = device.inputAV
 end
 
 local function parkUpdateTorque(device, dt)
   local outputTorque = device.parent[device.parentOutputTorqueName] - device.friction * min(max(device.inputAV, -1), 1)
-  device.virtualMassAV = device.virtualMassAV + outputTorque * device.invCumulativeInertia * dt
+  device.virtualMassAV = device.virtualMassAV + outputTorque * device.invCumulativeInertia * dt * device.lockCoef
 
   device.parkClutchAngle = min(max(device.parkClutchAngle + device.outputAV1 * dt, -device.maxParkClutchAngle), device.maxParkClutchAngle)
-  device.outputTorque1 = -device.parkClutchAngle * device.parkLockSpring * device.parkEngaged * device.lockCoef
+  device.outputTorque1 = -device.parkClutchAngle * device.parkLockSpring * device.parkEngaged
 end
 
 local function updateGFX(device, dt)
@@ -62,10 +67,12 @@ local function updateGFX(device, dt)
       powertrain.calculateTreeInertia()
       device.shiftLossCoef = 1
     end
-    --print(string.format("Gearratio: %.3f / %.3f", device.gearRatio, device.desiredGearRatio))
+  --print(string.format("Gearratio: %.3f / %.3f", device.gearRatio, device.desiredGearRatio))
   end
 
-  device.isShifting = device.gearRatio ~= device.desiredGearRatio
+  device.isShiftingUp = device.gearRatio > device.desiredGearRatio
+  device.isShiftingDown = device.gearRatio < device.desiredGearRatio
+  device.isShifting = device.isShiftingUp or device.isShiftingDown
 
   if device.mode == "park" and abs(device.outputAV1) < 100 then
     device.parkEngaged = 1
@@ -75,6 +82,7 @@ end
 local function selectUpdates(device)
   device.velocityUpdate = updateVelocity
   device.torqueUpdate = updateTorque
+  device.parkClutchAngle = 0
 
   if device.mode == "park" then
     device.velocityUpdate = parkUpdateVelocity
@@ -111,13 +119,16 @@ local function setGearIndex(device, index, gearChangeTime)
   device.gearIndex = min(max(index, device.minGearIndex), device.maxGearIndex)
   device.desiredGearRatio = device.gearRatios[device.gearIndex]
   device.gearRatioChangeRate = abs((device.desiredGearRatio - device.gearRatio) / (max(device.minimumGearChangeTime, gearChangeTime or 0)))
-  device.shiftLossCoef = device.shiftEfficiency
+  if abs(device.gearRatio - device.desiredGearRatio) > 0.01 then
+    device.shiftLossCoef = device.shiftEfficiency
+  end
 
   selectUpdates(device)
 end
 
 local function setLock(device, enabled)
   device.lockCoef = enabled and 0 or 1
+  device.parkClutchAngle = 0
 end
 
 local function calculateInertia(device)
@@ -131,11 +142,11 @@ local function calculateInertia(device)
     maxCumulativeGearRatio = child.maxCumulativeGearRatio
   end
 
-  local gearRatio = device.gearRatio ~= 0 and abs(device.gearRatio) or device.maxGearRatio
-  device.cumulativeInertia = outputInertia / gearRatio /gearRatio
+  local gearRatio = device.gearRatio ~= 0 and abs(device.gearRatio) or (device.maxGearRatio * 2)
+  device.cumulativeInertia = outputInertia / gearRatio / gearRatio
   device.invCumulativeInertia = 1 / device.cumulativeInertia
 
-  device.parkLockSpring = device.jbeamData.parkLockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * device.cumulativeInertia) --Nm/rad
+  device.parkLockSpring = device.jbeamData.parkLockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * outputInertia * 0.5) --Nm/rad
   device.maxParkClutchAngle = device.parkLockTorque / device.parkLockSpring --rad
 
   device.cumulativeGearRatio = cumulativeGearRatio * device.gearRatio
@@ -162,6 +173,8 @@ local function reset(device)
 
   device.desiredGearRatio = 0
   device.isShifting = false
+  device.isShiftingUp = false
+  device.isShiftingDown = false
   device.mode = "drive"
 
   --gearbox park locking clutch
@@ -179,7 +192,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -190,37 +202,33 @@ local function new(jbeamData)
     cumulativeGearRatio = 1,
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
-
     outputAV1 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     virtualMassAV = 0,
     isBroken = false,
-
     lockCoef = 1,
-
     shiftEfficiency = jbeamData.shiftEfficiency or 0.5,
     shiftLossCoef = 1,
-
     gearRatios = {},
     desiredGearRatio = 0,
     isShifting = false,
+    isShiftingUp = false,
+    isShiftingDown = false,
     minimumGearChangeTime = jbeamData.gearChangeTime or 0.5, --time in s it takes to interpolate from one to another gear ratio when shifting (simulates clutches inside the auto transmission)
     mode = "drive",
-
     reset = reset,
     setMode = setMode,
     validate = validate,
     calculateInertia = calculateInertia,
-
     setGearIndex = setGearIndex,
     updateGFX = updateGFX,
-    setLock = setLock,
+    setLock = setLock
   }
 
   local forwardGears = {}
   local reverseGears = {}
-  for k,v in pairs(jbeamData.gearRatios) do
+  for k, v in pairs(jbeamData.gearRatios) do
     if type(k) == "number" then
       table.insert(v >= 0 and forwardGears or reverseGears, v)
     end
@@ -256,7 +264,7 @@ local function new(jbeamData)
 
   --one way viscous coupling (prevents rolling backwards)
   device.oneWayViscousCoef = jbeamData.oneWayViscousCoef or 5
-  device.oneWayViscousTorque = jbeamData.oneWayViscousTorque or  device.oneWayViscousCoef * 25
+  device.oneWayViscousTorque = jbeamData.oneWayViscousTorque or device.oneWayViscousCoef * 25
   device.oneWayTorqueSmoother = newExponentialSmoothing(jbeamData.oneWayViscousSmoothing or 50)
 
   if jbeamData.gearboxNode_nodes and type(jbeamData.gearboxNode_nodes) == "table" then

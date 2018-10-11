@@ -1,5 +1,5 @@
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 M.defaultOrder = 50
 
@@ -40,7 +40,7 @@ local revLimiterEngineCount = 0
 
 local yawSmooth = nil --exponential smoothing for the yaw rate
 local desiredYawSmooth = nil --exponential smoothing for the yaw rate
-local invSquaredCharacteristicSpeed = 0--pre calculated, used for desired yaw calculation
+local invSquaredCharacteristicSpeed = 0 --pre calculated, used for desired yaw calculation
 
 local frontLeftWheelId = nil
 local frontRightWheelId = nil
@@ -102,17 +102,17 @@ local hasRegisteredQuickAccess = false
 
 local function generateSteeringCurve(steeringAngle) --generates debug data to visualize the steering part of the desired yaw graph
   local steeringData = {}
-  for i=0, 50, 1 do
-    steeringData[i+1] = abs((steeringAngle * invWheelBase) * (i / (1 + ((i * i) * invSquaredCharacteristicSpeed))))
+  for i = 0, 50, 1 do
+    steeringData[i + 1] = abs((steeringAngle * invWheelBase) * (i / (1 + ((i * i) * invSquaredCharacteristicSpeed))))
   end
 
   return steeringData
 end
 
 local function generateAccelerationCurve() --generates debug data to visualize the acceleration part of the desired yaw graph
-  local accelerationData = {[1]=100000}
-  for i=1, 50, 1 do
-    accelerationData[i+1] = currentESCConfiguration.maxSideAcceleration / i
+  local accelerationData = {[1] = 100000}
+  for i = 1, 50, 1 do
+    accelerationData[i + 1] = currentESCConfiguration.maxSideAcceleration / i
   end
 
   return accelerationData
@@ -146,7 +146,9 @@ local function updateGFX(dt)
   electrics.values.tcsActive = tcsActive
 
   if streams.willSend("escData") then
-    gui.send('escData', {
+    gui.send(
+      "escData",
+      {
         steeringAngle = math.deg(wheelAngleFront),
         yawRate = yawRate,
         desiredYawRate = desiredYawRate,
@@ -156,14 +158,18 @@ local function updateGFX(dt)
         steeringCurve = generateSteeringCurve(wheelAngleFront),
         accelerationCurve = generateAccelerationCurve(),
         maxSpeed = 50,
-        speed = speed,
-      })
+        speed = speed
+      }
+    )
   end
 
   if streams.willSend("escInfo") then
-    gui.send('escInfo', {
+    gui.send(
+      "escInfo",
+      {
         ledColor = (escPulse > 0 or tcsPulse > 0) and offColor or currentESCConfiguration.activeColor
-      })
+      }
+    )
   end
 
   if streams.willSend("tcsData") then
@@ -175,13 +181,16 @@ local function updateGFX(dt)
       wheelBrakeFactors[wheel.name] = wheel.tractionControlBrakeFactor
     end
 
-    gui.send('tcsData', {
+    gui.send(
+      "tcsData",
+      {
         throttleFactor = throttleFactor,
         wheelBrakeFactors = wheelBrakeFactors,
         allWheelSlip = allWheelSlip and -0.2 or 0,
         wheelSlips = lastSlips,
-        slipThreshold = currentESCConfiguration.slipThreshold,
-      })
+        slipThreshold = currentESCConfiguration.slipThreshold
+      }
+    )
   end
 end
 
@@ -249,7 +258,7 @@ local function updateWheelsIntermediate(dt)
   yawRate = yawSmooth:get(-obj:getYawAngularVelocity())
 
   --calculate expected yaw rate based on steering angle
-  desiredYawRateSteering = ((wheelAngleFront * invWheelBase) * (speed / (1 + ((speed * speed * invSquaredCharacteristicSpeed)))))
+  desiredYawRateSteering = ((wheelAngleFront * invWheelBase) * (speed / (1 + (speed * speed * invSquaredCharacteristicSpeed))))
   --calculate expected yaw rate based on Gs
   desiredYawRateAcceleration = currentESCConfiguration.maxSideAcceleration / (speed + 1e-30)
 
@@ -268,7 +277,6 @@ local function updateWheelsIntermediate(dt)
 
   local escWheelToBrake = nil
   local escDesiredBrakeTorque = 0
-  local escCorrectionAction = 0 -- 0 = nothing, 1 = oversteer, -1 = understeer
   if speed >= escEnableThreshold and absYawDifference > currentESCConfiguration.escThreshold and not M.pauseESCAction then --only act if we are fast enough and pass the threshold
     yawDifference = yawDifference - (fsign(yawDifference) * currentESCConfiguration.escThreshold)
 
@@ -278,16 +286,13 @@ local function updateWheelsIntermediate(dt)
       elseif yawRate < 0 then --turning right
         escWheelToBrake = frontLeftWheelId
       end
-      escCorrectionAction = 1
     else --Understeer
-      escCorrectionAction = -1
       if yawRate > 0 then --turning left
         escWheelToBrake = rearLeftWheelId
 
         if counterSteerFlag then
           escWheelToBrake = frontLeftWheelId --switch to the FRONT wheel when braking, otherwise we would work AGAINST the driver while counter steering
           yawDifference = yawDifference * 0.5 --also reduce the severity of the brake action for a smoother drift
-          escCorrectionAction = 1
         end
       elseif yawRate < 0 then --turning right
         escWheelToBrake = rearRightWheelId
@@ -295,7 +300,6 @@ local function updateWheelsIntermediate(dt)
         if counterSteerFlag then
           escWheelToBrake = frontRightWheelId
           yawDifference = yawDifference * 0.5
-          escCorrectionAction = 1
         end
       end
     end
@@ -305,7 +309,7 @@ local function updateWheelsIntermediate(dt)
       local wheel = wheelCache[escWheelToBrake] --get the wheel we need to brake
       wheel.stabilityControlBrakeIntegral = min(max(wheel.stabilityControlBrakeIntegral + absYawDifference * dt, 0), currentESCConfiguration.maxIntegralPart)
 
-      local wheelAntiLockupFactor = min(max((abs(wheel.angularVelocity) - 10) * 0.1, 0), 1)--factor in some coef from the wheelspeed, if the AV drops below 1 we gradually lower the braking torque to prevent wheel lockup
+      local wheelAntiLockupFactor = min(max((abs(wheel.angularVelocity) - 10) * 0.1, 0), 1) --factor in some coef from the wheelspeed, if the AV drops below 1 we gradually lower the braking torque to prevent wheel lockup
       local brakeCoef = min((absYawDifference * currentESCConfiguration.proportionalFactor + wheel.stabilityControlBrakeIntegral * currentESCConfiguration.integralFactor) * wheelAntiLockupFactor, 1)
       local brakingTorque = min(brakeCoef * currentESCConfiguration.brakeForceMultiplier * wheel.brakeTorque, wheel.brakeTorque) --calculate our actual braking torque based on the brake's maximum torque
 
@@ -321,9 +325,6 @@ local function updateWheelsIntermediate(dt)
   ---------------------
   ---------------------
   ---------------------
-
-
-
 
   ---------------------
   ---------TCS---------
@@ -423,9 +424,6 @@ local function updateWheelsIntermediate(dt)
   ---------------------
   ---------------------
 
-
-
-
   ---------------------
   ---Decision Block----
   ---------------------
@@ -505,10 +503,10 @@ local function updateWheelsIntermediate(dt)
   ---------------------
 
   --use existing ESC data for calibration purposes (nop'ed when not in use)
-  calibrateESC(wheelAngleFront, wheelAngleRear, yawRate)
+  calibrateESC()
 end
 
-local function doCalibration(wheelAngleFront, wheelAngleRear, yawRate)
+local function doCalibration()
   if M.doMeasure then
     escMeasuringStepCounter = escMeasuringStepCounter + 1
 
@@ -519,16 +517,15 @@ local function doCalibration(wheelAngleFront, wheelAngleRear, yawRate)
     local dot = velocityVector:dot(directionVector)
     local floatAngle = math.acos(dot / (directionVector:length() * velocityVector:length()))
 
-    yawRate = abs(yawRate) * -1
-    wheelAngleFront = abs(wheelAngleFront) * -1
-    wheelAngleRear = abs(wheelAngleRear) * -1
+    local yawRateCalibration = abs(yawRate) * -1
+    local wheelAngleFrontCalibration = abs(wheelAngleFront) * -1
+    local wheelAngleRearCalibration = abs(wheelAngleRear) * -1
 
-    local stiffnessFront = (distanceCOGRearAxle * mass * yawRate * actualVelocity) / ((distanceCOGFrontAxle + distanceCOGRearAxle) * (wheelAngleFront - (distanceCOGFrontAxle * yawRate / actualVelocity) - floatAngle ))
-    local stiffnessRear = ((yawRate * mass * actualVelocity) - stiffnessFront * (wheelAngleFront - (distanceCOGFrontAxle * yawRate / actualVelocity) - floatAngle)) / (wheelAngleRear + (distanceCOGRearAxle * yawRate / actualVelocity) - floatAngle)
+    local stiffnessFront = (distanceCOGRearAxle * mass * yawRateCalibration * actualVelocity) / ((distanceCOGFrontAxle + distanceCOGRearAxle) * (wheelAngleFrontCalibration - (distanceCOGFrontAxle * yawRateCalibration / actualVelocity) - floatAngle))
+    local stiffnessRear = ((yawRateCalibration * mass * actualVelocity) - stiffnessFront * (wheelAngleFrontCalibration - (distanceCOGFrontAxle * yawRateCalibration / actualVelocity) - floatAngle)) / (wheelAngleRearCalibration + (distanceCOGRearAxle * yawRateCalibration / actualVelocity) - floatAngle)
 
     stiffnessFrontSum = stiffnessFrontSum + stiffnessFront
     stiffnessRearSum = stiffnessRearSum + stiffnessRear
-
 
     if escMeasuringStepCounter >= escMeasuringStepThreshold then
       M.stiffnessFront = stiffnessFrontSum / escMeasuringStepCounter
@@ -584,7 +581,7 @@ local function getCarData()
     trackWidth = trackWidth,
     distanceCOGRearAxle = distanceCOGRearAxle,
     distanceCOGFrontAxle = distanceCOGFrontAxle,
-    mass = mass,
+    mass = mass
   }
 end
 
@@ -618,8 +615,8 @@ local function sanitizeConfiguration(config, name)
   config.brakingProportionalFactor = config.brakingProportionalFactor or 1.2
   config.brakingIntegralFactor = config.brakingIntegralFactor or 0
 
-  config.maxBrakingFactor = max(min(config.maxBrakingFactor or 0, 1),0)
-  config.minThrottleFactor = max(min(config.minThrottleFactor or 1, 1),0)
+  config.maxBrakingFactor = max(min(config.maxBrakingFactor or 0, 1), 0)
+  config.minThrottleFactor = max(min(config.minThrottleFactor or 1, 1), 0)
 
   config.brakeThrottleSwitchThreshold = config.brakeThrottleSwitchThreshold or 10
 
@@ -646,7 +643,7 @@ local function setESCMode(key)
 
   currentESCConfiguration = escConfigurations[currentESCConfigurationKey] --load new esc config
 
-  preCalculate()-- make sure to update our precalculated values with the new config
+  preCalculate() -- make sure to update our precalculated values with the new config
 
   lastESCConfigurationKey = currentESCConfigurationKey
   gui.message(currentESCConfiguration.name, 5, "vehicle.esc.mode")
@@ -662,19 +659,36 @@ end
 
 local function registerQuickAccess()
   if not hasRegisteredQuickAccess then
-    core_quickAccess.addEntry({ level = '/', generator = function(entries)
-          table.insert(entries, { title = 'ui.radialmenu2.ESC', priority = 40, ["goto"] = '/esc/', icon = 'radial_regular_esc' })
-        end})
+    core_quickAccess.addEntry(
+      {
+        level = "/",
+        generator = function(entries)
+          table.insert(entries, {title = "ui.radialmenu2.ESC", priority = 40, ["goto"] = "/esc/", icon = "radial_regular_esc"})
+        end
+      }
+    )
 
-    core_quickAccess.addEntry({ level = '/esc/', generator = function(entries)
-          for k,v in pairs(escConfigurations) do
-            local entry = { title = "ui.radialmenu2.ESC."..v.name:gsub(" ","_"), icon = "radial_"..string.lower(v.name:gsub(" ","_")), onSelect = function() controller.getController("esc").setESCMode(k) return {'reload'} end}
+    core_quickAccess.addEntry(
+      {
+        level = "/esc/",
+        generator = function(entries)
+          for k, v in pairs(escConfigurations) do
+            local entry = {
+              title = "ui.radialmenu2.ESC." .. v.name:gsub(" ", "_"),
+              icon = "radial_" .. string.lower(v.name:gsub(" ", "_")),
+              onSelect = function()
+                controller.getController("esc").setESCMode(k)
+                return {"reload"}
+              end
+            }
             if currentESCConfiguration == v then
-              entry.color = '#ff6600'
+              entry.color = "#ff6600"
             end
             table.insert(entries, entry)
           end
-        end})
+        end
+      }
+    )
     hasRegisteredQuickAccess = true
   end
 end
@@ -683,10 +697,10 @@ local function calculateCharacteristicSpeed(config)
   local eg = (mass * (config.skewStiffnessRear * distanceCOGRearAxle - config.skewStiffnessFront * distanceCOGFrontAxle)) / (config.skewStiffnessFront * config.skewStiffnessRear * wheelBase)
   local characteristicSpeed = sqrt(wheelBase / abs(eg + 1e-30)) --guard against infinity
   if isDebugMode and config.escEnabled then
-    log('D', "ESC", string.format("Calculated EG: %s --> %.6f", config.name, eg))
-    log('D', "ESC", string.format("Calculated characteristic speed: %s --> %.2f m/s", config.name, characteristicSpeed))
+    log("D", "ESC", string.format("Calculated EG: %s --> %.6f", config.name, eg))
+    log("D", "ESC", string.format("Calculated characteristic speed: %s --> %.2f m/s", config.name, characteristicSpeed))
     if eg < 0 then
-      log('W', "ESC", string.format("Calculated EG (%s) is lower than 0 (oversteery car setup), ESC might not work perfectly!", config.name))
+      log("W", "ESC", string.format("Calculated EG (%s) is lower than 0 (oversteery car setup), ESC might not work perfectly!", config.name))
     end
   end
   return characteristicSpeed
@@ -696,9 +710,9 @@ local function calculateAxleDistances()
   wheelBase = obj:nodeLength(wheelCache[frontRightWheelId].node1, wheelCache[rearRightWheelId].node1) --calculate wheelbase from the distance of the front and rear wheels
   invWheelBase = 1 / wheelBase
 
-  local tmp = vec3(0,0,0)
+  local tmp = vec3(0, 0, 0)
   local totalMass = 0
-  for _,v in pairs(v.data.nodes) do
+  for _, v in pairs(v.data.nodes) do
     tmp = tmp + vec3(v.pos) * v.nodeWeight
     totalMass = totalMass + v.nodeWeight
   end
@@ -710,7 +724,7 @@ local function calculateAxleDistances()
   local rearAxlePos = 0
   local twLeft = 0
   local twRight = 0
-  for _,n in pairs(v.data.nodes) do
+  for _, n in pairs(v.data.nodes) do
     if n.cid == wheelCache[frontRightWheelId].node1 then
       frontAxlePos = n.pos.y
       twRight = n.pos.x
@@ -727,10 +741,10 @@ local function calculateAxleDistances()
   trackWidth = abs(twLeft - twRight)
 
   if isDebugMode then
-    log('D', "ESC", "Distance COG to Rearaxle: "..distanceCOGRearAxle.." m")
-    log('D', "ESC", "Distance COG to Frontaxle: "..distanceCOGFrontAxle.." m")
-    log('D', "ESC", "Wheelbase: "..wheelBase.." m")
-    log('D', "ESC", "Track width: "..trackWidth.." m")
+    log("D", "ESC", "Distance COG to Rearaxle: " .. distanceCOGRearAxle .. " m")
+    log("D", "ESC", "Distance COG to Frontaxle: " .. distanceCOGFrontAxle .. " m")
+    log("D", "ESC", "Wheelbase: " .. wheelBase .. " m")
+    log("D", "ESC", "Track width: " .. trackWidth .. " m")
   end
 end
 
@@ -749,7 +763,7 @@ local function initSecondStage()
   M.stiffnessRear = 0
 
   calibrateESC = nop
-  M.updateWheelsIntermediate  = nil
+  M.updateWheelsIntermediate = nil
   M.updateGFX = nil
 
   wheelCache = table.new(4, 0)
@@ -760,14 +774,14 @@ local function initSecondStage()
   allWheelSlip = false
 
   --cache all wheels for easy access
-  for id,wd in pairs(wheels.wheels) do
+  for id, wd in pairs(wheels.wheels) do
     local wheelCacheEntry = wd
-    wheelCacheEntry.speedSmoother =  newExponentialSmoothing(500)
-    wheelCacheEntry.stabilityControlBrakeIntegral =  0
-    wheelCacheEntry.tractionControlBrakeIntegral =  0
-    wheelCacheEntry.tractionControlBrakeFactor =  0
-    wheelCacheEntry.tractionControlLastSlip =  0
-    wheelCacheEntry.tractionControlSpeedCorrectionFactor =  1
+    wheelCacheEntry.speedSmoother = newExponentialSmoothing(500)
+    wheelCacheEntry.stabilityControlBrakeIntegral = 0
+    wheelCacheEntry.tractionControlBrakeIntegral = 0
+    wheelCacheEntry.tractionControlBrakeFactor = 0
+    wheelCacheEntry.tractionControlLastSlip = 0
+    wheelCacheEntry.tractionControlSpeedCorrectionFactor = 1
     --table.insert(wheelCache, wheelCacheEntry)
     wheelCache[id] = wheelCacheEntry
     wheelNameCache[wd.name] = id
@@ -775,20 +789,21 @@ local function initSecondStage()
     tcsWheelBrakeTorques[id] = 0
   end
 
-  yawSmooth = newExponentialSmoothing(50)  --windows of 50 frames
+  yawSmooth = newExponentialSmoothing(50) --windows of 50 frames
 
   --we need to find the average wheel position (basically the "center" of our vehicle)
-  local avgWheelPos = vec3(0,0,0)
+  local avgWheelPos = vec3(0, 0, 0)
   local wheelCount = 0
 
-  local escConfigs = configData--shallowcopy(v.data.escConfig)
+  local escConfigs = configData
+
   if v.userSettings and v.userSettings.escConfig then
     escConfigs = tableMergeRecursive(escConfigs, v.userSettings.escConfig)
   end
 
-  for _,wheelName in ipairs(escConfigs.actionedWheels) do
+  for _, wheelName in ipairs(escConfigs.actionedWheels) do
     if wheelNameCache[wheelName] == nil then
-      log('W', "ESC", "Could not find wheel: "..wheelName.." defined in escConfig")
+      log("W", "ESC", "Could not find wheel: " .. wheelName .. " defined in escConfig")
       M.update = nop
       M.graphicsStep = nop
       return
@@ -808,7 +823,7 @@ local function initSecondStage()
   offColor = escConfigs.offColor or "343434"
 
   --iterate over all wheels that should be included in the esc
-  for _,wheelName in ipairs(escConfigs.actionedWheels) do
+  for _, wheelName in ipairs(escConfigs.actionedWheels) do
     local wheelNodePos = vec3(v.data.nodes[wheelCache[wheelNameCache[wheelName]].node1].pos) --find the wheel position
     local wheelVector = wheelNodePos - avgWheelPos --create a vector from our "center" to the wheel
     local dotForward = vectorForward:dot(wheelVector) --calculate dot product of said vector and forward vector
@@ -822,9 +837,9 @@ local function initSecondStage()
       end
     else
       if dotLeft >= 0 then
-        rearRightWheelId = wheelNameCache[wheelName]-- ...
+        rearRightWheelId = wheelNameCache[wheelName] -- ...
       else
-        rearLeftWheelId = wheelNameCache[wheelName]-- ...
+        rearLeftWheelId = wheelNameCache[wheelName] -- ...
       end
     end
   end
@@ -838,7 +853,7 @@ local function initSecondStage()
   otherWheelOnAxle[rearRightWheelId] = rearLeftWheelId
 
   local tmpConfigs = {}
-  for name,config in pairs(escConfigs.configurations) do
+  for name, config in pairs(escConfigs.configurations) do
     if type(config) == "table" and config.escConfigurationEnabled then
       table.insert(tmpConfigs, sanitizeConfiguration(shallowcopy(config), name)) --we need to create copies of all our configurations as we are going to use them for saving a few values as well and we want a fresh copy every time we reset the vehicle
     end
@@ -846,8 +861,13 @@ local function initSecondStage()
 
   local counter = 1
   escConfigurations = {}
-  table.sort(tmpConfigs, function(a,b) return b.order > a.order end)
-  for _,config in pairs(tmpConfigs) do
+  table.sort(
+    tmpConfigs,
+    function(a, b)
+      return b.order > a.order
+    end
+  )
+  for _, config in pairs(tmpConfigs) do
     escConfigurations[counter] = config
     counter = counter + 1
   end
@@ -855,7 +875,7 @@ local function initSecondStage()
   if lastESCConfigurationKey ~= -1 then
     currentESCConfigurationKey = lastESCConfigurationKey
   else
-    currentESCConfigurationKey = escConfigs.defaultConfig
+    currentESCConfigurationKey = escConfigs.defaultConfig or 1
     lastESCConfigurationKey = currentESCConfigurationKey
   end
   currentESCConfiguration = escConfigurations[currentESCConfigurationKey] --load the default configuration
@@ -864,21 +884,21 @@ local function initSecondStage()
   isDebugMode = escConfigs.isDebugMode > 0
 
   if isDebugMode then
-    log('D', "ESC", "ESC configuration data:")
-    log('D', "ESC", dumps(configData))
-    log('D', "ESC", "Using ESC configuration: "..currentESCConfiguration.name)
-    log('D', "ESC", "Front Left wheel: "..frontLeftWheelId)
-    log('D', "ESC", "Front Right wheel: "..frontRightWheelId)
-    log('D', "ESC", "Rear Left wheel: "..rearLeftWheelId)
-    log('D', "ESC", "Rear Right wheel: "..rearRightWheelId)
+    log("D", "ESC", "ESC configuration data:")
+    log("D", "ESC", dumps(configData))
+    log("D", "ESC", "Using ESC configuration: " .. currentESCConfiguration.name)
+    log("D", "ESC", "Front Left wheel: " .. frontLeftWheelId)
+    log("D", "ESC", "Front Right wheel: " .. frontRightWheelId)
+    log("D", "ESC", "Rear Left wheel: " .. rearLeftWheelId)
+    log("D", "ESC", "Rear Right wheel: " .. rearRightWheelId)
   end
 
   calculateAxleDistances()
   local statsObj = obj:calcBeamStats()
   mass = statsObj.total_weight --simply the mass of the car
 
-  for _,config in pairs(escConfigurations) do
-    if type(config) =="table" and config.escConfigurationEnabled and config.characteristicSpeed <= 0 then --calculate char. speed if no override is provided
+  for _, config in pairs(escConfigurations) do
+    if type(config) == "table" and config.escConfigurationEnabled and config.characteristicSpeed <= 0 then --calculate char. speed if no override is provided
       config.characteristicSpeed = calculateCharacteristicSpeed(config)
     end
   end
@@ -896,12 +916,12 @@ local function initSecondStage()
   local engines = powertrain.getDevicesByCategory("engine") --get all devices with "engine" category
   local blacklistedEngines = {}
   if escConfigs.blacklistedEngines and type(escConfigs.blacklistedEngines) == "table" then
-    for k,v in pairs(escConfigs.blacklistedEngines) do
+    for _, v in pairs(escConfigs.blacklistedEngines) do
       blacklistedEngines[v] = true
     end
   end
   revLimiterEngines = {}
-  for _,v in pairs(engines) do
+  for _, v in pairs(engines) do
     --make sure the device supports temp rev limiters, otherwise we'll just run into issues
     if v.setTempRevLimiter and v.resetTempRevLimiter and not blacklistedEngines[v.name] then
       table.insert(revLimiterEngines, v)
@@ -930,7 +950,7 @@ end
 
 -- public interface
 M.init = init
-M.initSecondStage   = initSecondStage
+M.initSecondStage = initSecondStage
 M.updateWheelsIntermediate = nil
 M.updateGFX = nil
 M.toggleESCMode = toggleESCMode

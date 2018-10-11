@@ -111,7 +111,12 @@ angular.module('beamng.stuff')
   }
 
   $scope.difText = function (num) {
-    var val = ['Easy', 'Medium', 'Hard', 'Very Hard'];
+    var val = [
+      'ui.scenarios.difficulty.easy', 
+      'ui.scenarios.difficulty.medium', 
+      'ui.scenarios.difficulty.hard', 
+      'ui.scenarios.difficulty.veryHard'
+    ];
     return val[Math.floor(parseFloat(num)/25)];
   }
 

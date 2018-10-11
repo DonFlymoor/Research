@@ -11,7 +11,7 @@ local sqrt = math.sqrt
 local conversion = {
   kelvinToCelsius = -273.15,
   celsiusToKelvin = 273.15,
-  avToRPM = 9.549296596425384,
+  avToRPM = 9.549296596425384
 }
 
 local parentEngine = nil
@@ -26,12 +26,14 @@ M.oilTemperature = 0
 M.exhaustTemperature = 0
 M.radiatorFanSpin = 0
 
+M.exhaustEndNodes = {}
+
 local energyCoef = {
   engineBlock = nil,
   cylinderWall = nil,
   oil = nil,
   coolant = nil,
-  exhaust = nil,
+  exhaust = nil
 }
 
 local thermalsEnabled = false
@@ -111,7 +113,7 @@ local constants = {
   maxCoolantTemperature = 130,
   oilTemperatureDamageThreshold = 150,
   exhaustCondensationThresholdEnvTemp = 15,
-  exhaustCondensationThresholdBlockTemp = 60,
+  exhaustCondensationThresholdBlockTemp = 60
 }
 
 --Nodes
@@ -143,14 +145,14 @@ end
 
 local function updateExhaustGFX(dt)
   local absEngineRPM = abs(parentEngine.outputAV1 * conversion.avToRPM)
-  local particleAirspeed      = electrics.values.airspeed
+  local particleAirspeed = electrics.values.airspeed
   local particulateEmission = (particulates * parentEngine.engineLoad) + idleParticulates
-  local lightSmokeParticleType    = particleAirspeed < 10 and 40 or 41
-  local heavySmokeParticleType    = particleAirspeed < 10 and 42 or 43
-  local condensationParticleType  = particleAirspeed < 10 and 46 or 47
-  local exhaustGrayParticleType   = particleAirspeed < 10 and 44 or 45
-  local steamParticleType         = particleAirspeed < 10 and 34 or 39
-  local oilParticleType           = particleAirspeed < 10 and 36 or 38
+  local lightSmokeParticleType = particleAirspeed < 10 and 40 or 41
+  local heavySmokeParticleType = particleAirspeed < 10 and 42 or 43
+  local condensationParticleType = particleAirspeed < 10 and 46 or 47
+  local exhaustGrayParticleType = particleAirspeed < 10 and 44 or 45
+  local steamParticleType = particleAirspeed < 10 and 34 or 39
+  local oilParticleType = particleAirspeed < 10 and 36 or 38
 
   --exhaust emission
   afterFire.afterFireSoundTimer = max(afterFire.afterFireSoundTimer - dt, 0)
@@ -164,7 +166,7 @@ local function updateExhaustGFX(dt)
   local tmpAfterFireTime = 0
   local emitSmallParticulates = exhaustSmokeParticleTick > 1 and particulateEmission > 0.05 and particulateEmission < 0.3
   local emitLargeParticulates = exhaustSmokeParticleTick > 1 and particulateEmission >= 0.3
-  for _,n in pairs(exhaustNodes) do
+  for _, n in pairs(exhaustNodes) do
     --regular exhaust smoke
     if emitSmallParticulates then
       obj:addParticleByNodesRelative(n.finish, n.start, absEngineRPM * -0.0004 - 3, lightSmokeParticleType, 0, 1)
@@ -180,7 +182,7 @@ local function updateExhaustGFX(dt)
       --print(maxFuel)
       --print(reason)
       if afterFire.afterFireSoundTimer <= 0 then
-        if reason == 0  then --Single bang
+        if reason == 0 then --Single bang
           --print("bang (audio): "..exhaustAudioEndFuel)
           --print("bang (visual): "..exhaustVisualEndFuel)
           if exhaustAudioEndFuel > afterFire.audibleThresholdInstant then --Single bang
@@ -192,7 +194,6 @@ local function updateExhaustGFX(dt)
           end
 
           tmpAfterFireTime = max(tmpAfterFireTime, 0.0 + random(100) * 0.001)
-
         elseif reason == 2 then -- transmission ignition cut sounds
           --print("shift (audio): "..exhaustAudioEndFuel)
           --print("shift (visual): "..exhaustVisualEndFuel)
@@ -205,7 +206,6 @@ local function updateExhaustGFX(dt)
           end
 
           tmpAfterFireTime = max(tmpAfterFireTime, 0.5)
-
         elseif reason == 1 and parentEngine.instantEngineLoad <= 0 then --popcorn single bang
           --print("popcorn (audio): "..exhaustAudioEndFuel)
           --print("popcorn (visual): "..exhaustVisualEndFuel)
@@ -221,7 +221,6 @@ local function updateExhaustGFX(dt)
         end
       end
     end
-
 
     if parentEngine.continuousAfterFireFuel > 0 and not exhaustNodeInWater then
       emitBigAfterFireParticles(n.finish, n.start, exhaustGrayParticleType)
@@ -252,7 +251,180 @@ local function updateExhaustGFX(dt)
   afterFire.afterFireSoundTimer = tmpAfterFireTime > 0 and tmpAfterFireTime or afterFire.afterFireSoundTimer
 end
 
-local function updateThermalsGFX(dt)
+local function updateThermalsAirGFX(dt)
+  tEnv = obj:getEnvTemperature() + conversion.kelvinToCelsius
+  --k "spring" values
+  local kExhaustToAir = 0.00001
+  local kCylinderWallToOil = 200
+  local kOilToAir = 60
+  local kOilToBlock = 250
+  local kCylinderWallToBlock = 5000
+
+  local engineRPM = parentEngine.outputAV1 * conversion.avToRPM
+  local absEngineRPM = abs(engineRPM)
+
+  local airSpeedThroughVehicle = obj:getFrontAirflowSpeed()
+
+  local oilRadiatorActive = min((hasOilRadiator and M.oilTemperature > oilThermostatTemperature and not parentEngine.isDisabled) and M.oilTemperature - oilThermostatTemperature or 0, 1)
+  --Efficiency of the cooling system drops with decreasing coolant mass and raising temps above damage threshold
+
+  local underWaterBlockCoolingCoef = 1
+  --if a node is underwater we want to increase the block to air cooling to simulate water cooling of the block
+  for _, v in pairs(engineNodes) do
+    underWaterBlockCoolingCoef = underWaterBlockCoolingCoef + (obj:inWater(v) and 1000 or 0)
+  end
+
+  --Step 1: Calculate the "forces" with our "spring" k values
+  local currentEngineEfficiency = burnEfficiencyCoef[math.floor(parentEngine.engineLoad * 100) * 0.01]
+  local burnEnergyPerUpdate = parentEngine.engineWorkPerUpdate * currentEngineEfficiency
+
+  local energyToCylinderWall = 0.5 * burnEnergyPerUpdate + 0.5 * parentEngine.pumpingLossPerUpdate
+  local energyToExhaust = 0.5 * burnEnergyPerUpdate + 0.5 * parentEngine.pumpingLossPerUpdate
+  local energyToOil = parentEngine.frictionLossPerUpdate
+
+  local radiatorAirSpeed = max(airSpeedThroughVehicle * 0.7, fanAirSpeed) --reduce actual airspeed because the rad blocks part of the air
+  local radiatorAirSpeedCoef = max(radiatorAirSpeed / (10 + radiatorAirSpeed), 0.01)
+
+  local blockFanAirSpeedCoef = 1 + blockFanMaxAirSpeed * min(max(engineRPM * blockFanRPMCoef, 0), 1)
+
+  local energyOilToBlock = (M.oilTemperature - M.engineBlockTemperature) * kOilToBlock
+  local energyCylinderWallToBlock = (M.cylinderWallTemperature - M.engineBlockTemperature) * kCylinderWallToBlock
+
+  local energyCylinderWallToOil = (M.cylinderWallTemperature - M.oilTemperature) * kCylinderWallToOil
+  local energyOilSumpToAir = (M.oilTemperature - tEnv) * kOilToAir * radiatorAirSpeedCoef
+  local energyOilToAir = (M.oilTemperature - tEnv) * oilRadiatorCoef * radiatorAirSpeedCoef * oilRadiatorActive
+  local energyBlockToAir = (M.engineBlockTemperature - tEnv) * blockFanAirSpeedCoef * engineBlockAirCoolingEfficiency * underWaterBlockCoolingCoef
+  local exhaustTempDiff = M.exhaustTemperature - tEnv
+  local exhaustTempSquared = exhaustTempDiff * exhaustTempDiff
+  local energyExhaustToAir = exhaustTempSquared * exhaustTempSquared * kExhaustToAir
+  --local energyFireToBlock       = 0
+
+  --Step 2: The integrator
+  M.cylinderWallTemperature = max(M.cylinderWallTemperature + (energyToCylinderWall - (energyCylinderWallToOil + energyCylinderWallToBlock) * dt) * energyCoef.cylinderWall, tEnv)
+  M.oilTemperature = max(M.oilTemperature + (energyToOil + (energyCylinderWallToOil - energyOilToAir - energyOilSumpToAir - energyOilToBlock) * dt) * energyCoef.oil, tEnv)
+  M.engineBlockTemperature = max(M.engineBlockTemperature + (energyCylinderWallToBlock - energyBlockToAir + energyOilToBlock) * energyCoef.engineBlock * dt, tEnv)
+  M.exhaustTemperature = max(M.exhaustTemperature + (energyToExhaust - energyExhaustToAir * dt) * energyCoef.exhaust, tEnv)
+
+  local particleAirspeed = electrics.values.airspeed
+  local engineRunning = (parentEngine.isDisabled or parentEngine.isStalled or parentEngine.ignitionCoef < 1) and 0 or 1
+  exhaustOilParticleTick = exhaustOilParticleTick > 1 and 0 or exhaustOilParticleTick + dt * (0.01 * absEngineRPM + 0.1 * particleAirspeed) * engineRunning
+  exhaustSmokeParticleTick = exhaustSmokeParticleTick > 1 and 0 or exhaustSmokeParticleTick + dt * (0.02 + (0.02 * absEngineRPM + 0.02 * particleAirspeed)) * engineRunning
+
+  if M.engineBlockTemperature > damageThreshold.engineBlockTemperature then
+    M.engineBlockOverheatDamage = min(M.engineBlockOverheatDamage + parentEngine.engineWorkPerUpdate, damageThreshold.headGasket)
+    if M.engineBlockOverheatDamage >= damageThreshold.headGasket and not M.headGasketBlown then
+      --if we reach the headgasket damage threshold, we will lose more coolant
+      M.headGasketBlown = true
+      --without a working headgasket we don't have full compression anymore -> less torque
+      parentEngine:scaleOutputTorque(0.8)
+      damageTracker.setDamage("engine", "headGasketDamaged", true)
+
+      --implement nice steam "explosion" here
+      if #parentEngine.engineBlockNodes >= 2 then
+        for i = 1, 10 do
+          local rnd = random()
+          obj:addParticleByNodesRelative(parentEngine.engineBlockNodes[2], parentEngine.engineBlockNodes[1], i * rnd, 43, 0, 1)
+          obj:addParticleByNodesRelative(parentEngine.engineBlockNodes[2], parentEngine.engineBlockNodes[1], i * rnd, 39, 0, 1)
+          obj:addParticleByNodesRelative(parentEngine.engineBlockNodes[2], parentEngine.engineBlockNodes[1], -i * rnd, 43, 0, 1)
+          obj:addParticleByNodesRelative(parentEngine.engineBlockNodes[2], parentEngine.engineBlockNodes[1], -i * rnd, 39, 0, 1)
+        end
+      end
+    end
+
+    if M.engineBlockTemperature > engineBlockMeltingTemperature and not M.engineBlockMelted then
+      parentEngine:scaleFriction(10000) --essentially kill the engine
+      M.engineBlockMelted = true
+      damageTracker.setDamage("engine", "blockMelted", true)
+    end
+  end
+
+  if M.oilTemperature > constants.oilTemperatureDamageThreshold then
+    local diff = M.oilTemperature - constants.oilTemperatureDamageThreshold
+    --increase engine friction relative to temperature of overheated oil
+    local frictionCoef = 1 + diff * dt * 0.005
+    parentEngine:scaleFriction(frictionCoef)
+    M.oilOverheatDamage = min(M.oilOverheatDamage + parentEngine.engineWorkPerUpdate, damageThreshold.connectingRod)
+    if M.oilOverheatDamage >= damageThreshold.connectingRod and not M.connectingRodBearingsDamaged then
+      M.connectingRodBearingsDamaged = true
+      damageTracker.setDamage("engine", "rodBearingsDamaged", true)
+    end
+
+    damageTracker.setDamage("engine", "oilHot", true)
+  elseif damageTracker.getDamage("engine", "oilHot", true) then
+    damageTracker.setDamage("engine", "oilHot", false)
+  end
+
+  if M.cylinderWallTemperature > damageThreshold.cylinderWallTemperature then
+    M.cylinderWallOverheatDamage = min(M.cylinderWallOverheatDamage + parentEngine.engineWorkPerUpdate, damageThreshold.pistonRing)
+    --if our cylinder wall gets too hot, the piston rings will be damaged eventually
+    if M.cylinderWallOverheatDamage >= damageThreshold.pistonRing and not M.pistonRingsDamaged then
+      M.pistonRingsDamaged = true
+      --Damaged piston rings cause a loss of compression and therefore less torque
+      parentEngine:scaleOutputTorque(0.8)
+      damageTracker.setDamage("engine", "pistonRingsDamaged", true)
+    end
+
+    if M.cylinderWallTemperature > cylinderWallMeltingTemperature and not M.cylinderWallsMelted then
+      parentEngine:scaleFriction(10000) --essentially kill the engine
+      M.cylinderWallsMelted = true
+      damageTracker.setDamage("engine", "cylinderWallsMelted", true)
+    end
+  end
+
+  if M.connectingRodBearingsDamaged then
+    knockSoundTick = knockSoundTick > 1 and 0 or knockSoundTick + dt * absEngineRPM * 0.008333
+    if knockSoundTick > 1 then
+      --make a knocking sound if the bearings are damaged
+      sounds.playSoundOnceAtNode("Knock", engineNodes[1], 0.1)
+    end
+  end
+
+  if streams.willSend("engineThermalData") then
+    gui.send(
+      "engineThermalData",
+      {
+        coolantTemperature = M.coolantTemperature,
+        oilTemperature = M.oilTemperature,
+        engineBlockTemperature = M.engineBlockTemperature,
+        cylinderWallTemperature = M.cylinderWallTemperature,
+        exhaustTemperature = M.exhaustTemperature,
+        radiatorAirSpeed = radiatorAirSpeed,
+        radiatorAirSpeedEfficiency = radiatorAirSpeedCoef,
+        fanActive = fanAirSpeed > 0,
+        thermostatStatus = 0,
+        oilThermostatStatus = oilRadiatorActive,
+        coolantLeakRate = 0,
+        coolantEfficiency = 0,
+        engineEfficiency = 1 / (currentEngineEfficiency + 1),
+        energyToCylinderWall = energyToCylinderWall,
+        energyToOil = energyToOil,
+        energyToExhaust = energyToExhaust,
+        energyCoolantToAir = 0,
+        energyCylinderWallToCoolant = 0,
+        energyCoolantToBlock = 0,
+        energyCylinderWallToBlock = energyCylinderWallToBlock * dt,
+        energyCylinderWallToOil = energyCylinderWallToOil * dt,
+        energyOilToAir = energyOilToAir * dt,
+        energyOilToBlock = energyOilToBlock * dt,
+        energyOilSumpToAir = energyOilSumpToAir * dt,
+        energyBlockToAir = energyBlockToAir * dt,
+        energyExhaustToAir = energyExhaustToAir * dt,
+        engineBlockOverheatDamage = M.engineBlockOverheatDamage,
+        oilOverheatDamage = M.oilOverheatDamage,
+        cylinderWallOverheatDamage = M.cylinderWallOverheatDamage,
+        headGasketBlown = M.headGasketBlown,
+        pistonRingsDamaged = M.pistonRingsDamaged,
+        connectingRodBearingsDamaged = M.connectingRodBearingsDamaged,
+        engineBlockMelted = M.engineBlockMelted,
+        cylinderWallsMelted = M.cylinderWallsMelted,
+        thermostatTemperature = thermostatTemperature,
+        oilThermostatTemperature = oilThermostatTemperature
+      }
+    )
+  end
+end
+
+local function updateThermalsCoolantGFX(dt)
   tEnv = obj:getEnvTemperature() + conversion.kelvinToCelsius
   --k "spring" values
   local kExhaustToAir = 0.00001
@@ -268,8 +440,7 @@ local function updateThermalsGFX(dt)
 
   if hasCoolantRadiator then
     --get radiator damage (if there is any) and calculate coolant leak rate based on that
-    M.radiatorDamage = max(beamstate.deformGroupDamage[radiatorDamageDeformGroup] and
-      (beamstate.deformGroupDamage[radiatorDamageDeformGroup].damage - radiatorDeformThreshold) or 0, 0)
+    M.radiatorDamage = max(beamstate.deformGroupDamage[radiatorDamageDeformGroup] and (beamstate.deformGroupDamage[radiatorDamageDeformGroup].damage - radiatorDeformThreshold) or 0, 0)
 
     if M.radiatorDamage > 0 and not damageTracker.getDamage("engine", "radiatorLeak") then
       damageTracker.setDamage("engine", "radiatorLeak", true)
@@ -296,17 +467,14 @@ local function updateThermalsGFX(dt)
   local airSpeedThroughVehicle = obj:getFrontAirflowSpeed()
 
   --radiator is only actually used above a certain temperature
-  local radiatorActive = min((hasCoolantRadiator and M.coolantTemperature > thermostatTemperature and not parentEngine.isDisabled) and
-    M.coolantTemperature - thermostatTemperature or 0, 1)
-  local oilRadiatorActive = min((hasOilRadiator and M.oilTemperature > oilThermostatTemperature and not parentEngine.isDisabled) and
-    M.oilTemperature - oilThermostatTemperature or 0, 1)
+  local radiatorActive = min((hasCoolantRadiator and M.coolantTemperature > thermostatTemperature and not parentEngine.isDisabled) and M.coolantTemperature - thermostatTemperature or 0, 1)
+  local oilRadiatorActive = min((hasOilRadiator and M.oilTemperature > oilThermostatTemperature and not parentEngine.isDisabled) and M.oilTemperature - oilThermostatTemperature or 0, 1)
   --Efficiency of the cooling system drops with decreasing coolant mass and raising temps above damage threshold
-  local coolantEfficiency = (coolantMass > constants.minimumCoolantMass or M.coolantTemperature < constants.maxCoolantTemperature) and
-  (coolantMass * invInitialCoolantMass * max(min((constants.maxCoolantTemperature - M.coolantTemperature) * 0.1, 1), 0)) or 0
+  local coolantEfficiency = (coolantMass > constants.minimumCoolantMass or M.coolantTemperature < constants.maxCoolantTemperature) and (coolantMass * invInitialCoolantMass * max(min((constants.maxCoolantTemperature - M.coolantTemperature) * 0.1, 1), 0)) or 0
 
   local underWaterBlockCoolingCoef = 1
   --if a node is underwater we want to increase the block to air cooling to simulate water cooling of the block
-  for _,v in pairs(engineNodes) do
+  for _, v in pairs(engineNodes) do
     underWaterBlockCoolingCoef = underWaterBlockCoolingCoef + (obj:inWater(v) and 1000 or 0)
   end
 
@@ -324,43 +492,43 @@ local function updateThermalsGFX(dt)
   local blockFanAirSpeedCoef = 1 + blockFanMaxAirSpeed * min(max(engineRPM * blockFanRPMCoef, 0), 1)
   local cylinderWallToCoolantAirCooledCoef = blockFanMaxAirSpeed > 0 and 0 or 1 --kill the energy transfer from wall to coolant on an air cooled engine (no coolant)
 
-  local energyCylinderWallToCoolant   = (M.cylinderWallTemperature - M.coolantTemperature) * kCylinderWallToCoolant * coolantEfficiency * cylinderWallToCoolantAirCooledCoef
-  local energyCoolantToAir            = (M.coolantTemperature - tEnv) * radiatorCoef * radiatorActive * radiatorAirSpeedCoef * coolantEfficiency
-  local energyCoolantToBlock          = (M.coolantTemperature - M.engineBlockTemperature) * kCoolantToBlock * coolantEfficiency * cylinderWallToCoolantAirCooledCoef
-  local energyOilToBlock              = (M.oilTemperature - M.engineBlockTemperature) * kOilToBlock
-  local energyCylinderWallToBlock     = (M.cylinderWallTemperature - M.engineBlockTemperature) * kCylinderWallToBlock
+  local energyCylinderWallToCoolant = (M.cylinderWallTemperature - M.coolantTemperature) * kCylinderWallToCoolant * coolantEfficiency * cylinderWallToCoolantAirCooledCoef
+  local energyCoolantToAir = (M.coolantTemperature - tEnv) * radiatorCoef * radiatorActive * radiatorAirSpeedCoef * coolantEfficiency
+  local energyCoolantToBlock = (M.coolantTemperature - M.engineBlockTemperature) * kCoolantToBlock * coolantEfficiency * cylinderWallToCoolantAirCooledCoef
+  local energyOilToBlock = (M.oilTemperature - M.engineBlockTemperature) * kOilToBlock
+  local energyCylinderWallToBlock = (M.cylinderWallTemperature - M.engineBlockTemperature) * kCylinderWallToBlock
 
-  local energyCylinderWallToOil   = (M.cylinderWallTemperature - M.oilTemperature) * kCylinderWallToOil
-  local energyOilSumpToAir        = (M.oilTemperature - tEnv) * kOilToAir * radiatorAirSpeedCoef
-  local energyOilToAir            = (M.oilTemperature - tEnv) * oilRadiatorCoef * radiatorAirSpeedCoef * oilRadiatorActive
-  local energyBlockToAir          = (M.engineBlockTemperature - tEnv) * blockFanAirSpeedCoef * engineBlockAirCoolingEfficiency * underWaterBlockCoolingCoef
-  local exhaustTempDiff           = M.exhaustTemperature - tEnv
-  local exhaustTempSquared        = exhaustTempDiff * exhaustTempDiff
-  local energyExhaustToAir        = exhaustTempSquared * exhaustTempSquared * kExhaustToAir
+  local energyCylinderWallToOil = (M.cylinderWallTemperature - M.oilTemperature) * kCylinderWallToOil
+  local energyOilSumpToAir = (M.oilTemperature - tEnv) * kOilToAir * radiatorAirSpeedCoef
+  local energyOilToAir = (M.oilTemperature - tEnv) * oilRadiatorCoef * radiatorAirSpeedCoef * oilRadiatorActive
+  local energyBlockToAir = (M.engineBlockTemperature - tEnv) * blockFanAirSpeedCoef * engineBlockAirCoolingEfficiency * underWaterBlockCoolingCoef
+  local exhaustTempDiff = M.exhaustTemperature - tEnv
+  local exhaustTempSquared = exhaustTempDiff * exhaustTempDiff
+  local energyExhaustToAir = exhaustTempSquared * exhaustTempSquared * kExhaustToAir
   --local energyFireToBlock         = 0
 
   --We can lose coolant in different places, sum up all the rates and calculate the new mass
   local overallLeakRate = coolantOverpressureLeakRate + coolantHeadGasketLeakRate + radiatorLeakRate
 
   --Step 2: The integrator
-  M.cylinderWallTemperature   = max(M.cylinderWallTemperature + (energyToCylinderWall - (energyCylinderWallToOil + energyCylinderWallToCoolant + energyCylinderWallToBlock) * dt) * energyCoef.cylinderWall, tEnv)
-  M.coolantTemperature        = min(max(M.coolantTemperature + (energyCylinderWallToCoolant - energyCoolantToAir - energyCoolantToBlock) * energyCoef.coolant * dt, tEnv), constants.maxCoolantTemperature)
-  M.oilTemperature            = max(M.oilTemperature + (energyToOil + (energyCylinderWallToOil - energyOilToAir - energyOilSumpToAir - energyOilToBlock) * dt) * energyCoef.oil, tEnv)
-  M.engineBlockTemperature    = max(M.engineBlockTemperature + (energyCoolantToBlock + energyCylinderWallToBlock - energyBlockToAir + energyOilToBlock) * energyCoef.engineBlock * dt, tEnv)
-  M.exhaustTemperature        = max(M.exhaustTemperature + (energyToExhaust - energyExhaustToAir * dt) * energyCoef.exhaust , tEnv)
-  coolantMass                 = max(coolantMass - overallLeakRate * dt, constants.minimumCoolantMass)
+  M.cylinderWallTemperature = max(M.cylinderWallTemperature + (energyToCylinderWall - (energyCylinderWallToOil + energyCylinderWallToCoolant + energyCylinderWallToBlock) * dt) * energyCoef.cylinderWall, tEnv)
+  M.coolantTemperature = min(max(M.coolantTemperature + (energyCylinderWallToCoolant - energyCoolantToAir - energyCoolantToBlock) * energyCoef.coolant * dt, tEnv), constants.maxCoolantTemperature)
+  M.oilTemperature = max(M.oilTemperature + (energyToOil + (energyCylinderWallToOil - energyOilToAir - energyOilSumpToAir - energyOilToBlock) * dt) * energyCoef.oil, tEnv)
+  M.engineBlockTemperature = max(M.engineBlockTemperature + (energyCoolantToBlock + energyCylinderWallToBlock - energyBlockToAir + energyOilToBlock) * energyCoef.engineBlock * dt, tEnv)
+  M.exhaustTemperature = max(M.exhaustTemperature + (energyToExhaust - energyExhaustToAir * dt) * energyCoef.exhaust, tEnv)
+  coolantMass = max(coolantMass - overallLeakRate * dt, constants.minimumCoolantMass)
 
-  local particleAirspeed      = electrics.values.airspeed
-  local engineRunning         = (parentEngine.isDisabled or parentEngine.isStalled or parentEngine.ignitionCoef < 1) and 0 or 1
-  engineSteamParticleTick     = engineSteamParticleTick > 1 and 0 or engineSteamParticleTick + dt * 4
-  radiatorSteamParticleTick   = radiatorSteamParticleTick > 1 and 0 or radiatorSteamParticleTick + dt * (200 * M.radiatorDamage + 2 * particleAirspeed)
-  exhaustSteamParticleTick    = exhaustSteamParticleTick > 1 and 0 or exhaustSteamParticleTick + dt * (0.01 * absEngineRPM + 0.2 * particleAirspeed) * engineRunning
-  exhaustOilParticleTick      = exhaustOilParticleTick > 1 and 0 or exhaustOilParticleTick + dt * (0.01 * absEngineRPM + 0.1 * particleAirspeed) * engineRunning
-  exhaustSmokeParticleTick    = exhaustSmokeParticleTick > 1 and 0 or exhaustSmokeParticleTick + dt * (0.02 + (0.02 * absEngineRPM + 0.02 * particleAirspeed)) * engineRunning
+  local particleAirspeed = electrics.values.airspeed
+  local engineRunning = (parentEngine.isDisabled or parentEngine.isStalled or parentEngine.ignitionCoef < 1) and 0 or 1
+  engineSteamParticleTick = engineSteamParticleTick > 1 and 0 or engineSteamParticleTick + dt * 4
+  radiatorSteamParticleTick = radiatorSteamParticleTick > 1 and 0 or radiatorSteamParticleTick + dt * (200 * M.radiatorDamage + 2 * particleAirspeed)
+  exhaustSteamParticleTick = exhaustSteamParticleTick > 1 and 0 or exhaustSteamParticleTick + dt * (0.01 * absEngineRPM + 0.2 * particleAirspeed) * engineRunning
+  exhaustOilParticleTick = exhaustOilParticleTick > 1 and 0 or exhaustOilParticleTick + dt * (0.01 * absEngineRPM + 0.1 * particleAirspeed) * engineRunning
+  exhaustSmokeParticleTick = exhaustSmokeParticleTick > 1 and 0 or exhaustSmokeParticleTick + dt * (0.02 + (0.02 * absEngineRPM + 0.02 * particleAirspeed)) * engineRunning
 
   --airspeed depending particle type selection
-  local coolantHeavyParticleType  = particleAirspeed < 10 and 35 or 37
-  local coolantLightParticleType  = particleAirspeed < 10 and 48 or 49
+  local coolantHeavyParticleType = particleAirspeed < 10 and 35 or 37
+  local coolantLightParticleType = particleAirspeed < 10 and 48 or 49
   local rand = random(1) --some random value for particle emission
 
   if M.coolantTemperature > constants.coolantTemperatureDamageThreshold then
@@ -369,7 +537,7 @@ local function updateThermalsGFX(dt)
 
     if engineSteamParticleTick > 1 then
       --emit steam as long as there is still coolant left
-      obj:addParticleByNodesRelative(coolantCapNodes[1], coolantCapNodes[2], 1-rand , coolantHeavyParticleType, 0, 1)
+      obj:addParticleByNodesRelative(coolantCapNodes[1], coolantCapNodes[2], 1 - rand, coolantHeavyParticleType, 0, 1)
     end
 
     damageTracker.setDamage("engine", "coolantHot", true)
@@ -467,7 +635,9 @@ local function updateThermalsGFX(dt)
   end
 
   if streams.willSend("engineThermalData") then
-    gui.send('engineThermalData', {
+    gui.send(
+      "engineThermalData",
+      {
         coolantTemperature = M.coolantTemperature,
         oilTemperature = M.oilTemperature,
         engineBlockTemperature = M.engineBlockTemperature,
@@ -503,8 +673,9 @@ local function updateThermalsGFX(dt)
         engineBlockMelted = M.engineBlockMelted,
         cylinderWallsMelted = M.cylinderWallsMelted,
         thermostatTemperature = thermostatTemperature,
-        oilThermostatTemperature = oilThermostatTemperature,
-      })
+        oilThermostatTemperature = oilThermostatTemperature
+      }
+    )
   end
 end
 
@@ -520,7 +691,7 @@ local function updateMechanicsGFX(dt)
 
     local oilParticleType = electrics.values.airspeed < 10 and 36 or 38
 
-    for _,n in pairs(exhaustNodes) do
+    for _, n in pairs(exhaustNodes) do
       if exhaustOilParticleTick > 1 and not parentEngine.isDisabled then
         --emit blue smoke from all exhaust ends because we are burning oil with damaged piston rings
         obj:addParticleByNodesRelative(n.finish, n.start, absEngineRPM * -0.0004 - 2, oilParticleType, 0, 1)
@@ -544,12 +715,15 @@ local function getExhaustEndNodes(startNode, exhaustTree)
     --if at this point something broke away or we reached the original end of the branch
     if (child.childrenCount ~= child.initialChildrenCount or child.initialChildrenCount == 0) and not child.isStartNode then
       --save the nodes as exit nodes
-      table.insert(endNodes, {
+      table.insert(
+        endNodes,
+        {
           start = child.previous,
           finish = child.cid,
           afterFireAudioCoef = child.afterFireAudioCoef,
           afterFireVisualCoef = child.afterFireVisualCoef
-        })
+        }
+      )
     end
     --if we have children left and we are not broken
     if child.childrenCount > 0 and not child.isBroken then
@@ -586,7 +760,7 @@ local function parseExhaustTree(currentBranch, exhaustBeams, startNodeLookup)
         beam = currentBeam.cid,
         level = currentBranch.level + 1,
         afterFireAudioCoef = currentBranch.afterFireAudioCoef * (nodeData.afterFireAudioCoef or 1),
-        afterFireVisualCoef = currentBranch.afterFireVisualCoef * (nodeData.afterFireVisualCoef or 1),
+        afterFireVisualCoef = currentBranch.afterFireVisualCoef * (nodeData.afterFireVisualCoef or 1)
       }
       currentBranch.children[currentBeam.id2] = parseExhaustTree(node, beams, startNodeLookup)
       currentBranch.childrenCount = currentBranch.childrenCount + 1
@@ -600,7 +774,7 @@ local function parseExhaustTree(currentBranch, exhaustBeams, startNodeLookup)
         beam = currentBeam.cid,
         level = currentBranch.level + 1,
         afterFireAudioCoef = currentBranch.afterFireAudioCoef * (nodeData.afterFireAudioCoef or 1),
-        afterFireVisualCoef = currentBranch.afterFireVisualCoef * (nodeData.afterFireVisualCoef or 1),
+        afterFireVisualCoef = currentBranch.afterFireVisualCoef * (nodeData.afterFireVisualCoef or 1)
       }
       currentBranch.children[currentBeam.id1] = parseExhaustTree(node, beams, startNodeLookup)
       currentBranch.childrenCount = currentBranch.childrenCount + 1
@@ -621,7 +795,7 @@ local function buildExhaustTree()
   local startNodeLookup = {}
 
   --search for the exhaust start node
-  for _,n in pairs(v.data.nodes) do
+  for _, n in pairs(v.data.nodes) do
     if n.isExhaust and (type(n.isExhaust) == "boolean" or n.isExhaust == parentEngine.name) then
       table.insert(exhaustStartNodes, n)
       startNodeLookup[n.cid] = true
@@ -634,7 +808,7 @@ local function buildExhaustTree()
   end
 
   --find all exhaust beams
-  for _,b in pairs(v.data.beams) do
+  for _, b in pairs(v.data.beams) do
     if b.isExhaust and (type(b.isExhaust) == "boolean" or b.isExhaust == parentEngine.name) then
       --one table for immediate use
       table.insert(exhaustBeamCache, b)
@@ -644,16 +818,15 @@ local function buildExhaustTree()
   end
 
   exhaustTrees = {}
-  for _,n in ipairs(exhaustStartNodes) do
+  for _, n in ipairs(exhaustStartNodes) do
     --build exhaust tree recursively
     local exhaustTree = {children = {}, startCid = n.cid}
     exhaustTree.children[n.cid] = parseExhaustTree({cid = n.cid, level = 0}, exhaustBeamCache, startNodeLookup)
     table.insert(exhaustTrees, exhaustTree)
   end
 
-
   local tmpExhaustNodes = {}
-  for _,t in ipairs(exhaustTrees) do
+  for _, t in ipairs(exhaustTrees) do
     --find initial exhaust end points
     local treeEndNodes = getExhaustEndNodes(t.startCid, t)
     tmpExhaustNodes = arrayConcat(tmpExhaustNodes, treeEndNodes)
@@ -662,7 +835,7 @@ local function buildExhaustTree()
 
   exhaustNodes = {}
   local exhaustNodeDeDuplicate = {}
-  for _,v in ipairs(tmpExhaustNodes) do
+  for _, v in ipairs(tmpExhaustNodes) do
     if not exhaustNodeDeDuplicate[v.finish] then
       table.insert(exhaustNodes, v)
       exhaustNodeDeDuplicate[v.finish] = true
@@ -671,6 +844,7 @@ local function buildExhaustTree()
   invExhaustNodeCount = #exhaustNodes > 0 and 1 / sqrt(#exhaustNodes) or 0
   --print(invExhaustNodeCount)
   --dump(exhaustNodes)
+  M.exhaustEndNodes = exhaustNodes
 
   if #exhaustNodes <= 0 then
     log("E", "engine.buildExhaustTree", "No exhaust end nodes found")
@@ -684,7 +858,7 @@ local function buildExhaustTree()
 end
 
 local function exhaustBeamBroken(id, exhaustTree)
-  for _,v in pairs(exhaustTree.children) do
+  for _, v in pairs(exhaustTree.children) do
     --if the broken beam matches one of our tree beams
     if v and v.beam == id then
       --break off this branch
@@ -700,7 +874,7 @@ local function beamBroke(id)
   if exhaustBeams and exhaustBeams[id] then
     exhaustBeams[id] = false
     local tmpExhaustNodes = {}
-    for _,t in ipairs(exhaustTrees) do
+    for _, t in ipairs(exhaustTrees) do
       --break off a tree branch
       exhaustBeamBroken(id, t)
       --and find the new exit nodes
@@ -711,19 +885,19 @@ local function beamBroke(id)
 
     exhaustNodes = {}
     local exhaustNodeDeDuplicate = {}
-    for _,v in ipairs(tmpExhaustNodes) do
+    for _, v in ipairs(tmpExhaustNodes) do
       if not exhaustNodeDeDuplicate[v.finish] then
         table.insert(exhaustNodes, v)
         exhaustNodeDeDuplicate[v.finish] = true
       end
     end
     invExhaustNodeCount = #exhaustNodes > 0 and 1 / sqrt(#exhaustNodes) or 0
-    --dump(exhaustNodes)
+  --dump(exhaustNodes)
   end
 end
 
 local function resetExhaustTree(exhaustTree)
-  for _,v in pairs(exhaustTree.children) do
+  for _, v in pairs(exhaustTree.children) do
     --if one of the children are already broken
     if v then
       if v.isBroken then
@@ -786,12 +960,12 @@ local function reset()
 
   electricalRadiatorFanSmoother:reset()
 
-  for k,_ in pairs(exhaustBeams) do
+  for k, _ in pairs(exhaustBeams) do
     exhaustBeams[k] = true
   end
 
   local tmpExhaustNodes = {}
-  for _,t in ipairs(exhaustTrees) do
+  for _, t in ipairs(exhaustTrees) do
     --break off a tree branch
     resetExhaustTree(t)
     --and find the new exit nodes
@@ -801,13 +975,14 @@ local function reset()
 
   exhaustNodes = {}
   local exhaustNodeDeDuplicate = {}
-  for _,v in ipairs(tmpExhaustNodes) do
+  for _, v in ipairs(tmpExhaustNodes) do
     if not exhaustNodeDeDuplicate[v.finish] then
       table.insert(exhaustNodes, v)
       exhaustNodeDeDuplicate[v.finish] = true
     end
   end
   --dump(tmpExhaustNodes)
+  M.exhaustEndNodes = exhaustNodes
   invExhaustNodeCount = #exhaustNodes > 0 and 1 / sqrt(#exhaustNodes) or 0
 
   if hasCoolantRadiator then
@@ -867,26 +1042,21 @@ local function initThermals()
 
   afterFire = {
     afterFireSoundTimer = 0,
-
     instantAfterFireFuel = 0,
     sustainedAfterFireFuel = 0,
     shiftAfterFireFuel = 0,
-
     instantAudioSample = jbeamData.instantAfterFireSound or "event:>Vehicle>Afterfire>01_Single_EQ1",
     sustainedAudioSample = jbeamData.sustainedAfterFireSound or "event:>Vehicle>Afterfire>01_Single_EQ1",
     shiftAudioSample = jbeamData.shiftAfterFireSound or "event:>Vehicle>Afterfire>01_Multi_EQ1",
-
     instantVolumeCoef = jbeamData.instantAfterFireVolumeCoef or 1,
     sustainedVolumeCoef = jbeamData.sustainedAfterFireVolumeCoef or 1,
     shiftVolumeCoef = jbeamData.shiftAfterFireVolumeCoef or 4,
-
     audibleThresholdInstant = jbeamData.afterFireAudibleThresholdInstant or 500000,
     audibleThresholdSustained = jbeamData.afterFireAudibleThresholdSustained or 40000,
     audibleThresholdShift = jbeamData.afterFireAudibleThresholdShift or 250000,
-
     visualThresholdInstant = jbeamData.afterFireVisualThresholdInstant or 500000,
     visualThresholdSustained = jbeamData.afterFireVisualThresholdSustained or 150000,
-    visualThresholdShift = jbeamData.afterFireVisualThresholdShift or 1000000,
+    visualThresholdShift = jbeamData.afterFireVisualThresholdShift or 1000000
   }
 
   --default to some little coolant mass to prevent any divide by 0 issues
@@ -894,14 +1064,14 @@ local function initThermals()
   invInitialCoolantMass = 1 / coolantMass
   local oilMass = (jbeamData.oilVolume or 5) * 0.86
   burnEfficiencyCoef = {}
-  for k,v in pairs(parentEngine.invBurnEfficiencyTable) do
+  for k, v in pairs(parentEngine.invBurnEfficiencyTable) do
     burnEfficiencyCoef[k] = v - 1
   end
   mechanicalRadiatorFanRPMCoef = 1 / (parentEngine.maxRPM * 0.7)
 
   local engineBlockMaterial = jbeamData.engineBlockMaterial or "iron"
-  local engineBlockSpecHeat = 0
-  local cylinderWallSpecHeat = 0
+  local engineBlockSpecHeat
+  local cylinderWallSpecHeat
   if engineBlockMaterial == "iron" then
     engineBlockSpecHeat = 450
     cylinderWallSpecHeat = 450
@@ -913,7 +1083,7 @@ local function initThermals()
     engineBlockMeltingTemperature = 660
     cylinderWallMeltingTemperature = 700
   else
-    log("E", "engine.initThermals", "Unknown engine block material specified: "..engineBlockMaterial)
+    log("E", "engine.initThermals", "Unknown engine block material specified: " .. engineBlockMaterial)
     log("E", "engine.initThermals", "Engine thermals are disabled due to above error")
     return
   end
@@ -923,6 +1093,7 @@ local function initThermals()
   blockFanRPMCoef = 1 / parentEngine.maxRPM
   radiatorFanType = jbeamData.radiatorFanType
   local radiatorArea = jbeamData.radiatorArea or 0
+  local isAirCooledOnly = jbeamData.isAirCooledOnly or false
   radiatorFanMaxAirSpeed = jbeamData.radiatorFanMaxAirSpeed or 0
   mechanicalFanRPMCoef = jbeamData.mechanicalFanRPMCoef or 0.5
   local radiatorEffectiveness = jbeamData.radiatorEffectiveness or 0
@@ -935,14 +1106,14 @@ local function initThermals()
   damageThreshold.headGasket = jbeamData.headGasketDamageThreshold or 2000000
   damageThreshold.pistonRing = jbeamData.pistonRingDamageThreshold or 2000000
   damageThreshold.connectingRod = jbeamData.connectingRodDamageThreshold or 2000000
-  damageThreshold.engineBlockTemperature =  jbeamData.engineBlockTemperatureDamageThreshold or 140
+  damageThreshold.engineBlockTemperature = jbeamData.engineBlockTemperatureDamageThreshold or 140
   radiatorDeformThreshold = jbeamData.radiatorDeformThreshold or 0.015
   hasCoolantRadiator = radiatorArea > 0 and radiatorEffectiveness > 0
   hasOilRadiator = oilRadiatorArea > 0 and oilRadiatorEffectiveness > 0
   hasOilStarvingDamage = (jbeamData.hasOilStarvingDamage == nil or jbeamData.hasOilStarvingDamage)
 
   if radiatorFanType and radiatorFanType ~= "electric" and radiatorFanType ~= "mechanical" then
-    log("E", "engine.initThermals", "Unknown radiator fan type specified: "..radiatorFanType)
+    log("E", "engine.initThermals", "Unknown radiator fan type specified: " .. radiatorFanType)
   end
   electricalRadiatorFanSmoother = newTemporalSmoothing(500, 1000)
 
@@ -953,7 +1124,7 @@ local function initThermals()
     log("E", "engine.initThermals", "Engine thermals are disabled due to above error")
     return
   end
-  for _,n in pairs(jbeamData.engineBlock._engineGroup_nodes) do
+  for _, n in pairs(jbeamData.engineBlock._engineGroup_nodes) do
     engineBlockMass = engineBlockMass + v.data.nodes[n].nodeWeight
   end
 
@@ -961,7 +1132,7 @@ local function initThermals()
   local exhaustMass = math.max(engineBlockMass / 10, 5)
 
   energyCoef.coolant = 1 / (coolantMass * constants.coolantSpecHeat)
-  energyCoef.oil = 1 /  (oilMass * constants.oilSpecHeat)
+  energyCoef.oil = 1 / (oilMass * constants.oilSpecHeat)
   energyCoef.cylinderWall = 1 / (cylinderWallMass * cylinderWallSpecHeat)
   energyCoef.engineBlock = 1 / (engineBlockMass * engineBlockSpecHeat)
   energyCoef.exhaust = 1 / (constants.exhaustSpecHeat * exhaustMass)
@@ -986,17 +1157,17 @@ local function initThermals()
   arrayConcat(engineNodes, jbeamData.engineBlock._engineGroup_nodes or {})
 
   if #coolantCapNodes < 2 then
-    log("D", "engine.initThermals", "Wrong number of coolant cap nodes found. Should be at least 2, is: "..#coolantCapNodes)
+    log("D", "engine.initThermals", "Wrong number of coolant cap nodes found. Should be at least 2, is: " .. #coolantCapNodes)
   end
 
   if #engineNodes < 2 then
-    log("E", "engine.initThermals", "Wrong number of engine nodes found. Should be at least 2, is: "..#engineNodes)
+    log("E", "engine.initThermals", "Wrong number of engine nodes found. Should be at least 2, is: " .. #engineNodes)
     log("E", "engine.initThermals", "Engine thermals are disabled due to above error")
     return
   end
 
   if hasCoolantRadiator and #radiatorNodes < 2 then
-    log("D", "engine.initThermals", "Wrong number of radiator nodes found. Should be at least 2, is: "..#radiatorNodes)
+    log("D", "engine.initThermals", "Wrong number of radiator nodes found. Should be at least 2, is: " .. #radiatorNodes)
   end
 
   if not buildExhaustTree() then
@@ -1017,7 +1188,11 @@ local function initThermals()
   damageTracker.setDamage("engine", "blockMelted", false)
   damageTracker.setDamage("engine", "oilStarvation", false)
 
-  updateThermalsGFXMethod = updateThermalsGFX
+  if isAirCooledOnly then
+    updateThermalsGFXMethod = updateThermalsAirGFX
+  else
+    updateThermalsGFXMethod = updateThermalsCoolantGFX
+  end
   updateExhaustGFXMethod = updateExhaustGFX
   updateMechanicsGFXMethod = updateMechanicsGFX
 
