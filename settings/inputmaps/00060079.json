@@ -1,0 +1,67 @@
+{
+"bindings" :   [
+    {
+    "deadzone" :       {"end"               : 0.05                }, 
+    "action"            : "steering"             , 
+    "control"           : "xaxis"             
+    }, 
+    {
+    "control"           : "button5"           , 
+    "action"            : "parkingbrake"
+    }, 
+    {
+    "control"           : "button4"           , 
+    "action"            : "clutch"            
+    }, 
+    {
+    "deadzone" :       {"end"               : 0.05                }, 
+    "action"            : "rotate_camera_horizontal"        , 
+    "control"           : "zaxis"             
+    }, 
+    {
+    "deadzone" :       {"end"               : 0.05                }, 
+    "action"            : "rotate_camera_vertical"      , 
+    "control"           : "rzaxis"            
+    }, 
+    {
+    "control"           : "button8"           , 
+    "action"            : "switch_camera_next"     
+    }, 
+    {
+    "control"           : "upov"              , 
+    "action"            : "toggle_headlights" 
+    }, 
+    {
+    "control"           : "dpov"              , 
+    "action"            : "activateStarterMotor"
+    }, 
+    {
+    "action"            : "accelerate"        , 
+    "control"           : "button7"           , 
+    }, 
+    {
+    "action"            : "brake"             , 
+    "control"           : "button6"           , 
+    }, 
+    { "action"            : "menu_item_select"    , "control"           : "button7"             }, 
+    { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+    { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+    { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+    { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+    { "action" : "reset_physics", "control" : "rpov" },
+    { "action" : "menu_item_radial_x", "control" : "xaxis" },
+    { "action" : "pause", "control" : "button9" },
+    { "action" : "toggleMenues", "control" : "button10" },
+    { "action" : "center_camera", "control" : "button11" },
+    { "action" : "increase_zoom", "control" : "button0" },
+    { "action" : "shiftUp", "control" : "button2" },
+    { "action" : "shiftDown", "control" : "button3" },
+    { "action" : "menu_item_radial_y", "control" : "yaxis" },
+    { "action" : "decrease_zoom", "control" : "button1" },
+    { "action" : "recover_vehicle", "control" : "lpov" }
+  ], 
+"name"              : "Generic   USB  Joystick  ", 
+"vidpid"            : "00060079"          , 
+"guid"              : "{00060079-0000-0000-0000-504944564944}",
+"version"           : 1,
+}, 

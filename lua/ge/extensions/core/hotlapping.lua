@@ -240,7 +240,7 @@ local function addCheckPoint(cpPos, cpSize)
     --checkPoint.triggerType = 'Sphere'
     checkPoint:setField("triggerType", 0, 'Sphere')
     --checkPoint.debug = true
-    checkPoint.luaFunction = String('core_hotlapping.onHotLapTrigger')
+    --checkPoint.luaFunction = String('core_hotlapping.onHotLapTrigger')
     checkPoint:registerObject(triggerName .. checkPointCount)
     checkPoint:setPosition(cpPos)
     checkPoint:setScale(cpSize)
@@ -287,8 +287,10 @@ end
 -- removes all checkpoints and clears the array saving them
 local function clearAllCP()
     --log('E',logTag,"Removed All CP")
-    for k,v in pairs(checkPoints) do
-        v.delete()
+    for _,v in ipairs(checkPoints) do
+      if v ~= nil then
+        v:delete()
+      end
     end
     checkPoints ={}
     checkPointPosAndSize = {}
@@ -323,7 +325,7 @@ end
 
 
 -- internal trigger function. starts the race, closes the track and registers if the right checkpoints gets passed
-local function onHotLapTrigger( data )
+local function onBeamNGTrigger( data )
    if allowPlacingCP and data['event'] == 'exit' and string.startswith(data['triggerName'],triggerName) then
         local cpNumber = tonumber(string.match (data['triggerName'], "%d+"))
         --log('E',logTag,"Passed CP nr. "..cpNumber)
@@ -784,7 +786,7 @@ local function save( filename )
     local date = os.date("*t")
     local now = string.format("%.4d-%.2d-%.2d_%.2d-%.2d-%.2d", date.year,date.month,date.day, date.hour,date.min,date.sec)
     fn = M.getCurrentTrackName()
-    filename = 'game:settings/hotlapping/'..fn..'/'..now..'.json';
+    filename = 'settings/hotlapping/'..fn..'/'..now..'.json';
     serializeJsonToFile(filename,checkPointPosAndSize, false)
     log('I',logTag,'Serialized '..#checkPointPosAndSize..' checkpoints to file Documents/BeamNG.drive/'..filename)
     guihooks.trigger('HotlappingSuccessfullySaved', now)
@@ -794,7 +796,7 @@ end
 -- renames a file
 local function rename( oldName, newName )
     --log('E',logTag,'saving to file '..filename..' ...')
-    local pre = 'game:settings/hotlapping/' .. M.getCurrentTrackName() ..'/'
+    local pre = 'settings/hotlapping/' .. M.getCurrentTrackName() ..'/'
     if not FS:fileExists(pre..oldName..'.json') then
         log('I',logTag,'Failed renaming '..oldName..' to '..newName..': File not found')
         return 
@@ -842,8 +844,8 @@ end
 local function refreshTracklist(  )
     local tracks = {}
     local fn = M.getCurrentTrackName()
-
-    for i, file in ipairs(FS:findFilesByPattern('game:settings/hotlapping/'..M.getCurrentTrackName()..'/','*.json',-1,true,false)) do
+    local trackfiles = FS:findFilesByPattern('settings/hotlapping/'..M.getCurrentTrackName()..'/','*.json',-1,true,false)
+    for i, file in ipairs(trackfiles) do
         local _, fn, e = string.match(file, "(.-)([^/]-([^%.]-))$")
 
         tracks[i] = fn:sub(1,#fn - #e - 1)
@@ -861,6 +863,21 @@ local function onClientStartMission( )
     guihooks.trigger("HotlappingResetApp")
 end
 
+local function onClientEndMission()
+    M.stopTimer()
+    if not scenetree then
+      checkPoints = {}
+    end
+    M.stopHotlapping()
+end
+
+local function  onExtensionUnloaded()
+    M.stopTimer()
+    if not scenetree then
+      checkPoints = {}
+    end
+    M.stopHotlapping()
+end
 
 
 --------------------------------------------------------------------
@@ -890,6 +907,7 @@ local function onRaceWaypointReached( wpInfo )
       prevTimes = prevTimes + times[i]["duration"]
     end
   end
+
 
   --times[currentLap][currentCP]["endTime"] = wpInfo.time
   --times[currentLap]["duration"] = wpInfo.time - prevTimes
@@ -947,7 +965,7 @@ M.positionMarkers = positionMarkers
 
 
 
-M.onHotLapTrigger = onHotLapTrigger
+M.onBeamNGTrigger = onBeamNGTrigger
 M.onCheckPointPassed = onCheckPointPassed
 
 M.getTimeInfoRaw = getTimeInfoRaw
@@ -975,7 +993,8 @@ M.changeSize = changeSize
 M.refreshTracklist = refreshTracklist
 
 M.onClientStartMission = onClientStartMission
-
+M.onClientEndMission = onClientEndMission
+M.onExtensionUnloaded = onExtensionUnloaded
 
 -- Race Interface
 M.onRaceStart = onRaceStart

@@ -38,7 +38,7 @@ angular.module('beamng.stuff')
     };
   }
 
-  reset();
+  //reset();
 
   return {
     getSelections:  function()        { return selections;            },
@@ -165,6 +165,8 @@ angular.module('beamng.stuff')
   bngApi.engineLua('core_vehicles.getCurrentVehicleDetails()', (res) => {
     console.log(res);
     if (QuickraceService.getSelections().vehicle.name === "") {
+      if(res && res.model && (res.model.Type === "Prop" || res.model.Type == "Trailer"))
+        return;
       QuickraceService.setVehicle({
         official: res.configs.aggregates.Source['BeamNG - Official'],
         model: res.model.key,
@@ -233,7 +235,7 @@ angular.module('beamng.stuff')
 
     if ($scope.selections.level.file && $scope.selections.track.file && $scope.selections.vehicle) {
       bngApi.engineLua(luaCode);
-      QuickraceService.reset();
+      //QuickraceService.reset();
       $scope.$emit('CloseMenu');
     }
   };

@@ -49,6 +49,12 @@
           </div>
         </md-grid-tile-footer>
       </md-grid-tile>
+      <md-grid-tile ng-class="(scenario === selected) ? 'selectedGridItem' : ''" style="overflow: hidden;" mdx-paint-bg="accent" ng-click="app.openRepo()">
+        <span class="material-icons" style="font-size: 12vmin; color: white; ">add_to_photos</span>
+        <md-grid-tile-footer>
+          <h3>{{ ::'ui.common.downloadMore' | translate }}</h3>
+        </md-grid-tile-footer>
+      </md-grid-tile>
     </md-grid-list>
   </div>
 </md-content>
@@ -81,7 +87,7 @@
          <md-icon class="material-icons" style="font-size: 2em">flag</md-icon>
         <div class="md-list-item-text">
           <h3>{{ ::'ui.common.property.difficulty' | translate }}</h3>
-          <p>{{ difText(selected.difficulty) || 'Unknown' }}</p>
+          <p>{{ difText(selected.difficulty) || 'Unknown' | translate}}</p>
         </div>
       </md-list-item>
 

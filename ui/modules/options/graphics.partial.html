@@ -71,6 +71,11 @@
     <span style="margin-left:15px">{{ options.data.values.FPSLimiter }}</span>
   </md-list-item>
 
+  <md-list-item layout md-no-ink>
+    <p>{{:: 'ui.options.graphics.sleepinbackground' | translate}}</p>
+    <md-checkbox ng-model="options.data.values.SleepInBackground" ng-change="options.applyState()"></md-checkbox>
+  </md-list-item>
+
   <md-divider></md-divider>
 
   <md-list-item layout class="bng-short-select-item"  ng-if="!app.mainmenu">

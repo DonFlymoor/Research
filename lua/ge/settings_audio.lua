@@ -5,27 +5,20 @@
 local M = {}
 
 local function applyOptions_Audio()
-    log( 'D', 'settings.audio', 'applyOptions_Audio' )
+    --log( 'D', 'settings.audio', 'applyOptions_Audio' )
     -- validate options
     local devices = Engine.Audio.getInfo()
     local providerOK = false
-    local deviceOK = false
 
     local audioProviderName = TorqueScript.getVar( '$pref::SFX::providerName' )
-    local audioDeviceName = TorqueScript.getVar( '$pref::SFX::deviceName' )
     for n, p in pairs(devices) do
         if n == audioProviderName then
-            for i, d in ipairs(p) do
-                if d.name == audioDeviceName then
-                    deviceOK = true
-                end
-            end
             providerOK = true
         end
     end
 
     if not providerOK then
-        log( 'E', 'settings.audio', 'incorrect audio provider: provider: "' .. tostring(audioProviderName) .. '", device: "' .. tostring(audioDeviceName) .. '" : ' .. dumps(devices) )
+        log( 'E', 'settings.audio', 'incorrect audio provider: "' .. tostring(audioProviderName) .. '": ' .. dumps(devices) )
 
         local firstProviderName = ''
         for n, d in pairs(devices) do
@@ -36,36 +29,16 @@ local function applyOptions_Audio()
         end
 
         audioProviderName = firstProviderName
-        audioDeviceName = "default"
         if devices[firstProviderName] then
             TorqueScript.setVar( '$pref::SFX::providerName', audioProviderName )
-            TorqueScript.setVar( '$pref::SFX::deviceName', audioDeviceName )
-            log( 'W', 'settings.audio', 'set provider to ' .. tostring(audioProviderName) .. ' and device to ' .. tostring(audioDeviceName) )
-            deviceOK = true
+            log( 'W', 'settings.audio', 'set provider to ' .. tostring(audioProviderName))
         end
     end
 
-    if audioDeviceName == "default" then
-      deviceOK = true
-    end
-
-    if not deviceOK then
-        log( 'E', 'settings.audio', 'incorrect audio device: provider: "' .. tostring(audioProviderName) .. '", device: "' .. tostring(audioDeviceName) .. '" : ' ..  dumps(devices))
-        for providerName, deviceArray in pairs(devices) do
-            if providerName == audioProviderName then
-                audioDeviceName = "default"
-                TorqueScript.setVar( '$pref::SFX::deviceName', audioDeviceName )
-                log( 'W', 'settings.audio', 'set device to ' .. tostring(audioDeviceName) )
-                break
-            end
-        end
-    end
-
-    if TorqueScript.eval( 'sfxCreateDevice($pref::SFX::providerName, $pref::SFX::deviceName, $pref::SFX::useHardware, -1);' ) == '0' then
+    if TorqueScript.eval( 'sfxCreateDevice($pref::SFX::providerName, $pref::SFX::useHardware, -1);' ) == '0' then
         local useHardware = TorqueScript.getVar( '$pref::SFX::useHardware' )
         audioProviderName = TorqueScript.getVar( '$pref::SFX::providerName' )
-        audioDeviceName = TorqueScript.getVar( '$pref::SFX::deviceName' )
-        log( 'E', 'applyOptions_Audio', 'Unable to create SFX device: '..audioProviderName..' '..audioDeviceName..' '..useHardware );
+        log( 'E', 'applyOptions_Audio', 'Unable to create SFX device: '..audioProviderName..' '..useHardware );
     end
 end
 
@@ -97,53 +70,6 @@ local function buildOptionHelpers()
                     table.insert(values, provider)
                     added[provider] = true
                 end
-            end
-            return {keys=keys, values=values}
-        end
-    }
-
-    -- SettingsAudioDevice
-    o.AudioDevice = {
-        get = function() return TorqueScript.getVar('$pref::SFX::deviceName') end,
-        set = function(value)
-            TorqueScript.setVar( '$pref::SFX::deviceName', value )
-            applyOptions_Audio()
-        end,
-        getModes = function()
-            local keys = {}
-            local values = {}
-            local usedKeys = {}
-            local deviceList = be:sfxGetAvailableDevices()
-            local entries = string.match( deviceList, '(.*)\n' )
-            entries = split( entries, '\n' )
-            local defaultDeviceName = "None"
-            local previousDeviceName = TorqueScript.getVar('$pref::SFX::deviceName')
-            local foundPreviousDeviceName = previousDeviceName == "default"
-            for k, v in ipairs(entries) do
-                if v ~= '\n' then
-                    v = v:match( '(.*)\t' )
-                    local record = split( v, '\t')
-                    local device = record[2]
-                    if usedKeys[device] then
-                        log( 'D', 'settings.audio', ' Duplicated device name: '..device )
-                    elseif device ~= '' and not device:upper():find('NULL') then
-                        if defaultDeviceName == "None" then
-                          defaultDeviceName = device
-                        end
-                        if device == previousDeviceName then
-                          foundPreviousDeviceName = true
-                        end
-                        table.insert(keys, device)
-                        table.insert(values, device)
-                        usedKeys[device] = true
-                    end
-                end
-            end
-            table.insert(keys, "default")
-            table.insert(values, "Windows Default | Detected: "..defaultDeviceName..")")
-            if not foundPreviousDeviceName then
-              table.insert(keys, previousDeviceName)
-              table.insert(values, "Disconnected: "..previousDeviceName..")")
             end
             return {keys=keys, values=values}
         end

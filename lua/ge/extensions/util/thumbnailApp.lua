@@ -300,14 +300,14 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
         -- Take screenshot
         local screenShotName = "vehicles/" .. v.model_key .. "/" .. (findValView('prefix') or '') .. v.key .. (findValView('suffix') or '')
         log('I', logTag, "saved screenshot:" .. screenShotName  ..'.png')
-        TorqueScript.eval('screenShot("' .. screenShotName ..'", "PNG");')
+        TorqueScript.eval('screenShot("' .. screenShotName ..'", "PNG", 1);')
         if viewName == "default" and v.is_default_config then
           -- t3d apparently does not like to take two pictures in one frame...
           for i=1,40 do
             coroutine.yield()
           end
           log('I', logTag, "saved default:" .. v.model_key  ..'.png')
-          TorqueScript.eval('screenShot("vehicles/' .. v.model_key .. '/default", "PNG");')
+          TorqueScript.eval('screenShot("vehicles/' .. v.model_key .. '/default", "PNG", 1);')
         end
         coroutine.yield()
 

@@ -119,7 +119,7 @@ local function calculateInertia(device)
     maxCumulativeGearRatio = child.maxCumulativeGearRatio
   end
 
-  local gearRatio = device.gearRatio ~= 0 and abs(device.gearRatio) or device.maxGearRatio
+  local gearRatio = device.gearRatio ~= 0 and abs(device.gearRatio) or (device.maxGearRatio * 2)
   device.cumulativeInertia = outputInertia / gearRatio / gearRatio
   device.invCumulativeInertia = 1 / device.cumulativeInertia
 

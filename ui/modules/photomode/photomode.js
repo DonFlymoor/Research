@@ -12,20 +12,31 @@ angular.module('beamng.stuff')
   bngApi.engineLua("commands.setFreeCamera()");
   bngApi.engineScript('$_pm_fov=$cameraFov;$mvRoll = 0;');
   bngApi.engineLua('bullettime.pause(true)');
+ // bngApi.engineLua('campaign_exploration.activemode()');
 
   var vm = this;
 
   vm.shipping = beamng.shipping;
+  
 
   $scope.$on('SettingsChanged', function (event, data) {
     vm.devMode = data.values.devMode;
   });
-
+ // bngApi.engineLua('campaign_exploration.activephotomission()');
   bngApi.engineLua('settings.requestState()');
   bngApi.engineLua('Steam.isWorking', function (steamStatus) {
-    console.log('steam available:', steamStatus);
     $scope.$evalAsync(function () {
       vm.steamAvailable = steamStatus;
+    });
+  });
+  bngApi.engineLua('campaign_exploration and campaign_photoSafari.photomodeOpen',function(isCampaign){
+    $scope.$evalAsync(function () {
+      vm.campaingexp = isCampaign;
+    });
+   });
+  bngApi.engineLua('scenario_scenarios.getScenario()', function(data) {
+    $scope.$evalAsync(function () {
+      vm.currentScenario = data;
     });
   });
 
@@ -35,7 +46,7 @@ angular.module('beamng.stuff')
     fov: 80,
     roll: 0,
     visible: false,
-    showGrid: showPhotomodeGrid.show
+    showGrid: showPhotomodeGrid.show,
   };
 
 
@@ -59,6 +70,23 @@ angular.module('beamng.stuff')
     vm.showControls = false;
     setTimeout(function() {
       $scope.$emit('hide_ui', true);
+      if (vm.campaingexp){
+          bngApi.engineLua('campaign_photoSafari.takepiccheck()', (val) => {
+          vm.objContained = val;
+          if(vm.objContained){
+            console.log("horrieh");
+          }
+          else{
+            console.log("wrong objContained");
+           // break;
+          }
+        });
+      }
+      if (vm.currentScenario){
+        if(vm.currentScenario.scenarioName == 'bussafari'){
+            bngApi.engineLua('scenario_scenarios.takephoto()');
+        }
+      }
       bngApi.engineScript('hideCursor();');
       bngApi.engineScript('doScreenShot();');
       setTimeout(function() {
@@ -143,6 +171,7 @@ angular.module('beamng.stuff')
   });
 
   vm.openPostFXManager = function() {
+    console.log("openPostFXManager");
     bngApi.engineScript('Canvas.pushDialog(PostFXManager);');
   };
 

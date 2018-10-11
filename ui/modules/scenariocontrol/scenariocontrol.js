@@ -5,8 +5,33 @@ angular.module('beamng.stuff')
  * @name beamng.stuff:ScenarioStartController
  * @description Controller for the view that appears on scenario start
 **/
-.controller('ScenarioStartController', ['logger', '$scope', '$state', 'bngApi', 'ControlsUtils', 'Utils', '$ocLazyLoad', 'gamepadNav', '$sce', '$translate',
-function (logger, $scope, $state, bngApi, ControlsUtils, Utils, $ocLazyLoad, gamepadNav, $sce, $translate) {
+.factory('ScenarioControlService', function() {
+  var selections= {};
+
+  function reset () {
+    selections.vehicle = {
+      name: '',
+      file:null,
+      preview: '/ui/images/appDefault.png',
+      targetState: {state: 'vehicles', args: {mode: 'selectableVehicle'}}
+    };
+  }
+
+  reset();
+
+  return {
+    getSelections:  function()        { return selections;            },
+    setVehicle:    function(vehicle)  { selections.vehicle   = vehicle; },
+    reset : reset,
+    accessibility: function () {
+      for (var key in selections) {
+        selections[key].disabled = key === 'route';
+      }
+    }
+  };
+})
+.controller('ScenarioStartController', ['logger', '$scope', '$state', '$timeout', '$rootScope', 'bngApi', 'ControlsUtils', 'Utils', '$ocLazyLoad', 'gamepadNav', '$sce', '$translate', 'VehicleSelectConfig', '$stateParams', 'ScenarioControlService',
+function (logger, $scope, $state, $timeout, $rootScope, bngApi, ControlsUtils, Utils, $ocLazyLoad, gamepadNav, $sce, $translate, VehicleSelectConfig, $stateParams, ScenarioControlService) {
   var vm = this;
   vm.data = null;
   vm.config = { playerValid: true };
@@ -25,6 +50,83 @@ function (logger, $scope, $state, bngApi, ControlsUtils, Utils, $ocLazyLoad, gam
     bngApi.engineLua('WinInput.setForwardRawEvents(true);');
     bngApi.engineLua('WinInput.setForwardFilteredEvents(true);');
   });
+
+  if (ScenarioControlService.getSelections().vehicle.name === "") {
+    bngApi.engineLua('core_vehicles.getCurrentVehicleDetails()', function(data) {
+      var currentVehicle = data;
+      ScenarioControlService.setVehicle({
+        official: currentVehicle.configs.aggregates.Source['BeamNG - Official'],
+        model: currentVehicle.current.key,
+        config: currentVehicle.current.config_key,
+        color: currentVehicle.current.color,
+        name: currentVehicle.configs.Name,
+        preview: currentVehicle.configs.preview,
+        targetState: {state: 'vehicles', args: {mode: 'selectableVehicle'}},
+        file: currentVehicle.model
+      });
+      $scope.vehicle = ScenarioControlService.getSelections().vehicle;
+    });
+  }
+  else {
+    $scope.vehicle = ScenarioControlService.getSelections().vehicle;
+  }
+
+  vm.selectVehicle = function() {
+    $state.go('menu.vehicles', {mode: 'selectableVehicle'})
+    $scope.$emit('MenuHide', false);
+
+    VehicleSelectConfig.addConfig('selectableVehicle', {
+      hide: {
+        'removeBtns': true,
+        'spawnNew': true
+      },
+      backButtonRef : 'scenario-start',
+      selected: (carObj, model, config, color, spawnNew) => {
+        if(config == null ) config = carObj.default_pc;
+        if(color == null ) color = carObj.default_color;
+        ScenarioControlService.setVehicle({
+          official: carObj.aggregates.Source['BeamNG - Official'],
+          model: model,
+          config: config,
+          color: color,
+          name: carObj.Name,
+          preview: carObj.preview,
+          targetState: {state: 'vehicles', args: {mode: 'selectableVehicle'}},
+          file: carObj
+        });
+        VehicleSelectConfig.configs['selectableVehicle'].backButtonRef = 'scenario-start';
+        $state.go(`scenario-start`);
+        var vehicle = {
+          'model': model,
+          'config': config,
+          'color': color
+        }
+        var fallback = $timeout(() => {
+           // if the car isn't spawned by now it will probably not spawn at all, so remove the waiting sign
+          $rootScope.$broadcast('app:waiting', false);
+        }, 3000);
+
+        $rootScope.$broadcast('app:waiting', true, function() {
+          bngApi.engineLua(`extensions.hook("onVehicleSelected", ${bngApi.serializeToLua(vehicle)})`, function() {
+            $timeout($rootScope.$broadcast('app:waiting', false));
+            $timeout.cancel(fallback);
+          });
+        });
+      },
+      selectButton: 'ui.quickrace.selectVehicle',
+      parentState: 'scenario-start',
+      name: 'scenario-start',
+      filter: {
+        'Type': ['Prop', 'Trailer']
+      },
+      getVehicles: function() {
+        if ($stateParams.vehicles) {
+          return $stateParams.vehicles;
+        }
+        return undefined;
+      }
+    });
+  }
 
 
   // bngApi.engineLua('requestGameState()'); // <- why? (todo)
@@ -92,6 +194,17 @@ function (logger, $scope, $state, bngApi, ControlsUtils, Utils, $ocLazyLoad, gam
     });
   }
 
+  $scope.$on('SettingsChanged', function (_, data) {
+    $scope.$evalAsync(() => {
+      vm.userSettings = data;
+    });
+  });
+  bngApi.engineLua('settings.requestState()')
+
+  vm.applySettings = function (key) {
+    bngApi.engineLua(`settings.setValue("${key}", "${vm.userSettings.values[key]}")`)
+  }
+
   // This event carries data relevant to the loaded scenario. By listening to
   // that, we get the information to be displayed.
   $scope.$on('ScenarioChange', function (event, data) {
@@ -116,6 +229,7 @@ function (logger, $scope, $state, bngApi, ControlsUtils, Utils, $ocLazyLoad, gam
     gamepadNav.enableSpatialNav(spatialNavEnabled); // use old value here
     bngApi.engineLua("bindings.menuActive(false);");
     $scope.$emit('ShowApps', true);
+    ScenarioControlService.reset();
     //vm.play();
   });
 

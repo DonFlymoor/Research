@@ -1,7 +1,7 @@
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
     detailMap = "levels/west_coast_usa/art/terrain/Grass-01-D";
     internalName = "forest";
     diffuseSize = "2048";
@@ -18,61 +18,46 @@ new TerrainMaterial()
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
-    detailMap = "levels/west_coast_usa/art/terrain/Grass-02-D";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
+    detailMap = "levels/west_coast_usa/art/terrain/Overlay_Grass-03";
     internalName = "grass";
     diffuseSize = "2048";
-    detailDistance = "80";
-    detailSize = "7.5";
+    detailDistance = "500";
+    detailSize = "100";
     isManaged = "1";
     Enabled = "1";
-    normalMap = "levels/west_coast_usa/art/terrain/Grass-02-N";
-   detailStrength = "0.6";
+    normalMap = "levels/west_coast_usa/art/terrain/Grass-03-N";
+   detailStrength = "0.200000003";
    macroMap = "levels/west_coast_usa/art/terrain/Grass-02-D";
-   macroStrength = "0.2";
-   macroSize = "50";
+   macroStrength = "0.600000024";
+   macroSize = "7.5";
    annotation = "GRASS";
+   macroDistance = "80";
 };
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
     detailMap = "levels/west_coast_usa/art/terrain/Grass-01-D";
     internalName = "grass2";
     diffuseSize = "2048";
-    detailDistance = "80";
+    detailDistance = "200";
     isManaged = "1";
     Enabled = "1";
-    normalMap = "levels/west_coast_usa/art/terrain/Grass-01-N";
-   detailStrength = "0.6";
-   macroMap = "levels/west_coast_usa/art/terrain/RockyDirt-01-D";
-   macroStrength = "0.2";
-   macroSize = "20";
+   detailStrength = "0.400000006";
+   macroMap = "levels/west_coast_usa/art/terrain/Grass-01-D";
+   macroStrength = "0.5";
+   macroSize = "5";
    annotation = "GRASS";
+   detailSize = "10";
+   macroDistance = "100";
+   normalMap = "levels/west_coast_usa/art/terrain/Grass-01-N";
 };
 
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
-    detailMap = "levels/west_coast_usa/art/terrain/Grass-02-D";
-    internalName = "dirt_grass";
-    diffuseSize = "2048";
-    detailDistance = "80";
-    detailSize = "15";
-    isManaged = "1";
-    Enabled = "1";
-    normalMap = "levels/west_coast_usa/art/terrain/Grass-02-N";
-   detailStrength = "0.6";
-   macroMap = "levels/west_coast_usa/art/terrain/Grass-02-D";
-   macroStrength = "0.2";
-   macroSize = "50";
-   annotation = "GRASS";
-};
-
-new TerrainMaterial()
-{
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
     detailMap = "levels/west_coast_usa/art/terrain/Overlay_Dirt-01";
     internalName = "dirt";
     diffuseSize = "2048";
@@ -81,16 +66,36 @@ new TerrainMaterial()
     isManaged = "1";
     Enabled = "1";
     normalMap = "levels/west_coast_usa/art/terrain/Grass-03-N";
-   detailStrength = "0.6";
+   detailStrength = "0.600000024";
    macroMap = "levels/west_coast_usa/art/terrain/Overlay_Dirt-01";
-   macroStrength = "0.2";
+   macroStrength = "0.200000003";
    macroSize = "20";
    annotation = "SAND";
+   macroDistance = "500";
 };
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
+    detailMap = "levels/west_coast_usa/art/terrain/Sand-01-D";
+    internalName = "BeachSand";
+    diffuseSize = "2048";
+    detailDistance = "500";
+    detailSize = "20";
+    isManaged = "1";
+    Enabled = "1";
+    normalMap = "levels/west_coast_usa/art/terrain/Sand-01-N";
+   detailStrength = "0";
+   macroMap = "levels/west_coast_usa/art/terrain/Sand-01-D";
+   macroStrength = "0.899999976";
+   macroSize = "5";
+   annotation = "SAND";
+   macroDistance = "100";
+};
+
+new TerrainMaterial()
+{
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
     detailMap = "levels/west_coast_usa/art/terrain/Grass-01-D";
     internalName = "dirt_loose";
     diffuseSize = "2048";
@@ -139,41 +144,27 @@ new TerrainMaterial()
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
-    normalMap = "levels/west_coast_usa/art/terrain/Sand-01-N";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
+    normalMap = "levels/west_coast_usa/art/terrain/cliff_nb";
     diffuseSize = "2048";
     isManaged = "1";
-    detailMap = "levels/west_coast_usa/art/terrain/Sand-01-D";
-    internalName = "BeachSand";
-    detailSize = "10";
-    parallaxScale = "0";
-    annotation = "SAND";
-   macroSize = "10";
-   macroMap = "levels/west_coast_usa/art/terrain/Sand-01-D";
-};
-
-new TerrainMaterial()
-{
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
-    diffuseSize = "2048";
     detailMap = "levels/west_coast_usa/art/terrain/cliff_d";
-    detailSize = "7";
-    detailDistance = "100";
     internalName = "Rock_cliff";
-    useSideProjection = "1";
-    detailStrength = "0.600000024";
+    detailSize = "25";
     parallaxScale = "0";
-    macroMap = "levels/west_coast_usa/art/terrain/cliff_o";
-    macroStrength = "0.200000003";
-    macroSize = "40";
-    macroDistance = "500";
-    normalMap = "levels/west_coast_usa/art/terrain/cliff_n";
     annotation = "ROCK";
+   macroSize = "9";
+   macroMap = "levels/west_coast_usa/art/terrain/cliff_d";
+   detailStrength = "0.600000024";
+   detailDistance = "500";
+   useSideProjection = "1";
+   macroStrength = "0.300000012";
+   macroDistance = "200";
 };
 
 new TerrainMaterial()
 {
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
     diffuseSize = "2048";
     detailMap = "levels/west_coast_usa/art/terrain/cliff_d";
     detailSize = "30";
@@ -193,7 +184,7 @@ new TerrainMaterial()
 new TerrainMaterial()
 {
     diffuseSize = "2048";
-    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_basetex";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
     detailMap = "levels/west_coast_usa/art/terrain/Concrete-03-diff";
     detailSize = "4";
     detailDistance = "50";
@@ -208,11 +199,46 @@ new TerrainMaterial()
    annotation = "ASPHALT";
 };
 
+new TerrainMaterial()
+{
+    diffuseSize = "2048";
+    detailMap = "levels/west_coast_usa/art/terrain/gravel_d";
+    detailSize = "8";
+    detailDistance = "50";
+    macroSize = "30";
+    isManaged = "1";
+    macroStrength = "0";
+    internalName = "Gravel";
+    normalMap = "levels/west_coast_usa/art/terrain/gravel_n";
+    macroMap = "levels/west_coast_usa/art/terrain/Concrete-03-diff";
+    detailStrength = "0.899999976";
+   macroDistance = "1200";
+   annotation = "ASPHALT";
+   diffuseMap = "levels/west_coast_usa/art/terrain/Concrete-03-diff";
+};
+
+new TerrainMaterial()
+{
+    diffuseSize = "2048";
+    diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
+    detailMap = "levels/west_coast_usa/art/terrain/Concrete-03-diff";
+    detailSize = "4";
+    detailDistance = "50";
+    macroSize = "30";
+    isManaged = "1";
+    macroStrength = "0.3";
+    internalName = "asphalt_prepped";
+    macroMap = "levels/west_coast_usa/art/terrain/Concrete-03-diff";
+    detailStrength = "0.6";
+   macroDistance = "1200";
+   annotation = "ASPHALT";
+   normalMap = "levels/west_coast_usa/art/terrain/Concrete-03-ddn";
+};
+
 singleton Material(backdrop)
 {
     mapTo = "backdrop";
     vertColor[0] = "1";
-    diffuseMap[0] = "levels/west_coast_usa/art/terrain/terrain_backdrop_d.dds";
     specularPower[0] = "32";
     pixelSpecular[0] = "0";
     diffuseColor[0] = "1 1 1 1";
@@ -226,4 +252,26 @@ singleton Material(backdrop)
     materialTag0 = "beamng"; materialTag1 = "vehicle";
     //cubemap = "global_cubemap_metalblurred";
     annotation = "NATURE";
+   colorMap[0] = "levels/west_coast_usa/art/terrain/terrain_backdrop_d.dds";
+   detailMap[0] = "levels/west_coast_usa/art/terrain/utah_texture_dirt_01_d.dds";
+   detailScale[0] = "40 40";
+   specularColor0 = "1 1 1 1";
+};
+
+new TerrainMaterial()
+{
+   diffuseMap = "levels/west_coast_usa/art/terrain/WCA_base";
+   diffuseSize = "2048";
+   normalMap = "levels/west_coast_usa/art/terrain/Grass-03-N";
+   detailMap = "levels/west_coast_usa/art/terrain/Grass-02-D";
+   detailSize = "30";
+   detailStrength = "0.200000003";
+   detailDistance = "500";
+   macroMap = "levels/west_coast_usa/art/terrain/Grass-02-D";
+   macroSize = "10";
+   macroStrength = "0.5";
+   internalName = "dirt_grass";
+   isManaged = "1";
+   enabled = "1";
+   macroDistance = "80";
 };

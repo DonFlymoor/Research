@@ -1,0 +1,178 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      groupPosition = "0.000000 0.000000 0.000000";
+
+   new BeamNGWaypoint(Checkpoint_4) {
+      drawDebug = "0";
+      directionalWaypoint = "1";
+      position = "211.452744 502.367554 117.194473";
+      scale = "12 12 12";
+      rotationMatrix = "0.809017003 0.587785304 0 -0.587785304 0.809017003 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "Checkpoint_19";
+   };
+   new BeamNGWaypoint(Checkpoint_3) {
+      drawDebug = "0";
+      directionalWaypoint = "1";
+      position = "-99.6004639 248.964493 116.17012";
+      scale = "12 12 12";
+      rotationMatrix = "0.74965471 0.661829054 0 -0.661829054 0.74965471 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "Checkpoint_19";
+   };
+   new BeamNGWaypoint(Checkpoint_2) {
+      drawDebug = "0";
+      directionalWaypoint = "1";
+      position = "-382.888428 -33.6806984 109.964714";
+      scale = "12 12 12";
+      rotationMatrix = "0.707570016 0.706643522 0 -0.706643522 0.707570016 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "Checkpoint_19";
+   };
+   new BeamNGWaypoint(Checkpoint_1) {
+      drawDebug = "0";
+      directionalWaypoint = "1";
+      position = "-658.219299 -323.344147 106.280807";
+      scale = "12 12 12";
+      rotationMatrix = "0.708377421 0.70583415 0 -0.70583415 0.708377421 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         cloneOrigin = "Checkpoint_19";
+   };
+   new SpawnSphere(highway_race_standing_spawn) {
+      autoSpawn = "0";
+      spawnTransform = "0";
+      radius = "100";
+      dataBlock = "SpawnSphereMarker";
+      position = "-939.338257 -608.203308 106.468246";
+      scale = "1 1 1";
+      rotationMatrix = "-0.699481428 0.714650691 0 -0.714650691 -0.699481428 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+         autoplaceOnSpawn = "0";
+         enabled = "1";
+   };
+   new DecalRoad() {
+      drivability = "-1";
+      lanesInvert = "0";
+      improvedSpline = "0";
+      startTangent = "0";
+      endTangent = "0";
+      looped = "0";
+      smoothness = "0.5";
+      detail = "0.100000001";
+      overObjects = "0";
+      Material = "line_white";
+      textureLength = "5";
+      breakAngle = "3";
+      renderPriority = "1";
+      zBias = "0";
+      decalBias = "0.000500000024";
+      distanceFade = "0 0";
+      startEndFade = "0 0";
+      position = "205.74971 510.26825 117.335938";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+
+      Node = "205.749710 510.268250 117.335938 0.200000";
+      Node = "217.119888 494.635681 117.132813 0.200000";
+   };
+   new DecalRoad() {
+      drivability = "-1";
+      lanesInvert = "0";
+      improvedSpline = "0";
+      startTangent = "0";
+      endTangent = "0";
+      looped = "0";
+      smoothness = "0.5";
+      detail = "0.100000001";
+      overObjects = "0";
+      Material = "line_white";
+      textureLength = "5";
+      breakAngle = "3";
+      renderPriority = "1";
+      zBias = "0";
+      decalBias = "0.000500000024";
+      distanceFade = "0 0";
+      startEndFade = "0 0";
+      position = "-105.568192 255.766129 116.148438";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+
+      Node = "-105.568192 255.766129 116.148438 0.200000";
+      Node = "-95.470146 244.062180 116.015625 0.200000";
+   };
+   new DecalRoad() {
+      drivability = "-1";
+      lanesInvert = "0";
+      improvedSpline = "0";
+      startTangent = "0";
+      endTangent = "0";
+      looped = "0";
+      smoothness = "0.5";
+      detail = "0.100000001";
+      overObjects = "0";
+      Material = "line_white";
+      textureLength = "5";
+      breakAngle = "3";
+      renderPriority = "1";
+      zBias = "0";
+      decalBias = "0.000500000024";
+      distanceFade = "0 0";
+      startEndFade = "0 0";
+      position = "-388.004517 -28.4015656 109.773438";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+
+      Node = "-388.004517 -28.401566 109.773438 0.200000";
+      Node = "-377.476715 -38.879402 109.710938 0.200000";
+   };
+   new DecalRoad() {
+      drivability = "-1";
+      lanesInvert = "0";
+      improvedSpline = "0";
+      startTangent = "0";
+      endTangent = "0";
+      looped = "0";
+      smoothness = "0.5";
+      detail = "0.100000001";
+      overObjects = "0";
+      Material = "line_white";
+      textureLength = "5";
+      breakAngle = "3";
+      renderPriority = "1";
+      zBias = "0";
+      decalBias = "0.000500000024";
+      distanceFade = "0 0";
+      startEndFade = "0 0";
+      position = "-664.070007 -317.340363 106.070313";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+
+      Node = "-664.070007 -317.340363 106.070313 0.200000";
+      Node = "-653.524719 -327.799408 106.054688 0.200000";
+   };
+};
+//--- OBJECT WRITE END ---

@@ -1,0 +1,173 @@
+//--- OBJECT WRITE BEGIN ---
+%guiContent = new GuiControl(CameraTranslationDlg) {
+    profile = "GuiDefaultProfile";
+    horizSizing = "width";
+    vertSizing = "height";
+    position = "0 0";
+    extent = "640 480";
+    minExtent = "8 8";
+    visible = "1";
+    helpTag = "0";
+
+    new GuiWindowCtrl() {
+        profile = "GuiWindowProfile";
+        text = "Camera transform";
+        horizSizing = "center";
+        vertSizing = "center";
+        position = "170 175";
+        extent = "590 80";
+        minExtent = "48 80";
+        visible = "1";
+        helpTag = "0";
+        maxLength = "255";
+        resizeWidth = "0";
+        resizeHeight = "0";
+        canMove = "0";
+        canClose = "1";
+        canMinimize = "0";
+        canMaximize = "0";
+        minSize = "50 50";
+        closeCommand = "Canvas.popDialog(CameraTranslationDlg);";
+
+        new GuiTextCtrl() {
+            profile = "GuiTextProfile";
+            horizSizing = "center";
+            vertSizing = "bottom";
+            position = "16 21";
+            extent = "568 24";
+            minExtent = "8 8";
+            visible = "1";
+            helpTag = "0";
+            lineSpacing = "2";
+            allowColorChars = "0";
+            maxChars = "-1";
+            text = "Current Position:";
+        };
+
+        new GuiTextEditCtrl() {
+            internalName = "currentPos";
+            profile = "GuiTextEditProfile";
+            horizSizing = "center";
+            vertSizing = "bottom";
+            position = "100 25";
+            extent = "400 24";
+            minExtent = "8 8";
+            visible = "1";
+            helpTag = "0";
+            lineSpacing = "2";
+            allowColorChars = "0";
+            maxChars = "-1";
+        };
+        
+        new GuiButtonCtrl() {
+            text = "Copy";
+            groupNum = "-1";
+            buttonType = "PushButton";
+            useMouseEvents = "0";
+            isContainer = "0";
+            profile = "GuiButtonProfile";
+            horizSizing = "width";
+            vertSizing = "top";
+            position = "510 25";
+            extent = "30 24";
+            minExtent = "8 8";
+            canSave = "1";
+            visible = "1";
+            command = "CameraTranslationDlg.copy();";
+            hovertime = "1000";
+            canSaveDynamicFields = "0";
+        };
+
+        new GuiTextCtrl() {
+            profile = "GuiTextProfile";
+            horizSizing = "center";
+            vertSizing = "bottom";
+            position = "16 46";
+            extent = "568 24";
+            minExtent = "8 8";
+            visible = "1";
+            helpTag = "0";
+            lineSpacing = "2";
+            allowColorChars = "0";
+            maxChars = "-1";
+            text = "Go to:";
+        };
+
+        new GuiTextEditCtrl() {
+            internalName = "gotoPos";
+            profile = "GuiTextEditProfile";
+            horizSizing = "center";
+            vertSizing = "bottom";
+            position = "100 50";
+            extent = "400 24";
+            minExtent = "8 8";
+            visible = "1";
+            helpTag = "0";
+            lineSpacing = "2";
+            allowColorChars = "0";
+            maxChars = "-1";
+            AltCommand = "CameraTranslationDlg.updateCamera();";
+        };
+
+        new GuiButtonCtrl() {
+            text = "Paste";
+            groupNum = "-1";
+            buttonType = "PushButton";
+            useMouseEvents = "0";
+            isContainer = "0";
+            profile = "GuiButtonProfile";
+            horizSizing = "width";
+            vertSizing = "top";
+            position = "510 50";
+            extent = "30 24";
+            minExtent = "8 8";
+            canSave = "1";
+            visible = "1";
+            command = "CameraTranslationDlg.paste();";
+            hovertime = "1000";
+            canSaveDynamicFields = "0";
+        };        
+
+        new GuiButtonCtrl() {
+            text = "Go";
+            groupNum = "-1";
+            buttonType = "PushButton";
+            useMouseEvents = "0";
+            isContainer = "0";
+            profile = "GuiButtonProfile";
+            horizSizing = "width";
+            vertSizing = "top";
+            position = "550 50";
+            extent = "30 24";
+            minExtent = "8 8";
+            canSave = "1";
+            visible = "1";
+            command = "CameraTranslationDlg.updateCamera();";
+            hovertime = "1000";
+            canSaveDynamicFields = "0";
+        };        
+    };
+};
+//--- OBJECT WRITE END ---
+
+function CameraTranslationDlg::onWake(%this)
+{
+    %this-->currentPos.setText(LuaExecuteStringSync("return commands.getCameraTransformJson()"));
+    %this-->gotoPos.setText('');
+}
+
+function CameraTranslationDlg::updateCamera(%this)
+{
+    LuaExecuteStringSync("commands.setFreeCameraTransformJson(\"" @ CameraTranslationDlg-->gotoPos.getText() @ "\")");
+    Canvas.popDialog(CameraTranslationDlg);
+}
+
+function CameraTranslationDlg::copy(%this)
+{
+    setClipboard(CameraTranslationDlg-->currentPos.getText());
+}
+
+function CameraTranslationDlg::paste(%this)
+{
+    %this-->gotoPos.setText(getClipboard());
+}

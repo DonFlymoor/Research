@@ -41,17 +41,17 @@ float3 desaturate(const float3 color, const float desaturation)
    return lerp(color, dot(gray_conv , color), desaturation);  
 }  
   
-uniform float4 colorize;  
+uniform float4 colorize;
 
-Conn main(  Vert In,
-            uniform float4x4 modelView          : register(C0),
-            uniform float4 misc                 : register(C4),
-            uniform float4 sphereRadii          : register(C5),
-            uniform float4 scatteringCoeffs     : register(C6),
-            uniform float3 camPos               : register(C7),
-            uniform float3 lightDir             : register(C8),
-            uniform float4 invWaveLength        : register(C9)
-            )	         
+uniform float4x4 modelView;
+uniform float4 misc;
+uniform float4 sphereRadii;
+uniform float4 scatteringCoeffs;
+uniform float3 camPos;
+uniform float3 lightDir;
+uniform float4 invWaveLength;
+
+Conn main( Vert In )	         
 {
    // Pull some variables out:
    float camHeight = misc.x;

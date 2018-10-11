@@ -1,18 +1,16 @@
-<md-content style="background-color: transparent; height: 100%; width: 100%; overflow: hidden;">
+<md-content class="filler" style=" background-color:rgba(255,255,255,0.8); overflow: hidden;">
   <md-toolbar layout="row">
     <div class="md-toolbar-tools">
       <span flex>Performance</span>
       <span style="margin-right: 10px" ng-if="vsync"> [VSync ON] </span>
       <span style="margin-right: 10px" ng-if="fps_limiter"> [FPS Limiter] </span>
-      <p ng-bind="updatesText">Updates unlimited</p>
-      <md-checkbox md-no-ink aria-label="Updates limited" ng-model="updatesLimited"></md-checkbox>
+      <md-button ng-click="tempHideUI()">
+        {{:: 'ui.performance.tempHide' | translate }}
+      </md-button>
     </div>
-    <md-button ng-click="tempHideUI()"><div bng-translate="ui.performance.tempHide"></div></md-button>
   </md-toolbar>
-  
-  <div style="position: relative; height: 100%; width: 100%">
-    <div style="position:absolute; overflow: auto; display: block; top: 0; right: 0; left: 0; bottom: 0;"> 
-      <performance-graph style="margin:20px; background-color:rgba(255,255,255,0.8);"></performance-graph>
-    </div>  
+
+  <div class="filler" style="position: relative;">
+    <performance-graph class="container" style="overflow: auto; display: block;"></performance-graph>
   </div>
 </md-content>

@@ -3,7 +3,7 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 
 local min = math.min
@@ -41,10 +41,10 @@ end
 local function setBeamGroupPressureRaw(groupName, pressure)
   local groupData = beamGroups[groupName]
   if not groupData then
-    log("W", "pneumatics.setBeamGroupPressureRaw", "Can't find pressure beam group: "..g)
+    log("W", "pneumatics.setBeamGroupPressureRaw", "Can't find pressure beam group: " .. groupName)
   else
     local maxPressureDiff = 0
-    for _,v in pairs(groupData.beams) do
+    for _, v in pairs(groupData.beams) do
       local oldTarget = v.targetPressure
       v.targetPressure = clamp(pressure, v.minPressure, v.maxPressure)
       local pressureDiff = oldTarget - v.targetPressure
@@ -57,10 +57,10 @@ local function setBeamGroupPressureRaw(groupName, pressure)
 end
 
 local function setBeamGroupsPressureRaw(groupNames, pressure)
-  for _,g in pairs(groupNames) do
+  for _, g in pairs(groupNames) do
     local groupData = beamGroups[g]
     if not groupData then
-      log("W", "pneumatics.setBeamPressure", "Can't find pressure beam group: "..g)
+      log("W", "pneumatics.setBeamPressure", "Can't find pressure beam group: " .. g)
     else
       setBeamGroupPressureRaw(g, pressure)
     end
@@ -70,10 +70,10 @@ end
 local function setBeamGroupPressureLevel(groupName, pressureName)
   local groupData = beamGroups[groupName]
   if not groupData then
-    log("W", "pneumatics.setBeamPressureGroup", "Can't find pressure beam group: "..groupName)
+    log("W", "pneumatics.setBeamPressureGroup", "Can't find pressure beam group: " .. groupName)
   else
     local maxPressureDiff = 0
-    for _,v in pairs(groupData.beams) do
+    for _, v in pairs(groupData.beams) do
       local oldTarget = v.targetPressure
       v.targetPressure = clamp(v[pressureName] or 0, v.minPressure, v.maxPressure)
       local pressureDiff = oldTarget - v.targetPressure
@@ -86,7 +86,7 @@ local function setBeamGroupPressureLevel(groupName, pressureName)
 end
 
 local function setBeamGroupsPressureLevel(groupNames, pressureName)
-  for _,g in pairs(groupNames) do
+  for _, g in pairs(groupNames) do
     setBeamGroupPressureLevel(g, pressureName)
   end
 end
@@ -104,13 +104,13 @@ local function setBeamGroupsDefaultPressure(groupNames)
 end
 
 local function toggleBeamGroupsMinMax(groupNames)
-  for _,g in pairs(groupNames) do
+  for _, g in pairs(groupNames) do
     local groupData = beamGroups[g]
     if not groupData then
-      log("W", "pneumatics.toggleBeamMinMax", "Can't find pressure beam group: "..g)
+      log("W", "pneumatics.toggleBeamMinMax", "Can't find pressure beam group: " .. g)
     else
       local isMax = true
-      for _,v in pairs(groupData.beams) do
+      for _, v in pairs(groupData.beams) do
         isMax = isMax and abs(v.targetPressure - v.maxPressure) < 0.1
       end
       if isMax then
@@ -123,10 +123,10 @@ local function toggleBeamGroupsMinMax(groupNames)
 end
 
 local function setBeamGroupsMomentaryIncrease(groupNames, enabled)
-  for _,g in pairs(groupNames) do
+  for _, g in pairs(groupNames) do
     local groupData = beamGroups[g]
     if not groupData then
-      log("W", "pneumatics.setBeamGroupsMomentaryIncrease", "Can't find pressure beam group: "..g)
+      log("W", "pneumatics.setBeamGroupsMomentaryIncrease", "Can't find pressure beam group: " .. g)
     else
       groupData.momentaryIncrease = enabled
       groupData.momentaryDecrease = false
@@ -142,10 +142,10 @@ local function setBeamGroupsMomentaryIncrease(groupNames, enabled)
 end
 
 local function setBeamGroupsMomentaryDecrease(groupNames, enabled)
-  for _,g in pairs(groupNames) do
+  for _, g in pairs(groupNames) do
     local groupData = beamGroups[g]
     if not groupData then
-      log("W", "pneumatics.setBeamGroupsMomentaryDecrease", "Can't find pressure beam group: "..g)
+      log("W", "pneumatics.setBeamGroupsMomentaryDecrease", "Can't find pressure beam group: " .. g)
     else
       groupData.momentaryIncrease = false
       groupData.momentaryDecrease = enabled
@@ -167,7 +167,7 @@ local function isBeamGroupAtPressureLevel(groupName, levelName)
     return false
   else
     local isAtLevel = true
-    for _,v in pairs(groupData.beams) do
+    for _, v in pairs(groupData.beams) do
       isAtLevel = isAtLevel and v.currentPressure == v[levelName]
     end
     return isAtLevel
@@ -175,10 +175,10 @@ local function isBeamGroupAtPressureLevel(groupName, levelName)
 end
 
 local function updateGFX(dt)
-  for _,g in pairs(beamGroups) do
+  for _, g in pairs(beamGroups) do
     local isFinishedChanging = true
 
-    for _,v in pairs(g.beams) do
+    for _, v in pairs(g.beams) do
       if g.momentaryIncrease then
         v.targetPressure = clamp(v.targetPressure + v.increaseRate * dt, v.minPressure, v.maxPressure)
       elseif g.momentaryDecrease then
@@ -190,7 +190,7 @@ local function updateGFX(dt)
         local diff = v.targetPressure - v.currentPressure
         local rateLimitedDiff = min(abs(diff), (diff >= 0 and v.increaseRate or v.decreaseRate) * dt) * fsign(diff)
         v.currentPressure = clamp(v.currentPressure + rateLimitedDiff, v.minPressure, v.maxPressure)
-        setBeamPressureCore(v.cid, v.currentPressure , v.maxBeamPressure, v.spring, v.damp)
+        setBeamPressureCore(v.cid, v.currentPressure, v.maxBeamPressure, v.spring, v.damp)
       end
     end
 
@@ -208,8 +208,8 @@ local function updateGFX(dt)
 end
 
 local function reset()
-  for _,g in pairs(beamGroups) do
-    for _,v in pairs(g.beams) do
+  for _, g in pairs(beamGroups) do
+    for _, v in pairs(g.beams) do
       v.targetPressure = v.defaultPressure
       v.currentPressure = v.defaultPressure
     end
@@ -219,7 +219,7 @@ end
 local function init(jbeamData)
   local pressureLevels = {minPressure = 0, maxPressure = 0}
   if jbeamData.pressureLevels then
-    for _,v in pairs(tableFromHeaderTable(jbeamData.pressureLevels)) do
+    for _, v in pairs(tableFromHeaderTable(jbeamData.pressureLevels)) do
       pressureLevels[v.name] = v.pressure
     end
   end
@@ -230,14 +230,14 @@ local function init(jbeamData)
   local pressureBeamData = v.data[jbeamData.pressuredBeams] or {}
 
   local pressuredBeamNames = {}
-  for _,v in pairs(pressureBeamData) do
+  for _, v in pairs(pressureBeamData) do
     local name = v.beamName
     pressuredBeamNames[name] = true
   end
 
   local relevantBeams = {}
   local beams = v.data.beams
-  for i = 0, #beams do
+  for i = 0, tableSizeC(beams) - 1 do
     local v = beams[i]
     if v.name and pressuredBeamNames[v.name] then
       relevantBeams[v.name] = {cid = v.cid, defaultPressure = v.pressurePSI, maxPressure = v.maxPressure, spring = v.beamSpring, damp = v.beamDamp}
@@ -245,12 +245,12 @@ local function init(jbeamData)
   end
 
   beamGroups = {}
-  for _,pressureData in pairs(pressureBeamData) do
+  for _, pressureData in pairs(pressureBeamData) do
     local name = pressureData.beamName
     local groupName = pressureData.groupName
     local beamPressureLevels = shallowcopy(pressureLevels)
 
-    for k,v2 in pairs(pressureData) do
+    for k, v2 in pairs(pressureData) do
       local pressureStart = k:find("Pressure")
       if pressureStart then
         beamPressureLevels[k] = v2
@@ -260,10 +260,10 @@ local function init(jbeamData)
     local beamIncreaseRate = pressureData.increaseRate or increaseRate
     local beamDecreaseRate = pressureData.decreaseRate or decreaseRate
     if not beamGroups[groupName] then
-      beamGroups[groupName] = {beams= {}}
+      beamGroups[groupName] = {beams = {}}
     end
     if not relevantBeams[name] then
-      log("W", "pneumatics.init", "Can't find beam with name: "..name)
+      log("W", "pneumatics.init", "Can't find beam with name: " .. name)
     else
       local beamData = {
         name = name,
@@ -275,7 +275,7 @@ local function init(jbeamData)
         currentPressure = relevantBeams[name].defaultPressure,
         targetPressure = relevantBeams[name].defaultPressure,
         increaseRate = beamIncreaseRate,
-        decreaseRate = beamDecreaseRate,
+        decreaseRate = beamDecreaseRate
       }
 
       for k, v in pairs(beamPressureLevels) do
@@ -295,20 +295,20 @@ local function initSounds()
   local pressureBeamSoundData = v.data[originalJbeamData.groupSounds] or {}
   --dump(pressureBeamSoundData)
 
-  for _,v in pairs(pressureBeamSoundData) do
+  for _, v in pairs(pressureBeamSoundData) do
     local groupData = beamGroups[v.groupName]
     if groupData then
       groupData.volumeUp = v.volumeUp or 1
       groupData.volumeDown = v.volumeDown or 1
       groupData.soundNode = v.node or 0
       if v.soundDown then
-        groupData.soundLoopDown = obj:createSFXSource(v.soundDown, "AudioDefaultLoop3D", "pneumatics_down_"..v.groupName, groupData.soundNode)
+        groupData.soundLoopDown = obj:createSFXSource(v.soundDown, "AudioDefaultLoop3D", "pneumatics_down_" .. v.groupName, groupData.soundNode)
       end
       if v.soundUp then
-        groupData.soundLoopUp = obj:createSFXSource(v.soundUp, "AudioDefaultLoop3D", "pneumatics_up_"..v.groupName, groupData.soundNode)
+        groupData.soundLoopUp = obj:createSFXSource(v.soundUp, "AudioDefaultLoop3D", "pneumatics_up_" .. v.groupName, groupData.soundNode)
       end
     else
-      log("W", "pneumatics.initSounds", "Can't find group with name: "..v.groupName)
+      log("W", "pneumatics.initSounds", "Can't find group with name: " .. v.groupName)
     end
   end
 
@@ -316,7 +316,7 @@ local function initSounds()
 end
 
 local function resetSounds()
-  for _,g in pairs(beamGroups) do
+  for _, g in pairs(beamGroups) do
     if g.soundLoopUp then
       obj:setVolume(g.soundLoopUp, 0)
       g.isPlayingUp = false

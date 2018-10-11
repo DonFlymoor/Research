@@ -1,0 +1,73 @@
+{
+    // speedlink drift oz
+"name" : "PC Game Controller", "version" : 1, "vidpid" : "335211FF", "bindings" :   [
+    {
+"action" : "switch_camera_next", "control" : "button8"
+
+},     {
+"action" : "reset_physics", "control" : "rpov"
+
+},     {
+"action" : "menu_item_left", "control" : "lpov"
+
+},     {
+"isInverted" : true, "control" : "yaxis", "action" : "accelerate_brake"
+
+},     {
+"action" : "menu_item_select", "control" : "button2"
+
+},     {
+"action" : "menu_item_back", "control" : "button3"
+
+},     {
+"action" : "menu_item_up", "control" : "upov"
+
+},     {
+"action" : "menu_item_right", "control" : "rpov"
+
+},     {
+"action" : "decline", "control" : "button3"
+
+},     {
+"action" : "pause", "control" : "button9"
+
+},     {
+"action" : "shiftDown", "control" : "button1"
+
+},     {
+"action" : "shiftUp", "control" : "button0"
+
+},     {
+"action" : "steering", "control" : "xaxis", "angle": 180
+
+},     {
+"action" : "increase_zoom", "control" : "button3"
+
+},     {
+"action" : "decrease_zoom", "control" : "button2"
+
+},     {
+"action" : "toggle_headlights", "control" : "upov"
+
+},     {
+"action" : "accept", "control" : "button2"
+
+},     {
+"action" : "clutch", "control" : "button4"
+
+},     {
+"action" : "activateStarterMotor", "control" : "dpov"
+
+},     {
+"action" : "parkingbrake", "control" : "button5"
+
+},     {
+"action" : "recover_vehicle", "control" : "lpov"
+
+},     {
+"action" : "menu_item_down", "control" : "dpov"
+
+}]
+, "guid" : "{335211FF-0000-0000-0000-504944564944}"
+
+}

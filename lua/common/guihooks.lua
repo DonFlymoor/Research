@@ -36,15 +36,21 @@ local function callListeners(type, data)
 end
 
 local function hook(...)
-  local cmd = "if(HookManager){HookManager.trigger.apply(undefined," .. encodeJson({...}) .. ");}"
+  local msg = encodeJson({...})
+  local cmd = "if(HookManager){HookManager.trigger.apply(undefined," .. msg .. ");}"
   cppIntermediate:queueJS(cmd)
-  informListeners("hook", {...})
+
+  informListeners("hook", msg)
 end
 
+local test = true
 local function hookStream(name, ...)
     local params = unpack({...})
     local cmd = "if(HookManager){HookManager.trigger('"..name.."',"..encodeJson(params)..");}"
     cppIntermediate:queueStreamJS(name, cmd)
+
+    local sending = arrayConcat({name}, {params})
+    informListeners("hook", encodeJson(sending))
 end
 
 local function checkStreamsAndVehicle()
@@ -73,8 +79,8 @@ local function frameUpdated(dt)
   if M.updateStreams then
     timer = timer % updateLimit
     vehicleLuaSpecific()
-    cppIntermediate:queueStreamJS("vStream."..objectId, "if (typeof oUpdate == 'function') oUpdate("..encodeJson(cache)..");")
-    informListeners("stream", cache)
+    cppIntermediate:queueStreamJS("vStream."..objectId, "if (typeof oUpdate == 'function') oUpdate(".. encodeJson(cache)..");")
+    informListeners("stream", encodeJson({cache}))
     table.clear(cache)
   end
 end

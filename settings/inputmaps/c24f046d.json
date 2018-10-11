@@ -1,0 +1,74 @@
+{
+"bindings" :   [
+    {
+    "isInverted"        : true                , 
+    "control"           : "yaxis"             , 
+    "action"            : "accelerate" , 
+    }, 
+    {
+    "isInverted"        : true                , 
+    "control"           : "rzaxis"            , 
+    "action"            : "brake"      , 
+    }, 
+    {
+    "isInverted"        : true                , 
+    "control"           : "slider"            , 
+    "action"            : "clutch"     , 
+    }, 
+    {
+    "action"            : "parkingbrake", 
+    "control"           : "button0"           
+    }, 
+    {
+    "action"            : "shiftUp"           , 
+    "control"           : "button4"           
+    }, 
+    {
+    "action"            : "shiftDown"         , 
+    "control"           : "button5"           
+    }, 
+    {
+    "ffb" :       {"forceLimit"        : 5                   , "smoothing"         : 350                 , "forceCoef"         : 500                 , "forceCoefLowSpeed": 250, "smoothingHF"       : 200                 , "frequency": 0}, 
+    "isForceInverted"   : true                , 
+    "ffbUpdateType" : 0,
+    "isForceEnabled"    : true                , 
+    "action"            : "steering"      , 
+    "control"           : "xaxis"             ,
+    "angle": 900
+    }, 
+    { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+    { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+    { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+    { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+    { "control" : "button9", "action" : "toggleMenues" },
+    { "control" : "button1", "action" : "menu_item_back" },
+    { "control" : "button0", "action" : "menu_item_select" },
+    { "control" : "dpov", "action" : "toggle_hazard_signal" },
+    { "control" : "button1", "action" : "toggle_left_signal" },
+    { "control" : "button3", "action" : "toggleRangeStatus" },
+    { "control" : "button7", "action" : "look_back" }, 
+    { "control" : "button1", "action" : "decline" }, 
+    { "isForceInverted" : true, "icon" : "radio_button_on", "isForceEnabled" : true, "ffb" :       {"responseCorrected" : false, "forceCoefLowSpeed" : 500, "forceCoef" : 500, "smoothingHF" : 200, "frequency" : 0, "smoothing" : 350, "responseCurve" : [[0, 0], [1, 1]], "forceLimit" : 3.5}, "desc" : "Steers the vehicle with an axis (steering wheels, joysticks, etc)", "title" : "Steering Axis", "control" : "xaxis", "action" : "steering", "filterType" : "-1", "angle" : 900 },
+    { "control" : "button15", "action" : "gear4" },
+    { "control" : "button13", "action" : "gear2" },
+    { "control" : "lpov", "action" : "recover_vehicle" },
+    { "control" : "rpov", "action" : "reset_physics" },
+    { "control" : "button17", "action" : "gear6" },
+    { "control" : "button12", "action" : "gear1" },
+    { "control" : "button0", "action" : "accept" },
+    { "control" : "button18", "action" : "gearR" },
+    { "control" : "button11", "action" : "center_camera" },
+    { "control" : "button2", "action" : "toggle_right_signal" },
+    { "control" : "button14", "action" : "gear3" },
+    { "control" : "button23", "action" : "activateStarterMotor" },
+    { "control" : "button19", "action" : "increase_zoom" },
+    { "control" : "button16", "action" : "gear5" },
+    { "control" : "button10", "action" : "parkingbrake" },
+    { "control" : "button24", "action" : "pause" },
+    { "control" : "button8", "action" : "publishScreenShot" },
+    { "control" : "upov", "action" : "toggle_headlights" },
+    { "control" : "button20", "action" : "decrease_zoom" }
+  ], 
+"name"              : "Logitech G29", 
+"vidpid"            : "C24F046D"          
+}, 

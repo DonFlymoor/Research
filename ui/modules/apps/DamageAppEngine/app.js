@@ -4,7 +4,7 @@ angular.module('beamng.apps')
       template:
       `
         <div class="bngApp" style="width:100%; height:100%; padding: 10px; background-color: transparent;">
-          <object style="width:100%; pointer-events: none;" type="image/svg+xml" data="modules/apps/DamageAppEngine/damage_engine.svg"/>   
+          <object style="width:100%; pointer-events: none;" type="image/svg+xml" data="modules/apps/DamageAppEngine/damage_engine.svg"/>
         </div>
       `,
       replace: true,
@@ -28,12 +28,12 @@ angular.module('beamng.apps')
           rodBearingsDamaged:   {svgId: '#rodBearings',  priority: 1},
           headGasketDamaged:    {svgId: '#headGasket',   priority: 1},
           turbochargerHot:      {svgId: '#turbocharger', priority: 0},
-          
+
           engineIsHydrolocking: {svgId: '#engine',       priority: 0},
           engineReducedTorque:  {svgId: '#engine',       priority: 0},
           mildOverrevDamage:    {svgId: '#engine',       priority: 0},
           mildOverTorqueDamage: {svgId: '#engine',       priority: 0},
-          
+
           engineHydrolocked:    {svgId: '#engine',       priority: 1},
           engineDisabled:       {svgId: '#engine',       priority: 1},
           blockMelted:          {svgId: '#engine',       priority: 1},
@@ -44,16 +44,16 @@ angular.module('beamng.apps')
           var svg = element[0].children[0].contentDocument;
 
           $scope.$on('DamageData', (ev, data) => {
-            
-            // checking if component is not damaged, this is done here and not as an else 
-            // for the loop below as that will overwrite existing damage colour since 
+
+            // checking if component is not damaged, this is done here and not as an else
+            // for the loop below as that will overwrite existing damage colour since
             // we are using the same svg paths for multiple damage types.
             for (var key in damageMap) {
               if (data['engine'] && data['engine'][key] === false) {
                 hu(damageMap[key].svgId, svg).css({ fill: greenColor});
               }
             }
-            
+
             // checking for component damage
             for (var key in damageMap) {
               if (data['engine'] && data['engine'][key] === true) {
@@ -72,8 +72,6 @@ angular.module('beamng.apps')
           // request skeleton on TAB
           $scope.$on('VehicleFocusChanged', function() {
             reset();
-            // calling lua method so that we can update app according to existing components, for example turbos
-            bngApi.activeObjectLua('damageTracker.sendWarningStateToUi()');
           });
 
           //on vehicle reset
@@ -87,8 +85,6 @@ angular.module('beamng.apps')
           }
 
         }
-
-        bngApi.activeObjectLua('damageTracker.sendWarningStateToUi()');
 
       }
     };

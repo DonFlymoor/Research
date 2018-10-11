@@ -12,11 +12,14 @@
     {{ 'ui.repository.repo_network_limit' | translate }}
   </div>
 
-  <div layout="column" ng-show="!repo.onlineState || repo.loadingPage" layout-align="center center" class="md-padding" style="font-size: 30px;">
+  <div layout="column" ng-show="repo.loadingPage" layout-align="center center" class="md-padding" style="font-size: 30px;">
     {{ 'ui.repository.loading' | translate }}
     <div class="md-padding" ng-show="repo.loadTimeout === true" style="font-size: 0.5em">
       {{ 'ui.repository.loadingTimedOut' | translate }}<a ui-sref="menu.help">{{ "ui.repository.support" | translate }}</a>.
     </div>
+  </div>
+  <div class="md-padding" ng-show="!repo.onlineState" style="font-size: 1.2em">
+    {{ 'ui.repository.notOnline' | translate }}<a href="https-external://wiki.beamng.com/Reposiory_troubleshooting">{{ 'ui.repository.notOnline_here' | translate }}</a>.
   </div>
 
   <div ng-if="repo.repoMsg.msg || !repo.loadingPage"class="special-event" >

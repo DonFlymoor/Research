@@ -23,7 +23,7 @@ local function onSerialize()
 end
 
 local function registerBaseBank(path)
-    if inLevel then        
+    if inLevel then
         log("E", "registerBaseBank", 'Not posible to register base banks inside a level')
         return
     end
@@ -36,7 +36,7 @@ local function registerBaseBank(path)
 end
 
 local function loadLevelBank(path)
-    if not inLevel then        
+    if not inLevel then
         table.insert(forLoadLevel, path)
         return
     end
@@ -48,14 +48,12 @@ local function loadLevelBank(path)
 end
 
 local function onClientPreStartMission()
-    log("I", "loadLevelBank", "Loaded default level banks")
+    --log("I", "loadLevelBank", "Loading default level banks")
     inLevel = true
 
-    loadLevelBank("art/sound/FMOD/Desktop/Ambient_Generic.bank")    
-    loadLevelBank("art/sound/FMOD/Desktop/Ambient_Maps.bank")    
-    loadLevelBank("art/sound/FMOD/Desktop/Ambient_Single_Animals.bank")
+    loadLevelBank("art/sound/FMOD/Desktop/Ambient_Maps.bank")
 
-    for i, v in ipairs(forLoadLevel) do        
+    for i, v in ipairs(forLoadLevel) do
         loadLevelBank(v)
     end
     forLoadLevel = {}

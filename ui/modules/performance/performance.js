@@ -1,56 +1,170 @@
-angular.module('beamng.stuff')
-.controller('PerformanceController', ['$log', '$scope', 'Settings', 'bngApi', function($log, $scope, Settings, bngApi) {
-  var vm = this
-    , timeout
-  ;
+(function () {
+  'use strict';
 
-  bngApi.engineLua('extensions.load("ui_performance")');
-  $scope.updatesLimited = false;
-  $scope.updatesText = 'Updates limited';
 
-  $scope.vsync = false;
-  $scope.fps_limiter = 0;
-  if(Settings.values.GraphicSyncFullscreen !== undefined) {
-    $scope.vsync = Settings.values.GraphicSyncFullscreen;
-  }
+  angular.module('beamng.stuff')
+  .controller('PerformanceController', ['$log', '$scope', 'Settings', 'bngApi', function($log, $scope, Settings, bngApi) {
+    var vm = this
+      , timeout
+    ;
 
-  //fps-limiter
-  if(Settings.values.FPSLimiter !== undefined) {
-    $scope.fps_limiter = Settings.values.FPSLimiter;
-  }
+    bngApi.engineLua('extensions.load("ui_performance")');
+    $scope.updatesLimited = false;
+    $scope.updatesText = 'Updates limited';
 
-  $scope.$on('SettingsChanged', function (event, data) {
-    //console.log('onHardwareInfo', data)
-    $scope.$apply(function() {
-      $scope.vsync = data.values.GraphicSyncFullscreen;
-      $scope.fps_limiter = data.values.FPSLimiter;
+    $scope.vsync = false;
+    $scope.fps_limiter = 0;
+    if(Settings.values.GraphicSyncFullscreen !== undefined) {
+      $scope.vsync = Settings.values.GraphicSyncFullscreen;
+    }
+
+    //fps-limiter
+    if(Settings.values.FPSLimiter !== undefined) {
+      $scope.fps_limiter = Settings.values.FPSLimiter;
+    }
+
+    // TODO: change this to check if the settings changed before applying it directly
+    $scope.$on('SettingsChanged', function (event, data) {
+      //console.log('onHardwareInfo', data)
+      $scope.$apply(function() {
+        $scope.vsync = data.values.GraphicSyncFullscreen;
+        $scope.fps_limiter = data.values.FPSLimiter;
+      });
     });
-  });
 
-  $scope.$on('$destroy', function () {
-    bngApi.engineLua('extensions.unload("ui_performance")');
-    $scope.$emit('ShowApps', true);
-    $scope.$emit('hide_ui', false);
-    clearTimeout(timeout);
-  });
+    $scope.$on('$destroy', function () {
+      bngApi.engineLua('extensions.unload("ui_performance")');
+      $scope.$emit('ShowApps', true);
+      $scope.$emit('hide_ui', false);
+      clearTimeout(timeout);
+    });
 
-  $scope.$emit('ShowApps', false);
+    $scope.$emit('ShowApps', false);
 
-  $scope.$watch('updatesLimited', function(newValue, oldValue) {
-    if (newValue === oldValue) { return; }
-    bngApi.engineLua('extensions.ui_performance.requestConfig('+ bngApi.serializeToLua(newValue) + ')');
-    $scope.updatesText = newValue ? 'Updates unlimited' : 'Updates limited';
-  }, true);
+    $scope.tempHideUI = function () {
+      $scope.$emit('hide_ui', true);
+      timeout = setTimeout(function() {
+        $scope.$emit('hide_ui', false);
+      }, 10000);
+    };
+  }])
 
-  $scope.tempHideUI = function () {
-    $scope.$emit('hide_ui', true);
-    timeout = setTimeout(function() {
-      $scope.$emit('hide_ui', false);      
-    }, 10000);
-  };
+  .directive('performanceGraph', function () {
+   return {
+     restrict : 'E',
+     scope : true,
+     template: '<canvas></canvas>',
+     link: function (scope, element) {
+      var canvas = element.find('canvas')[0]
+        , ctx = canvas.getContext('2d')
+        , neededHeight = 1200
+        , shouldDraw = false
+        ;
+
+      beamng.sendEngineLua('ui_performance.requestConfig()');
+
+      // cover resizes
+      function resize() {
+        canvas.width = canvas.parentElement.offsetWidth;
+        canvas.height = neededHeight;
+        // console.log('needed height', neededHeight)
+      }
+      window.addEventListener('resize', resize, false);
+      resize();
+
+      ctx.lineWidth = 1;
+      ctx.font = 'monospace';
+      ctx.textAlign = "left";
+
+      // Anti aliasing fix. This makes the lines look crisp and sharp and means that rounding to the nearest half pixel is not needed.
+      ctx.translate(0.5, 0.5);
+
+      // config/metadata sent by lua
+      var config = null;
+
+      // runtime vars
+      var simpleGraphs = [];
+      var stackedGraphs = [];
+      var updateData = [];
+
+      scope.$on('$destroy', () => {
+        shouldDraw = false;
+        // clearInterval(fnCallHelper.intervalHandel)
+      });
+
+      scope.$on('PerformanceInit', function (_, _config) {
+        neededHeight = 20;
+        // called on start to setup the metadata
+        config = _config;
+        //console.log('got performance config: ', config);
+        // setup stacked graphs
+        stackedGraphs.length = 0;
+        for(var pk in config.stacked) {
+          var sg = new StackedGraph(config.stacked[pk], config.metadata);
+          stackedGraphs.push(sg);
+          neededHeight += 200;
+        }
+        //setup simple graphs
+        simpleGraphs.length = 0;
+        for(var pk in config.simple) {
+          var sg = new SimpleGraph(config.simple[pk], config.metadata);
+          simpleGraphs.push(sg);
+          neededHeight += 80;
+        }
+
+        resize();
+        shouldDraw = true;
+        drawHelper();
+      });
+
+      scope.$on('PerformanceData', function (_, rawData) {
+        // delivers the data
+        //console.log(rawData)
+        updateData.push(rawData)
+      });
+
+      function drawHelper () {
+        if (shouldDraw) {
+          window.requestAnimationFrame(draw);
+        }
+      }
+
+      // var fnCallHelper = fnCallCounter(drawHelper);
+      // drawHelper = fnCallHelper.newFn;
+
+      function draw () {
+        // delivers the data
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var y = 10;
+        var x = 10;
+        var graphWidth = canvas.width - 20;
+
+        // update stackedGraphs
+        for(var i = 0; i < stackedGraphs.length; i++) {
+          var res = stackedGraphs[i].draw(updateData, ctx, x, y, graphWidth, 180);
+          x = res[0];
+          y = res[1] + 10;
+        }
+
+        // update simpleGraphs
+        for(var i = 0; i < simpleGraphs.length; i++) {
+          var res = simpleGraphs[i].draw(updateData, ctx, x, y, graphWidth, 60);
+          x = res[0];
+          y = res[1] + 10;
+        }
+
+        updateData.length = 0;
+        setTimeout(drawHelper, 250);
+      }
+    }
+  }
+});
 
 
-}]);
+// Graphing library from here on
+// TODO: when porting to ui2 make sure to put this in an es6 module
+
 
 function F32windowShift(array, newElemLen, windowLen) {
   if (newElemLen == 0) return array;
@@ -107,7 +221,7 @@ function getColor(rgba, lum, alphaChange) {
     ];
     rgba = rgbaNew;
   }
-  return 'rgba('+Math.round(rgba[0])+','+Math.round(rgba[1])+','+Math.round(rgba[2])+','+rgba[3]+')';
+  return `rgba(${Math.round(rgba[0])},${Math.round(rgba[1])},${Math.round(rgba[2])},${rgba[3]})`;
 }
 function bytesToSize(bytes, precision) {
    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -443,91 +557,4 @@ StackedGraph.prototype.draw = function(updateData, ctx, x, y, width, height) {
 
 /*****************************************************************************/
 
-angular.module('beamng.stuff')
-.directive('performanceGraph', function () {
- "use strict";
- return {
-   restrict : 'EAC',
-   replace : true,
-   scope : true,
-   template: '<canvas></canvas>',
-   link: function (scope, element, attribute) {
-    var canvas = element[0];
-    var ctx = canvas.getContext('2d');
-
-    // cover resizes
-    function resize() {
-      beamng.sendEngineLua('ui_performance.requestConfig(false)');
-      canvas.width = canvas.parentElement.offsetWidth - 40;
-      canvas.height = 1200;
-    }
-    window.addEventListener('resize', resize, false);
-    resize();
-
-    ctx.lineWidth = 1;
-    ctx.font = 'monospace';
-    ctx.textAlign = "left";
-
-    // Anti aliasing fix. This makes the lines look crisp and sharp and means that rounding to the nearest half pixel is not needed.
-    ctx.translate(0.5, 0.5);
-
-    // config/metadata sent by lua
-    var config = null;
-
-    // runtime vars
-    var simpleGraphs = [];
-    var stackedGraphs = [];
-    var updateData = [];
-
-    scope.$on('PerformanceInit', function (event, _config) {
-      // called on start to setup the metadata
-      config = _config;
-      //console.log('got performance config: ', config);
-      // setup stacked graphs
-      stackedGraphs = [];
-      for(var pk in config.stacked) {
-        var sg = new StackedGraph(config.stacked[pk], config.metadata);
-        stackedGraphs.push(sg);
-      }
-      //setup simple graphs
-      simpleGraphs = [];
-      for(var pk in config.simple) {
-        var sg = new SimpleGraph(config.simple[pk], config.metadata);
-        simpleGraphs.push(sg);
-      }
-    });
-    scope.$on('PerformanceData', function (event, rawData) {
-      // delivers the data
-      //console.log(rawData)
-      updateData.push(rawData)
-    });
-    scope.$on('PerformanceDraw', function (event) {
-      // delivers the data
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      var y = 10;
-      var x = 10;
-      var graphWidth = canvas.width - 20;
-
-      // update stackedGraphs
-      for(var i = 0; i < stackedGraphs.length; i++) {
-        var res = stackedGraphs[i].draw(updateData, ctx, x, y, graphWidth, 180);
-        x = res[0];
-        y = res[1] + 10;
-      }
-
-      // update simpleGraphs
-      var y0 = y;
-      var x0 = x;
-      for(var i = 0; i < simpleGraphs.length; i++) {
-        var res = simpleGraphs[i].draw(updateData, ctx, x, y, graphWidth, 60);
-        x = res[0];
-        y = res[1] + 10;
-      }
-
-      updateData.length = 0;
-    });
-   }
- }
-});
+})();

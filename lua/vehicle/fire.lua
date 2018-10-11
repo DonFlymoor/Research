@@ -27,6 +27,10 @@ local fireSoundDelay = 6
 local fireSoundTimer = 6
 local fireSoundIntensity = 0
 
+local fireParticleSmall = 25
+local fireParticleMedium = 27
+local fireParticleLarge = 29
+
 --shorter functions for increased performance
 local random = math.random
 local sqrt = math.sqrt
@@ -34,22 +38,21 @@ local min = math.min
 local max = math.max
 
 local function updateGFX(dt)
-  local rand = random(1)    --use the same random value for all effects in this frame
+  local rand = random(1) --use the same random value for all effects in this frame
 
   --we combine these two values only once per frame here, we need the result of this quite often below
   local nodeCountTimeFactor = dt * fireNodeCounter
-  local airSpeed = electrics.values['airspeed'] or 0
+  local airSpeed = electrics.values.airspeed or 0
   tEnv = obj:getEnvTemperature() - 273.15
 
   -- Node Iteration --
-  local currentNode = nil
+  local currentNode
   --get the next node for this frame's comparision, returns nil if we reached the end of the table
   currentNodeKey, currentNode = next(flammableNodes, currentNodeKey)
   if not currentNode then --if we reached the end
     currentNodeKey, currentNode = next(flammableNodes, nil) --get the first one instead
   end
   local mycid = currentNodeKey
-
 
   -- Steam Handling --
   local underWater = obj:inWater(mycid) and 1 or 0
@@ -62,7 +65,6 @@ local function updateGFX(dt)
   if currentNode.temperature > tSteam and underWater == 1 then
     obj:addParticleByNodesRelative(currentNodeKey, centreNode, rand * -2, 24, 0, 1)
   end
-
 
   -- Vapor Handling --
   if currentNode.containerBeam then
@@ -85,6 +87,12 @@ local function updateGFX(dt)
   -- Fire / Smoke --
   if currentNode.canIgnite and currentNode.temperature >= vaporCorrectedSmokePoint then
     if currentNode.chemEnergy > 0 and underWater == 0 then
+      -- TODO: test new dynamic node properties code
+      --[[
+            local np = obj:getNodeState(mycid)
+            np.burnedness = (currentNode.originalChemEnergy - currentNode.chemEnergy) / currentNode.originalChemEnergy * 255 --0-255
+            obj:setNodeState(mycid, np)
+            --]]
       --increase burnrate by a factor of x when node is vaporized
       local burnRate = currentNode.burnRate + currentNode.burnRate * currentNode.isVapor * 10
       local chemEnergyRatio = currentNode.chemEnergy / currentNode.originalChemEnergy
@@ -96,13 +104,6 @@ local function updateGFX(dt)
       if currentNode.chemEnergy / currentNode.originalChemEnergy < 0.01 then
         currentNode.chemEnergy = 0
       end
-
-      -- TODO: test new dynamic node properties code
-      --[[
-            local np = obj:getNodeState(mycid)
-            np.burnedness = (currentNode.originalChemEnergy - currentNode.chemEnergy) / currentNode.originalChemEnergy * 255 --0-255
-            obj:setNodeState(mycid, np)
-            --]]
     else
       currentNode.intensity = 0
     end
@@ -112,13 +113,13 @@ local function updateGFX(dt)
     if wheelNodes[mycid] and currentNode.temperature > tirePopTemp then --tire popping
       local wheelData = wheelNodes[mycid]
       beamstate.deflateTire(wheelData.wheelID, 1)
-      sounds.playSoundOnceAtNode("event:>Vehicle>Fire>Fire_Ignition", mycid, 2)
+      sounds.playSoundOnceFollowNode("event:>Vehicle>Fire>Fire_Ignition", mycid, 2)
       --puff of flame on tire burst
-        obj:addParticleByNodesRelative(mycid, centreNode, 0, 31, 0.5, 20)
+      obj:addParticleByNodesRelative(mycid, centreNode, 0, 31, 0.5, 20)
 
-        obj:addParticleByNodesRelative(mycid, centreNode, 0, 29, 0.5, 20)
+      obj:addParticleByNodesRelative(mycid, centreNode, 0, 29, 0.5, 20)
 
-        --obj:addParticleByNodesRelative(mycid, centreNode, 0, 9, 0.5, 100)
+      --obj:addParticleByNodesRelative(mycid, centreNode, 0, 9, 0.5, 100)
 
       -- we only want to deflate the tires once, so we just pretend this wheel node is not actually a wheel node anymore
       wheelNodes[wheelData.node1] = nil
@@ -130,7 +131,6 @@ local function updateGFX(dt)
     currentNode.intensity = 0 --kill any flames that might still exist
   end
 
-
   -- Heat Transfer --
   --radiate, conduct heat from current node to all other nodes, one per frame
   if hotNodes[mycid] or currentNode.baseTemp > tEnv then
@@ -138,18 +138,17 @@ local function updateGFX(dt)
     for cid, otherNode in pairs(flammableNodes) do
       if cid ~= mycid then
         local dist = obj:nodeLength(mycid, cid) --distance to nearby nodes, for heat radiation
-        local contact = dist <= currentNode.conductionRadius and 1 or 0    --determine whether the two nodes are in contact
-        local radiation = (24 * currentNode.intensity * burningCoef) / (1 + dist * dist * dist)  --radiation of heat depends on flame intensity, base heat, and distance to surrounding nodes, factor is arbitary, can be adjusted to change radiation speed
+        local contact = dist <= currentNode.conductionRadius and 1 or 0 --determine whether the two nodes are in contact
+        local radiation = (24 * currentNode.intensity * burningCoef) / (1 + dist * dist * dist) --radiation of heat depends on flame intensity, base heat, and distance to surrounding nodes, factor is arbitary, can be adjusted to change radiation speed
         local conduction = max(1 * contact * (currentNode.temperature - otherNode.temperature), 0)
         otherNode.heatEnergy = otherNode.heatEnergy + (radiation + conduction) * nodeCountTimeFactor --radiate heat to another node; multiply it by the delta T (hotNum)
       end
     end
   end
 
-
   -- Cooling Down ---
   --coefficient of heat transfer, based on airspeed
-  local hc = 0.0006 * ((waterCoolingCoef * underWater) + 1) * (10.45 - airSpeed  + 10 * sqrt(airSpeed))
+  local hc = 0.0006 * ((waterCoolingCoef * underWater) + 1) * (10.45 - airSpeed + 10 * sqrt(airSpeed))
   --if the engine is dead, our nodes can cool below their baseTemp (baseTemp represents the engine's constant heat)
   local minTemp = (drivetrain.engineDisabled or underWater == 1) and tEnv or currentNode.baseTemp
   --heat is lost to the surroundings at a rate of temperature * hc. Lower limit = 0
@@ -166,41 +165,43 @@ local function updateGFX(dt)
     node.flameTick = node.flameTick >= 1 and 0 or node.flameTick + 10 * (1 + airSpeed * 0.05) * dt
     node.smokeTick = node.smokeTick >= 1 and 0 or node.smokeTick + 1.2 * (1 + airSpeed * 0.05) * dt
 
-    local vaporCorrectedSmokePoint = node.smokePoint - (node.smokePoint * node.isVapor * vaporFlashPointModifier)
-    local vaporCorrectedFlashPoint = node.flashPoint - (node.flashPoint * node.isVapor * vaporFlashPointModifier)
+    local vaporCorrectedNodeSmokePoint = node.smokePoint - (node.smokePoint * node.isVapor * vaporFlashPointModifier)
+    local vaporCorrectedNodeFlashPoint = node.flashPoint - (node.flashPoint * node.isVapor * vaporFlashPointModifier)
 
     if node.flameTick >= 1 then
-      if node.intensity > 0 and node.temperature >= vaporCorrectedFlashPoint and currentNode.lastUnderWaterValue == 0 then
+      if node.intensity > 0 and node.temperature >= vaporCorrectedNodeFlashPoint and currentNode.lastUnderWaterValue == 0 then
         local rootedIntensity = sqrt(node.intensity)
         --small flames for low intensity fire
-        obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity, 25, 0, 1)
+        fireParticleSmall = airSpeed < 10 and 25 or 26
+        obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity, fireParticleSmall, 0, 1)
         fireSoundIntensity = max(node.intensity, fireSoundIntensity) --find the most intensely burning node and set the fire sound volume accordingly
         if fireSoundTimer >= fireSoundDelay then
-          local playsound = "event:>Vehicle>Fire>Fire_Burn"
-          sounds.playSoundOnceAtNode(playsound, mycid, sqrt(min(fireSoundIntensity, 0.9)) * 1)
+          sounds.playSoundOnceFollowNode("event:>Vehicle>Fire>Fire_Burn", mycid, sqrt(min(fireSoundIntensity, 0.9)) * 1)
           fireSoundTimer = 0
         end
 
         if node.intensity > 0.15 then
           --medium flames for medium intensity fire
-          obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity, 27, 0, 1)
+          fireParticleMedium = airSpeed < 10 and 27 or 28
+          obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity, fireParticleMedium, 0, 1)
 
           if node.intensity > 0.3 then
             --large flames for high-intensity fire
-            obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity, 29, 0, 1)
+            fireParticleLarge = airSpeed < 10 and 29 or 30
+            obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity, fireParticleLarge, 0, 1)
 
             if node.intensity > 10 then
               node.vaporState = 0
               --huge fireball for explosions
               if fireballSoundTimer >= fireballSoundDelay then
-                sounds.playSoundOnceAtNode("event:>Vehicle>Fire>Fire_Ignition", mycid, 3)
+                sounds.playSoundOnceFollowNode("event:>Vehicle>Fire>Fire_Ignition", mycid, 3)
               end
 
-                obj:addParticleByNodesRelative(hotcid, centreNode, 0, 31, 0.5, 10)
+              obj:addParticleByNodesRelative(hotcid, centreNode, 0, 31, 0.5, 10)
               --huge smoke puff for explosions
               obj:addParticleByNodesRelative(hotcid, centreNode, 0, 32, 0, 1)
               --spray of sparks
-                obj:addParticleByNodesRelative(hotcid, centreNode, 0, 9, 0.5, 100)
+              obj:addParticleByNodesRelative(hotcid, centreNode, 0, 9, 0.5, 100)
             end
           end
         end
@@ -208,13 +209,13 @@ local function updateGFX(dt)
     end
 
     if node.smokeTick >= 1 then
-      if node.smokePoint and node.temperature > vaporCorrectedSmokePoint then
+      if node.smokePoint and node.temperature > vaporCorrectedNodeSmokePoint then
         local rootedIntensity = sqrt(node.intensity)
         --node emits smoke if close to flash point
-        obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity * (1 + airSpeed * 0.1), 26, 0, 1)
+        obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity * (1 + airSpeed * 0.1), 51, 0, 1)
 
         if node.temperature > node.flashPoint * 4 then
-          obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity * (1 + airSpeed * 0.1), 28, 0, 1)
+          obj:addParticleByNodesRelative(hotcid, centreNode, rand * -2 * rootedIntensity * (1 + airSpeed * 0.1), 52, 0, 1)
         end
       end
     end
@@ -230,7 +231,7 @@ local function nodeCollision(p)
     return
   end
 
-  local normalEnergy = p.normalForce * p.perpendicularVel  * lastDt
+  local normalEnergy = p.normalForce * p.perpendicularVel * lastDt
   local slipEnergy = p.slipForce * p.slipVel * lastDt
   -- energy = work, sum up the normal and slip work for the time being, lastDt comes directly from main lua and is the dT from the last gfx frame
   local collisionEnergy = normalEnergy + slipEnergy
@@ -269,7 +270,7 @@ local function init()
 
   --create a cache of all available container beams for easy access
   if v.data.beams then
-    for k,b in pairs(v.data.beams) do
+    for k, b in pairs(v.data.beams) do
       if b.containerBeam then
         containerBeamCache[b.containerBeam] = k
       end
@@ -278,9 +279,9 @@ local function init()
 
   if v.data.nodes then
     local centreNodeDist = 100
-    for _,node in pairs(v.data.nodes) do
+    for _, node in pairs(v.data.nodes) do
       local nodeDist = sqrt((node.pos.x * node.pos.x) + (node.pos.y * node.pos.y) + (node.pos.z * node.pos.z))
-      if  nodeDist < centreNodeDist then  --find the centre-most node and store it for particle reference
+      if nodeDist < centreNodeDist then --find the centre-most node and store it for particle reference
         centreNodeDist = nodeDist
         centreNode = node.cid
       end
@@ -288,8 +289,7 @@ local function init()
       if node.flashPoint then
         --we can assume this node is part of the fire system
         local staticBaseTemp = (type(node.baseTemp) == "number") and node.baseTemp or tEnv
-        flammableNodes[node.cid] =
-        {
+        flammableNodes[node.cid] = {
           name = node.name,
           flashPoint = node.flashPoint,
           smokePoint = node.smokePoint or node.flashPoint,
@@ -324,9 +324,9 @@ local function init()
 
   --cache wheelnodes for easy access from update
   if wheels.wheels then
-    for id,wd in pairs(wheels.wheels) do
-      wheelNodes[wd.node1] = { wheelID = id, node1 = wd.node1, node2 = wd.node2 }
-      wheelNodes[wd.node2] = { wheelID = id, node1 = wd.node1, node2 = wd.node2 }
+    for id, wd in pairs(wheels.wheels) do
+      wheelNodes[wd.node1] = {wheelID = id, node1 = wd.node1, node2 = wd.node2}
+      wheelNodes[wd.node2] = {wheelID = id, node1 = wd.node1, node2 = wd.node2}
     end
   end
 
@@ -350,7 +350,7 @@ end
 
 local function igniteRandomNode()
   local possibleNodes = {}
-  for k,n in pairs(flammableNodes) do
+  for k, n in pairs(flammableNodes) do
     if n and n.canIgnite and not wheelNodes[k] and n.intensity <= 0 then
       table.insert(possibleNodes, k)
     end
@@ -371,7 +371,7 @@ end
 
 local function igniteRandomNodeMinimal()
   local possibleNodes = {}
-  for k,n in pairs(flammableNodes) do
+  for k, n in pairs(flammableNodes) do
     if n and n.canIgnite and not wheelNodes[k] and n.intensity <= 0 then
       table.insert(possibleNodes, k)
     end
@@ -392,7 +392,7 @@ local function igniteRandomNodeMinimal()
 end
 
 local function igniteVehicle()
-  for cid,_ in pairs(flammableNodes) do
+  for cid, _ in pairs(flammableNodes) do
     if not wheelNodes[cid] then --don't ignite wheelnodes right away to delay the tire popping a bit
       igniteNode(cid)
     end
@@ -400,7 +400,7 @@ local function igniteVehicle()
 end
 
 local function explodeVehicle()
-  for cid,node in pairs(flammableNodes) do
+  for cid, node in pairs(flammableNodes) do
     if node.containerBeam then
       node.vaporState = 100
       node.containerBeamBroken = true
@@ -427,7 +427,7 @@ local function explodeNode(cid)
 end
 
 local function extinguishVehicle()
-  for cid,node in pairs(flammableNodes) do
+  for cid, node in pairs(flammableNodes) do
     node.heatEnergy = 0
     node.temperature = tEnv
     node.intensity = 0
@@ -436,7 +436,7 @@ local function extinguishVehicle()
 end
 
 local function extinguishVehicleSlowly()
-  for _,node in pairs(flammableNodes) do
+  for _, node in pairs(flammableNodes) do
     node.chemEnergy = 0
   end
 end

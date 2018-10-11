@@ -1,0 +1,34 @@
+{
+    "name": "Ferrari F1 wheel Integral T500"
+    "guid": "{B662044F-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        //%device = "{B662044F-0000-0000-0000-504944564944}-" @ %joyNum;
+        // movement
+        {"control": "xaxis" ,   "action": "steering", "angle": 1080},
+        {"control": "yaxis" ,   "action": "brake"   ,   "isInverted": true},
+        {"control": "rzaxis"    ,   "action": "accelerate"  ,   "isInverted": true},
+        {"control": "slider0"   ,   "action": "clutch"  ,   "isInverted": true},
+        {"control": "button5"   ,   "action": "toggleShifterMode"},
+        // paddle - left
+        {"control": "button2"   ,   "action": "shiftDown"},
+        // paddle - right
+        {"control": "button1"   ,   "action": "shiftUp"},
+        // gears
+        {"control": "button14"  ,   "action": "gearR"},
+        {"control": "button8"   ,   "action": "gear1"},
+        {"control": "button9"   ,   "action": "gear2"},
+        {"control": "button10"  ,   "action": "gear3"},
+        {"control": "button11"  ,   "action": "gear4"},
+        {"control": "button12"  ,   "action": "gear5"},
+        {"control": "button13"  ,   "action": "gear6"},
+        // we should be able to activate stick shifting and wheel range functions with this device
+        //{"control": "button2" ,   "action": "reset_physics"},
+        //{"control": "button3" ,   "action": "pause"},
+        //{"control": "button4" ,   "action": "parkingbrake"},
+        //{"control": "button5" ,   "action": "switch_next_vehicle"},
+        //{"control": "button8" ,   "action": "center_camera"},
+        //{"control": "button9" ,   "action": "switch_camera_next"},
+        //{"control": "btn_x"   ,   "action": "toggleFirstPerson"},
+    ]
+}

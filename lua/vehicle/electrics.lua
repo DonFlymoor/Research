@@ -12,7 +12,7 @@ M.values = {
   wheelspeed = 0,
   avgWheelAV = 0,
   airspeed = 0,
-  horn = false,
+  horn = false
 }
 
 M.disabledState = {}
@@ -49,35 +49,27 @@ local blinkTimer = 0
 local rpmspin = 0
 
 -- sounds
-local indicatorLoopSound = nil
 local hornSound = nil
 local sirenSound = nil
 local indStartSnd = nil
 local indStopSnd = nil
-local indLoopSnd1= nil
+local indLoopSnd1 = nil
 local indLoopSnd2 = nil
-local lightOn =nil
-local lightOff =nil
+local lightOn = nil
+local lightOff = nil
 local hasSteered = false -- used to see whether right/left-turn has been finished
 
 -- set to nop in the beginning - this avoids conflict with the warn signal
 local automatic_indicator_stop = nop
 
-local function playSound(snd)
-  if not snd then return end
-  if v.data.refNodes then
-    obj:setVolume(snd, 1)
-    obj:playSFX(snd)
-  end
-end
 local function generateBlinkPulse(dt)
   blinkTimer = blinkTimer + dt
   if blinkTimer > blinkTimerThreshold then
     if signalLeftState or signalRightState then
       if blinkPulse then
-       playSound(indLoopSnd1)
+        sounds.playSound(indLoopSnd1)
       else
-        playSound(indLoopSnd2)
+        sounds.playSound(indLoopSnd2)
       end
     end
     blinkPulse = not blinkPulse
@@ -89,7 +81,9 @@ end
 local function manage_automatic_indicator_stop()
   local controlPoint = 100
   local steering = M.values.steering
-  if steering == nil then return end
+  if steering == nil then
+    return
+  end
 
   --check whether user has steered in the desired direction
   if signalLeftState and steering > controlPoint then
@@ -98,21 +92,18 @@ local function manage_automatic_indicator_stop()
     hasSteered = true
   end
 
-  --hasSteered = ((signalRightState and steering < -controlPoint) or (signalLeftState and steering > controlPoint))
-
   --if the wheel has returned to the neutral position, turn indicator off
-  if signalLeftState and hasSteered and steering <=0 then
+  if signalLeftState and hasSteered and steering <= 0 then
     signalLeftState = false
     hasSteered = false
-    playSound(indStopSnd)
+    sounds.playSound(indStopSnd)
     automatic_indicator_stop = nop
   elseif signalRightState and hasSteered and steering >= 0 then
     signalRightState = false
     hasSteered = false
-    playSound(indStopSnd)
+    sounds.playSound(indStopSnd)
     automatic_indicator_stop = nop
   end
-
 end
 
 -- user input functions
@@ -125,11 +116,11 @@ local function toggle_left_signal()
   if signalLeftState then
     signalRightState = false
     signalWarnState = false
-    playSound(indStartSnd)
+    sounds.playSound(indStartSnd)
     automatic_indicator_stop = manage_automatic_indicator_stop
   end
   if not signalLeftState then
-    playSound(indStopSnd)
+    sounds.playSound(indStopSnd)
     automatic_indicator_stop = nop
   end
 end
@@ -143,17 +134,19 @@ local function toggle_right_signal()
   if signalRightState then
     signalLeftState = false
     signalWarnState = false
-    playSound(indStartSnd)
+    sounds.playSound(indStartSnd)
     automatic_indicator_stop = manage_automatic_indicator_stop
   end
   if not signalRightState then
     automatic_indicator_stop = nop
-    playSound(indStopSnd)
+    sounds.playSound(indStopSnd)
   end
 end
 
 local function toggleSound(val, snd)
-  if not snd then return end
+  if not snd then
+    return
+  end
   if val then
     obj:setVolume(snd, 1)
     obj:playSFX(snd)
@@ -171,16 +164,22 @@ local function update(dt)
   automatic_indicator_stop()
 
   rpmspin = rpmspin + (dt * (vals.rpm or 0))
-  if rpmspin > 360 then rpmspin = rpmspin - 360 end
+  if rpmspin > 360 then
+    rpmspin = rpmspin - 360
+  end
   vals.rpmspin = rpmspin
 
   vals.parkingbrake = vals.parkingbrake_input
   vals.lights = lightsState
   vals.lights_state = lightsState
-  if signalWarnState then vals.turnsignal = 0
-  elseif signalRightState then vals.turnsignal = 1
-  elseif signalLeftState then vals.turnsignal = -1
-  else vals.turnsignal = 0
+  if signalWarnState then
+    vals.turnsignal = 0
+  elseif signalRightState then
+    vals.turnsignal = 1
+  elseif signalLeftState then
+    vals.turnsignal = -1
+  else
+    vals.turnsignal = 0
   end
 
   vals.airspeed = obj:getAirflowSpeed()
@@ -213,7 +212,7 @@ local function update(dt)
     if M.disabledState[f] ~= nil then
       vals[f] = nil
     else
-      if type(v) == 'boolean' then
+      if type(v) == "boolean" then
         vals[f] = vals[f] and 1 or 0
       end
     end
@@ -229,27 +228,11 @@ local function update(dt)
   gui.send("electrics", vals)
 end
 
--- helper to create sounds
-local function createSound(type)
-  if not v.data.soundscape or not v.data.soundscape[type] then return end
-  local h = v.data.soundscape[type]
-  if h.node == nil then
-    h.node = sounds.engineNode
-  end
-  local snd = obj:createSFXSource(h.src, h.descriptor or 'AudioDefaultLoop3D', '', h.node)
-  obj:stopSFX(snd)
-  return snd
-end
-
 local function reset()
   M.disabledState = {}
 
-  for _,s in pairs(smoothers) do
+  for _, s in pairs(smoothers) do
     s:set(0)
-  end
-
-  if not indicatorLoopSound then
-    --indicatorLoopSound = sounds.createSFXSource("art/sound/indicator_default_loop.ogg", 'AudioDefaultLoop3D', "", v.data.refNodes[0].ref)
   end
 
   M.values.throttle = 0
@@ -262,44 +245,22 @@ local function reset()
   M.values.horn = false
   lightbarState = 0
   lightsState = 0
-  -- horn sound
+
   --dump(v.data.soundscape)
-  hornSound = createSound('horn')
-  sirenSound = createSound('siren')
-  indStartSnd = createSound('indicatorStart')
-  indStopSnd= createSound('indicatorStop')
-  indLoopSnd1=  createSound('indLoop1')
-  indLoopSnd2= createSound('indLoop2')
-  lightOn =createSound('LightOn')
-  lightOff =createSound('LightOff')
-end
-
-local function beamBroke(id)
---[[
-  if not v.data.props then return end
-  local brokenBeamName = v.data.beams[id].name
-  if not brokenBeamName then
-    return
-  end
-
-  for propKey, prop in pairs (v.data.props) do
-    if prop.disableBeams then
-      for k,ab in pairs(prop.disableBeams) do
-        if ab == brokenBeamName then
-          log('D', "electrics.beamBroke", "prop beam broke:"..v)
-          prop.disabled = 1
-          break
-        end
-      end
-    end
-  end
-]]--
+  hornSound = sounds.createSoundscapeSound("horn")
+  sirenSound = sounds.createSoundscapeSound("siren")
+  indStartSnd = sounds.createSoundscapeSound("indicatorStart")
+  indStopSnd = sounds.createSoundscapeSound("indicatorStop")
+  indLoopSnd1 = sounds.createSoundscapeSound("indLoop1")
+  indLoopSnd2 = sounds.createSoundscapeSound("indLoop2")
+  lightOn = sounds.createSoundscapeSound("LightOn")
+  lightOff = sounds.createSoundscapeSound("LightOff")
 end
 
 local function set_warn_signal(value)
   signalWarnState = value
   signalRightState = signalWarnState
-  signalLeftState  = signalWarnState
+  signalLeftState = signalWarnState
 end
 
 local function toggle_warn_signal()
@@ -308,20 +269,21 @@ end
 
 local function toggle_lights()
   lightsState = lightsState + 1
-  if lightsState==1 then
-   playSound(lightOn)
-  elseif lightsState ==2 then
-    playSound(lightOn)
-  elseif lightsState == 3  then
+  if lightsState == 1 then
+    sounds.playSound(lightOn)
+  elseif lightsState == 2 then
+    sounds.playSound(lightOn)
+  elseif lightsState == 3 then
     lightsState = 0
-    playSound(lightOff)
- --   sounds.playSoundOnceAtNode("event:>Light_Test_3", v.data.refNodes[0].ref, 5)
+    sounds.playSound(lightOff)
   end
 end
 
 local function set_lightbar_signal(state)
   lightbarState = state
-  if lightbarState >= 3 then lightbarState = 0 end
+  if lightbarState >= 3 then
+    lightbarState = 0
+  end
   -- 1 = lights, no sound
   -- 2 = lights + sound
   toggleSound(lightbarState == 2, sirenSound)
@@ -352,20 +314,17 @@ end
 
 -- public interface
 M.update = update
-M.toggle_left_signal        = toggle_left_signal
-M.toggle_right_signal       = toggle_right_signal
-M.toggle_warn_signal        = toggle_warn_signal
-M.set_warn_signal           = set_warn_signal
-M.toggle_lightbar_signal    = toggle_lightbar_signal
-M.set_lightbar_signal       = set_lightbar_signal
-M.toggle_fog_lights         = toggle_fog_lights
-M.set_fog_lights            = set_fog_lights
-M.toggle_lights             = toggle_lights
-M.setLightsState            = setLightsState
-M.beamBroke                 = beamBroke
-M.horn                      = horn
-M.reset                     = reset
-M.init                      = reset
-M.createSound               = createSound
-M.playSound                 = playSound
+M.toggle_left_signal = toggle_left_signal
+M.toggle_right_signal = toggle_right_signal
+M.toggle_warn_signal = toggle_warn_signal
+M.set_warn_signal = set_warn_signal
+M.toggle_lightbar_signal = toggle_lightbar_signal
+M.set_lightbar_signal = set_lightbar_signal
+M.toggle_fog_lights = toggle_fog_lights
+M.set_fog_lights = set_fog_lights
+M.toggle_lights = toggle_lights
+M.setLightsState = setLightsState
+M.horn = horn
+M.reset = reset
+M.init = reset
 return M

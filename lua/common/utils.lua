@@ -21,6 +21,7 @@ local __typeQuaternion = (Quaternion ~= nil) and Quaternion().___type or nil
 local __typeQuatF = (QuatF ~= nil) and QuatF(0,0,0,1).___type or nil
 local __typeColor = (color ~= nil) and color(0,0,0,0).___type or nil
 local abs, floor, min, max, stringformat, tableconcat = math.abs, math.floor, math.min, math.max, string.format, table.concat
+local str_find, str_len, str_sub = string.find, string.len, string.sub
 
 function dumps(...)
   if #{...} > 1 then
@@ -59,11 +60,7 @@ end
 -- use luajit extension table.clear and new if they exist, otherwise fallback to lua implementations
 local ok, _ = pcall(require, "table.clear")
 if not ok then
-  table.clear = function(tab)
-                  for k, _ in pairs(tab) do
-                      tab[k] = nil
-                  end
-                end
+  table.clear = function(tab) for k, _ in pairs(tab) do tab[k] = nil end end
 end
 
 local ok, _ = pcall(require, "table.new")
@@ -73,12 +70,8 @@ end
 
 -- ASCII graph
 function graphs(v, len)
-  local char = v>0 and "+" or "-"
-  local result = char
-  for i=1, abs(math.min(len,v)) do result = result..char end
-  if len then while string.len(result) < len do result = result.." " end end
-  if string.len(result) > len then result = string.sub(result, 1, len) end
-  return "["..result.."]"
+  local size = math.min(len, math.abs(v))
+  return '['..string.rep(v>0 and "+" or "-", size) .. string.rep(' ', len - size)..']'
 end
 
 function dumpToFile(filename, ...)
@@ -89,6 +82,35 @@ function dumpToFile(filename, ...)
     return true
   end
   return false
+end
+
+function encodeJsonPretty(v, lvl)
+  if v == nil then return "null" end
+
+  local vtype = type(v)
+  if vtype == 'string' then return stringformat('%q', v) end
+  if vtype == 'number' then return stringformat('%g', v) end
+  if vtype == 'boolean' then return tostring(v) end
+
+  -- Handle tables
+  if vtype == 'table' then
+    lvl = lvl or 0
+    local indent = string.rep('  ', lvl)
+    local indentPrev = string.rep('  ', math.max(0, lvl - 1))
+    local tmp = {}
+    if v[1] ~= nil and next(v, #v) == nil then
+      for _, vv in ipairs(v) do table.insert(tmp, encodeJsonPretty(vv, lvl + 1)) end
+      return stringformat('[\n' .. indent .. '%s\n' .. indentPrev .. ']', table.concat(tmp, ',\n' .. indent))
+    else
+      for kk, vv in pairs(v) do
+        local cv = encodeJsonPretty(vv, lvl + 1)
+        if cv ~= nil then table.insert(tmp, string.format('"%s":%s', kk, cv)) end
+      end
+      return stringformat('{\n'..indent .. '%s\n'.. indentPrev ..'}', table.concat(tmp, ',\n' .. indent))
+    end
+  end
+
+  return nil
 end
 
 function serializeJsonToFile(filename, obj, pretty)
@@ -117,59 +139,7 @@ function rpad(s, l, c)
   return s .. string.rep(c, l - #s)
 end
 
-function saveG()
-  dumpToFile("global_state.lua", _G)
-end
-
 function nop()
-end
-
-function sign(n)
-  if n > 0 then return 1 end
-  if n < 0 then return -1 end
-  return 0
-end
-
-function fsign(x) --branchless
-  return x / (abs(x) + 1e-307)
-end
-
-function guardZero(x) --branchless
-  return 1 / max(min(1/x, 1e300), -1e300)
-end
-
-function msgs(txt, t, name)
-  t = t or 5
-  if name == nil then
-    BeamEngine:queueLuaCommand("msg('"..txt.."',"..t..")")
-  else
-    BeamEngine:queueLuaCommand("msg('"..txt.."',"..t..",'"..name.."')")
-  end
-end
-
-local singleEventTimer = {}
-singleEventTimer.__index = singleEventTimer
-
-function newSingleEventTimer()
-  local data = {waitDt = -1, update = nop, eventFun = nop}
-  setmetatable(data, singleEventTimer)
-  return data
-end
-
-function singleEventTimer:update(dt)
-  local waitDt = max(0, self.waitDt - dt)
-  self.waitDt = waitDt
-  if waitDt == 0 then
-    self.update = nop
-    self.eventFun(unpack(self.params))
-  end
-end
-
-function singleEventTimer:callAfter(dt, eventFun, ...)
-  self.waitDt = dt
-  self.eventFun = eventFun
-  self.params = {...}
-  self.update = singleEventTimer.update
 end
 
 local temporalSpring = {}
@@ -452,7 +422,6 @@ function readJsonFile(filename)
   local content = readFile(filename)
   if content == nil then
     -- parent needs to deal with error reporting
-    --log('D', "readJsonFile","unable to open JSON file: "..tostring(filename))
     return nil
   end
   return readJsonData(content, filename)
@@ -520,7 +489,6 @@ function saveCompiledJBeamRecursive(f, data, level)
           saveCompiledJBeamRecursive(f, v, level + 1)
           --if nl then f:write("\n" end
         else
-          --local txt = tostring(joinKVES(columnSize,toJSONString(k), toJSONString(v)))
           local txt = toJSONString(k) .. ' : ' .. toJSONString(v)
           f:write(txt)
         end
@@ -591,54 +559,6 @@ function writeFile(filename, data)
   return true
 end
 
-function isOfficialContent(path)
-  return string.startswith(path, FS:getGamePath())
-end
-
-function fileExistsOrNil(path)
-  if type(path) == 'string' and FS:fileExists(path) then
-    return path
-  end
-  return nil
-end
-
-function imageExistsDefault(path, fallbackPath)
-  if path ~= nil and FS:fileExists(path) then
-    return path
-  else
-    return fallbackPath or '/ui/images/appDefault.png'
-  end
-end
-
-function dirContent(path)
-  return FS:findFilesByPattern(path, '*', -1, true, false)
-end
-
-function getDirs(path, recursiveLevels)
-  local files = FS:findFilesByPattern(path, '*', recursiveLevels, false, true)
-  local res = {}
-  local residx = 1
-  for _, value in pairs(files) do
-    if not tableContains(res, value) then
-      res[residx] = value
-      residx = residx + 1
-    end
-  end
-
-  return res
-end
-
-function getFileSize(filename)
-  local res = -1
-  local f = io.open(filename, "r")
-  if f == nil then
-    return res
-  end
-  res = f:seek("end")
-  f:close()
-  return res
-end
-
 function pairs_tail(t, last) return next, t, last end
 
 function tableContainsCaseInsensitive(table, element)
@@ -658,21 +578,6 @@ function tableContains(t, element)
     end
   end
   return false
-end
-
-function locals()
-  local variables = {}
-  local idx = 1
-  while true do
-    local ln, lv = debug.getlocal(2, idx)
-    if ln ~= nil then
-      variables[ln] = lv
-    else
-      break
-    end
-    idx = 1 + idx
-  end
-  return variables
 end
 
 function tableIsDict(tbl)
@@ -707,8 +612,8 @@ end
 
 function tableMerge(dst, src)
   for i,v in pairs(src) do
-    if (type(v) ~= "function") then
-      dst[i] = v;
+    if type(v) ~= "function" then
+      dst[i] = v
     end
   end
   return dst
@@ -799,99 +704,12 @@ function tableFromHeaderTable(entry)
   return output
 end
 
--- Return the string 'str', with all magic (pattern) characters escaped.
-function escape_magic(str)
-  assert(type(str) == "string", "utils.escape: Argument 'str' is not a string.")
-  local escaped = str:gsub('[%-%.%+%[%]%(%)%^%%%?%*%^%$]','%%%1')
-  return escaped
-end
-
 function trim(s)
-  return (s:gsub("^%s*(.-)%s*$", "%1"))
-end
-
-function trimr(str, chrs)
-  return str:match("(.-)["..chrs.."]*$")
-end
-
--- Compatibility: Lua-5.0
-function split(str, delim, maxNb)
-  -- delim = delim or " "
-  -- if delim == " " then
-  --   str = trim(str)
-  -- end
-  -- Eliminate bad cases...
-  if string.find(str, delim) == nil then
-    return { str }
-  end
-  if maxNb == nil or maxNb < 1 then
-    maxNb = 0  -- No limit
-  end
-  local result = {}
-  local pat = "(.-)" .. delim .. "()"
-  local nb = 0
-  local lastPos
-  for part, pos in string.gmatch(str, pat) do
-    nb = nb + 1
-    result[nb] = part
-    lastPos = pos
-    if nb == maxNb then break end
-  end
-  -- Handle the last field
-  if nb ~= maxNb or lastPos < string.len(str) then
-    result[nb + 1] = string.sub(str, lastPos)
-  end
-  --print('split str: "'.. str .. '", delim: "'..delim..'", nb: '..nb .. ', lastPos: '..lastPos.. ', strlen: ' .. string.len(str) .. ', maxNb: ' .. maxNb .. ', result: ' .. dumps(result))
-  return result
-end
-
-function splitAsKeys(str, delim, maxNb, value)
-  local res = {}
-  local items = split(str, delim, maxNb)
-  for _, i in ipairs(items) do
-    res[i] = value or 1
-  end
-  return res
-end
-
-
-function joinKVES(space, k, v)
-  local diff = space - string.len(k)
-  local str = (k) .. string.rep(" ", diff)
-  str = str .. ": "
-  local diff2 = space - string.len(v)
-  if diff < 0 then diff2 = diff2 + diff end
-  str = str .. v .. string.rep(" ", diff2)
-  return str
-end
-
--- join equally spaced
-function joinES(space, list, delimiter)
-  local diff = space - string.len(list[1])
-  local str = list[1] .. string.rep(" ", diff)
-  for i = 2, #list do
-    diff = space - string.len(list[i])
-    str = str .. delimiter .. list[i] .. string.rep(" ", diff)
-  end
-  return str
+  return s:match("^%s*(.-)%s*$")
 end
 
 function join(list, delimiter)
   return table.concat(list, delimiter)
-end
-
-function joinKeys(list, delimiter)
-  return table.concat(tableKeys(list), delimiter)
-end
-
-function tableFirstKey(tbl)
-  if type(tbl) ~= "table" then
-    return ""
-  end
-  for k, v in pairs (tbl) do
-    --log('I', "tableFirstKey", "*** "..tostring(k).." = "..tostring(v).." ["..type(v).."]")
-    return k
-  end
 end
 
 function tableSize(tbl)
@@ -899,10 +717,14 @@ function tableSize(tbl)
     return 0
   end
   local count = 0
-  for _ in pairs (tbl) do
-    count=count+1
+  for _ in pairs(tbl) do
+    count = count + 1
   end
   return count
+end
+
+function tableSizeC(tbl)
+  return #tbl + (tbl[0] and 1 or 0)
 end
 
 function tableFindKey(t, element)
@@ -914,39 +736,6 @@ function tableFindKey(t, element)
   return nil
 end
 
-local __randomWasSeeded = false
-function tableChooseRandomKey(t)
-  if t == nil then return nil end
-  if not __randomWasSeeded then
-    math.randomseed(os.time())
-    __randomWasSeeded = true
-  end
-  local randval = math.random(1, tableSize(t))
-  local n = 0
-  for k, v in pairs(t) do
-    n = n + 1
-    if n == randval then
-      return k
-    end
-  end
-  return nil
-end
-
-function randomASCIIString(len)
-  if not __randomWasSeeded then
-    math.randomseed(os.time())
-    __randomWasSeeded = true
-  end
-  local res = ''
-  local ascii = '01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  local sl = string.len(ascii)
-  for i = 1, len do
-    local k = math.random(1, sl)
-    res = res .. string.sub(ascii, k, k + 1)
-  end
-  return res
-end
-
 function tableClear(tbl)
   local count = #tbl
   for i = 1, count do
@@ -954,20 +743,21 @@ function tableClear(tbl)
   end
 end
 
-function _tableDepth(tbl, depth)
-  if type(tbl) ~= "table" then
-    return 0
-  end
-  for k, v in pairs (tbl) do
+function tableDepth(tbl, lookup)
+  if type(tbl) ~= 'table' then return 0 end
+  lookup = lookup or {}
+  local depth = 1
+  for k, v in pairs(tbl) do
+    if type(k) == "table" then
+      lookup[k] = lookup[k] or tableDepth(k, lookup)
+      depth = math.max(depth, lookup[k] + 1)
+    end
     if type(v) == "table" then
-      return _tableDepth(v, depth + 1)
+      lookup[v] = lookup[v] or tableDepth(v, lookup)
+      depth = math.max(depth, lookup[v] + 1)
     end
   end
   return depth
-end
-
-function tableDepth(tbl)
-  return _tableDepth(tbl, 0)
 end
 
 function shallowcopy(orig)
@@ -983,23 +773,25 @@ function shallowcopy(orig)
   return copy
 end
 
-function deepcopy(object)
-  local lookup_table = {}
-  local function _copy(object)
-    if lookup_table[object] then
-      return lookup_table[object]
+local function _deepcopyTable(lookup_table, object)
+  local new_table = table.new(#object, 0)
+  lookup_table[object] = new_table
+  for index, value in pairs(object) do
+    if type(index) == 'table' then
+      index = lookup_table[index] or _deepcopyTable(lookup_table, index)
     end
-    local new_table = table.new(#object, 0)
-    lookup_table[object] = new_table
-    for index, value in pairs(object) do
-      if type(index) == 'table' then index = _copy(index) end
-      if type(value) == 'table' then value = _copy(value) end
-      new_table[index] = value
+    if type(value) == 'table' then
+      value = lookup_table[value] or _deepcopyTable(lookup_table, value)
     end
-    return setmetatable(new_table, getmetatable(object))
+    new_table[index] = value
   end
+  return setmetatable(new_table, getmetatable(object))
+end
+
+function deepcopy(object)
   if type(object) == 'table' then
-    return _copy(object)
+    local lookup_table = {}
+    return _deepcopyTable(lookup_table, object)
   else
     return object
   end
@@ -1011,21 +803,6 @@ function tableToFloat3(v)
     return float3(0,0,0)
   end
   return float3(v.x, v.y, v.z)
-end
-
--- converts string str separated with separator sep to table
-function stringToTable(str, sep)
-  if sep == nil then
-    sep = "%s"
-  end
-
-  local t = {}
-  local i = 1
-  for s in string.gmatch(str, "([^"..sep.."]+)") do
-    t[i] = s
-    i = i + 1
-  end
-  return t
 end
 
 -- color conversion helpers
@@ -1068,7 +845,7 @@ function ipairs_safe(t)
 end
 
 function pairs_safe(t)
-  local new_table = {}
+  local new_table = table.new(#t, 0)
   for index, value in pairs(t) do
     new_table[index] = value
   end
@@ -1170,11 +947,7 @@ function encodeJson(v)
   -- Handle numbers and booleans
   if vtype == 'number' then
     if v == v + 1 then -- test for inf
-      if v >= 0 then
-        return '"inf"'
-      else
-        return '"-inf"'
-      end
+      return v >= 0 and '"inf"' or '"-inf"'
     else
       return stringformat('%g', v)
     end
@@ -1203,52 +976,6 @@ function encodeJson(v)
   if vtype == 'boolean' then return tostring(v) end
 
   return "null"
-end
-
-function encodeJsonPretty(v, lvl)
-  if v == nil then return "null" end
-  if lvl == nil then lvl = 0 end
-
-  local vtype = type(v)
-
-  -- Handle strings
-  if vtype == 'string' then
-    return stringformat('%q', v)
-  end
-
-  -- Handle numbers and booleans
-  if vtype == 'number' then
-    return stringformat('%g', v)
-  elseif vtype == 'boolean' then
-    return tostring(v)
-  end
-
-  -- Handle tables
-  if vtype == 'table' then
-    local indent = string.rep('  ', lvl)
-    local indentPrev = ''
-    if lvl > 1 then
-      indentPrev = string.rep('  ', lvl - 1)
-    end
-    local tmp = {}
-    if next(v) ~= 1 then
-      for kk, vv in pairs(v) do
-        local cv = encodeJsonPretty(vv, lvl + 1)
-        if cv ~= nil then
-          -- no keys with nil as value, happens on functions
-          table.insert(tmp, string.format('"%s":%s', kk, cv))
-        end
-      end
-      return stringformat('{\n'..indent .. '%s\n'.. indentPrev ..'}', table.concat(tmp, ',\n' .. indent))
-    else
-      for kk, vv in pairs(v) do
-        table.insert(tmp, encodeJsonPretty(vv, lvl + 1))
-      end
-      return stringformat('[\n' .. indent .. '%s\n' .. indentPrev .. ']', table.concat(tmp, ',\n' .. indent))
-    end
-  end
-
-  return nil
 end
 
 local function isPackage(name, entry)
@@ -1405,95 +1132,48 @@ function unserialize(s)
   return loadstring("return " .. s)()
 end
 
-function testSerialization()
-  d = {a = "foo", b = {c = 123, d = "foo", p = float3(1,2,3)}}
-  print("original data: " .. tostring(d))
-  dump(d)
+-- function testSerialization()
+--   d = {a = "foo", b = {c = 123, d = "foo", p = float3(1,2,3)}}
+--   print("original data: " .. tostring(d))
+--   dump(d)
 
-  s = serialize(d)
-  print("serialized data: " .. tostring(s))
+--   s = serialize(d)
+--   print("serialized data: " .. tostring(s))
 
-  da = unserialize(s)
-  print("restored data: " .. tostring(da))
-  dump(da)
+--   da = unserialize(s)
+--   print("restored data: " .. tostring(da))
+--   dump(da)
 
-  sa = serialize(da)
-  if sa == s then
-    print "serialization seems to work"
-  else
-    print "serialization got problems, look above"
-  end
+--   sa = serialize(da)
+--   if sa == s then
+--     print "serialization seems to work"
+--   else
+--     print "serialization got problems, look above"
+--   end
 
-  if unserialize(serialize(nil)) ~= nil then print "serialize with nil fails to work corectly" end
-end
+--   if unserialize(serialize(nil)) ~= nil then print "serialize with nil fails to work corectly" end
+-- end
 --testSerialization()
 
-function copyfile(src, dst)
-  local infile = io.open(src, "r")
-  if not infile then return nil end
-  local outfile = io.open(dst, "w")
-  if not outfile then return nil end
-  outfile:write(infile:read("*a"))
-  infile:close()
-  outfile:close()
-end
+-- Compatibility: Lua-5.0
+function split(str, delim, nMax)
+  local aRecord = {}
 
---[[
-LUA 5.1 compatible
-
-Ordered Table
-keys added will be also be stored in a metatable to recall the insertion oder
-metakeys can be seen with for i,k in ( <this>:ipairs()  or ipairs( <this>._korder ) ) do
-ipairs( ) is a bit faster
-
-variable names inside __index shouldn't be added, if so you must delete these again to access the metavariable
-or change the metavariable names, except for the 'del' command. thats the reason why one cannot change its value
-]]--
-function newT( t )
-  local mt = {}
-  -- set methods
-  mt.__index = {
-    -- set key order table inside __index for faster lookup
-    _korder = {},
-    -- traversal of hidden values
-    hidden = function() return pairs( mt.__index ) end,
-    -- traversal of table ordered: returning index, key
-    ipairs = function( self ) return ipairs( self._korder ) end,
-    -- traversal of table
-    pairs = function( self ) return pairs( self ) end,
-    -- traversal of table ordered: returning key,value
-    opairs = function( self )
-      local i = 0
-      local function iter( self )
-        i = i + 1
-        local k = self._korder[i]
-        if k then
-          return k,self[k]
-        end
-      end
-      return iter,self
-    end,
-    -- to be able to delete entries we must write a delete function
-    del = function( self,key )
-      if self[key] then
-        self[key] = nil
-        for i,k in ipairs( self._korder ) do
-          if k == key then
-            table.remove( self._korder, i )
-            return
-          end
-        end
-      end
-    end,
-  }
-  -- set new index handling
-  mt.__newindex = function( self,k,v )
-    if k ~= "del" and v then
-      rawset( self,k,v )
-      table.insert( self._korder, k )
-    end
+  if str_len(str) > 0 then
+     nMax = nMax or -1
+     local nField, nStart = 1, 1
+     local nFirst,nLast = str_find(str, delim, nStart, true)
+     while nFirst and nMax ~= 0 do
+        aRecord[nField] = str_sub(str, nStart, nFirst-1)
+        nField = nField+1
+        nStart = nLast+1
+        nFirst,nLast = str_find(str, delim, nStart, true)
+        nMax = nMax-1
+     end
+     aRecord[nField] = str_sub(str, nStart)
   end
-  return setmetatable( t or {},mt )
+
+  return aRecord
 end
 
 function string.startswith(String,Start)
@@ -1627,43 +1307,22 @@ function loadIni(filename)
 end
 
 function saveIni(filename, d)
-  local c = ""
+  local c = {}
   for k,v in pairs(d) do
-    c = c .. ("%s = %s\r\n"):format(tostring(k), tostring(v))
+    table.insert(c, ("%s = %s\r\n"):format(tostring(k), tostring(v)))
   end
   local f = io.open(filename, "w")
   if not f then return end
-  f:write(c)
-  f:close()
-end
-
-function hex_dump_file(buf, filename)
-  local f = io.open(filename, "w")
-  for i=1,math.ceil(#buf/16) * 16 do
-    if (i-1) % 16 == 0 then f:write(string.format('%08X  ', i-1)) end
-    f:write( i > #buf and '   ' or string.format('%02X ', buf:byte(i)) )
-    if i %  8 == 0 then f:write(' ') end
-    if i % 16 == 0 then f:write( buf:sub(i-16+1, i):gsub('%c','.'), '\n' ) end
-  end
+  f:write(tableconcat(c, ""))
   f:close()
 end
 
 function ui_message(msg, ttl, category, icon)
   (obj or be):executeJS("HookManager.trigger('Message',"..encodeJson({msg=msg, ttl=ttl or 5, category=category or '', icon = icon})..");")
-  --log('D', "gui.message", msg)
-end
-
-function isint(n)
-  local m = tonumber(n)
-  return m == floor(m)
 end
 
 function detectGlobalWrites()
   setmetatable(_G, {
-    --__index = function (t, key)
-    --  log('D', 'globals', 'read: ' .. tostring(key))
-    --  rawget(_G[key])
-    --end,
     __newindex = function (t, key, val)
       rawset(_G, key, val)
       log('W', 'globals', debug.traceback('set new global variable: "' .. tostring(key) .. '"  to "'  .. tostring(val) .. '"', 2, 1, false))
@@ -1673,11 +1332,6 @@ end
 
 function lerp(from,to,t)
   return from + (to - from) * min(max(0, t),1)
-end
-
-function invertLerp(from,to,value)
-  value = min(max(from, value),to)
-  return (value - from) / (to-from)
 end
 
 function stringHash(text)
@@ -1711,8 +1365,9 @@ function executeLuaSandboxed(cmd, source)
   -- sandbox creation
   local fEnv = getfenv(1) -- we reuse the environment and override only some things ...
   -- sandboxed functions
+  local print_saved = fEnv.print
   fEnv.print = function(msg)
-    io.write("sandboxed print: " .. tostring(msg) .. "\n")
+    --io.write("sandboxed print: " .. tostring(msg) .. "\n")
     table.insert(stdOutCache, tostring(msg))
   end
 
@@ -1727,57 +1382,21 @@ function executeLuaSandboxed(cmd, source)
   -- execute the lua
   if func then
     if type(debug.traceback) ~= "function" then
+      fEnv.print = print_saved
       return "Error: Lua debug traceback broken"
     end
 
     local ok, result = xpcall(func, debug.traceback)
     if ok then
+      fEnv.print = print_saved
       return result, stdOutCache
     end
 
+    fEnv.print = print_saved
     return "Error: " .. tostring(result)
   end
+  fEnv.print = print_saved
   return "Error: " .. tostring(err)
-end
-
-function convertVehicleIdKeysToVehicleNameKeys(data)
-  local result = {}
-  if data and type(data) == 'table' then
-    for vid,entry in pairs(data) do
-      local vehicle = be:getObjectByID(vid)
-      if vehicle then
-        local vehicleName = vehicle:getField('name', '')
-        result[vehicleName] = entry
-      end
-    end
-  end
-  return result
-end
-
-function convertVehicleNameKeysToVehicleIdKeys(data)
-  local result = {}
-  if data and type(data) == 'table' then
-    for vehicleName,entry in pairs(data) do
-      local vehicle = scenetree.findObject(vehicleName)
-      if vehicle then
-        local vehicleID = vehicle:getID()
-        result[vehicleID] = entry
-      end
-    end
-  end
-  return result
-end
-
--- returns a list of immidiate directories with full path in given path
-function getDirectories(path)
-  local files = FS:findFilesByPattern(path,"*", 0, true, true)
-  local dirs = {}
-  for _,v in pairs(files) do
-    if FS:directoryExists(v) and not FS:fileExists(v) then
-      table.insert(dirs, v)
-    end
-  end
-  return dirs
 end
 
 -- prints KB of garbage created since previous call
@@ -1823,13 +1442,4 @@ function startDebugger()
   dbg = require('debugger/vscode-debuggee') -- global intentionally
   debugPoll = dbg.poll
   dbg.start(luaVMInstanceName, {logFunc = log}) -- luaVMInstanceName should be hardcoded in c++
-end
-
-function hex2rgb(hex)
-  local hex = hex:gsub("#","")
-  if hex:len() == 3 then
-    return (tonumber("0x"..hex:sub(1,1))*17)/255, (tonumber("0x"..hex:sub(2,2))*17)/255, (tonumber("0x"..hex:sub(3,3))*17)/255
-  else
-    return tonumber("0x"..hex:sub(1,2))/255, tonumber("0x"..hex:sub(3,4))/255, tonumber("0x"..hex:sub(5,6))/255
-  end
 end

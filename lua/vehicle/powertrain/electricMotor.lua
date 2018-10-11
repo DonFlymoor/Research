@@ -21,40 +21,51 @@ local function getTorqueData(device)
   local curves = {}
   local curveCounter = 1
   local maxTorque = 0
+  local maxTorqueRPM = 0
   local maxPower = 0
+  local maxPowerRPM = 0
   local maxRPM = 0
 
   local torqueCurve = {}
   local powerCurve = {}
 
-  for k,v in pairs(device.torqueCurve) do
+  for k, v in pairs(device.torqueCurve) do
     if type(k) == "number" then
       torqueCurve[k + 1] = v - device.friction - (device.dynamicFriction * k * rpmToAV)
       powerCurve[k + 1] = torqueCurve[k + 1] * k * torqueToPower
-      maxTorque = math.max(maxTorque, torqueCurve[k + 1])
-      maxPower = math.max(maxPower, powerCurve[k + 1])
+      if torqueCurve[k + 1] > maxTorque then
+        maxTorque = torqueCurve[k + 1]
+        maxTorqueRPM = k + 1
+      end
+      if powerCurve[k + 1] > maxPower then
+        maxPower = powerCurve[k + 1]
+        maxPowerRPM = k + 1
+      end
       maxRPM = max(maxRPM, k)
     end
   end
 
   table.insert(curves, curveCounter, {torque = torqueCurve, power = powerCurve, name = "Electric", priority = 10})
 
-  table.sort(curves, function(a,b)
+  table.sort(
+    curves,
+    function(a, b)
       local ra, rb = a.priority, b.priority
       if ra == rb then
         return a.name < b.name
       else
         return ra > rb
       end
-    end)
+    end
+  )
 
-  local dashes = {nil, {10, 4}, {8, 3, 4, 3}, {6, 3, 2, 3}, {5,3}}
-  for k,v in ipairs(curves) do
+  local dashes = {nil, {10, 4}, {8, 3, 4, 3}, {6, 3, 2, 3}, {5, 3}}
+  for k, v in ipairs(curves) do
     v.dash = dashes[k]
     v.width = 2
   end
 
-  return {maxRPM = maxRPM, curves = curves, maxTorque = maxTorque, maxPower = maxPower, finalCurveName = curveCounter, deviceName = device.name, vehicleID = obj:getID()}
+  return {maxRPM = maxRPM, curves = curves, maxTorque = maxTorque, maxPower = maxPower, maxTorqueRPM = maxTorqueRPM, maxPowerRPM = maxPowerRPM, finalCurveName = curveCounter, deviceName = device.name, vehicleID = obj:getID()}
 end
 
 local function sendTorqueData(device, data)
@@ -90,7 +101,7 @@ end
 
 local function updateEnergyStorageRatios(device)
   device.energyStorageRatios = {}
-  for _,s in pairs(device.registeredEnergyStorages) do
+  for _, s in pairs(device.registeredEnergyStorages) do
     local storage = energyStorage.getStorage(s)
     if storage then
       if storage.storedEnergy > 0 then
@@ -109,7 +120,7 @@ local function updateEnergyUsage(device)
 
   local hasEnergy = false
   local previousStorageCount = device.storageWithEnergyCounter
-  for _,s in pairs(device.registeredEnergyStorages) do
+  for _, s in pairs(device.registeredEnergyStorages) do
     local storage = energyStorage.getStorage(s)
     if storage then
       local previous = device.previousEnergyLevels[storage.name]
@@ -151,11 +162,11 @@ local function updateSounds(device, dt)
   --rpm = abs(rpm - (device.lastSoundRPM or 0)) > 100 and rpm or (device.lastSoundRPM or 0)
   --engineLoad = abs(engineLoad - (device.lastSoundLoad or 0)) > 1.99 and engineLoad or (device.lastSoundLoad or 0)
   --print(abs(rpm - (device.lastSoundRPM or 0)))
---  if abs(rpm - (device.lastSoundRPM or 0)) > rpm * 0.0015 or abs(engineLoad - (device.lastSoundLoad or 0)) > 0.05 then
---    obj:setEngineSound(0, rpm, engineLoad, sounds.hzToFMODHz(rpm / 20), 1)
---    device.lastSoundRPM = rpm
---    device.lastSoundLoad = engineLoad
---  end
+  --  if abs(rpm - (device.lastSoundRPM or 0)) > rpm * 0.0015 or abs(engineLoad - (device.lastSoundLoad or 0)) > 0.05 then
+  --    obj:setEngineSound(0, rpm, engineLoad, sounds.hzToFMODHz(rpm / 20), 1)
+  --    device.lastSoundRPM = rpm
+  --    device.lastSoundLoad = engineLoad
+  --  end
 
   obj:setEngineSound(device.engineSoundID, rpm, engineLoad, sounds.hzToFMODHz(rpm / 20), 1)
 end
@@ -168,10 +179,11 @@ local function updateTorque(device, dt)
   throttle = min(max(-throttle * min(max(engineAV - device.tempRevLimiterAV, 0), device.tempRevLimiterMaxAVOvershoot) * device.invTempRevLimiterRange + throttle, 0), 1)
 
   local rpm = engineAV * avToRPM * device.motorDirection
-  local torque = (device.torqueCurve[floor(rpm)] or 0) * device.outputTorqueState
+  local torqueRPM = rpm >= 0 and floor(rpm) or 0
+  local torque = (device.torqueCurve[torqueRPM] or 0) * device.outputTorqueState
   torque = torque * min(max(throttle * device.maxPowerThrottleMap / (torque * abs(engineAV) + 1e-30), 0), 1) * device.motorDirection
 
-  local maxCurrentTorque = (device.torqueCurve[floor(device.outputRPM)] or device.torqueCurve[0]) - device.friction - (device.dynamicFriction * device.outputRPM * 0.1047197177)
+  local maxCurrentTorque = (device.torqueCurve[torqueRPM] or device.torqueCurve[0]) - device.friction - (device.dynamicFriction * abs(device.outputRPM) * 0.1047197177)
   device.instantEngineLoad = min(max(device.outputTorque1 / (maxCurrentTorque + 1e-30), 0), 1)
   device.engineLoad = device.loadSmoother:get(device.instantEngineLoad, dt)
 
@@ -184,7 +196,7 @@ local function updateTorque(device, dt)
   local avSign = fsign(engineAV)
   local frictionTorque = abs(device.friction * avSign + device.dynamicFriction * engineAV)
   --friction torque is limited for stability
-  frictionTorque = min(frictionTorque,  abs(engineAV) * device.inertia * 2000) * avSign
+  frictionTorque = min(frictionTorque, abs(engineAV) * device.inertia * 2000) * avSign
 
   device.outputTorque1 = device.clutchChild.torqueDiff
   device.outputAV1 = (engineAV + dt * (torque - device.outputTorque1 - frictionTorque) * device.invEngInertia) * device.outputAVState
@@ -226,7 +238,8 @@ local function setTempRevLimiter(device, revLimiterAV, maxOvershootAV)
 end
 
 local function resetTempRevLimiter(device)
-  device.tempRevLimiterAV = 999999999--device.maxAV * 10
+  device.tempRevLimiterAV = 999999999
+  --device.maxAV * 10
   device.tempRevLimiterMaxAVOvershoot = device.tempRevLimiterAV * 0.01
   device.invTempRevLimiterRange = 1 / device.tempRevLimiterMaxAVOvershoot
   device.isTempRevLimiterActive = false
@@ -270,7 +283,7 @@ local function initSounds(device)
 
         local sampleName = soundConfig.sampleName
         if sampleName then
-          local samplePath = "art/sound/blends/"..sampleName..".sfxBlend2D.json"
+          local samplePath = "art/sound/blends/" .. sampleName .. ".sfxBlend2D.json"
           obj:queueGameEngineLua(string.format("core_sounds.initEngineSound(%d,%d,%q,%s,%f,%f)", objectId, device.engineSoundID, samplePath, device.engineNodeID, offLoadGain, onLoadGain))
 
           local main_gain = soundConfig.mainGain or 0
@@ -288,7 +301,6 @@ local function initSounds(device)
 
           local params = {
             main_gain = main_gain,
-
             eq_a_freq = eq_a_freq,
             eq_b_freq = eq_b_freq,
             eq_c_freq = eq_c_freq,
@@ -298,7 +310,7 @@ local function initSounds(device)
             eq_d_gain = eq_d_gain,
             eq_d_reso = eq_d_reso,
             eq_e_gain = eq_e_gain,
-            eq_e_reso = eq_e_reso,
+            eq_e_reso = eq_e_reso
           }
           --dump(params)
 
@@ -309,7 +321,7 @@ local function initSounds(device)
         --dump(sounds)
         sounds.disableOldEngineSounds()
       else
-        log("E", "electricMotor.init", "Can't find sound config: "..device.jbeamData.soundConfig)
+        log("E", "electricMotor.init", "Can't find sound config: " .. device.jbeamData.soundConfig)
       end
     end
   else
@@ -322,7 +334,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -332,39 +343,32 @@ local function new(jbeamData)
     cumulativeGearRatio = jbeamData.cumulativeGearRatio,
     isPhysicallyDisconnected = true,
     isPropulsed = true,
-
     outputAV1 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     virtualMassAV = 0,
     isBroken = false,
-
     electricsThrottleName = jbeamData.electricsThrottleName or "throttle",
     electricsThrottleFactorName = jbeamData.electricsThrottleFactorName or "throttleFactor",
-
     throttle = 0,
     dynamicFriction = jbeamData.dynamicFriction or 0,
     inertia = jbeamData.inertia or 0.1,
     idleAV = 0, --we keep these for compat with logic that expects an ICE
     idleRPM = 0,
-
     outputTorqueState = 1,
     outputAVState = 1,
     isDisabled = false,
     ignitionCoef = 1,
     isStalled = false,
-
     instantEngineLoad = 0,
     engineLoad = 0,
-    loadSmoother = newTemporalSmoothing(1,1),
-
+    loadSmoother = newTemporalSmoothing(1, 1),
     grossWorkPerUpdate = 0,
     frictionLossPerUpdate = 0,
     spentEnergy = 0,
     storageWithEnergyCounter = 0,
     registeredEnergyStorages = {},
     previousEnergyLevels = {},
-
     initSounds = initSounds,
     updateSounds = nop,
     onBreak = onBreak,
@@ -386,7 +390,7 @@ local function new(jbeamData)
     enable = enable,
     updateEnergyUsage = updateEnergyUsage,
     updateEnergyStorageRatios = updateEnergyStorageRatios,
-    registerStorage = registerStorage,
+    registerStorage = registerStorage
   }
 
   device.jbeamData = jbeamData
@@ -402,7 +406,7 @@ local function new(jbeamData)
   end
   local torqueTable = tableFromHeaderTable(jbeamData.torque)
   local points = {}
-  for _,v in pairs(torqueTable) do
+  for _, v in pairs(torqueTable) do
     table.insert(points, {v.rpm, v.torque})
     device.maxRPM = max(device.maxRPM, v.rpm)
   end
@@ -414,14 +418,14 @@ local function new(jbeamData)
 
   local tempElectricalEfficiencyTable = nil
   if not jbeamData.electricalEfficiency or type(jbeamData.electricalEfficiency) == "number" then
-    tempElectricalEfficiencyTable = { {0, jbeamData.electricalEfficiency or 1}, {1, jbeamData.electricalEfficiency or 1}}
+    tempElectricalEfficiencyTable = {{0, jbeamData.electricalEfficiency or 1}, {1, jbeamData.electricalEfficiency or 1}}
   elseif type(jbeamData.electricalEfficiency) == "table" then
     tempElectricalEfficiencyTable = deepcopy(jbeamData.electricalEfficiency)
   end
 
   local copy = deepcopy(tempElectricalEfficiencyTable)
   tempElectricalEfficiencyTable = {}
-  for k,v in pairs(copy) do
+  for k, v in pairs(copy) do
     if type(k) == "number" then
       table.insert(tempElectricalEfficiencyTable, {v[1] * 100, v[2]})
     end
@@ -429,7 +433,7 @@ local function new(jbeamData)
 
   tempElectricalEfficiencyTable = createCurve(tempElectricalEfficiencyTable)
   device.electricalEfficiencyTable = {}
-  for k,v in pairs(tempElectricalEfficiencyTable) do
+  for k, v in pairs(tempElectricalEfficiencyTable) do
     device.electricalEfficiencyTable[k * 0.01] = v
   end
 

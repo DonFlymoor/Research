@@ -202,7 +202,7 @@
           {"beamDeform":270000,"beamStrength":462800},
           {"beamLimitSpring":5001000,"beamLimitDamp":4500},
           {"beamSpring":500,"beamDamp":0},
-          ["axshr","fr17r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak.ogg","volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1000}],
+          ["axshr","fr17r"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":1000}],
           ["axshl","fr17l"{"beamLimitDampRebound":0,"dampCutoffHz":500,"soundFile":"art/sound/spring_creak2.ogg","volumeFactor":10,"decayMode":1,"decayFactor":4,"pitchFactor":1,"maxStress":1000}],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],

@@ -11,6 +11,13 @@ local config = readJsonFile('settings/createThumbnails_config.json')
 local options = config.options
 local views = config.views
 
+local function yieldSec(yieldfn,sec)
+    local start  = os.clock()
+    while (start+sec)>os.clock() do
+        yieldfn()
+    end
+end
+
 local function onPreRender(dt)
     if workerCoroutine ~= nil then
         local errorfree, value = coroutine.resume(workerCoroutine)
@@ -90,16 +97,14 @@ local function onExtensionLoaded()
     -- todo: since we need to load the whole vehicle for each config anyway we should cycle each view for each vehicle so that we don't need to set the window dimensions that often
 
     workerCoroutine = coroutine.create(function()
-        for i=1,80 do
-            coroutine.yield()
-        end
+        yieldSec(coroutine.yield, 0.1)
 
         log('I', logTag, 'Getting config list')
         local configs = core_vehicles.getConfigList(true).configs
         local configCount = tableSize(configs)
         log('I', logTag, table.maxn(configs).." configs")
         
-        coroutine.yield()
+        yieldSec(coroutine.yield, 0.1)
         
         local counter = 0
         for _, v in pairs(configs) do
@@ -113,14 +118,10 @@ local function onExtensionLoaded()
 
             -- Replace the vehicle
             log('I', logTag, string.format("Spawning vehicle %05d / %05d", counter, configCount) .. ' : ' .. ' name: ' .. tostring(v.model_key) .. ', config: ' .. tostring(v.key))
-            coroutine.yield()
+            yieldSec(coroutine.yield, 0.1)
             local oldVehicle = be:getPlayerVehicle(0)
             core_vehicles.replaceVehicle(v.model_key, { config = v.key, licenseText = options.plate or ' '})
-            coroutine.yield()
-
-            for i=1,120 do
-                coroutine.yield()
-            end
+            yieldSec(coroutine.yield, 1)
 
             guihooks.trigger('hide_ui', true)
 
@@ -134,17 +135,13 @@ local function onExtensionLoaded()
                 if options.views ~= nil and not tableContains(options.views, viewName) then goto skipView end
                 local findValView = findValConf(useView)
 
-                for i=1,10 do
-                    coroutine.yield()
-                end
+                yieldSec(coroutine.yield, 0.1)
                 setDimHelper(useView)
-                for i=1,10 do
-                    coroutine.yield()
-                end
+                yieldSec(coroutine.yield, 0.1)
 
                 local newVehicle = oldVehicle
                 while newVehicle == oldVehicle do
-                    coroutine.yield()
+                    yieldSec(coroutine.yield, 0.1)
                     newVehicle = be:getPlayerVehicle(0)
                 end
 
@@ -159,16 +156,12 @@ local function onExtensionLoaded()
                 core_camera.resetCameraByID(vehicleId)
                 core_camera.setFOV(vehicleId, 20)
 
-                for i=1,40 do
-                    coroutine.yield()
-                end
+                yieldSec(coroutine.yield, 0.4)
 
                 core_camera.resetCameraByID(vehicleId)
                 core_camera.setFOV(vehicleId, 20)
                 
-                for i=1,40 do
-                    coroutine.yield()
-                end
+                yieldSec(coroutine.yield, 0.4)
 
 
                 -- newVehicle:setCamModeByType("orbit")
@@ -194,9 +187,7 @@ local function onExtensionLoaded()
                 --BeamEngine.zoomInSpeed = idealDistance
                 --print("* new distance: " .. tostring(idealDistance))
 
-                for i=1,200 do
-                    coroutine.yield()
-                end
+                yieldSec(coroutine.yield, 2)
 
                 if findValView('freeOffset') then
                     commands.setFreeCamera()
@@ -208,9 +199,7 @@ local function onExtensionLoaded()
                     pos.z = pos.z + findValView('freeOffset')[3] / idealDistance
                     camera:setPosition(vec3(pos):toPoint3F())
                     TorqueScript.eval('setFov('.. findValView('fov') ..');') --cannot be replaced atm because of anonymous namespace in c++
-                    for i=1,40 do
-                        coroutine.yield()
-                    end
+                    yieldSec(coroutine.yield, 0.5)
                 end
 
 
@@ -220,42 +209,34 @@ local function onExtensionLoaded()
                 -- Take screenshot
                 local screenShotName = "vehicles/" .. v.model_key .. "/" .. (findValView('prefix') or '') .. v.key .. (findValView('suffix') or '')
                 log('I', logTag, "saved screenshot:" .. screenShotName  ..'.png')
-                TorqueScript.eval('screenShot("' .. screenShotName ..'", "PNG");')
+                TorqueScript.eval('screenShot("' .. screenShotName ..'", "PNG", 1);')
                 if viewName == "default" and v.is_default_config then
                     -- t3d apparently does not like to take two pictures in one frame...
-                    for i=1,40 do
-                        coroutine.yield()
-                    end
+                    yieldSec(coroutine.yield, 0.2)
                     log('I', logTag, "saved default:" .. v.model_key  ..'.png')
-                    TorqueScript.eval('screenShot("vehicles/' .. v.model_key .. '/default", "PNG");')
+                    TorqueScript.eval('screenShot("vehicles/' .. v.model_key .. '/default", "PNG", 1);')
                 end
-                coroutine.yield()
+                yieldSec(coroutine.yield, 0.2)
 
                 if findValView("annotation") == "true" then 
+                    yieldSec(coroutine.yield, 0.2)
                     TorqueScript.eval('toggleAnnotationVisualize(true);')
                     screenShotName = "vehicles/" .. v.model_key .. "/" .. (findValView('prefix') or '') .. v.key .. (findValView('suffix') or '')
-                    for i=1,5 do
-                        coroutine.yield()
-                    end
+                    yieldSec(coroutine.yield, 0.2)
                     log('I', logTag, "saved screenshot:" .. screenShotName  ..'_ann.png')
-                    TorqueScript.eval('screenShot("' .. screenShotName ..'_ann", "PNG");')
-                    for i=1,5 do
-                        coroutine.yield()
-                    end
+                    TorqueScript.eval('screenShot("' .. screenShotName ..'_ann", "PNG", 1);')
+                    yieldSec(coroutine.yield, 0.2)
                     TorqueScript.eval('toggleAnnotationVisualize(false);')
                 end
 
                 if findValView("annotation") == "true" then 
+                    yieldSec(coroutine.yield, 0.2)
                     TorqueScript.eval('toggleLightColorViz(true);')
                     screenShotName = "vehicles/" .. v.model_key .. "/" .. (findValView('prefix') or '') .. v.key .. (findValView('suffix') or '')
-                    for i=1,5 do
-                        coroutine.yield()
-                    end
+                    yieldSec(coroutine.yield, 0.2)
                     log('I', logTag, "saved screenshot:" .. screenShotName  ..'_li.png')
-                    TorqueScript.eval('screenShot("' .. screenShotName ..'_li", "PNG");')
-                    for i=1,5 do
-                        coroutine.yield()
-                    end
+                    TorqueScript.eval('screenShot("' .. screenShotName ..'_li", "PNG", 1);')
+                    yieldSec(coroutine.yield, 0.2)
                     TorqueScript.eval('toggleLightColorViz(false);')
                 end
 

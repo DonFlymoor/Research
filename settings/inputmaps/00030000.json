@@ -1,0 +1,10 @@
+{
+    "name": "Hitec Aurora 9 R/C (RC-Joystick)"
+    "guid": "{00030000-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        // movement
+        {"control": "rzaxis"    ,   "action": "steering", "linearity": 1.3},
+        {"control": "yaxis" ,   "action": "joy_accelerate"},
+    ]
+}

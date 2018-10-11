@@ -19,7 +19,10 @@ end
 
 local function updateTorque(device)
   local reverseGearRatioCoef = device.reverseGearRatioCoef
-  local oneWayTorque = min(max(device.oneWayViscousCoef * device.outputAV1 * reverseGearRatioCoef, -device.oneWayViscousTorque), 0)
+  local oneWayTorque = device.oneWayTorqueSmoother:get(min(max(device.oneWayViscousCoef * device.outputAV1, -device.oneWayViscousTorque), device.oneWayViscousTorque))
+  device.oneWayTorqueSmoother:set(device.outputAV1 * reverseGearRatioCoef < 0 and oneWayTorque or 0)
+  oneWayTorque = device.oneWayTorqueSmoother:value() * reverseGearRatioCoef
+
   device.outputTorque1 = ((device.parent[device.parentOutputTorqueName] - device.friction * min(max(device.inputAV, -1), 1)) * device.gearRatio - oneWayTorque) * reverseGearRatioCoef * device.lockCoef
 end
 
@@ -106,6 +109,9 @@ local function calculateInertia(device)
   device.cumulativeInertia = outputInertia / device.maxGearRatio / device.maxGearRatio
   device.invCumulativeInertia = 1 / device.cumulativeInertia
 
+  device.parkLockSpring = device.jbeamData.parkLockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * outputInertia * 0.5) --Nm/rad
+  device.maxParkClutchAngle = device.parkLockTorque / device.parkLockSpring
+
   device.cumulativeGearRatio = cumulativeGearRatio * device.gearRatio
   device.maxCumulativeGearRatio = maxCumulativeGearRatio * device.maxGearRatio
 end
@@ -127,6 +133,9 @@ local function reset(device)
   device.lockCoef = 1
   device.reverseGearRatioCoef = 1
   device.parkClutchAngle = 0
+
+  --one way viscous coupling (prevents rolling backwards)
+  device.oneWayTorqueSmoother:reset()
 
   device:setGearRatio(device.maxGearRatio)
 
@@ -177,12 +186,11 @@ local function new(jbeamData)
   --gearbox park locking clutch
   device.parkClutchAngle = 0
   device.parkLockTorque = jbeamData.parkLockTorque or 1000 --Nm
-  device.parkLockSpring = jbeamData.parkLockSpring or device.parkLockTorque --Nm/rad
-  device.maxParkClutchAngle = device.parkLockTorque / device.parkLockSpring --rad
 
   --one way viscous coupling (prevents rolling backwards)
   device.oneWayViscousCoef = jbeamData.oneWayViscousCoef or 5
-  device.oneWayViscousTorque = jbeamData.oneWayViscousTorque or  device.oneWayViscousCoef * 20
+  device.oneWayViscousTorque = jbeamData.oneWayViscousTorque or device.oneWayViscousCoef * 25
+  device.oneWayTorqueSmoother = newExponentialSmoothing(jbeamData.oneWayViscousSmoothing or 50)
 
   if jbeamData.gearboxNode_nodes and type(jbeamData.gearboxNode_nodes) == "table" then
     device.transmissionNodeID = jbeamData.gearboxNode_nodes[1]

@@ -28,7 +28,6 @@ angular.module('beamng.apps')
       var canvas = element[0].getElementsByTagName('canvas')[0];
 
       var chart = new SmoothieChart({
-          minValue: 0,
           millisPerPixel: 20,
           interpolation: 'bezier',
           grid: { fillStyle: 'rgba(250,250,250,0.8)', strokeStyle: 'transparent', verticalSections: 10, millisPerLine: 1000, sharpLines: true },

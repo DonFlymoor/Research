@@ -1,0 +1,63 @@
+{
+"name" : "PS(R) Gamepad Adaptor", "version" : 1, "devicetype" : "joystick", "vidpid" : "00030E8F", "bindings" :   [
+    {
+"action" : "switch_camera_next", "control" : "button8"
+
+},     {
+"action" : "reset_physics", "control" : "rpov"
+
+},     {
+"action" : "menu_item_left", "control" : "lpov"
+
+},     {
+"action" : "pause", "control" : "button9"
+
+},     {
+"action" : "menu_item_select", "control" : "button2"
+
+},     {
+"action" : "shiftUp", "control" : "button7"
+
+},     {
+"action" : "menu_item_up", "control" : "upov"
+
+},     {
+"action" : "menu_item_right", "control" : "rpov"
+
+},     {
+"action" : "brake", "control" : "button3"
+
+},     {
+"action" : "menu_item_down", "control" : "dpov"
+
+},     {
+"action" : "shiftDown", "control" : "button6"
+
+},     {
+"action" : "steering", "control" : "xaxis"
+
+},     {
+"action" : "activateStarterMotor", "control" : "dpov"
+
+},     {
+"action" : "clutch", "control" : "button4"
+
+},     {
+"action" : "toggle_headlights", "control" : "upov"
+
+},     {
+"action" : "accelerate", "control" : "button2"
+
+},     {
+"action" : "parkingbrake", "control" : "button5"
+
+},     {
+"action" : "recover_vehicle", "control" : "lpov"
+
+},     {
+"action" : "menu_item_back", "control" : "button1"
+
+}]
+, "guid" : "{00030E8F-0000-0000-0000-504944564944}"
+
+}

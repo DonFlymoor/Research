@@ -1,0 +1,185 @@
+Name of sound asset: 
+ui_mission_complete_bronze.ogg; ui_mission_complete_silver.ogg; ui_mission_complete_gold.ogg; ui_mission_complete_failed.ogg
+
+Name of source sound
+: 140222__shall555__sh-antique-cash-register-sale-ringup.wav
+
+Link to license: 
+https://creativecommons.org/licenses/by/3.0/
+
+Way of use/modification: 
+used as one of several layers of final sound; modifications by equalizer, pitch-shifting and file length adaption
+
+Link to source sound
+: https://www.freesound.org/people/shall555/sounds/140222/
+
+Name of sound asset: 
+ui_mission_complete_bronze.ogg; ui_mission_complete_silver.ogg; ui_mission_complete_gold.ogg; ui_mission_complete_failed.ogg
+
+Name of source sound: 
+184438__capslok__cash-register-fake.wav
+
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: used as one of several layers of final sound; modifications by equalizer, pitch-shifting and file length adaption
+
+Link to source sound: 
+https://www.freesound.org/people/CapsLok/sounds/184438/
+
+Name of sound asset: 169575__kvgarlic__cricketsearlymornngaugust2010_loop.wav
+Name of source sound: 169575__kvgarlic__cricketsearlymornngaugust2010.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: Single loop, cleaned up with EQ. Ambient sound.
+Link to source sound: 
+http://freesound.org/people/kvgarlic/sounds/169575/
+
+Name of sound asset: 195977__blaukreuz__130719-brela-climbingtrail-f-4824_loop
+Name of source sound: 195977__blaukreuz__130719-brela-climbingtrail-f-4824.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: Single loop, cleaned up with EQ. Ambient sound.
+Link to source sound: http://freesound.org/people/blaukreuz/sounds/195977/
+
+Name of sound asset: 199532__felix-blume__toucan-screaming-in-the-amazon-forest-venezuela_JR_1-5.wav
+Name of source sound: 199532__felix-blume__toucan-screaming-in-the-amazon-forest-venezuela.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: SFX Emitter in Jungle Rock.
+Link to source sound: http://freesound.org/people/felix.blume/sounds/376669/
+
+Name of sound asset: 208024__felix-blume__countryside-in-texas-insects-and-birds_loop.wav
+Name of source sound: 208024__felix-blume__countryside-in-texas-insects-and-birds.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: Single loop, cleaned up with EQ. Ambient sound.
+Link to source sound: http://freesound.org/people/felix.blume/sounds/208024/
+
+Name of sound asset: 210523__yuval__roomtone-central-heating_loop.wav
+Name of source sound: 210523__yuval__roomtone-central-heating.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: Single loop, cleaned up with EQ. Ambient sound.
+Link to source sound: http://freesound.org/people/Yuval/sounds/210523/
+
+Name of sound asset: 328294__felix-blume__loop.wav
+Name of source sound: 328294__felix-blume__forest-at-dawn-owl-birds-crickets-and-insects-in-the-sian-ka-an-biosphere-reserve.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: Single loop, cleaned up with EQ. Ambient sound.
+Link to source sound: http://freesound.org/people/felix.blume/sounds/328294/
+
+
+Name of sound asset: 328297__felix-blume__forest-at-dawn-with-birds-chachalacas-crickets-and-insects-in-the-sian-ka-an-biosphere-reserve_loop_edited
+Name of source sound: 328297__felix-blume__forest-at-dawn-with-birds-chachalacas-crickets-and-insects-in-the-sian-ka-an-biosphere-reserve.wav
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+: Single loop, cleaned up with EQ. Ambient sound.
+Link to source sound: http://freesound.org/people/felix.blume/sounds/328297/
+
+
+Name of sound asset: claire_de_lune_loop.flac
+Name of source sound: Claire_de_Lune.wav
+Link to license: 
+https://creativecommons.org/licenses/by/3.0/
+
+Way of use/modification
+: Shortened, converted to looping sound for Piano object sound
+Link to source sound:
+https://soundcloud.com/pianomusicgirl/claire-de-lune
+Date obtained: 2017-07-21
+
+Name of sound asset: ui_mouse_over_v1, _v2 and _v3, ui_select_main, ui_countdown all variations
+Name of source sound: 265458__gowlermusic__sleigh-bells-sound-effect.wav
+Link to license: 
+https://creativecommons.org/licenses/by/3.0/
+Way of use/modification
+: UI sound for winter mod
+Link to source sound: https://freesound.org/people/GowlerMusic/sounds/265458/
+
+
+Name of sound asset: Merry Christmas Music Box Filtered
+Name of source sound: 322275__rhodesmas__we-wish-you-a-merry-christmas.wav
+Link to license: https://creativecommons.org/licenses/by/3.0/
+Way of use/modification
+: Siren sound for winter mod
+Link to source sound: https://freesound.org/people/rhodesmas/sounds/322275/
+
+
+Name of sound asset:
+Name of source sound: 
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+:
+Link to source sound:
+
+
+Name of sound asset:
+Name of source sound: 
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+:
+Link to source sound:
+
+
+Name of sound asset:
+Name of source sound: 
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+:
+Link to source sound:
+
+
+Name of sound asset:
+Name of source sound: 
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+:
+Link to source sound:
+
+
+Name of sound asset:
+Name of source sound: 
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+:
+Link to source sound:
+
+
+Name of sound asset:
+Name of source sound: 
+Link to license: 
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Way of use/modification
+:
+Link to source sound:
+
+
+

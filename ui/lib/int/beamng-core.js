@@ -316,10 +316,10 @@ angular.module('beamng.core', [])
         // console.log(config[ev], config[ev].disabled ? config[ev].disabled() : 'non obj');
 
         if (typeof config[ev] === 'string') {
-          var soundLoc = config[ev].startsWith('event:') ? config[ev] : `${path}/${config[ev]}`; 
+          var soundLoc = config[ev].startsWith('event:') ? config[ev] : `${path}/${config[ev]}`;
           bngApi.engineLua(`Engine.Audio.playOnce('AudioGui', '${soundLoc}')`);
         } else if (!config[ev].disabled()) {
-          var soundLoc = config[ev].sound.startsWith('event:') ? config[ev].sound : `${path}/${config[ev].sound}`; 
+          var soundLoc = config[ev].sound.startsWith('event:') ? config[ev].sound : `${path}/${config[ev].sound}`;
           bngApi.engineLua(`Engine.Audio.playOnce('AudioGui', '${soundLoc}')`);
         }
       });
@@ -335,7 +335,7 @@ angular.module('beamng.core', [])
     template: `
       <div class="imageslider">
         <div class="imageslideItem filler" ng-repeat="image in images track by $index" ng-show="image.visible" ng-mouseenter="isActive(true)" ng-mouseleave="isActive(false)">
-          <div style="background-image:url({{image.url}}); background-size: cover; background-position: center center;" class="filler"></div>
+          <div style="background-image: url('{{image.url}}'); background-size: cover; background-position: center center;" class="filler"></div>
         </div>
       </div>
       `,

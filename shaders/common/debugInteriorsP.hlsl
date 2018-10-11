@@ -13,15 +13,13 @@ struct Fragout
    float4 col : COLOR0;
 };
 
+uniform sampler2D diffuseMap;
+uniform float4    shadeColor;
 
 //-----------------------------------------------------------------------------
 // Main                                                                        
 //-----------------------------------------------------------------------------
-Fragout main( ConnectData IN,
-              uniform sampler2D diffuseMap      : register(S0),
-              uniform float4    shadeColor      : register(C0)
-              
-)
+Fragout main( ConnectData IN )
 {
    Fragout OUT;
 

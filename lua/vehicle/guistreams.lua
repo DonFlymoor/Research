@@ -18,31 +18,31 @@ local function updateStreams()
   -- Wheelinfo --
   if streamControl.wheelInfo then
     local wheelinfo = {}
-    for i,wd in pairs(wheels.wheels) do
+    for i, wd in pairs(wheels.wheels) do
       wheelinfo[i] = {
-        wd.name
-        , wd.radius
-        , wd.wheelDir
-        , wd.angularVelocity
-        , wd.propulsionTorque
-        , wd.lastSlip
-        , 0 --deprecated, used to be lastTorqueMode
-        , wd.downForce
-        , wd.brakingTorque
-        , wd.brakeTorque
+        wd.name,
+        wd.radius,
+        wd.wheelDir,
+        wd.angularVelocity,
+        wd.propulsionTorque,
+        wd.lastSlip,
+        0, --deprecated, used to be lastTorqueMode
+        wd.downForce,
+        wd.brakingTorque,
+        wd.brakeTorque
       }
     end
-    gui.send('wheelInfo', wheelinfo)
+    gui.send("wheelInfo", wheelinfo)
   end
 
   -- Engineinfo --
   if streamControl.engineInfo then
-    gui.send('engineInfo', controller.mainController.engineInfo)
+    gui.send("engineInfo", controller.mainController.engineInfo)
   end
 
   -- Electrics --
   if streamControl.electrics then
-    gui.send('electrics', electrics.values)
+    gui.send("electrics", electrics.values)
   end
 
   -- Stats --
@@ -59,7 +59,7 @@ local function updateStreams()
       tri_count = obj:getTriangleCount(),
       collidable_tri_count = obj:getCollidableTriangleCount()
     }
-    gui.send('stats' , stats )
+    gui.send("stats", stats)
   end
 
   if streamControl.sensors then
@@ -89,12 +89,12 @@ local function updateStreams()
     lsensors.pitch = dirVector.z
     lsensors.yaw = math.atan2(dirVector.x, -dirVector.y)
     lsensors.gravity = obj:getGravity()
-    gui.send('sensors', lsensors)
+    gui.send("sensors", lsensors)
   end
 end
 
 local function updateReferenceCounts(state)
-  for k,v in pairs(state) do
+  for k, v in pairs(state) do
     streamControl[k] = v > 0
   end
 end

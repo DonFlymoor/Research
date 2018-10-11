@@ -1,0 +1,12 @@
+{
+"name" : "HE Sequential Shifter", "version" : 1, "devicetype" : "joystick", "vidpid" : "3142A020", "bindings" :   [
+    {
+"action" : "shiftDown", "control" : "button1"
+
+},     {
+"action" : "shiftUp", "control" : "button0"
+
+}]
+, "guid" : "{3142A020-0000-0000-0000-504944564944}"
+
+}

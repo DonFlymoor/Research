@@ -307,7 +307,7 @@
 
 
       <md-grid-tile md-colspan="10" md-rowspan="1" layout="row" layout-align="bottom center">
-        <div ng-click="startRoute();" class="playBtn" bng-nav-item style="font-size: 5vh; padding: 10px; text-align: center; min-width: 300px;" ng-class="{'disabled': isDisabled()}" nav-item-disabled="{{isDisabled()}}">
+        <div ng-click="startRoute();" class="playBtn" bng-nav-item style="font-size: 5vh; padding: 10px; text-align: center; min-width: 300px;" ng-class="{'disabled': isDisabled()}" nav-item-disabled="{{!isDisabled()}}">
           {{ :: 'ui.quickrace.play' | translate }}
         </div>
       </md-grid-tile>

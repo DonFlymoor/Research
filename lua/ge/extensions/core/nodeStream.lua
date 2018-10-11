@@ -12,6 +12,17 @@ local listenPort = 13317
 local listenUdpSocket = nil
 local sendingUdpSocket = nil
 
+function hex_dump_file(buf, filename)
+  local f = io.open(filename, "w")
+  for i=1,math.ceil(#buf/16) * 16 do
+    if (i-1) % 16 == 0 then f:write(string.format('%08X  ', i-1)) end
+    f:write( i > #buf and '   ' or string.format('%02X ', buf:byte(i)) )
+    if i %  8 == 0 then f:write(' ') end
+    if i % 16 == 0 then f:write( buf:sub(i-16+1, i):gsub('%c','.'), '\n' ) end
+  end
+  f:close()
+end
+
 local function onExtensionLoaded()
   log('D', 'nodeStream.onExtensionLoaded', "nodeStream module loaded")
 

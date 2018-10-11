@@ -282,14 +282,14 @@ local function loadInternal(extName, globalAlias, noNameConversion)
             log('W', logTag, "Patching function " ..name.."() to "..data.replacement.."()")
             m[data.replacement] = m[name]
             m[name] = nil
-          end          
+          end
           if data.executeOnModuleLoad then
             local res = m[data.replacement]()
             if type(res) == 'boolean' and res == false and data.returnOnFail then
               log('W', logTag, "Earlying out of loading module "..mName)
               return false
             end
-          end         
+          end
         end
       end
     end

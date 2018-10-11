@@ -161,9 +161,72 @@ angular.module('beamng.stuff')
 
 //       setSrc();
 //     }
-//   };
+//   };s
 // })
 
+
+.directive('bngGrid', function () {
+  return {
+    restrict: 'E',
+    template: `
+      <div class="container" ng-transclude></div>`,
+    scope: {
+      rows: '@',
+      cols: '@'
+    },
+    transclude: true,
+    controller: function ($scope, $element) {
+      var vm = this
+        , childs = [] // TODO: implement this, so we can have some more control over how items are placed it the values do not result in a pixel perfect grid
+          // otherwise we'll have some pixel fragments between and around the right and bottom border
+        ;
+
+      vm.register = function (x, y, rowspan, colspan, cb) {
+        var res = {}
+          , width = 100/Number($scope.cols)
+          , height = 100/Number($scope.rows)
+          ;
+        res.width = `${width * colspan}%`;
+        res.height = `${height * rowspan}%`;
+        res.left = `${(x - 1) * width}%`;
+        res.top = `${(y - 1) * height}%`;
+        cb(res);
+      }
+    }
+  }
+})
+
+.directive('bngGridItem', function () {
+  return {
+    require: '^bngGrid',
+    // todo: perf only adjust height and width once (they are percentage based anyway and should then be handled by css)
+    template: `
+        <div style="position: absolute;" ng-transclude>
+      </div>`,
+    restrict: 'E',
+    transclude: true,
+    scope: {
+      row: '@',
+      col: '@',
+      rowspan: '@',
+      colspan: '@'
+    },
+    replace: true,
+    link: function (scope, elem, attrs, gridCtrl) {
+      var x = Number(scope.col)
+        , y = Number(scope.row)
+        , colspan = scope.colspan ? Number(scope.colspan) : 1
+        , rowspan = scope.rowspan ? Number(scope.rowspan) : 1
+        ;
+      gridCtrl.register(x, y, rowspan, colspan, function (dim) {
+        // console.log(x, y, rowspan, colspan, dim)
+        for (var key in dim) {
+          elem.css(key, dim[key])
+        }
+      });
+    }
+  }
+})
 
 
 
@@ -650,7 +713,7 @@ angular.module('beamng.stuff')
     'temperature': 'uiUnitTemperature',
     'weight': 'uiUnitWeight',
     'consumptionRate': 'uiUnitConsumptionRate',
-    'torque': 'uiUnitWeight',
+    'torque': 'uiUnitTorque',
     'energy': 'uiUnitEnergy',
     'date': 'uiUnitDate',
     'power': 'uiUnitPower',
@@ -1324,3 +1387,19 @@ Object.defineProperty(Object.prototype, 'isEmpty', {
 function nop () {}
 
 window.print = nop;
+
+
+
+function fnCallCounter (fn) {
+  ctr = 0
+  interval = 1000
+  i = setInterval(() => {
+    console.log(ctr, interval)
+    ctr = 0
+  }, interval)
+  return {intervalHandel: i, newFn: function () {
+      ctr += 1
+      fn.apply(undefined, arguments);
+    }};
+
+}

@@ -1,3 +1,7 @@
+-- This Source Code Form is subject to the terms of the bCDDL, v. 1.1.
+-- If a copy of the bCDDL was not distributed with this
+-- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
+
 local M = {}
 
 M.wheelRotators = {}
@@ -71,21 +75,20 @@ local airspeedResetTime = 0.3
 local airspeedResetSpeedThreshold = 1 / 0.7
 
 local padThermalEfficiencyData = {
-  ["basic"] =       {w1x1Coef = 0.018462, w2x1Coef = -0.013846, b1 = 3,   b2 = 7,    a = -0.988}, --w1x1Coef = w1 / (2 * x1), w2x1Coef = w2 / (2 * x1)
-  ["premium"] =     {w1x1Coef = 0.018462, w2x1Coef = -0.011538, b1 = 3.5, b2 = 7,    a = -0.992},
-  ["sport"] =       {w1x1Coef = 0.019231, w2x1Coef = -0.014231, b1 = 2,   b2 = 9.5,  a = -0.996},
-  ["semi-race"] =   {w1x1Coef = 0.008462, w2x1Coef = -0.013846, b1 = 1.5, b2 = 10.5, a = -0.985},
-  ["full-race"] =   {w1x1Coef = 0.009231, w2x1Coef = -0.016923, b1 = 0.8, b2 = 14,   a = -0.992},
-  ["godmode"] =     {w1x1Coef = 0.007692, w2x1Coef = -0.007692, b1 = 10,  b2 = 100,  a = -1.001},
+  ["basic"] = {w1x1Coef = 0.018462, w2x1Coef = -0.013846, b1 = 3, b2 = 7, a = -0.988}, --w1x1Coef = w1 / (2 * x1), w2x1Coef = w2 / (2 * x1)
+  ["premium"] = {w1x1Coef = 0.018462, w2x1Coef = -0.011538, b1 = 3.5, b2 = 7, a = -0.992},
+  ["sport"] = {w1x1Coef = 0.019231, w2x1Coef = -0.014231, b1 = 2, b2 = 9.5, a = -0.996},
+  ["semi-race"] = {w1x1Coef = 0.008462, w2x1Coef = -0.013846, b1 = 1.5, b2 = 10.5, a = -0.985},
+  ["full-race"] = {w1x1Coef = 0.009231, w2x1Coef = -0.016923, b1 = 0.8, b2 = 14, a = -0.992},
+  ["godmode"] = {w1x1Coef = 0.007692, w2x1Coef = -0.007692, b1 = 10, b2 = 100, a = -1.001}
 }
 
-local virtualAirspeedMaps =
-{
-  {acceleration = 0.1,  invGainSum = 0, wheelCoef = 1, correctionCoef = 1.01}, -- stable, idle
-  {acceleration = 0,    invGainSum = 0, wheelCoef = 1, correctionCoef = 0.9},  -- heavyBrakingInit, idle
-  {acceleration = 1,    invGainSum = 0, wheelCoef = 0, correctionCoef = 1.00}, -- heavyBraking, braking
-  {acceleration = 2,    invGainSum = 0, wheelCoef = 0, correctionCoef = 1.01}, -- heavyAcceleration, acceleration
-  {acceleration = 0.1,  invGainSum = 0, wheelCoef = 1, correctionCoef = 1}     -- heavyYaw, idle
+local virtualAirspeedMaps = {
+  {acceleration = 0.1, invGainSum = 0, wheelCoef = 1, correctionCoef = 1.01}, -- stable, idle
+  {acceleration = 0, invGainSum = 0, wheelCoef = 1, correctionCoef = 0.9}, -- heavyBrakingInit, idle
+  {acceleration = 1, invGainSum = 0, wheelCoef = 0, correctionCoef = 1.00}, -- heavyBraking, braking
+  {acceleration = 2, invGainSum = 0, wheelCoef = 0, correctionCoef = 1.01}, -- heavyAcceleration, acceleration
+  {acceleration = 0.1, invGainSum = 0, wheelCoef = 1, correctionCoef = 1} -- heavyYaw, idle
 }
 
 local updateThermalsGFXMethod = nop
@@ -96,7 +99,7 @@ local function beamBroke(id)
     return
   end
 
-  for _,v in ipairs(axleBeamLookup[beamName]) do
+  for _, v in ipairs(axleBeamLookup[beamName]) do
     local wd = M.wheelRotators[v]
     if not wd.isBroken then
       wd.isBroken = true
@@ -108,11 +111,11 @@ local function beamBroke(id)
       wd.obj:setTorqueAndBrakeTorque(0, 0)
       damageTracker.setDamage("wheels", wd.name, true)
       -- Brake damage
-      damageTracker.setDamage("wheels", "brake"..wd.name, true);
+      damageTracker.setDamage("wheels", "brake" .. wd.name, true)
       if wd.rotatorType == "wheel" then
         M.wheelCount = M.wheelCount - 1
         invWheelCount = M.wheelCount > 0 and 1 / M.wheelCount or 0
-        if wd.isSpeedo then
+        if wd.isSpeedo == 1 then
           speedoWheelCount = speedoWheelCount - 1
           invSpeedoWheelCount = speedoWheelCount > 0 and 1 / speedoWheelCount or 0
         end
@@ -140,9 +143,9 @@ local function calculateThermalEfficiency(temperature, config)
   local z1 = config.w1x1Coef * temperature + config.b1
   local z2 = config.w2x1Coef * temperature + config.b2
 
-  local sigma1 = 1 / (1 + math.exp(-z1));
-  local sigma2 = 1 / (1 + math.exp(-z2));
-  local f = sigma1 + sigma2 + config.a;
+  local sigma1 = 1 / (1 + math.exp(-z1))
+  local sigma2 = 1 / (1 + math.exp(-z2))
+  local f = sigma1 + sigma2 + config.a
 
   local result = min(max(f, 0), 1)
   return result
@@ -177,8 +180,8 @@ local function updateThermalsGFX(dt)
       local energyBrakeSurfaceToCore = (wd.brakeSurfaceTemperature - wd.brakeCoreTemperature) * wd.kSurfaceToCore * wd.brakeCoolingArea
       local energyBrakeCoreToAir = (wd.brakeCoreTemperature - tEnv) * coreCooling * wd.brakeCoolingArea
 
-      wd.brakeSurfaceTemperature = max(wd.brakeSurfaceTemperature + (energyToBrakeSurface - (energyBrakeSurfaceToAir + energyRadiationToAir + energyBrakeSurfaceToCore) * dt) * wd.brakeSurfaceEnergyCoef , tEnv)
-      wd.brakeCoreTemperature = max(wd.brakeCoreTemperature + ((energyBrakeSurfaceToCore - energyBrakeCoreToAir) * dt) * wd.brakeCoreEnergyCoef , tEnv)
+      wd.brakeSurfaceTemperature = max(wd.brakeSurfaceTemperature + (energyToBrakeSurface - (energyBrakeSurfaceToAir + energyRadiationToAir + energyBrakeSurfaceToCore) * dt) * wd.brakeSurfaceEnergyCoef, tEnv)
+      wd.brakeCoreTemperature = max(wd.brakeCoreTemperature + ((energyBrakeSurfaceToCore - energyBrakeCoreToAir) * dt) * wd.brakeCoreEnergyCoef, tEnv)
 
       wd.isBrakeMolten = wd.brakeCoreTemperature > wd.brakeMeltingPoint or wd.isBrakeMolten
 
@@ -194,7 +197,7 @@ local function updateThermalsGFX(dt)
       if slopeSwitchBit < 1 and thermalEfficiency <= brakeSmokeEfficiencyThreshold then
         wd.smokeParticleTick = wd.smokeParticleTick > 1 and 0 or wd.smokeParticleTick + dt * 50 * (brakeSmokeEfficiencyThreshold - thermalEfficiency)
         if wd.smokeParticleTick > 1 then
-          local particleType  = airSpeed < 10 and 48 or 49
+          local particleType = airSpeed < 10 and 48 or 49
           obj:addParticleByNodesRelative(wd.node1, wd.node2, 1 - math.random(1), particleType, 0, 1)
         end
       end
@@ -202,15 +205,15 @@ local function updateThermalsGFX(dt)
       if isUnderWater > 1 and wd.brakeSurfaceTemperature > brakeCoreWaterToSteamThresholdTemperature then
         wd.steamParticleTick = wd.steamParticleTick > 1 and 0 or wd.steamParticleTick + dt * 0.05 * (wd.brakeSurfaceTemperature - brakeCoreWaterToSteamThresholdTemperature)
         if wd.steamParticleTick > 1 then
-          local particleType  = airSpeed < 10 and 48 or 49
+          local particleType = airSpeed < 10 and 48 or 49
           obj:addParticleByNodesRelative(wd.node1, wd.node2, 1 - math.random(1), particleType, 0, 1)
         end
       end
 
       if updateDamage then
-        damageTracker.setDamage("wheels", "brakeOverHeat"..wd.name, (slopeSwitchBit < 1 and thermalEfficiency < 0.85) and wd.brakeThermalEfficiency or 0)
+        damageTracker.setDamage("wheels", "brakeOverHeat" .. wd.name, (slopeSwitchBit < 1 and thermalEfficiency < 0.85) and wd.brakeThermalEfficiency or 0)
         if wd.isBrakeMolten then
-          damageTracker.setDamage("wheels", "brake"..wd.name, wd.isBrakeMolten)
+          damageTracker.setDamage("wheels", "brake" .. wd.name, wd.isBrakeMolten)
         end
       end
 
@@ -255,9 +258,12 @@ local function updateThermalsGFX(dt)
   end
 
   if updateGUI then
-    gui.send('wheelThermalData', {
+    gui.send(
+      "wheelThermalData",
+      {
         wheels = wheelInfo
-      })
+      }
+    )
   end
 end
 
@@ -272,18 +278,16 @@ local function updateWheelsGFX(dt)
     local wd = M.wheels[i]
     wd.contactMaterialID1 = -1
     wd.contactMaterialID2 = -1
-    wd.lastSlip, wd.slipEnergy = wd.obj:getSlipVelEnergy()
+    wd.lastSlip, wd.slipEnergy, wd.downForceRaw, wd.peakForce = wd.obj:getSlipVelEnergyDownPeakForce()
     wd.contactDepth = 0
-    wd.downForce = wd.downForceSmoother:get(wd.downForceRaw)
-    wd.downForceRaw = 0
+    wd.downForce = wd.downForceSmoother:get(wd.downForceRaw, dt)
     if not wd.isBroken then
       local wheelAV = wd.angularVelocity * wd.wheelDir
       M.wheelPower = M.wheelPower + wd.propulsionTorque * wd.angularVelocity
       M.wheelTorque = M.wheelTorque + wd.propulsionTorque * wd.wheelDir
-      if wd.isSpeedo  then
-        avgAV = avgAV + wheelAV
-        avgWheelSpeed = avgWheelSpeed + wheelAV * wd.radius
-      end
+      wd.wheelSpeed = wheelAV * wd.radius
+      avgAV = avgAV + wheelAV * wd.isSpeedo
+      avgWheelSpeed = avgWheelSpeed + wd.wheelSpeed * wd.isSpeedo
 
       if wd.isTireDeflated then
         wd.deflatedTireAngle = wd.deflatedTireAngle + clamp(wd.angularVelocity, -100, 100) * dt
@@ -329,14 +333,14 @@ local function updateBrakingDistanceGFX(dt)
     if airspeed <= targetSpeed then
       startPosition = obj:getPosition()
       state = "measuring"
-      gui.message({txt="Measuring braking distance...", context = { }}, 1, "vehicle.brakingdistance")
+      gui.message({txt = "Measuring braking distance...", context = {}}, 1, "vehicle.brakingdistance")
     end
   elseif state == "measuring" then
     if airspeed <= 1 then
       local endPosition = obj:getPosition()
       local distance = (startPosition - endPosition):length()
       local avgDeceleration = -(square(airspeed) - square(targetSpeed)) / (2 * distance)
-      gui.message({txt=string.format("Brakingdistance: %.2fm, G: %.2f", distance, avgDeceleration / 9.81), context = { }}, 5, "vehicle.brakingdistance")
+      gui.message({txt = string.format("Brakingdistance: %.2fm, G: %.2f", distance, avgDeceleration / 9.81), context = {}}, 5, "vehicle.brakingdistance")
       startPosition = nil
       state = "idle"
     end
@@ -344,25 +348,20 @@ local function updateBrakingDistanceGFX(dt)
 end
 
 local function updateGFX(dt)
-
   updateThermalsGFXMethod(dt)
-
   updateWheelsGFX(dt)
-
   --updateBrakingDistanceGFX(dt)
 end
 
 local function updateWheelSlip(p)
-  if not p then return end
-  if not v.data.nodes[p.id1] then return end
-  local wheelID = v.data.nodes[p.id1].wheelID
-  if wheelID then
-    local wd = M.wheelRotators[wheelID]
-    -- Smoothed instant energy (E/dt)
-    wd.contactMaterialID1 = p.materialID1
-    wd.contactMaterialID2 = p.materialID2
-    wd.contactDepth = math.max (p.depth, wd.contactDepth)
-    wd.downForceRaw = wd.downForceRaw - p.normalForce
+  if v.data.nodes[p.id1] then
+    local wheelID = v.data.nodes[p.id1].wheelID
+    if wheelID and p then
+      local wd = M.wheelRotators[wheelID]
+      wd.contactMaterialID1 = p.materialID1
+      wd.contactMaterialID2 = p.materialID2
+      wd.contactDepth = max(p.depth, wd.contactDepth)
+    end
   end
 end
 
@@ -413,15 +412,15 @@ local function updateVirtualAirspeed(dt)
   lastVirtualAirspeed = (wheelSpeedSum + accSpeed) * virtualAirspeedMap.invGainSum
   virtualAirspeed = lastVirtualAirspeed * virtualAirspeedMap.correctionCoef
 
---  if streams.willSend("profilingData") then
---    gui.send('profilingData', {
---        virtualSpeed = { title = "Virtual Speed", color = getContrastColorStringRGB(7), unit = "km/h", value = virtualAirspeed * 3.6},
---        realSpeed = { title = "Real Speed", color = getContrastColorStringRGB(1), unit = "km/h", value = obj:getGroundSpeed() * 3.6},
---        wheelSpeed = { title = "Wheel Speed", color = getContrastColorStringRGB(8), unit = "km/h", value = wheelspeed * 3.6},
---        yaw = { title = "Yaw Rate", color = getContrastColorStringRGB(5), unit = "km/h", value = abs(obj:getYawAngularVelocity()) * 10},
---        mapIndex = { title = "Map Index", color = getContrastColorStringRGB(11), unit = "", value = (mapId-1) * 10},
---      })
---  end
+  --  if streams.willSend("profilingData") then
+  --    gui.send('profilingData', {
+  --        virtualSpeed = { title = "Virtual Speed", color = getContrastColorStringRGB(7), unit = "km/h", value = virtualAirspeed * 3.6},
+  --        realSpeed = { title = "Real Speed", color = getContrastColorStringRGB(1), unit = "km/h", value = obj:getGroundSpeed() * 3.6},
+  --        wheelSpeed = { title = "Wheel Speed", color = getContrastColorStringRGB(8), unit = "km/h", value = wheelspeed * 3.6},
+  --        yaw = { title = "Yaw Rate", color = getContrastColorStringRGB(5), unit = "km/h", value = abs(obj:getYawAngularVelocity()) * 10},
+  --        mapIndex = { title = "Map Index", color = getContrastColorStringRGB(11), unit = "", value = (mapId-1) * 10},
+  --      })
+  --  end
 end
 
 local function updateBrakeABS(wd, brake, invAirspeed, airspeed, airspeedCutOff, dt)
@@ -430,7 +429,7 @@ local function updateBrakeABS(wd, brake, invAirspeed, airspeed, airspeedCutOff, 
     if wd.absTimer <= 0 then
       local absDT = max(dt, wd.absTime) --if the ABS frequency is smaller than the physics step, we need to use the right dt here
       wd.absTimer = wd.absTime
-      local slipRatio = min(max((airspeed - (abs(wd.angularVelocityBrakeCouple * wd.wheelDir) * wd.radius)) * invAirspeed, 0), 1)
+      local slipRatio = min(max((airspeed - abs(wd.angularVelocityBrakeCouple * wd.wheelDir * wd.radius)) * invAirspeed, 0), 1)
       local slipRatioTarget = min(2 * invAirspeed + wd.slipRatioTarget, 1)
       local slipError = slipRatioTarget - slipRatio
       local slipErrorDerivative = (slipError - wd.lastSlipError) / absDT
@@ -563,7 +562,7 @@ local function resetThermals()
   local tEnv = obj:getEnvTemperature() + kelvinToCelsius
   local startPreHeated = settings.getValue("startBrakeThermalsPreHeated")
 
-  for _,wd in pairs(M.wheelRotators) do
+  for _, wd in pairs(M.wheelRotators) do
     if wd.enableBrakeThermals then
       wd.brakeThermalEfficiency = 1
       wd.padGlazingFactor = 1
@@ -573,7 +572,7 @@ local function resetThermals()
 
       local startTemp = tEnv
       if startPreHeated and string.find(wd.padMaterial, "race") then
-        local efficiency = 0
+        local efficiency
         repeat
           startTemp = startTemp + 1
           efficiency = calculateThermalEfficiency(startTemp, wd.thermalEfficiencyConfig)
@@ -585,9 +584,9 @@ local function resetThermals()
       wd.brakeCoreTemperature = startTemp
 
       -- Reset brake damage values
-      damageTracker.setDamage("wheels", "brake"..wd.name, false);
+      damageTracker.setDamage("wheels", "brake" .. wd.name, false)
       -- Reset brake overheating values
-      damageTracker.setDamage("wheels", "brakeOverHeat"..wd.name, 0);
+      damageTracker.setDamage("wheels", "brakeOverHeat" .. wd.name, 0)
     end
   end
 end
@@ -610,12 +609,8 @@ local function resetWheels()
     wd.contactMaterialID2 = -1
     wd.contactDepth = 0
     wd.downForceRaw = 0
+    wd.peakForce = 0
     wd.downForceSmoother:reset()
-    wd.slipEnergySmoother:reset()
-    wd.slipSkidFadeSmoother:reset()
-    wd.slipSkidVolSmoother:reset()
-    wd.slipSkidPitchSmoother:reset()
-    wd.tireContactSmoother:reset()
     wd.downForce = 0
     wd.isTireDeflated = false
     wd.deflatedTireAngle = 0
@@ -624,7 +619,6 @@ local function resetWheels()
     wd.lastSlipError = 0
     wd.isBroken = false
     wd.absTimer = 0
-
 
     wd.propulsionTorque = 0
     wd.brakingTorque = 0
@@ -650,11 +644,11 @@ local function resetWheels()
   brakeTorqueLimits[1] = maxBrakeTorque * 2
   brakeTorqueLimits[2] = maxBrakeTorque * 2
 
-  for k,_ in ipairs(wheelRotatorTorques) do
+  for k, _ in ipairs(wheelRotatorTorques) do
     wheelRotatorTorques[k] = 0
   end
 
-  for k,_ in ipairs(wheelAVs) do
+  for k, _ in ipairs(wheelAVs) do
     wheelAVs[k] = 0
   end
 end
@@ -672,7 +666,7 @@ local function initThermals()
 
   local startPreHeated = settings.getValue("startBrakeThermalsPreHeated")
 
-  for _,wd in pairs(M.wheelRotators) do
+  for _, wd in pairs(M.wheelRotators) do
     if wd.enableBrakeThermals then
       brakeThermalsEnabled = true
       wd.brakeMass = max(wd.brakeMass or 10, minBrakeMass)
@@ -700,7 +694,7 @@ local function initThermals()
         wd.wheelSpeedCoreCooling = 1
         wd.airSpeedCoreCooling = 1
       else
-        log("E", "wheels.initThermals", "Found unknown brake type: "..wd.brakeType..", disabling brake thermals...")
+        log("E", "wheels.initThermals", "Found unknown brake type: " .. wd.brakeType .. ", disabling brake thermals...")
         brakeThermalsEnabled = false
         break
       end
@@ -722,7 +716,7 @@ local function initThermals()
         wd.kRadiationToAir = 0.0000000567 * 0.9
         wd.brakeMeltingPoint = 1800
       else
-        log("E", "wheels.initThermals", "Found unknown rotor material: "..wd.rotorMaterial..", disabling brake thermals...")
+        log("E", "wheels.initThermals", "Found unknown rotor material: " .. wd.rotorMaterial .. ", disabling brake thermals...")
         brakeThermalsEnabled = false
         break
       end
@@ -743,7 +737,7 @@ local function initThermals()
 
       local startTemp = tEnv
       if startPreHeated and string.find(wd.padMaterial, "race") then
-        local efficiency = 0
+        local efficiency
         repeat
           startTemp = startTemp + 1
           efficiency = calculateThermalEfficiency(startTemp, wd.thermalEfficiencyConfig)
@@ -755,9 +749,9 @@ local function initThermals()
       wd.brakeCoreTemperature = startTemp
 
       -- Initialising brake damage values
-      damageTracker.setDamage("wheels", "brake"..wd.name, false);
+      damageTracker.setDamage("wheels", "brake" .. wd.name, false)
       -- Initialising brake overheating values
-      damageTracker.setDamage("wheels", "brakeOverHeat"..wd.name, 0);
+      damageTracker.setDamage("wheels", "brakeOverHeat" .. wd.name, 0)
     end
   end
 
@@ -803,7 +797,12 @@ local function initWheels()
         name = wd.name,
         wheelID = wd.wheelID,
         wheelDir = wd.wheelDir,
+        hasTire = wd.hasTire,
+        hubRadius = wd.hubRadius or 0,
         radius = (wd.hasTire or wd.hasTire == nil) and wd.radius or (wd.hubRadius or wd.radius), --use radius if there is a tire, if not use hub radius, if there is no hubradius, it might be a rotator, use normal radius then again...
+        tireWidth = wd.tireWidth or 0,
+        treadCoef = wd.treadCoef or 1,
+        softnessCoef = wd.softnessCoef or 0.6,
         node1 = wd.node1,
         node2 = wd.node2,
         brakeMass = wd.brakeMass,
@@ -815,24 +814,21 @@ local function initWheels()
         rotorMaterial = wd.rotorMaterial,
         nodes = wd.nodes,
         treadNodes = wd.treadNodes,
-        torsionReactor = {name="", outputTorque1 = 0},
+        torsionReactor = {name = "", outputTorque1 = 0},
         torsionReactorIdx = 1,
         lastTorqueMode = 0,
+        wheelSpeed = 0,
         lastSlip = 0,
         slipEnergy = 0,
         contactMaterialID1 = -1,
         contactMaterialID2 = -1,
         contactDepth = 0,
         downForceRaw = 0,
+        peakForce = 0,
         isTireDeflated = false,
         deflatedTireAngle = 0,
         flatTireSound = wd.flatTireSound or "event:>Surfaces>Flat_Tire",
-        downForceSmoother = newExponentialSmoothing(30),
-        slipEnergySmoother = newTemporalSmoothing(),
-        slipSkidFadeSmoother  = newTemporalSmoothingNonLinear(15),
-        slipSkidVolSmoother   = newTemporalSmoothingNonLinear(15),
-        slipSkidPitchSmoother = newTemporalSmoothingNonLinear(15),
-        tireContactSmoother = newTemporalSmoothing(),
+        downForceSmoother = newTemporalSmoothingNonLinear(5),
         downForce = 0,
         obj = wobj,
         cid = wd.cid,
@@ -842,18 +838,16 @@ local function initWheels()
         lastSlipError = 0,
         slipRatioTarget = 0.2,
         isBroken = false,
-        isSpeedo = wd.speedo or wd.speedo == nil,
+        isSpeedo = wd.speedo and 1 or (wd.speedo == nil and 1 or 0),
         hasABS = wd.enableABSactuator or wd.enableABS or false,
         absTimer = 0,
         absFrequency = wd.absHz or 100,
         absTime = 1 / (wd.absHz or 100),
         minABSCoef = 1 - (wd.minABSCoef or 0.1),
-
         brakeTorque = wd.brakeTorque or 0,
         initialBrakeTorque = wd.brakeTorque or 0,
-        parkingTorque =  wd.parkingTorque or 0,
+        parkingTorque = wd.parkingTorque or 0,
         initialParkingTorque = wd.parkingTorque or 0,
-
         propulsionTorque = 0,
         brakingTorque = 0,
         frictionTorque = 0,
@@ -863,12 +857,12 @@ local function initWheels()
         brakeInputSplit = math.max(math.min(wd.brakeInputSplit or 1, 1), 0),
         brakeSplitCoef = math.max(math.min(wd.brakeSplitCoef or 1, 1), 0),
         brakePressureDelay = newLinearSmoothing(dtPhysics, (wd.brakeTorque or 0) / ((wd.brakePressureInDelay or 0.05) + 1e-30), (wd.brakeTorque or 0) / ((wd.brakePressureOutDelay or 0.1) + 1e-30)),
-        brakeThermalEfficiency = 1,
+        brakeThermalEfficiency = 1
       }
 
       table.insert(M.wheelRotators, i, wheel)
       if wd.axleBeams then
-        for _,name in pairs(wd.axleBeams) do
+        for _, name in pairs(wd.axleBeams) do
           if not axleBeamLookup[name] then
             axleBeamLookup[name] = {}
           end
@@ -878,19 +872,19 @@ local function initWheels()
       --insert as wheels as well (temporary) for better backwards compat (controller init right after wheels init, no second stage init done yet)
       table.insert(M.wheels, i, wheel)
     else
-      log('W', "drivetrain.init", 'Wheel "'..wd.name..'" could not be added to drivetrain')
+      log("W", "drivetrain.init", 'Wheel "' .. wd.name .. '" could not be added to drivetrain')
     end
   end
 
   local absMode = settings.getValue("absBehavior") or "realistic"
   setABSBehavior(absMode)
 
-  wheelRotatorTorques = table.new(maxWheelCid * 4 + 1,0)
+  wheelRotatorTorques = table.new(maxWheelCid * 4 + 1, 0)
   for i = 0, maxWheelCid * 4 + 1 do
     wheelRotatorTorques[i] = 0
   end
 
-  wheelAVs = table.new(maxWheelCid * 2 + 1,0)
+  wheelAVs = table.new(maxWheelCid * 2 + 1, 0)
   for i = 0, maxWheelCid * 2 + 1 do
     wheelAVs[i] = 0
   end
@@ -917,7 +911,7 @@ local function resetSecondStage()
   for i = 0, initialWheelCountDec do
     local wd = M.wheels[i]
     damageTracker.setDamage("wheels", wd.name, false)
-    damageTracker.setDamage("wheels", "tire"..wd.name, false)
+    damageTracker.setDamage("wheels", "tire" .. wd.name, false)
   end
 
   airspeedMapTimer = 0
@@ -940,18 +934,17 @@ local function initSecondStage()
   M.rotatorIDs = {}
   M.rotatorCount = 0
 
-  local avgWheelPos = vec3(0,0,0)
-  for _,rotator in pairs(M.wheelRotators) do
+  local avgWheelPos = vec3(0, 0, 0)
+  for _, rotator in pairs(M.wheelRotators) do
     if rotator.rotatorType == "wheel" then
       table.insert(M.wheels, M.wheelCount, rotator)
       M.wheelCount = M.wheelCount + 1
       M.wheelIDs[rotator.name] = rotator.wheelID
-      if rotator.isSpeedo then
+      if rotator.isSpeedo == 1 then
         speedoWheelCount = speedoWheelCount + 1
       end
       local wheelNodePos = v.data.nodes[rotator.node1].pos --find the wheel position
       avgWheelPos = avgWheelPos + wheelNodePos --sum up all positions
-
     elseif rotator.rotatorType == "rotator" then
       table.insert(M.rotators, M.rotatorCount, rotator)
       M.rotatorCount = M.rotatorCount + 1
@@ -985,11 +978,19 @@ local function initSecondStage()
       wd.oppositeSide = 2 -- right
     end
 
+    wd.tireVolume = 0
+    if wd.hasTire then
+      local hubArea = math.pi * wd.hubRadius * wd.hubRadius
+      local overallArea = math.pi * wd.radius * wd.radius
+      local tireArea = overallArea - hubArea
+      wd.tireVolume = tireArea * wd.tireWidth
+    end
+
     damageTracker.setDamage("wheels", wd.name, false)
-    damageTracker.setDamage("wheels", "tire"..wd.name, false)
+    damageTracker.setDamage("wheels", "tire" .. wd.name, false)
   end
 
-  for _,v in ipairs(virtualAirspeedMaps) do
+  for _, v in ipairs(virtualAirspeedMaps) do
     local gainSum = (v.acceleration + M.wheelCount * v.wheelCoef)
     v.invGainSum = gainSum > 0 and 1 / gainSum or 0
   end

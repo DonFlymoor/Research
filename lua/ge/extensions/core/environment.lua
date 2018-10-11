@@ -1,17 +1,17 @@
 local M = {}
 --[[
 envState
-    TimeOfDay
-        time
-        play
-        speed
-    Weather
-        fog
-        cloudcover
-        rain
-            ground model
-            material: specular
-            ambient color
+  TimeOfDay
+    time
+    play
+    speed
+  Weather
+    fog
+    cloudcover
+    rain
+      ground model
+      material: specular
+      ambient color
 --]]
 M.groundModels = {}
 M.loadedGroundModelFiles = {}
@@ -22,211 +22,211 @@ local gm_filename = 'art/groundmodels.json'
 local simSpeed = 1
 local init_env={}
 local function getObject(className)
-    if envObjectIdCache[className] then
-        return scenetree.findObjectById(envObjectIdCache[className])
-    end
+  if envObjectIdCache[className] then
+    return scenetree.findObjectById(envObjectIdCache[className])
+  end
 
-    envObjectIdCache[className] = 0
-    local objNames = scenetree.findClassObjects(className)
-    if objNames and tableSize(objNames) > 0 then
-        local obj = scenetree.findObject(objNames[1])
-        if obj then
-            envObjectIdCache[className] = obj:getID()
-            return scenetree.findObject(objNames[1])
-        end
+  envObjectIdCache[className] = 0
+  local objNames = scenetree.findClassObjects(className)
+  if objNames and tableSize(objNames) > 0 then
+    local obj = scenetree.findObject(objNames[1])
+    if obj then
+      envObjectIdCache[className] = obj:getID()
+      return scenetree.findObject(objNames[1])
     end
+  end
 
-    return nil
+  return nil
 end
 
 local function transformTime2Colors(filePath, time)
-    if type(filePath) == 'string' and bitmap:loadFile(filePath) then
-        local width = bitmap:getwidth()
-        local index = time*width
-        local color
-        bitmap:getColor(index, 0, color)
-        return color
-    end
-    return nil
+  if type(filePath) == 'string' and bitmap:loadFile(filePath) then
+    local width = bitmap:getwidth()
+    local index = time*width
+    local color
+    bitmap:getColor(index, 0, color)
+    return color
+  end
+  return nil
 end
 
 local function setColors(time)
-    local skyObj = getObject("scattersky")
-    if skyObj then
-        local colorize = transformTime2Colors(skyObj.colorizeGradientFile, time)
-        local sunScale = transformTime2Colors(skyObj.sunScaleGradientFile, time)
-        local ambientScale = transformTime2Colors(skyObj.ambientScaleGradientFile, time)
-        local fogScale = transformTime2Colors(skyObj.fogScaleGradientFile, time)
-        skyObj.colorize = colorize
-        skyObj.sunScale = sunScale
-        skyObj.ambientScale = ambientScale
-        skyObj.fogScale = fogScale
-        --skyObj.shadowsoftness = 1
-        --skyObj.flarescale = 0
-        --skyObj.sunsize = 0
-    end
+  local skyObj = getObject("scattersky")
+  if skyObj then
+    local colorize = transformTime2Colors(skyObj.colorizeGradientFile, time)
+    local sunScale = transformTime2Colors(skyObj.sunScaleGradientFile, time)
+    local ambientScale = transformTime2Colors(skyObj.ambientScaleGradientFile, time)
+    local fogScale = transformTime2Colors(skyObj.fogScaleGradientFile, time)
+    skyObj.colorize = colorize
+    skyObj.sunScale = sunScale
+    skyObj.ambientScale = ambientScale
+    skyObj.fogScale = fogScale
+    --skyObj.shadowsoftness = 1
+    --skyObj.flarescale = 0
+    --skyObj.sunsize = 0
+  end
 end
 
 -------------------------------------------------------------
 local function setTimeOfDay(timeOfDay)
-    local timeObj = getObject("TimeOfDay")
-    if timeObj and timeOfDay.time then
-        timeObj.time = timeOfDay.time
-        --setColors(timeOfDay.time)
-        timeObj.play = timeOfDay.play
-        timeObj.dayScale = timeOfDay.dayScale
-        timeObj.nightScale = timeOfDay.nightScale
-        timeObj.dayLength = timeOfDay.dayLength
-    end
+  local timeObj = getObject("TimeOfDay")
+  if timeObj and timeOfDay.time then
+    timeObj.time = timeOfDay.time
+    --setColors(timeOfDay.time)
+    timeObj.play = timeOfDay.play
+    timeObj.dayScale = timeOfDay.dayScale
+    timeObj.nightScale = timeOfDay.nightScale
+    timeObj.dayLength = timeOfDay.dayLength
+  end
 end
 
 local function getTimeOfDay()
-    local timeOfDay = {}
-    local timeObj = getObject("TimeOfDay")
-    if timeObj then
-        timeOfDay.time = timeObj.time
-        timeOfDay.play = timeObj.play
-        timeOfDay.dayScale = timeObj.dayScale
-        timeOfDay.nightScale = timeObj.nightScale
-        timeOfDay.dayLength = timeObj.dayLength
-    end
-    return timeOfDay
+  local timeOfDay = {}
+  local timeObj = getObject("TimeOfDay")
+  if timeObj then
+    timeOfDay.time = timeObj.time
+    timeOfDay.play = timeObj.play
+    timeOfDay.dayScale = timeObj.dayScale
+    timeOfDay.nightScale = timeObj.nightScale
+    timeOfDay.dayLength = timeObj.dayLength
+  end
+  return timeOfDay
 end
 
 local function setWindSpeed(windSpeed)
-    local cloudObj = getObject("CloudLayer")
-    if cloudObj and windSpeed then
-        cloudObj.windSpeed = windSpeed
-        cloudObj:postApply()
-    end
+  local cloudObj = getObject("CloudLayer")
+  if cloudObj and windSpeed then
+    cloudObj.windSpeed = windSpeed
+    cloudObj:postApply()
+  end
 end
 
 local function getWindSpeed()
-    local cloudObj = getObject("CloudLayer")
-    local windSpeed
-    if cloudObj then
-        windSpeed = cloudObj.windSpeed
-    end
-    return windSpeed
+  local cloudObj = getObject("CloudLayer")
+  local windSpeed
+  if cloudObj then
+    windSpeed = cloudObj.windSpeed
+  end
+  return windSpeed
 end
 
 
 local function setCloudCover(cloud)
-    local cloudObj = getObject("CloudLayer")
-    if cloudObj and cloud then
-        cloudObj.coverage = cloud
-        cloudObj:postApply()
-    end
+  local cloudObj = getObject("CloudLayer")
+  if cloudObj and cloud then
+    cloudObj.coverage = cloud
+    cloudObj:postApply()
+  end
 end
 
 local function getCloudCover()
-    local cloudObj = getObject("CloudLayer")
-    local cloud
-    if cloudObj then
-        cloud = cloudObj.coverage
-    end
-    return cloud
+  local cloudObj = getObject("CloudLayer")
+  local cloud
+  if cloudObj then
+    cloud = cloudObj.coverage
+  end
+  return cloud
 end
 
 local function setFogDensity(fog)
-    local fogObj = getObject("LevelInfo")
-    if fogObj and fog then
-        fogObj.fogDensity = fog
-        fogObj:postApply()
-    end
+  local fogObj = getObject("LevelInfo")
+  if fogObj and fog then
+    fogObj.fogDensity = fog
+    fogObj:postApply()
+  end
 end
 
 local function getFogDensity()
-    local fogObj = getObject("LevelInfo")
-    local fog
-    if fogObj then
-        fog = fogObj.fogDensity
-    end
-    return fog
+  local fogObj = getObject("LevelInfo")
+  local fog
+  if fogObj then
+    fog = fogObj.fogDensity
+  end
+  return fog
 end
 
 local function setPrecipitation(rainDrops)
-    local rainObj = getObject("Precipitation")
-    if rainObj and rainDrops then
-        rainObj.numOfDrops = rainDrops
-    end
+  local rainObj = getObject("Precipitation")
+  if rainObj and rainDrops then
+    rainObj.numOfDrops = rainDrops
+  end
 end
 
 local function getPrecipitation()
-    local rainObj = getObject("Precipitation")
-    local rainDrops
-    if rainObj then
-        rainDrops = rainObj.numOfDrops
-    end
-    return rainDrops
+  local rainObj = getObject("Precipitation")
+  local rainDrops
+  if rainObj then
+    rainDrops = rainObj.numOfDrops
+  end
+  return rainDrops
 end
 
 local function setGravity(grav)
-    if not grav then return end
-    -- important: let the level known about the change
-    -- otherwise the spawning of objects will have the wrong gravity
-    if scenetree.theLevelInfo then
-      scenetree.theLevelInfo.gravity = grav
-    end
-    be:queueAllObjectLua("obj:setGravity("..grav..")")
+  if not grav then return end
+  -- important: let the level known about the change
+  -- otherwise the spawning of objects will have the wrong gravity
+  if scenetree.theLevelInfo then
+    scenetree.theLevelInfo.gravity = grav
+  end
+  be:queueAllObjectLua("obj:setGravity("..grav..")")
 end
 
 local function getGravity()
-    if scenetree.theLevelInfo then
-      return scenetree.theLevelInfo.gravity
-    end
-    return -9.81; -- fallback
+  if scenetree.theLevelInfo then
+    return scenetree.theLevelInfo.gravity
+  end
+  return -9.81; -- fallback
 end
 
 
 -------------------------------------------------------------
 local function getState()
-    local res = {}
-    local timeObj = getTimeOfDay()
-    if timeObj then
-        res.time = timeObj.time
-        res.play = timeObj.play
-        res.dayScale = timeObj.dayScale
-        res.nightScale = timeObj.nightScale
-    end
+  local res = {}
+  local timeObj = getTimeOfDay()
+  if timeObj then
+    res.time = timeObj.time
+    res.play = timeObj.play
+    res.dayScale = timeObj.dayScale
+    res.nightScale = timeObj.nightScale
+  end
 
-    local windSpeed = getWindSpeed()
-    res.windSpeed = windSpeed
+  local windSpeed = getWindSpeed()
+  res.windSpeed = windSpeed
 
-    local cloudCover = getCloudCover()
-    res.cloudCover = cloudCover
+  local cloudCover = getCloudCover()
+  res.cloudCover = cloudCover
 
-    local fog = getFogDensity()
-    res.fogDensity = fog
+  local fog = getFogDensity()
+  res.fogDensity = fog
 
-    local numOfDrops = getPrecipitation()
-    res.numOfDrops = numOfDrops
+  local numOfDrops = getPrecipitation()
+  res.numOfDrops = numOfDrops
 
-    res.gravity = getGravity()
+  res.gravity = getGravity()
 
-    if next(res) == nil then
-        return nil
-    end
-    return res
+  if next(res) == nil then
+    return nil
+  end
+  return res
 
 end
 
 local function setState(state)
 
-    if state then
-        local timeObj = {time = state.time, play = state.play, dayScale = state.dayScale, nightScale = state.nightScale}
-        setTimeOfDay(timeObj)
+  if state then
+    local timeObj = {time = state.time, play = state.play, dayScale = state.dayScale, nightScale = state.nightScale}
+    setTimeOfDay(timeObj)
 
-        setWindSpeed(state.windSpeed)
+    setWindSpeed(state.windSpeed)
 
-        setCloudCover(state.cloudCover)
+    setCloudCover(state.cloudCover)
 
-        setFogDensity(state.fogDensity)
+    setFogDensity(state.fogDensity)
 
-        setPrecipitation(state.numOfDrops)
+    setPrecipitation(state.numOfDrops)
 
-        setGravity(state.gravity)
-    end
+    setGravity(state.gravity)
+  end
 end
 
 local function dumpGroundModels()
@@ -237,21 +237,21 @@ local function dumpGroundModels()
     if gm.data then
       gm = gm.data
       gms[gm.name or i] = {
-        id = i,
-        roughnessCoefficient = gm.roughnessCoefficient,
-        defaultDepth = gm.defaultDepth,
-        staticFrictionCoefficient = gm.staticFrictionCoefficient,
-        slidingFrictionCoefficient = gm.slidingFrictionCoefficient,
-        hydrodynamicFriction = gm.hydrodynamicFriction or gm.hydrodnamicFriction,
-        stribeckVelocity = gm.stribeckVelocity,
-        strength = gm.strength,
-        collisiontype = gm.collisiontype,
-        fluidDensity = gm.fluidDensity,
-        flowConsistencyIndex = gm.flowConsistencyIndex,
-        flowBehaviorIndex = gm.flowBehaviorIndex or gm.flowBehaviourIndex, -- omg ...
-        dragAnisotropy = gm.dragAnisotropy,
-        skidMarks = gm.skidMarks,
-        shearStrength = gm.shearStrength
+      id = i,
+      roughnessCoefficient = gm.roughnessCoefficient,
+      defaultDepth = gm.defaultDepth,
+      staticFrictionCoefficient = gm.staticFrictionCoefficient,
+      slidingFrictionCoefficient = gm.slidingFrictionCoefficient,
+      hydrodynamicFriction = gm.hydrodynamicFriction or gm.hydrodnamicFriction,
+      stribeckVelocity = gm.stribeckVelocity,
+      strength = gm.strength,
+      collisiontype = gm.collisiontype,
+      fluidDensity = gm.fluidDensity,
+      flowConsistencyIndex = gm.flowConsistencyIndex,
+      flowBehaviorIndex = gm.flowBehaviorIndex or gm.flowBehaviourIndex, -- omg ...
+      dragAnisotropy = gm.dragAnisotropy,
+      skidMarks = gm.skidMarks,
+      shearStrength = gm.shearStrength
       }
     end
   end
@@ -279,11 +279,11 @@ local function loadGroundModelFile(filename)
     local knownAttributes = {aliases=1, roughnessCoefficient=1, staticFrictionCoefficient=1, slidingFrictionCoefficient=1, hydrodynamicFriction=1, stribeckVelocity=1, strength=1, collisiontype=1, fluidDensity=1, flowConsistencyIndex=1, flowBehaviorIndex=1, dragAnisotropy=1, skidMarks=1, defaultDepth=1, shearStrength = 1}
     local knownProblems = {hydrodnamicFriction='hydrodynamicFriction', flowBehaviourIndex='flowBehaviorIndex'}
     for j, _ in pairs(v) do
-        if knownProblems[j] then
-            log('E', 'groundmodels', 'Please fix your grounmodel up: ' .. tostring(j) .. ' should be instead: ' .. knownProblems[j])
-        elseif not knownAttributes[j] then
-            log('E', 'groundmodels', 'Unknown ground model attribute: ' .. tostring(j) .. ' - IGNORED')
-        end
+      if knownProblems[j] then
+        log('E', 'groundmodels', 'Please fix your grounmodel up: ' .. tostring(j) .. ' should be instead: ' .. knownProblems[j])
+      elseif not knownAttributes[j] then
+        log('E', 'groundmodels', 'Unknown ground model attribute: ' .. tostring(j) .. ' - IGNORED')
+      end
     end
 
     gm.roughnessCoefficient = v.roughnessCoefficient or 0
@@ -360,7 +360,7 @@ local function reloadGroundModels(missionFile)
   missionFile = missionFile or getMissionFilename()
   if missionFile and string.len(missionFile) > 0 then
     local levelDir, filename, ext = string.match(missionFile, "(.-)([^/]-([^%.]*))$")
-    local files = FS:findFilesByRootPattern('game:'..levelDir..'/groundModels/', '*.json', -1, true, false)
+    local files = FS:findFilesByRootPattern(levelDir..'/groundModels/', '*.json', -1, true, false)
 
     -- filter paths to only return filename without extension
     for _,fn in pairs(files) do
@@ -405,40 +405,80 @@ local function sendState()
   guihooks.trigger("EnvironmentStateUpdate", getState())
 end
 
+local function invertLerp(from,to,value)
+  value = math.min(math.max(from, value),to)
+  return (value - from) / (to-from)
+end
+
+--local dbgui_window_open = core_imgui.BoolPtr(true)
+--local dbgui_windowFlag_MenuBar = core_imgui.ImGuiWindowFlags("ImGuiWindowFlags_MenuBar")
+
+local function renderdebugUI()
+  core_imgui.Begin("Environment-Debug", dbgui_window_open, dbgui_windowFlag_MenuBar)
+
+  local fontHeight = core_imgui.GetTextLineHeight()
+  core_imgui.BeginChild("groundmodels", core_imgui.ImVec2(150, 0))
+  local ffi = require('ffi')
+
+  for i = 1, 10 do
+    local pos = core_imgui.GetCursorScreenPos()
+    core_imgui.Text("A: " .. tostring(i))
+    core_imgui.ImDrawList_AddRectFilled(
+      core_imgui.GetWindowDrawList(),
+      pos,
+      core_imgui.ImVec2(pos.x + 20, pos.y + fontHeight),
+      core_imgui.GetColorU32ByVec4(core_imgui.ImVec4(1,0,0,1))
+    )
+    core_imgui.SameLine()
+    core_imgui.Text("A: " .. tostring(i))
+  end
+  core_imgui.EndChild()
+
+
+  core_imgui.BeginChild("groundmodels1",core_imgui.ImVec2(150, 0))
+  core_imgui.Text("A")
+  core_imgui.Text("B")
+  core_imgui.EndChild()
+
+  core_imgui.End()
+end
+
 local function onUpdate()
-    local levelInfo = getObject("LevelInfo")
-    if not levelInfo then return end
+  local levelInfo = getObject("LevelInfo")
+  if not levelInfo then return end
 
-    local tempCurve = levelInfo:getTemperatureCurveC()
-    if #tempCurve < 2 then return end
+  local tempCurve = levelInfo:getTemperatureCurveC()
+  if #tempCurve < 2 then return end
 
-    local tod = getTimeOfDay()
-    if not tod or not tod.time then
-        be:setSeaLevelTemperatureK( tempCurve[1][2] + 273.15 )
-        return
+  local tod = getTimeOfDay()
+  if not tod or not tod.time then
+    be:setSeaLevelTemperatureK( tempCurve[1][2] + 273.15 )
+    return
+  end
+
+  local tempC = 15
+  local t = math.max(tempCurve[1][1], math.min(tempCurve[#tempCurve][1], tod.time))
+  for i, v in ipairs(tempCurve) do
+    if v[1] > t or i == #tempCurve then
+      local factor = invertLerp(tempCurve[i-1][1], v[1], t)
+      tempC = lerp(tempCurve[i-1][2], v[2], factor)
+      break
     end
+  end
 
-    local tempC = 15
-    local t = math.max(tempCurve[1][1], math.min(tempCurve[#tempCurve][1], tod.time))
-    for i, v in ipairs(tempCurve) do
-        if v[1] > t or i == #tempCurve then
-            local factor = invertLerp(tempCurve[i-1][1], v[1], t)
-            tempC = lerp(tempCurve[i-1][2], v[2], factor)
-            break
-        end
-    end
+  be:setSeaLevelTemperatureK( tempC + 273.15 )
 
-    be:setSeaLevelTemperatureK( tempC + 273.15 )
+  --renderdebugUI()
 end
 
 local function onClientStartMission(mission)
-    envObjectIdCache = {}
+  envObjectIdCache = {}
 end
 
 local function onEditorEnabled(enabled)
-    if not enabled then
-        envObjectIdCache = {}
-    end
+  if not enabled then
+    envObjectIdCache = {}
+  end
 end
 
 

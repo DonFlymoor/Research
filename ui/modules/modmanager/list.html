@@ -51,6 +51,13 @@
   <md-toolbar class="md-primary md-toolbar-tools" layout="row" layout-align="space-between center">
     <h1>{{ :: 'ui.modmanager.modmanager' | translate}}</h1>
     <span>
+      <span translate="ui.modmanager.numActive" translate-values="numActiveObj()"></span>
+      <md-button style="margin: -10px" md-no-ink class="md-icon-button md-default" aria-label="Download mods!" ng-click="openRepo()">
+        <md-tooltip>{{ :: 'ui.common.downloadMore' | translate}}</md-tooltip>
+        <md-icon class="material-icons">add_to_photos</md-icon>
+      </md-button>
+    </span>
+    <span>
       {{ :: 'ui.modmanager.active' | translate}}:
       <span style="cursor:pointer; outline: none" ng-click="activateAllMods()">
         <md-tooltip>{{ :: 'ui.modmanager.activateAll' | translate}}</md-tooltip>

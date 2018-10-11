@@ -104,8 +104,8 @@ local function sendTracking()
     serTmp[i] = strformat('[%s]=1', objCols[i])
   end
 
-  obj:queueGameEngineLua(strformat('map.objectData(%s,%s,%s,%s,%s,%s,%s)', objectId, tostring(playerInfo.anyPlayerSeated),
-      vec3toString(obj:getVelocity()), vec3toString(obj:getDirectionVector()), vec3toString(obj:getDirectionVectorUp()), math.floor(beamstate.damage), strformat('{%s}', table.concat(serTmp, ','))))
+  obj:queueGameEngineLua(strformat('map.objectData(%s,%s,%s,%s,%s)', objectId, tostring(playerInfo.anyPlayerSeated),
+      vec3toString(obj:getVelocity()), math.floor(beamstate.damage), strformat('{%s}', table.concat(serTmp, ','))))
 end
 
 local function enableTracking(name)

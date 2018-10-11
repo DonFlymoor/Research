@@ -64,15 +64,9 @@ end
 -- vehicle-specific actions have certain defaults, to aid modders get it right easily
 local function readActions(vehicleName)
     local result = {}
-    local protocol = "game:"
     local directory = vehicleName and "vehicles/"..vehicleName.."/" or "lua/ge/"
-    local protocol_paths = FS:findFilesByPattern(protocol..directory, "input_actions*.json", 0, false, false)
-    -- strip protocol prefix from all paths
-    local paths = {}
-    for _,protocol_path in pairs(protocol_paths) do
-        protocol_path = protocol_path:gsub(protocol,"")
-        table.insert(paths,protocol_path )
-    end
+    local paths = FS:findFilesByPattern(directory, "input_actions*.json", 0, false, false)
+
     -- actually parse the actions
     for _,path in pairs(paths) do
         tableMerge(result, readActionsFile(path, vehicleName))

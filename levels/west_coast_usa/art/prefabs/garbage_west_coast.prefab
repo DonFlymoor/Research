@@ -1,0 +1,925 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      groupPosition = "0.000000 0.000000 0.000000";
+
+   new Prefab(garbage_boxes8) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-784.286621 8.73530865 117.384956";
+      scale = "1 1 1";
+      rotationMatrix = "0.415463209 -0.909609973 0 0.909609973 0.415463209 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small15) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-403.674896 180.177261 100.045746";
+      scale = "1 1 1";
+      rotationMatrix = "0.773846328 0.633373439 0 -0.633373439 0.773846388 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium16) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-397.896942 215.863037 100.422363";
+      scale = "1 1 1";
+      rotationMatrix = "0.773846328 0.633373439 0 -0.633373439 0.773846388 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags15) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-399.30069 201.831253 100.438835";
+      scale = "1 1 1";
+      rotationMatrix = "0.773846328 0.633373439 0 -0.633373439 0.773846388 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large20) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-396.01355 215.930038 100.471298";
+      scale = "1 1 1";
+      rotationMatrix = "0.539531469 -0.841965199 0 0.841965199 0.539531469 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes17) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-393.333344 213.902725 100.53981";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large12) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-803.481201 34.6089859 117.767616";
+      scale = "1 1 1";
+      rotationMatrix = "0.911529303 0.411235243 0 -0.411235243 0.911529303 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags8) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-785.907532 47.9049377 117.735153";
+      scale = "1 1 1";
+      rotationMatrix = "0.911529303 0.411235243 0 -0.411235243 0.911529303 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium9) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-794.494751 43.7211075 117.718681";
+      scale = "1 1 1";
+      rotationMatrix = "0.911529303 0.411235243 0 -0.411235243 0.911529303 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small8) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-790.257629 48.7242012 117.736282";
+      scale = "1 1 1";
+      rotationMatrix = "0.911529303 0.411235243 0 -0.411235243 0.911529303 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes9) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-791.214905 48.259079 117.836128";
+      scale = "1 1 1";
+      rotationMatrix = "0.911529303 0.411235243 0 -0.411235243 0.911529303 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large13) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-722.699707 66.7135696 118.155899";
+      scale = "1 1 1";
+      rotationMatrix = "-0.369544029 0.929213285 0 -0.929213285 -0.369543999 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags9) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-724.121887 68.1255569 118.123444";
+      scale = "1 1 1";
+      rotationMatrix = "-0.369544029 0.929213285 0 -0.929213285 -0.369543999 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium10) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-732.986694 70.4819641 118.106964";
+      scale = "1 1 1";
+      rotationMatrix = "0.615100205 0.788448453 0 -0.788448572 0.615100145 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small9) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-745.582458 57.6401443 118.068748";
+      scale = "1 1 1";
+      rotationMatrix = "-0.369544029 0.929213285 0 -0.929213285 -0.369543999 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes10) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-729.424377 73.1279297 118.224411";
+      scale = "1 1 1";
+      rotationMatrix = "-0.369544029 0.929213285 0 -0.929213285 -0.369543999 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large14) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-154.978958 473.775543 72.6725311";
+      scale = "1 1 1";
+      rotationMatrix = "0.708534718 -0.705676079 0 0.705676079 0.708534718 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags10) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-149.280899 469.717041 72.6400681";
+      scale = "1 1 1";
+      rotationMatrix = "0.400795698 0.916167498 0 -0.916167498 0.400795698 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium11) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-167.258652 463.304504 72.6235962";
+      scale = "1 1 1";
+      rotationMatrix = "0.400795698 0.916167498 0 -0.916167498 0.400795698 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small10) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-167.455917 465.05777 72.6411972";
+      scale = "1 1 1";
+      rotationMatrix = "0.400795698 0.916167498 0 -0.916167498 0.400795698 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes11) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-167.095306 476.265259 72.7410431";
+      scale = "1 1 1";
+      rotationMatrix = "0.400795698 0.916167498 0 -0.916167498 0.400795698 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large16) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-479.70108 111.483894 100.325027";
+      scale = "1 1 1";
+      rotationMatrix = "0.605755448 0.795651019 0 -0.795651019 0.605755389 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes13) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-480.708099 109.369095 100.393539";
+      scale = "1 1 1";
+      rotationMatrix = "0.605755448 0.795651019 0 -0.795651019 0.605755389 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small7) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-785.454651 10.411068 117.285103";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium8) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-756.089172 -18.6265831 106.465904";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags7) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-770.501099 -4.8442049 111.861282";
+      scale = "1 1 1";
+      rotationMatrix = "-0.453689218 0.891160011 0 -0.891160011 -0.453689218 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large11) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-768.799255 -6.49281502 111.893753";
+      scale = "1 1 1";
+      rotationMatrix = "-0.453689218 0.891160011 0 -0.891160011 -0.453689218 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small6) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-670.729614 13.0807285 102.797707";
+      scale = "1 1 1";
+      rotationMatrix = "0.94439894 0.328801841 0 -0.328801841 0.94439894 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes6) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-644.46637 71.386322 103.058014";
+      scale = "1 1 1";
+      rotationMatrix = "-0.373591542 0.92759335 0 -0.92759335 -0.373591542 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium7) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-671.806091 11.8061247 102.754364";
+      scale = "1 1 1";
+      rotationMatrix = "0.94439894 0.328801841 0 -0.328801841 0.94439894 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags6) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-680.608521 3.09834647 102.659576";
+      scale = "1 1 1";
+      rotationMatrix = "0.94439894 0.328801841 0 -0.328801841 0.94439894 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large10) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-687.407959 -3.62244916 102.692032";
+      scale = "1 1 1";
+      rotationMatrix = "0.94439894 0.328801841 0 -0.328801841 0.94439894 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes7) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-653.182739 27.2066383 102.798767";
+      scale = "1 1 1";
+      rotationMatrix = "-0.373591542 0.92759335 0 -0.92759335 -0.373591542 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large9) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-644.808899 70.2714844 103.057365";
+      scale = "1 1 1";
+      rotationMatrix = "-0.373591542 0.92759335 0 -0.92759335 -0.373591542 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags5) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-627.015076 86.1791153 102.505493";
+      scale = "1 1 1";
+      rotationMatrix = "-0.373591542 0.92759335 0 -0.92759335 -0.373591542 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium6) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-645.205505 75.9489899 102.867401";
+      scale = "1 1 1";
+      rotationMatrix = "-0.373591542 0.92759335 0 -0.92759335 -0.373591542 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small5) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-648.588196 74.3512268 103.016617";
+      scale = "1 1 1";
+      rotationMatrix = "-0.39216128 -0.919896483 0 0.919896483 -0.39216128 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large8) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-563.240295 149.970825 100.536644";
+      scale = "1 1 1";
+      rotationMatrix = "0.936821043 0.34980914 0 -0.34980914 0.936821043 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags4) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-611.700073 106.903862 102.116867";
+      scale = "1 1 1";
+      rotationMatrix = "-0.571755052 0.820424438 0 -0.820424438 -0.571755052 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium5) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-610.887756 124.316345 101.840858";
+      scale = "1 1 1";
+      rotationMatrix = "0.936821043 0.34980914 0 -0.34980914 0.936821043 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small4) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-575.082397 146.13237 100.676872";
+      scale = "1 1 1";
+      rotationMatrix = "0.696738422 -0.717324495 0 0.717324495 0.696738422 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes5) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-589.152771 124.751923 101.634697";
+      scale = "1 1 1";
+      rotationMatrix = "0.738708615 0.674025059 0 -0.674025059 0.738708615 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes4) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-183.634277 529.702454 74.9402924";
+      scale = "1 1 1";
+      rotationMatrix = "0.904544592 -0.426378995 0 0.426378995 0.904544592 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large7) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-64.2079926 620.855225 74.6066437";
+      scale = "1 1 1";
+      rotationMatrix = "0.361024946 0.932556033 0 -0.932556033 0.361024946 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags3) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-44.2305832 599.334167 74.7349777";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium4) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "34.40345 581.736877 74.5631561";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small3) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-64.2622986 626.095398 74.5753098";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes3) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "37.4202995 587.632507 74.680603";
+      scale = "1 1 1";
+      rotationMatrix = "-0.177298635 -0.984157264 0 0.984157264 -0.177298635 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags2) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-66.0075378 647.555908 74.6085587";
+      scale = "1 1 1";
+      rotationMatrix = "0.901698411 -0.432365566 0 0.432365566 0.901698411 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags1) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-12.8851442 697.841431 74.7349777";
+      scale = "1 1 1";
+      rotationMatrix = "0.901698411 -0.432365566 0 0.432365566 0.901698411 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small2) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-16.3879166 693.386597 74.7361069";
+      scale = "1 1 1";
+      rotationMatrix = "0.901698411 -0.432365566 0 0.432365566 0.901698411 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium3) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-24.2592106 693.217896 74.7185059";
+      scale = "1 1 1";
+      rotationMatrix = "0.901698411 -0.432365566 0 0.432365566 0.901698411 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large6) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-12.7550926 694.762939 74.75914";
+      scale = "1 1 1";
+      rotationMatrix = "0.419004887 0.907984257 0 -0.907984257 0.419004887 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large5) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-7.9104538 674.896179 74.7488632";
+      scale = "1 1 1";
+      rotationMatrix = "-0.475681394 -0.879617751 0 0.879617751 -0.475681394 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large4) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "45.2826004 730.126831 74.7674408";
+      scale = "1 1 1";
+      rotationMatrix = "0.0169641301 0.999856055 0 -0.999856055 0.0169641301 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large3) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "65.1687698 721.733582 74.7674408";
+      scale = "1 1 1";
+      rotationMatrix = "0.220347092 -0.975421607 0 0.975421607 0.220347092 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes2) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "67.9694824 718.11969 74.8359528";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small1) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "56.7575912 718.218323 74.7361069";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large2) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "56.5354614 719.759277 74.7674408";
+      scale = "1 1 1";
+      rotationMatrix = "0.986069739 0.166331589 0 -0.166331589 0.986069739 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium2) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "54.7279549 695.416992 74.7185059";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes1) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "56.5176315 667.070984 74.8359528";
+      scale = "1 1 1";
+      rotationMatrix = "0.168451563 -0.985710323 0 0.985710323 0.168451563 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium1) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "43.518425 685.899902 74.7185059";
+      scale = "1 1 1";
+      rotationMatrix = "0.613382638 -0.789784551 0 0.789784551 0.613382638 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large1) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "42.0466537 690.110535 74.7674408";
+      scale = "1 1 1";
+      rotationMatrix = "-0.269692987 -0.962946057 0 0.962946057 -0.269692987 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "13.9173956 699.022888 74.7674408";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "16.1587067 699.791626 74.7349777";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "59.6374283 722.593384 74.8359528";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "84.6455383 650.305908 74.7060623";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes16) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-553.831665 153.040054 100.739983";
+      scale = "1 1 1";
+      rotationMatrix = "0.928837299 0.370488137 0 -0.370488107 0.92883718 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small14) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-618.337036 88.5521622 102.409637";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 0.999042988 -0.0437390171 0 0.0437390171 0.999042988";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium15) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-572.483215 138.081299 100.970467";
+      scale = "1 1 1";
+      rotationMatrix = "0.928243279 0.370251209 -0.0357570797 -0.370488107 0.92883718 0 0.0332125127 0.0132475737 0.999360442";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags14) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-593.578796 117.494873 101.63044";
+      scale = "1 1 1";
+      rotationMatrix = "0.928837299 0.370488137 0 -0.370488107 0.92883718 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large19) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-595.046082 116.031403 101.686043";
+      scale = "1 1 1";
+      rotationMatrix = "0.928152084 0.37021482 -0.0384046286 -0.370488107 0.92883718 0 0.0356716514 0.0142284594 0.999262214";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes15) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-727.240417 -5.82148266 104.586838";
+      scale = "1 1 1";
+      rotationMatrix = "0.935123801 0.354321241 0 -0.354321241 0.935123801 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small13) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-715.67572 5.82545471 104.486992";
+      scale = "1 1 1";
+      rotationMatrix = "0.935123801 0.354321241 0 -0.354321241 0.935123801 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium14) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-745.530701 -24.2103844 104.469391";
+      scale = "1 1 1";
+      rotationMatrix = "0.935123801 0.354321241 0 -0.354321241 0.935123801 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags13) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-743.442017 -22.0124779 104.485863";
+      scale = "1 1 1";
+      rotationMatrix = "0.935123801 0.354321241 0 -0.354321241 0.935123801 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large18) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-738.909851 -17.0714531 104.518326";
+      scale = "1 1 1";
+      rotationMatrix = "0.935123801 0.354321241 0 -0.354321241 0.935123801 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_boxes14) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_boxes.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-741.225586 96.6331406 118.589828";
+      scale = "1 1 1";
+      rotationMatrix = "0.927693307 0.373343378 0 -0.373343378 0.927693307 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small12) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-703.534424 130.353897 118.489983";
+      scale = "1 1 1";
+      rotationMatrix = "0.927693307 0.373343378 0 -0.373343378 0.927693307 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_medium13) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_medium.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-712.893616 91.951416 118.472382";
+      scale = "1 1 1";
+      rotationMatrix = "0.927693307 0.373343378 0 -0.373343378 0.927693307 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_bags12) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_bags.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-723.562744 114.656044 118.488853";
+      scale = "1 1 1";
+      rotationMatrix = "0.927693307 0.373343378 0 -0.373343378 0.927693307 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_large17) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_large.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "-733.530518 104.732407 118.521317";
+      scale = "1 1 1";
+      rotationMatrix = "0.927693307 0.373343378 0 -0.373343378 0.927693307 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new Prefab(garbage_small) {
+      fileName = "levels/west_coast_usa/art/prefabs/garbage_small.prefab";
+      loadMode = "Automatic";
+      useGlobalTranslation = "0";
+      position = "86.1660767 651.029968 74.7236633";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 1 0 0 0 1";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+};
+//--- OBJECT WRITE END ---
+
+
+
+

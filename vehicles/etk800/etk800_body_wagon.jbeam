@@ -53,7 +53,8 @@
     ],
     "soundscape": [
         ["name", "src"],
-        //indicator6
+        //indicator6,
+        {"node:":"int1"},
         ["indicatorStart", "event:>Vehicle>Interior>Indicator>PEU_On"],
         ["indicatorStop", "event:>Vehicle>Interior>Indicator>PEU_Off"],
         ["indLoop1", "event:>Vehicle>Interior>Indicator>PEU_Click"],
@@ -61,6 +62,12 @@
         //lights11
         ["LightOn", "event:>Vehicle>Interior>Light>POL_Light_On"],
         ["LightOff", "event:>Vehicle>Interior>Light>POL_Light_On"],
+        //handbrake2
+        {"node:":"int3"},
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Unlock"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Lock"],
+        //affects horn location because horn soundscape is loaded after
+        {"node:":"f15"},
     ]
     "refNodes":[
         ["ref:", "back:", "left:", "up:", "leftCorner:", "rightCorner:"]
@@ -554,7 +561,7 @@
 
           //roof main shape lengthwise
           {"beamSpring":1201000,"beamDamp":150},
-          {"beamDeform":36000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":32000,"beamStrength":"FLT_MAX"},
           {"deformGroup":"sunroof_break","deformationTriggerRatio":0.03},
           ["rf1r","rf2r"],
           ["rf1","rf2"],
@@ -662,7 +669,7 @@
           //a pillar main shape
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
           {"beamSpring":1001000,"beamDamp":150},
-          {"beamDeform":41000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":36000,"beamStrength":"FLT_MAX"},
           {"deformGroup":"windshield_break", "deformationTriggerRatio":0.01}
           ["p1r","p2r"],
           ["p1l","p2l"],
@@ -733,7 +740,7 @@
 
           //b pillar main shape
           {"beamSpring":1001000,"beamDamp":150},
-          {"beamDeform":41000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":36000,"beamStrength":"FLT_MAX"},
           ["p3r","p4r"],
           ["p3l","p4l"],
           ["p5r","p6r"],
@@ -869,7 +876,7 @@
 
           //c pillar main shape
           {"beamSpring":1001000,"beamDamp":150},
-          {"beamDeform":41000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":36000,"beamStrength":"FLT_MAX"},
           ["p9r","p10r"],
           ["p9r","q1r"],
           ["p9r","rf4r"],
@@ -919,7 +926,7 @@
 
           //d pillar main shape
           {"beamSpring":1001000,"beamDamp":150},
-          {"beamDeform":41000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":32000,"beamStrength":"FLT_MAX"},
           {"deformGroup":"sideglass_R_break","deformationTriggerRatio":0.03},
           ["p11r","p12r"],
           ["p11r","q2r"{"deformLimitExpansion":""}],
@@ -935,7 +942,7 @@
           ["p12l","q4l"],
 
           //corners
-          {"beamDeform":20400,"beamStrength":"FLT_MAX"},
+          {"beamDeform":17400,"beamStrength":"FLT_MAX"},
           {"deformGroup":"sideglass_R_break","deformationTriggerRatio":0.03},
           ["p11r","rf6"{"beamDeform":12000,"deformLimitExpansion":""}],
           ["p11r","rf5"{"beamDeform":12000,"deformLimitExpansion":""}],
@@ -986,7 +993,7 @@
 
           //quarter panel main shape lengthwise
           {"beamSpring":1501000,"beamDamp":150},
-          {"beamDeform":29700,"beamStrength":"FLT_MAX"},
+          {"beamDeform":20700,"beamStrength":"FLT_MAX"},
           ["q1r","q2r"],
           ["q1l","q2l"],
           ["q2r","q3r"],
@@ -1015,7 +1022,7 @@
           ["q4l","q9l"],
 
           //surficial crossing
-          {"beamDeform":16800,"beamStrength":"FLT_MAX"},
+          {"beamDeform":13800,"beamStrength":"FLT_MAX"},
           ["q2r","q6r"],
           ["q2l","q6l"],
           ["q1r","q7r"],
@@ -1086,7 +1093,7 @@
           ["q8l","r6ll"],
 
           //strong
-          {"beamDeform":21000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":18000,"beamStrength":"FLT_MAX"},
           ["q5r","f4rr"],
           ["q5r","f4r"],
           ["q4r","r6rr"]
@@ -1599,7 +1606,7 @@
           ["f10ll","f13"],
 
           //rear frame main shape lengthwise
-          {"beamDeform":49500,"beamStrength":"FLT_MAX"},
+          {"beamDeform":40500,"beamStrength":"FLT_MAX"},
           {"beamSpring":4800600,"beamDamp":120},
           ["f4rr","r1rr"],
           ["f4r","r1"],
@@ -1628,12 +1635,12 @@
           ["r5ll","r1"],
 
           //rear frame main shape widthwise
-          {"beamDeform":49500,"beamStrength":"FLT_MAX"},
+          {"beamDeform":40500,"beamStrength":"FLT_MAX"},
           ["r1rr","r1"],
           ["r1ll","r1"],
 
           //vertical
-          {"beamDeform":45000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":35000,"beamStrength":"FLT_MAX"},
           ["r2rr","r5rr"],
           //["r2","r5"],
           ["r2ll","r5ll"],
@@ -1645,7 +1652,7 @@
           ["r4ll","r7ll"],
 
           //crossing vertical widthwise
-          {"beamDeform":23700,"beamStrength":"FLT_MAX"},
+          {"beamDeform":20700,"beamStrength":"FLT_MAX"},
           ["r7rr","r4"],
           ["r7ll","r4"],
           ["r4rr","r7"],
@@ -1872,7 +1879,7 @@
           ["f9r", "f3l"],
 
           //strong to represent frame rails
-          {"beamDeform":48500,"beamStrength":"FLT_MAX"},
+          {"beamDeform":38500,"beamStrength":"FLT_MAX"},
           ["f7r","f3r"],
           ["f7l","f3l"],
           ["f8r","f2r"],
@@ -1953,7 +1960,7 @@
           ["f6ll","f2ll"],
 
           //floor main shape lengthwise
-          {"beamDeform":48000,"beamStrength":"FLT_MAX"},
+          {"beamDeform":40000,"beamStrength":"FLT_MAX"},
           ["f1rr","f2rr"],
           ["f1r","f2r"],
           ["f1l","f2l"],
@@ -2538,6 +2545,102 @@
          {"nodeMaterial":"|NM_PLASTIC"},
          {"frictionCoef":0.5},
          {"nodeWeight":9},
+         ["fseatr",-0.4, 0.32, 0.95],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1.0},
+          {"beamSpring":451000,"beamDamp":500},
+          {"beamDeform":3000,"beamStrength":"FLT_MAX"},
+          ["fseatr","f2rr"],
+          ["fseatr","f2r"],
+          ["fseatr","f7r"],
+          ["fseatr","f3rr"],
+          ["fseatr","f3r"],
+          ["fseatr","f8l"],
+          {"beamPrecompression":1, "beamType":"|SUPPORT", "beamLongBound":3},
+          {"beamSpring":1001000,"beamDamp":150,"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          {"beamPrecompression":0.9},
+          ["fseatr", "rf1r"],
+          ["fseatr", "rf1"],
+          {"beamPrecompression":0.7},
+          ["fseatr", "rf2r"],
+          ["fseatr", "rf2"],
+          {"beamPrecompression":0.6},
+          ["p7r", "fseatr"],
+          ["p5r", "fseatr"],
+          ["p3r", "fseatr"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1.0},
+    ],
+}
+"etk800_race_seat_FL": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Race Driver Seat",
+        "value":1100,
+    }
+    "slotType" : "etk800_seat_FL",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["racingseat", ["etk800_seat_FL"],[],{"pos":{"x":0.405,"y":0.11,"z":0.328}}],
+		 ["racingseat_base", ["etk800_seat_FL"],[],{"pos":{"x":0.405,"y":0.11,"z":0.30}, "scale":{"x":1.0, "y":1.0, "z":1.52}}],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"group":"etk800_seat_FL"},
+         {"selfCollision":true},
+         {"collision":true},
+         {"nodeMaterial":"|NM_PLASTIC"},
+         {"frictionCoef":0.5},
+         {"nodeWeight":4},
+         ["fseatl", 0.4, 0.32, 0.95],
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1.0},
+          {"beamSpring":451000,"beamDamp":500},
+          {"beamDeform":3000,"beamStrength":"FLT_MAX"},
+          ["fseatl","f2ll"],
+          ["fseatl","f2l"],
+          ["fseatl","f7l"],
+          ["fseatl","f3ll"],
+          ["fseatl","f3l"],
+          ["fseatl","f8r"],
+          {"beamPrecompression":1, "beamType":"|SUPPORT", "beamLongBound":3},
+          {"beamSpring":1001000,"beamDamp":150,"beamDeform":25000,"beamStrength":"FLT_MAX"},
+          {"beamPrecompression":0.9},
+          ["fseatl", "rf1l"],
+          ["fseatl", "rf1"],
+          {"beamPrecompression":0.7},
+          ["fseatl", "rf2l"],
+          ["fseatl", "rf2"],
+          {"beamPrecompression":0.6},
+          ["p7l", "fseatl"],
+          ["p5l", "fseatl"],
+          ["p3l", "fseatl"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1.0},
+    ],
+}
+"etk800_race_seat_FR": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Race Passenger Seat",
+        "value":1100,
+    }
+    "slotType" : "etk800_seat_FR",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["racingseat", ["etk800_seat_FR"],[],{"pos":{"x":-0.405,"y":0.11,"z":0.328}}],
+		 ["racingseat_base", ["etk800_seat_FR"],[],{"pos":{"x":-0.405,"y":0.11,"z":0.30}, "scale":{"x":1.0, "y":1.0, "z":1.52}}],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"group":"etk800_seat_FR"},
+         {"selfCollision":true},
+         {"collision":true},
+         {"nodeMaterial":"|NM_PLASTIC"},
+         {"frictionCoef":0.5},
+         {"nodeWeight":4},
          ["fseatr",-0.4, 0.32, 0.95],
     ],
     "beams": [

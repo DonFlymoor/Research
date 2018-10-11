@@ -292,7 +292,9 @@ local function switchBrokenMaterial(beam)
     local dm = deformMeshes[g.deformGroup]
     if dm then --if there is a mesh assigned to this deformGroup
       if dm.deformSound and dm.deformSound ~= "" and not brokenSwitches[msc] then    --check if the mesh has a deform sound
-        sounds.playSoundOnceAtNode(dm.deformSound, beam.id1, dm.deformVolume or 1)   --play the deform sound
+        --sounds.playSoundOnceAtNode(dm.deformSound, beam.id1, dm.deformVolume or 1)   --play the deform sound
+		sounds.playSoundOnceAtNode(dm.deformSound, beam.id1, (dm.deformVolume or 1) * 0.5)
+		--print ((dm.deformVolume or 1) * 0.5)
         beamstate.addDamage(500)
       end
     end
@@ -308,28 +310,9 @@ local function reset()
   brokenSwitches = {}
 end
 
-local function destroy()
-  if obj.ibody == nil then
-    -- if it failed to initialize correctly, there is nothing to be destroyed here
-    return
-  end
-
-  -- switch back all the materials
-  for _, s in ipairs(triggers) do
-    --log('D', "material.destroy", "switching material back to its original: "..s.msc.." -> ".. s.orgMat)
-    switchMaterial(s.msc, s.orgMat)
-  end
-
-  -- and destroy the rest
-  obj:destroyMaterials()
-  M.switches = {}
-  brokenSwitches = {}
-end
-
 -- public interface
 M.init = init
 M.reset = reset
-M.destroy = destroy
 M.switchBrokenMaterial = switchBrokenMaterial
 M.updateGFX = updateGFX
 

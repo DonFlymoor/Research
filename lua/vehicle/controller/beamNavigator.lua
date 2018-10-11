@@ -3,16 +3,16 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 
 local htmlTexture = require("htmlTexture")
 
-local screenMaterialName = "@screen_gps"
-local htmlFilePath = "local://local/vehicles/common/navi_screen.html"
-local textureWidth = 256
-local textureHeight = 128
-local textureFPS = 30
+local screenMaterialName = nil
+local htmlFilePath = nil
+local textureWidth = 0
+local textureHeight = 0
+local textureFPS = 0
 
 local function updateGFX(dt)
   local pos = obj:getPosition()
@@ -24,15 +24,15 @@ local function updateGFX(dt)
   htmlTexture.call(screenMaterialName, "map.updateData", data)
 end
 
-local function init(data)
-  screenMaterialName = data.screenMaterialName or screenMaterialName
-  htmlFilePath = data.htmlFilePath or htmlFilePath
-  textureWidth = data.textureWidth or textureWidth
-  textureHeight = data.textureHeight or textureHeight
-  textureFPS = data.textureFPS or textureFPS
+local function init(jbeamData)
+  screenMaterialName = jbeamData.screenMaterialName or "@screen_gps"
+  htmlFilePath = jbeamData.htmlFilePath or "local://local/vehicles/common/navi_screen.html"
+  textureWidth = jbeamData.textureWidth or 256
+  textureHeight = jbeamData.textureHeight or 128
+  textureFPS = jbeamData.textureFPS or 30
 
-  htmlTexture.create(screenMaterialName, htmlFilePath, textureWidth, textureHeight, textureFPS, 'automatic')
-  obj:queueGameEngineLua(string.format('extensions.ui_uinavi.requestVehicleDashboardMap(%q)', screenMaterialName))
+  htmlTexture.create(screenMaterialName, htmlFilePath, textureWidth, textureHeight, textureFPS, "automatic")
+  obj:queueGameEngineLua(string.format("extensions.ui_uinavi.requestVehicleDashboardMap(%q)", screenMaterialName))
 end
 
 M.init = init

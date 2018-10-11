@@ -54,11 +54,9 @@ end
 
 local function queryRoadNodeToPosition(vehicle, position, owner)
   -- log('I',logTag, 'queryRoadNodeToPosition called...')
-
   local pos = vec3(position)
   local first, second, distance = map.findClosestRoad(pos)
   local state = M.state
-
   -- log('D', logTag, 'queryRoadNodeToPosition '..owner..': '..first..','..second..','..distance)
   state.closestRoad[owner] = {position=position}
   if first ~= 'nil' and second ~= 'nil' then
@@ -136,7 +134,6 @@ local function onPreRender(dt)
   if not vehicle then return end
 
   --testDecals()
-
   if getExplorationActive() then
     lastQuery = lastQuery  - dt
     if lastQuery <= 0 then
@@ -146,7 +143,6 @@ local function onPreRender(dt)
     end
 
     local state = M.state
-
     local colorTable = {ColorF(0.7,0.2,0.2,1.0), ColorF(0.2,0.7,0.2,1.0), ColorF(0.2,0.2,0.7,1.0), ColorF(0.7,0.7,0.2,1.0), ColorF(0.7,0.2,0.7,1.0), ColorF(0.2,0.7,0.7,1.0)}
     local playerRoadData = state.closestRoad['player']
     if playerRoadData and playerRoadData.first and playerRoadData.first ~= 'nil' then
@@ -189,7 +185,6 @@ end
 
 local function openShortLocationInfo(locationKey)
   log('I', logTag, 'openShortLocationInfo called....'..tostring(locationKey))
-
   local campaign = campaign_campaigns.getCampaign()
   if not campaign then
     return
@@ -213,15 +208,10 @@ local function refreshLocationMarkers(subsection)
       if trigger then
         local markerName = v.entryMarker..'_marker'
         local completed = campaign_campaigns.isLocationCompleted(k)
-        if v.info.subtype == 'missionGiver' and completed then
-          trigger:deleteObject()
-        elseif not scenetree[markerName] then
+
+        if not scenetree[markerName] then
           state.locationTriggers[trigger.name] = k
-          if v.info.type == 'site' then
-            if v.info.subtype ~= 'missionGiver' or (campaign_campaigns.canStartScenario(k) and not completed) then
-              createScenarioMarker(markerName, trigger.position, trigger.scale, ColorF(1, 1, 0, 1))
-            end
-          elseif campaign_campaigns.canStartScenario(k) and campaign_campaigns.canImproveResult(k) then
+          if not completed and campaign_campaigns.canStartScenario(k) then
             createScenarioMarker(markerName, trigger.position, trigger.scale, ColorF(1, 1, 1, 1))
           end
         end
@@ -233,8 +223,8 @@ local function refreshLocationMarkers(subsection)
 end
 
 local function createSubsectionPrefabs(subsection, triggers)
-  -- log('I', logTag, 'createSubsectionPrefabs called...')
 
+  -- log('I', logTag, 'createSubsectionPrefabs called...')
   local campaign = campaign_campaigns.getCampaign()
   if not campaign then
     log('E', logTag, 'could not find a campaign')
@@ -308,11 +298,6 @@ local function endSubsectionExploration()
   core_groundMarkers.setFocus(nil)
   guihooks.trigger('MissionInfoUpdate', nil)
 
-  local ExplorationCheckpoints = scenetree.findObject("ExplorationCheckpointsActionMap")
-  if ExplorationCheckpoints then
-    ExplorationCheckpoints:pop()
-  end
-
   local ExplorationMissionUI = scenetree.findObject("ExplorationMissionUIActionMap")
   if ExplorationMissionUI then
     ExplorationMissionUI:pop()
@@ -376,8 +361,7 @@ local function processExploreSubsection(spawningData, transitioningFromScenario)
     return
   end
 
-  local state = M.state
-
+  local state = M.state 
   ----------------exploreSubsection(subsectionName)------------------------------
   campaign.state.activeSubsection = spawningData.subsectionKey
   campaign.state.currentLocation = spawningData.subsectionKey
@@ -402,7 +386,6 @@ local function processExploreSubsection(spawningData, transitioningFromScenario)
   guihooks.trigger('MenuHide')
   state.inExploration = true
   state.minimapOpen = false
-
   -- spawn new player vehicle
   -- log('I', logTag, 'Spawning Player in exploration : ')
   -- dump(spawningData)
@@ -418,10 +401,6 @@ local function processExploreSubsection(spawningData, transitioningFromScenario)
   inputActionFilter.clear(0)
   inputActionFilter.addAction(0, 'default_blacklist_exploration', true)
 
-  local ExplorationCheckpoints = scenetree.findObject("ExplorationCheckpointsActionMap")
-  if ExplorationCheckpoints then
-    ExplorationCheckpoints:push()
-  end  
   local ExplorationGeneral = scenetree.findObject("ExplorationGeneralActionMap")
   if ExplorationGeneral then
     ExplorationGeneral:push()
@@ -450,15 +429,11 @@ local function processExploreSubsection(spawningData, transitioningFromScenario)
     minimap.worldCoord.y = -0.5 * minimap.worldCoord.h
     --dump(minimap)
   end
-
-  campaign_campaignsLoader.saveCampaign(campaign)  
 end
 
 local function onClientStartMission(mission)
-
   -- Disclaimer message for campaign mode.
   -- guihooks.trigger('toastrMsg', {type="warning", title="Work in Progress", msg = "Campaign mode is a work in progress and is still subject to further changes.", config = {timeOut = 0}})
-
   local state = M.state
   if state.pendingSpawningData then
     log('D', logTag, 'onClientStartMission called....with sectionName '..tostring(state.pendingSpawningData.subsectionKey))
@@ -522,94 +497,13 @@ local function locationRequiresExtraUI(locationKey)
     -- dump(locationData)
     local locationInfo = locationData.info
     if locationInfo.type == 'site' then
-      return (locationInfo.subtype == 'playerHQ') or (locationInfo.subtype == 'vendor')
+      return (locationInfo.subtype == 'playerHQ') or (locationInfo.subtype == 'vendor') or(locationInfo.subtype == 'photoMode')
     end
     if locationInfo.type == 'race' then
       return (locationInfo.subtype == 'timeTrial')
     end
   end
   return false
-end
-
-local function openLocationExtraUI(locationKey)
-  local state = M.state
-
-  if state.missionExtraUiOpened then return end
-
-  local locationData = campaign_campaigns.getActiveSubsectionLocationData(state.locationKey)
-  if locationData and locationData.info then
-    local locationInfo = locationData.info
-    if locationInfo.type == 'race' and locationInfo.subtype == 'timeTrial' then
-      local raceLevel = scenario_quickRaceLoader.getLevel(locationInfo.levelName)
-      if not raceLevel then
-        log('E', logTag, 'Could not find time trail level '..tostring(locationInfo.levelName)..' for campaign scenario '..tostring(locationKey))
-        return
-      end
-
-      local vehicle = be:getPlayerVehicle(0)
-      vehicle:queueLuaCommand('controller.setFreeze(1)')
-      bindings.menuActive(true)
-      state.missionExtraUiOpened = true
-
-      local raceTrack = scenario_quickRaceLoader.getLevelTrack(locationInfo.levelName, locationInfo.trackName)
-      local ownedVehicles = core_inventory.getItemList('$$$_VEHICLES')
-      -- Note: 'campaign.quickraceOverview' is also used in UIStateChange, make sure to keep in sync if changing
-      guihooks.trigger('ChangeState', {state = 'campaign.quickraceOverview', params = {level = raceLevel , track = raceTrack, vehicles = ownedVehicles }})
-    end
-
-    if locationInfo.type == 'site' and (locationInfo.subtype == 'playerHQ' or locationInfo.subtype == 'vendor') then
-      core_gamestate.setGameState("scenario", {}, 'freeroam')
-      local vehicle = be:getPlayerVehicle(0)
-      vehicle:queueLuaCommand('controller.setFreeze(1)')
-      bindings.menuActive(true)
-      state.missionExtraUiOpened = true
-
-      local mode
-      local vehiclesList
-      local money
-      if locationInfo.subtype == 'playerHQ' then
-        mode = 'garage'
-        vehiclesList = core_inventory.getItemList('$$$_VEHICLES')
-      else
-        mode = 'dealer'
-        vehiclesList = campaign_dealer.getStock('$$$_VEHICLES')
-        money = core_inventory.getItemList('$$$_MONEY')
-      end
-
-      guihooks.trigger('ChangeState', {state = 'garageProto.menu.select', params = {vehicles = vehiclesList, mode=mode, money = money}})
-    end
-  end
-end
-
-local function processOnEvent(onEventData)
-end
-
-local function missionGiverCallback()
-  log('I', logTag, 'missionGiverCallback called...')
-  local state = M.state
-  if state.inSideMissionTrigger and state.locationKey then
-    local subsection = campaign_campaigns.getActiveSubsection()
-    local locationData = campaign_campaigns.getLocationData(subsection.key, state.locationKey)
-    dump(locationData)
-    if locationData.info.type == "site" and locationData.info.subtype == "missionGiver" then
-      campaign_campaigns.markCompleted(subsection, state.locationKey)
-
-      local markerName = locationData.entryMarker..'_marker'
-      if scenetree[markerName] then
-        scenetree[markerName]:deleteObject()
-      end
-
-      if scenetree[locationData.entryMarker] then
-        scenetree[locationData.entryMarker]:deleteObject()
-      end
-
-      processOnEvent(locationData)
-
-      state.locationKey = nil
-      state.inSideMissionTrigger = false
-      refreshLocationMarkers(subsection)
-    end
-  end
 end
 
 local function scenarioAcceptCallback()
@@ -626,60 +520,13 @@ local function scenarioAcceptCallback()
   end
 end
 
-local function siteLocationCallback()
-  log('I', logTag, 'siteLocationCallback accepted....')
-  local state = M.state
-  if state.inSideMissionTrigger and state.locationKey then
-    local secondaryUiRequired = locationRequiresExtraUI(state.locationKey)
-    if secondaryUiRequired then
-      log('I', logTag, 'Opening mission extra UI....')
-      openLocationExtraUI(state.locationKey)
-    end
-  end
-end
-
 local function handleScenarioTrigger(vehicleID, subsectionKey, locationKey)
   -- log('I', logTag, 'onBeamNGTrigger for campaign lua in trigger '..data.triggerName)
   local state = M.state
   local completed = campaign_campaigns.isLocationCompleted(locationKey)
-  local canImprove = campaign_campaigns.canImproveResult(locationKey)
   local allowed = campaign_campaigns.canStartScenario(locationKey)
-  if allowed and (not completed or canImprove) then
+  if allowed and not completed then
     state.triggerCallback = scenarioAcceptCallback
-    state.locationKey = locationKey
-    state.inSideMissionTrigger = true
-    openShortLocationInfo(locationKey)
-  end
-end
-
-local function handleSiteTrigger(vehicleID, subsectionKey, locationKey)
-  -- log('I', logTag, 'handleSiteTrigger called...'..subsectionKey..' , '..locationKey)
-  local state = M.state
-
-  local locationData = campaign_campaigns.getLocationData(subsectionKey, locationKey)
-
-  if campaign_campaigns.isTransitionPoint(subsectionKey, locationKey) then
-    if state.transitionPointData == nil then
-      local entryPointParts = campaign_campaignsLoader.splitFieldByToken(locationData.info.entryPoint, '.')
-
-      local vehicleData = extractVehicleData(vehicleID)
-      local spawningData = createPlayerSpawningData(vehicleData.model, vehicleData.config, vehicleData.color, vehicleData.licenseText)
-
-      state.transitionPointData = {locationMarker = entryPointParts[2]}
-
-      startSubsectionExploration(entryPointParts[1], entryPointParts[2], spawningData)
-    end
-  elseif campaign_campaigns.isMissionGiver(subsectionKey, locationKey) then
-    local completed = campaign_campaigns.isLocationCompleted(locationKey)
-    local allowed = campaign_campaigns.canStartScenario(locationKey)
-    if allowed and not completed then
-      state.triggerCallback = missionGiverCallback
-      state.locationKey = locationKey
-      state.inSideMissionTrigger = true
-      openShortLocationInfo(locationKey)
-    end
-  else --if campaign_campaigns.isPlayerHQ(subsectionKey, locationKey) then
-    state.triggerCallback = siteLocationCallback
     state.locationKey = locationKey
     state.inSideMissionTrigger = true
     openShortLocationInfo(locationKey)
@@ -693,20 +540,13 @@ local function onBeamNGTrigger(data)
   if not vid or not data or not data.subjectID or data.subjectID ~= vid then
     return
   end
-
-  -- log('D', logTag, 'vid: ' ..vid)
-  -- dump(data)
   local state = M.state
   if state.locationTriggers then
     local subsectionKey = campaign_campaigns.getActiveSubsection().key
     local locationKey = state.locationTriggers[data.triggerName]
     if subsectionKey and locationKey then
       if data.event == 'enter' and not state.inSideMissionTrigger then
-        if campaign_campaigns.isSiteLocation(subsectionKey, locationKey) then
-          handleSiteTrigger(data.subjectID, subsectionKey, locationKey)
-        else
-          handleScenarioTrigger(data.subjectID, subsectionKey, locationKey)
-        end
+        handleScenarioTrigger(data.subjectID, subsectionKey, locationKey)
         local ExplorationMissionUI = scenetree.findObject("ExplorationMissionUIActionMap")
         if ExplorationMissionUI then
           ExplorationMissionUI:push()
@@ -724,12 +564,10 @@ local function onBeamNGTrigger(data)
       end
     end
   end
-  --dump(campaign)
 end
 
 local function startSelectedScenario(processedScenario)
   local state = M.state
-
   if state.locationKey then
     local nextScenario = state.locationKey
     state.locationKey = nil
@@ -750,9 +588,7 @@ local function onUpdate()
   if not campaign then
     return
   end
-
   local state = M.state
-
   if state.inSideMissionTrigger and state.loadNextScenario then
     state.loadNextScenario = false
     state.inSideMissionTrigger = false
@@ -762,7 +598,6 @@ end
 
 local function accept()
   local state = M.state
-
   if getExplorationActive() and state.inSideMissionTrigger then
     if not state.locationInfoDisplayed then
       log('I', logTag, 'Displaying mission info for '..tostring(state.locationKey))
@@ -774,7 +609,6 @@ local function accept()
       if scenarioData and scenarioData.info then
         local locationInfo = scenarioData.info
         local dataTable = {}
-
         if locationInfo.distance then
           table.insert(dataTable,{label = 'distance',  value = locationInfo.distance})
         end
@@ -791,6 +625,7 @@ local function accept()
                                               buttons = buttonsTable})
 
         state.locationInfoDisplayed = true
+
         --guihooks.trigger('PlayerStatusUpdate', {'money'=520, 'currentObjs' = 1, 'totalObjs'= 4})
       else
         log('E', logTag, 'could not find mission info for '..tostring(state.locationKey or nil))
@@ -798,8 +633,8 @@ local function accept()
     else
       guihooks.trigger('MissionInfoUpdate', nil)
       state.locationInfoDisplayed = false
-
       if state.triggerCallback and type(state.triggerCallback) == 'function' then
+       -- dump(state.triggerCallback)
         state.triggerCallback()
         state.triggerCallback = nil
       else
@@ -822,15 +657,15 @@ local function decline()
 end
 
 local function getMinimapInfo()
-  local subsection = campaign_campaigns.getActiveSubsection()  
+  local subsection = campaign_campaigns.getActiveSubsection() 
   local minimap = subsection and subsection.minimap
   if not minimap then return end
 
   local locationStatusTable = campaign_campaigns.getLocationStatusTable()
-
   local info = {}
   for k,v in pairs(subsection.locations) do
-    local validPoi = campaign_campaigns.canStartScenario(k) and campaign_campaigns.canImproveResult(k)
+    local locationStatus = locationStatusTable[subsection.key..'.'..k]
+    local validPoi = locationStatus.state ~= 'completed' and campaign_campaigns.canStartScenario(k)
     if validPoi and v.entryMarker and scenetree[v.entryMarker..'_marker'] then
       local trigger = scenetree[v.entryMarker]
       local poi = {}
@@ -840,14 +675,13 @@ local function getMinimapInfo()
       poi.subtype = v.info.subtype
       poi.description = v.info.description
       poi.position = {0, 0}
-      local locationStatus = locationStatusTable[subsection.key..'.'..k]
-      poi.state = (locationStatus.state == 'completed' and locationStatus.medal) or locationStatus.state
+      poi.state = locationStatus.state
       poi.position.x = (trigger:getPosition().x - minimap.worldCoord.x) / minimap.worldCoord.w
       poi.position.y = 1 - ((trigger:getPosition().y - minimap.worldCoord.y) / minimap.worldCoord.h)
       table.insert(info, poi)
     end
   end
-
+ -- dump(info)
   return info
 end
 
@@ -868,8 +702,8 @@ local function updateMapUI()
   local subsection = campaign_campaigns.getActiveSubsection()
   local minimap = subsection and subsection.minimap
   local uiParams = {}
-  uiParams.level = subsection.level or "<missing level>"
-  uiParams.money = '$'..tostring(core_inventory.getItem('$$$_MONEY',  0))
+  uiParams.level = subsection.level or "<missing level>"  
+  uiParams.money = '$'..(campaign_campaigns.getCampaign().state.rewardMoney or 0)
   uiParams.baseImg = minimap.image
   uiParams.points = {}
   uiParams.selectedMission = -1
@@ -902,7 +736,6 @@ local function onVehicleSpawned(vehicleId)
   if not getExplorationActive() then
     return
   end
-
   local campaign = campaign_campaigns.getCampaign()
   local playerId = be:getPlayerVehicleID(0)
   log('I', logTag, 'onVehicleSpawned PlayerID: '..playerId..' Spawned: '..vehicleId)
@@ -986,11 +819,7 @@ local function onUiChangedState (curUIState, prevUIState)
       state.missionExtraUiOpened = false
       local subsectionKey = campaign_campaigns.getActiveSubsection().key
       local vid = be:getPlayerVehicleID(0)
-      if campaign_campaigns.isSiteLocation(subsectionKey, state.locationKey) then
-        handleSiteTrigger(vid, subsectionKey, state.locationKey)
-      else
-        handleScenarioTrigger(vid, subsectionKey, state.locationKey)
-      end
+      handleScenarioTrigger(vid, subsectionKey, state.locationKey)
     end
   end
 
@@ -999,51 +828,6 @@ local function onUiChangedState (curUIState, prevUIState)
       toggleMinimap()
     end
   end  
-end
-
-local function startTimeTrail(scenarioFile, trackFile, vehicleFile)
-  log('I', logTag, 'startTimeTrail called...')
-  local processedScenario = scenario_quickRaceLoader.loadQuickrace(M.state.locationKey, scenarioFile, trackFile, vehicleFile)
-  --dump(processedScenario)
-  bindings.menuActive(false)
-  startSelectedScenario(processedScenario)
-end
-
-local function uiEventSelectVehicle(vehicleData)
-  local state = M.state
-  log('I', logTag, 'uiEventSelectVehicle called... Location: '..state.locationKey)
-  -- dump(vehicleData)
-
-  local locationData = campaign_campaigns.getActiveSubsectionLocationData(state.locationKey)
-  local locationInfo = locationData and locationData.info
-  if locationInfo.type == 'site' and locationInfo.subtype == 'playerHQ' then
-    local vehicle = be:getPlayerVehicle(0)
-    vehicleData.licenseText = vehicle:getDynDataFieldbyName("licenseText", 0)
-    campaign_campaigns.getCampaign().state.userVehicle = vehicleData
-    spawningPlayer = createPlayerSpawningData(vehicleData.model, vehicleData.config, vehicleData.color, vehicleData.licenseText)
-    core_vehicles.replaceVehicle(spawningPlayer.model, spawningPlayer.options)
-
-    bindings.menuActive(false)
-    core_gamestate.setGameState('scenario', 'scenario', 'freeroam')
-    guihooks.trigger('ChangeState', {state = 'menu'})
-  elseif locationInfo.type == 'site' and locationInfo.subtype == 'vendor' then
-    -- log('I', logTag, 'Buying vehicle.... ')
-    local modelData = core_vehicles.getModel(vehicleData.model)
-    core_inventory.addItem("$$$_VEHICLES", vehicleData)
-    core_inventory.removeItem("$$$_MONEY", modelData.configs[vehicleData.config].Value)
-    campaign_dealer.removeFromStock("$$$_VEHICLES", vehicleData)
-    -- guihooks.trigger('RefreshVehicles', {vehicles = campaign_dealer.getStock('$$$_VEHICLES'), money = core_inventory.getItemList('$$$_MONEY')})
-  end
-end
-
-local function uiEventGarageExit()
-  log('I', logTag, 'uiEventGarageExit called...')
-  local vehicle = be:getPlayerVehicle(0)
-  vehicle:queueLuaCommand('controller.setFreeze(0)')
-
-  bindings.menuActive(false)
-  core_gamestate.setGameState('scenario', 'scenario', 'freeroam')
-  guihooks.trigger('ChangeState', {state = 'menu'})
 end
 
 local function onCameraToggled(data)
@@ -1061,30 +845,12 @@ local function onCameraToggled(data)
       state.missionExtraUiOpened = false
       local subsectionKey = campaign_campaigns.getActiveSubsection().key
       local vid = be:getPlayerVehicleID(0)
-      if campaign_campaigns.isSiteLocation(subsectionKey, state.locationKey) then
-        handleSiteTrigger(vid, subsectionKey, state.locationKey)
-      else
-        handleScenarioTrigger(vid, subsectionKey, state.locationKey)
-      end
+      handleScenarioTrigger(vid, subsectionKey, state.locationKey)
     end
   end
 end
 
-local function onSaveCampaign(saveCallback)
-  local data = {}  
-  data = deepcopy(M.state)
-  saveCallback(M.__globalAlias__, data)
-end
-
-local function onResumeCampaign(campaignInProgress, data)
-  log('I', logTag, 'resume campaign called.....')
-  M.state = data
-end
-
 M.onUiChangedState            = onUiChangedState
-M.startTimeTrail              = startTimeTrail
-M.uiEventSelectVehicle        = uiEventSelectVehicle
-M.uiEventGarageExit           = uiEventGarageExit
 M.updateMapUI                 = updateMapUI
 M.setFocusPOI                 = setFocusPOI
 M.onFocusPOI                  = onFocusPOI
@@ -1108,6 +874,6 @@ M.onDeserialized              = onDeserialized
 M.onClientStartMission        = onClientStartMission
 M.onClientEndMission          = onClientEndMission
 M.onCameraToggled             = onCameraToggled
-M.onSaveCampaign              = onSaveCampaign
-M.onResumeCampaign            = onResumeCampaign
+M.refreshLocationMarkers      = refreshLocationMarkers
+
 return M

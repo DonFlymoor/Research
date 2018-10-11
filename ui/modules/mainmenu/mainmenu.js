@@ -5,8 +5,8 @@ angular.module('beamng.stuff')
     replace: true,
     template: `
       <div ng-click="showBuildInfo = !showBuildInfo">
-        <div ng-show='!showBuildInfo'>v{{ ::versionSimpleStr }}</div>
-        <div ng-show='showBuildInfo'>v{{ ::versionStr }}<br/>{{ ::buildInfoStr }}</div>
+        <div ng-show='!showBuildInfo'>Alpha v{{ ::versionSimpleStr }}</div>
+        <div ng-show='showBuildInfo'>Alpha v{{ ::versionStr }}<br/>{{ ::buildInfoStr }}</div>
       </div>`,
     link: function (scope, element, attrs) {
       scope.showBuildInfo = false;
@@ -391,7 +391,7 @@ angular.module('beamng.stuff')
 
 
 
-  $http.get('http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?format=json&appid=284160&feeds=steam_community_announcements&count=1').
+  $http.get('https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?format=json&appid=284160&feeds=steam_community_announcements&count=1').
   success(function(data) {
     var options = { weekday: 'short', month: 'long', day: 'numeric' };
     $scope.date = Utils.dateFromUnixTs(data.appnews.newsitems[0].date).toLocaleDateString('en-US', options);
@@ -411,7 +411,7 @@ angular.module('beamng.stuff')
   bngApi.engineLua('core_online.requestState()');
 
   // date format: month/day/year hour:minutes timezone
-  var t = "Mar 16, 2018 17:01 GMT+1";
+  var t = "Jul 13, 2018 14:01 GMT+1";
   $scope.nextReleaseDate = new Date(Date.parse(t));
   $scope.nextReleaseDateStr = new Date(t).toString();
 
@@ -427,7 +427,7 @@ angular.module('beamng.stuff')
           var txt = $filter('translate')('ui.performance.warnings.' + data[key].warnings[i].msg);
           var html = Utils.parseBBCode(txt);
           toastr[(data.globalState === 'warn' ? 'warning' : 'error')](
-            $filter('translate')('ui.mainmenu.warningdetails'),
+            $filter('translate')('ui.mainmenu.warningdetails')+". ("+data[key].warnings[i].msg+")",//need a unique message
             html,
             {
             positionClass: 'toast-top-right',

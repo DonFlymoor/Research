@@ -242,6 +242,9 @@
     },
     "slotType": "etk_intake_i4",
     "turbocharger": {
+        "bovSoundFileName":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_bov"
+        "hissLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_hiss"
+        "whineLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_spin"
         "wastegateStart":12.3,
         "wastegateLimit":12.4,
         "maxExhaustPower": 850,
@@ -249,8 +252,10 @@
         "pressureRatePSI": 30,
         "frictionCoef": 15.5,
         "inertia":0.30,
-        "bovSoundVolumeCoef": 0.4,
-        "bovSoundPitchCoef": 0.9,
+        "bovSoundVolumeCoef": 0.3,
+		"hissVolumePerPSI": 0.04,
+		"whineVolumePer10kRPM": 0.04,
+        "whinePitchPer10kRPM": 0.05,
         "damageThresholdTemperature": 610,
         "pressurePSI":[
             //turbineRPM, pressure(PSI)
@@ -266,12 +271,12 @@
             //engineRPM, efficiency, exhaustFactor
             [0,     0.0,    0.4],
             [650,   0.75,   0.5],
-            [1000,   1.0,   0.8],
-            [1200,  0.95,   1.0],
-            [2000,  0.70,    1.0],
-            [2500,  0.57,    1.0],
-            [3000,  0.55,    1.0],
-            [4000,  0.53,    1.0],
+            [1000,   0.97,   0.8],
+            [1200,  0.94,   1.0],
+            [2000,  0.71,    1.0],
+            [2500,  0.60,    1.0],
+            [3000,  0.60,    1.0],
+            [4000,  0.60,    1.0],
             [5000,  0.50,    1.0],
             [6000,  0.37,    1.0],
             [7000,  0.40,    1.0],
@@ -576,6 +581,13 @@
     },
     "slotType" : "etk_intake_i6",
     "turbocharger": {
+        "bovSoundFileName":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_bov"
+        "hissLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_hiss"
+        "whineLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_spin"
+        "bovSoundVolumeCoef": 0.3,
+    	"hissVolumePerPSI": 0.05,
+    	"whineVolumePer10kRPM": 0.05,
+        "whinePitchPer10kRPM": 0.05,
         "wastegateStart":11.1,
         "wastegateLimit":11.2,
         "maxExhaustPower": 6000,
@@ -583,8 +595,6 @@
         "pressureRatePSI": 26,
         "frictionCoef": 45.5,
         "inertia":2.50,
-        "bovSoundVolumeCoef": 0.2,
-        "bovSoundPitchCoef": 0.9,
         "damageThresholdTemperature": 665,
         "pressurePSI":[
             //turbineRPM, pressure(PSI)
@@ -603,11 +613,12 @@
             [1000,   0.65,   0.45],
             [1400,  1.0,   0.7],
             [2000,  0.86,    1.0],
+            [2200,  0.77,    1.0],
             [2500,  0.69,    1.0],
             [3000,  0.67,    1.0],
-            [4000,  0.69,    1.0],
-            [4500,  0.79,    1.0],
-            [5000,  0.8,    1.0],
+            [4000,  0.70,    1.0],
+            [4500,  0.82,    1.0],
+            [5000,  0.83,    1.0],
             [6000,  0.55,    1.0],
             [7000,  0.3,    1.0],
             [8000,  0.0,    1.0],
@@ -658,6 +669,13 @@
     },
     "slotType" : "etk_intake_i6",
     "turbocharger": {
+        "bovSoundFileName":"event:>Vehicle>Forced_Induction>Turbo_02>turbo_bov"
+        "hissLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_02>turbo_hiss"
+        "whineLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_02>turbo_spin"
+        "bovSoundVolumeCoef": 0.1,
+        "hissVolumePerPSI": 0.030,
+        "whineVolumePer10kRPM": 0.04,
+        "whinePitchPer10kRPM": 0.08,
         "wastegateStart":21.0,
         "wastegateLimit":21.1,
         "maxExhaustPower": 6000,
@@ -665,8 +683,6 @@
         "pressureRatePSI": 23,
         "frictionCoef": 47.5,
         "inertia":2.70,
-        "bovSoundVolumeCoef": 0.3,
-        "bovSoundPitchCoef": 0.9,
         "damageThresholdTemperature": 685,
         "pressurePSI":[
             //turbineRPM, pressure(PSI)

@@ -15,7 +15,9 @@
     "dirt_loose",
     "grass2",
     "Rock_cliff",
-    "Asphalt"
+    "Asphalt",
+    "asphalt_prepped",
+    "Gravel"
   ],
   "size" : 2048
 }

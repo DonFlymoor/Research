@@ -13,12 +13,12 @@ struct ConnectData
    float4 tex2            : TEXCOORD1;
 };
 
+uniform float4x4 modelview;
+
 //-----------------------------------------------------------------------------
 // Main                                                                        
 //-----------------------------------------------------------------------------
-ConnectData main( VertexIn_PNTTTB IN,
-                  uniform float4x4 modelview   : register(C0)
-)
+ConnectData main( VertexIn_PNTTTB IN )
 {
    ConnectData OUT;
    OUT.hpos = mul(modelview, IN.pos);

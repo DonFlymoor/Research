@@ -12,7 +12,6 @@ local fsign = fsign
 local constants = {rpmToAV = 0.104719755, avToRPM = 9.549296596425384}
 
 local newDesiredGearIndex = 0
-local previousGearIndex = 0
 local gearbox = nil
 local engine = nil
 local torqueConverter = nil
@@ -38,7 +37,7 @@ M.isArcadeSwitched = false
 M.isSportModeActive = false
 
 local automaticHandling = {
-  availableModes = {"P","R", "N", "D", "S", "1", "2", "M"},
+  availableModes = {"P", "R", "N", "D", "S", "1", "2", "M"},
   hShifterModeLookup = {[-1] = "R", [0] = "N", "P", "D", "S", "2", "1", "M1"},
   availableModeLookup = {},
   existingModeLookup = {},
@@ -49,13 +48,14 @@ local automaticHandling = {
   maxAllowedGearIndex = 0,
   minAllowedGearIndex = 0,
   autoDownShiftInM = true,
+  throttleCoefWhileShifting = 1
 }
 
 local torqueConverterHandling = {
   lockupAV = 0,
   lockupRange = 0,
   lockupMinGear = 0,
-  hasLockup = false,
+  hasLockup = false
 }
 
 local function getGearName()
@@ -65,7 +65,7 @@ local function getGearName()
   elseif type(automaticHandling.mode) == "number" then
     modePrefix = "M"
   end
-  return modePrefix ~= "" and modePrefix..tostring(gearbox.gearIndex) or automaticHandling.mode
+  return modePrefix ~= "" and modePrefix .. tostring(gearbox.gearIndex) or automaticHandling.mode
 end
 
 local function getGearPosition()
@@ -78,7 +78,7 @@ end
 
 local function applyGearboxModeRestrictions()
   local manualModeIndex
-  if string.sub(automaticHandling.mode, 1,1) == "M" then
+  if string.sub(automaticHandling.mode, 1, 1) == "M" then
     manualModeIndex = string.sub(automaticHandling.mode, 2)
   end
   local maxGearIndex = gearbox.maxGearIndex
@@ -96,14 +96,6 @@ local function applyGearboxModeRestrictions()
 
   automaticHandling.maxGearIndex = maxGearIndex
   automaticHandling.minGearIndex = minGearIndex
-end
-
-local function gearboxBehaviorChanged(behavior)
-  gearboxLogic = gearboxAvailableLogic[behavior]
-  M.updateGearboxGFX = gearboxLogic.inGear
-  M.shiftUp = gearboxLogic.shiftUp
-  M.shiftDown = gearboxLogic.shiftDown
-  M.shiftToGearIndex = gearboxLogic.shiftToGearIndex
 end
 
 local function applyGearboxMode()
@@ -131,6 +123,30 @@ local function applyGearboxMode()
   M.isSportModeActive = automaticHandling.mode == "S"
 end
 
+local function gearboxBehaviorChanged(behavior)
+  gearboxLogic = gearboxAvailableLogic[behavior]
+  M.updateGearboxGFX = gearboxLogic.inGear
+  M.shiftUp = gearboxLogic.shiftUp
+  M.shiftDown = gearboxLogic.shiftDown
+  M.shiftToGearIndex = gearboxLogic.shiftToGearIndex
+
+  if behavior == "arcade" then
+    if gearbox.gearIndex > 0 then
+      automaticHandling.mode = "D"
+    elseif gearbox.gearIndex < 0 then
+      automaticHandling.mode = "R"
+    else
+      automaticHandling.mode = "N"
+    end
+  elseif behavior == "realistic" then
+    if automaticHandling.mode == "D" and not automaticHandling.availableModeLookup.D then
+      automaticHandling.mode = "M" .. tostring(max(gearbox.gearIndex, 1))
+    end
+  end
+
+  applyGearboxMode()
+end
+
 local function shiftUp()
   if automaticHandling.mode == "N" then
     M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
@@ -141,7 +157,7 @@ local function shiftUp()
   automaticHandling.mode = automaticHandling.modes[automaticHandling.modeIndex]
 
   if automaticHandling.mode == "M1" then --we just shifted into M1
-    automaticHandling.mode = "M"..tostring(max(gearbox.gearIndex, 1))
+    automaticHandling.mode = "M" .. tostring(max(gearbox.gearIndex, 1))
   end
 
   if M.gearboxHandling.gearboxSafety then
@@ -286,7 +302,6 @@ local function updateInGearArcade(dt)
       gearIndex = gearIndex + fsign(gearIndex)
       tmpEngineAV = relEngineAV * (gearbox.gearRatios[gearIndex] or 0)
       if tmpEngineAV < engine.idleAV * 1.1 then
-        tmpEngineAV = relEngineAV / (gearbox.gearRatios[gearIndex] or 0)
         gearIndex = gearIndex - fsign(gearIndex)
       else
         sharedFunctions.selectShiftPoints(gearIndex)
@@ -294,11 +309,13 @@ local function updateInGearArcade(dt)
     end
   end
 
-  local lockupTarget = 0
-  if torqueConverterHandling.hasLockup and gearIndex >= torqueConverterHandling.lockupMinGear and M.brake <= 0.2 and not gearbox.isShifting then
-    lockupTarget = min(max((gearboxInputAV - torqueConverterHandling.lockupAV) / torqueConverterHandling.lockupRange, 0), 1)
+  if torqueConverterHandling.hasTorqueConverter then
+    local lockupTarget = 0
+    if torqueConverterHandling.hasLockup and gearIndex >= torqueConverterHandling.lockupMinGear and M.brake <= 0.2 and not gearbox.isShifting then
+      lockupTarget = min(max((gearboxInputAV - torqueConverterHandling.lockupAV) / torqueConverterHandling.lockupRange, 0), 1)
+    end
+    electrics.values.lockupClutchRatio = torqueConverterHandling.lockupSmoother:getUncapped(lockupTarget, dt)
   end
-  electrics.values.lockupClutchRatio = torqueConverterHandling.lockupSmoother:getUncapped(lockupTarget, dt)
 
   -- neutral gear handling
   if abs(gearbox.gearIndex) <= 1 and M.timer.neutralSelectionDelayTimer <= 0 then
@@ -318,7 +335,7 @@ local function updateInGearArcade(dt)
         applyGearboxMode()
       end
 
-      if M.smoothedValues.brakeInput > 0.1 and M.inputValues.brake > 0 and M.smoothedValues.throttleInput <= 0 and M.smoothedValues.avgAV <= 0.15 and gearIndex > -1  then
+      if M.smoothedValues.brakeInput > 0.1 and M.inputValues.brake > 0 and M.smoothedValues.throttleInput <= 0 and M.smoothedValues.avgAV <= 0.15 and gearIndex > -1 then
         gearIndex = -1
         M.timer.neutralSelectionDelayTimer = M.timerConstants.neutralSelectionDelay
         automaticHandling.mode = "R"
@@ -328,10 +345,10 @@ local function updateInGearArcade(dt)
   end
 
   M.throttle = automaticHandling.mode ~= "N" and M.throttle or 0
+  M.throttle = gearbox.isShiftingUp and M.throttle * automaticHandling.throttleCoefWhileShifting or M.throttle
 
   if gearbox.gearIndex ~= gearIndex then
     newDesiredGearIndex = gearIndex
-    previousGearIndex = gearbox.gearIndex
     calculateShiftAggression()
     M.updateGearboxGFX = gearboxLogic.whileShifting
   end
@@ -353,7 +370,6 @@ local function updateWhileShiftingArcade()
   local gearChangeTime = min(max(automaticHandling.gearChangeTimeRange * (shiftAggression - 0.5) * 2 + automaticHandling.maxGearChangeTime, automaticHandling.minGearChangeTime), automaticHandling.maxGearChangeTime)
   gearbox:setGearIndex(newDesiredGearIndex, gearChangeTime)
   newDesiredGearIndex = 0
-  previousGearIndex = 0
   M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
   M.updateGearboxGFX = gearboxLogic.inGear
 end
@@ -396,22 +412,25 @@ local function updateInGear(dt)
     end
   end
 
-  local isManualMode = string.sub(automaticHandling.mode, 1,1) == "M"
+  local isManualMode = string.sub(automaticHandling.mode, 1, 1) == "M"
   --enforce things like L and M modes
   gearIndex = min(max(gearIndex, automaticHandling.minGearIndex), automaticHandling.maxGearIndex)
   if isManualMode and gearIndex > 1 and gearboxInputAV < engine.idleAV * 1.2 and M.shiftPreventionData.wheelSlipShiftDown and automaticHandling.autoDownShiftInM then
     gearIndex = gearIndex - 1
   end
 
-  local lockupTarget = 0
-  if torqueConverterHandling.hasLockup and gearIndex >= torqueConverterHandling.lockupMinGear and M.brake <= 0.2 and (not gearbox.isShifting or isSportMode) then
-    lockupTarget = min(max((gearboxInputAV - torqueConverterHandling.lockupAV) / torqueConverterHandling.lockupRange, 0), 1)
+  if torqueConverterHandling.hasTorqueConverter then
+    local lockupTarget = 0
+    if torqueConverterHandling.hasLockup and gearIndex >= torqueConverterHandling.lockupMinGear and M.brake <= 0.2 and (not gearbox.isShifting or isSportMode) then
+      lockupTarget = min(max((gearboxInputAV - torqueConverterHandling.lockupAV) / torqueConverterHandling.lockupRange, 0), 1)
+    end
+    electrics.values.lockupClutchRatio = torqueConverterHandling.lockupSmoother:getUncapped(lockupTarget, dt)
   end
-  electrics.values.lockupClutchRatio = torqueConverterHandling.lockupSmoother:getUncapped(lockupTarget, dt)
+
+  M.throttle = (gearbox.isShiftingUp and not isSportMode) and (M.throttle * automaticHandling.throttleCoefWhileShifting) or M.throttle
 
   if gearbox.gearIndex ~= gearIndex then
     newDesiredGearIndex = gearIndex
-    previousGearIndex = gearbox.gearIndex
     calculateShiftAggression()
     M.updateGearboxGFX = gearboxLogic.whileShifting
   end
@@ -419,7 +438,7 @@ local function updateInGear(dt)
   M.currentGearIndex = gearIndex
 
   if isManualMode then
-    automaticHandling.mode = "M"..gearIndex
+    automaticHandling.mode = "M" .. gearIndex
     automaticHandling.modeIndex = automaticHandling.modeIndexLookup[automaticHandling.mode]
     applyGearboxModeRestrictions()
   end
@@ -432,7 +451,7 @@ local function updateWhileShifting()
   M.isArcadeSwitched = false
 
   local gearChangeTime = min(max(automaticHandling.gearChangeTimeRange * (shiftAggression - 0.5) * 2 + automaticHandling.maxGearChangeTime, automaticHandling.minGearChangeTime), automaticHandling.maxGearChangeTime)
-  local autoMode = string.sub(automaticHandling.mode, 1,1)
+  local autoMode = string.sub(automaticHandling.mode, 1, 1)
   if (autoMode == "S" or autoMode == "M") then
     if abs(newDesiredGearIndex) > 1 and abs(newDesiredGearIndex) > abs(gearbox.gearIndex) then
       engine:cutIgnition(automaticHandling.sportGearChangeTime * 0.5)
@@ -443,7 +462,6 @@ local function updateWhileShifting()
   end
   gearbox:setGearIndex(newDesiredGearIndex, gearChangeTime)
   newDesiredGearIndex = 0
-  previousGearIndex = 0
   M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
   M.updateGearboxGFX = gearboxLogic.inGear
 end
@@ -454,7 +472,6 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   gearbox = gearboxDevice
   torqueConverter = powertrain.getDevice(expectedDeviceNames.torqueConverter)
   newDesiredGearIndex = 0
-  previousGearIndex = 0
 
   M.currentGearIndex = 0
   M.throttle = 0
@@ -462,26 +479,24 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   M.clutchRatio = 0
 
   gearboxAvailableLogic = {
-    arcade =
-    {
+    arcade = {
       inGear = updateInGearArcade,
       whileShifting = updateWhileShiftingArcade,
       shiftUp = sharedFunctions.warnCannotShiftSequential,
       shiftDown = sharedFunctions.warnCannotShiftSequential,
-      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior,
+      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior
     },
-    realistic =
-    {
+    realistic = {
       inGear = updateInGear,
       whileShifting = updateWhileShifting,
       shiftUp = shiftUp,
       shiftDown = shiftDown,
-      shiftToGearIndex = shiftToGearIndex,
+      shiftToGearIndex = shiftToGearIndex
     }
   }
 
   automaticHandling.availableModeLookup = {}
-  for _,v in pairs(automaticHandling.availableModes) do
+  for _, v in pairs(automaticHandling.availableModes) do
     automaticHandling.availableModeLookup[v] = true
   end
 
@@ -491,7 +506,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   local modeCount = #modes
   local modeOffset = 0
   for i = 1, modeCount do
-    local mode = modes:sub(i,i)
+    local mode = modes:sub(i, i)
     if automaticHandling.availableModeLookup[mode] then
       if mode ~= "M" then
         automaticHandling.modes[i + modeOffset] = mode
@@ -499,7 +514,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
         automaticHandling.existingModeLookup[mode] = true
       else
         for j = 1, gearbox.maxGearIndex, 1 do
-          local manualMode = "M"..tostring(j)
+          local manualMode = "M" .. tostring(j)
           local manualModeIndex = i + j - 1
           automaticHandling.modes[manualModeIndex] = manualMode
           automaticHandling.modeIndexLookup[manualMode] = manualModeIndex
@@ -508,11 +523,12 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
         end
       end
     else
-      print("unknown auto mode: "..mode)
+      print("unknown auto mode: " .. mode)
     end
   end
 
   if torqueConverter then
+    torqueConverterHandling.hasTorqueConverter = true
     torqueConverterHandling.lockupAV = (jbeamData.torqueConverterLockupRPM or 0) * constants.rpmToAV
     torqueConverterHandling.lockupRange = (jbeamData.torqueConverterLockupRange or (torqueConverterHandling.lockupAV * 0.2 * constants.avToRPM)) * constants.rpmToAV
     torqueConverterHandling.lockupMinGear = jbeamData.torqueConverterLockupMinGear or 0
@@ -533,6 +549,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   automaticHandling.sportGearChangeTime = jbeamData.sportGearChangeTime or 0
   automaticHandling.gearChangeTimeRange = automaticHandling.minGearChangeTime - automaticHandling.maxGearChangeTime
   automaticHandling.autoDownShiftInM = jbeamData.autoDownShiftInM == nil and true or jbeamData.autoDownShiftInM
+  automaticHandling.throttleCoefWhileShifting = jbeamData.throttleCoefWhileShifting or 1
 
   applyGearboxMode()
 end

@@ -68,6 +68,44 @@ angular.module('beamng.apps')
         }
       }
 
+      scope.resetMission = function(mission) {
+        bngApi.engineLua(`campaign_campaigns.resetMission(${bngApi.serializeToLua(mission)})`);
+      }
+      bngApi.engineLua('campaign_campaigns.test',function(isCampaign){
+        $scope.$evalAsync(function () {
+        vm.campaingexp = isCampaign;
+      });
+    });
+      if (vm.campaingexp){
+        bngApi.engineLua('campaign_campaigns.getCampaign()', function(data) {
+          if (data){
+          var currentSubsection = data.state.activeSubsection;
+          var locations = data.meta.subsections[currentSubsection].locations;
+          var missions = []
+
+          for (var key in locations) {
+            locations[key].key = key;
+            missions.push(locations[key]);
+          }
+          scope.missions = missions;
+          }
+          // var sortedMissions = [];
+          // for (var key in missions) {
+          //   missions[key].key = key;
+          //   sortedMissions.push(missions[key])
+          // }
+          // sortedMissions.sort((a, b) => a.index - b.index)
+          // for (var key in sortedMissions) {
+          //   for (var val in sortedMissions) {
+          //     if (sortedMissions[val].key === sortedMissions[key].key.substring(0, sortedMissions[key].key.indexOf('_intro'))) {
+          //       sortedMissions[val].intro = sortedMissions[key];
+          //       sortedMissions.splice(key, 1);
+          //     }
+          //   }
+          // }
+          // scope.missions = sortedMissions;
+        });
+}
       bngApi.engineLua('core_vehicles.requestSimpleVehicleList()');
 
     }

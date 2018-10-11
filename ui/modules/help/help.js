@@ -60,7 +60,7 @@ angular.module('beamng.stuff')
   }
 
   // changelog tab
-  $http.get('http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?format=json&appid=284160&feeds=steam_community_announcements').
+  $http.get('https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?format=json&appid=284160&feeds=steam_community_announcements').
   success(function(data) {
     // console.log(arguments);
     // console.log(data.appnews.newsitems);

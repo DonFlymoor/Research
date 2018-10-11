@@ -4,6 +4,9 @@
 
 local M = {}
 
+local min = math.min
+local max = math.max
+
 local activeThrusters = {}
 local thrusterState = {}
 local autoThrusters = {}
@@ -19,13 +22,13 @@ local function update()
   for _, thruster in ipairs(autoThrusters) do
     local vel = -obj:getNodeVelocity(thruster.id2, thruster.id1)
     if vel > 0.3 then
-      t = (vel *vel) * thruster.factor
+      t = (vel * vel) * thruster.factor
       if thrusting then
-        t = math.min( math.max(obj:getNodeForce(thruster.id1, thruster.id2), 0) + t, thruster.thrustLimit)
+        t = min(max(obj:getNodeForce(thruster.id1, thruster.id2), 0) + t, thruster.thrustLimit)
       else
-        t = math.min( t, thruster.thrustLimit)
+        t = min(t, thruster.thrustLimit)
       end
-      obj:applyForce(thruster.id2, thruster.id1, t )
+      obj:applyForce(thruster.id2, thruster.id1, t)
     end
   end
 
@@ -58,16 +61,16 @@ end
 local function updateGFX()
   table.clear(thrusterState)
   for _, thruster in ipairs(activeThrusters) do
-    if thruster.control == '+axisX' and input.axisX > 0 then
-      table.insert(thrusterState, {thruster.id1, thruster.id2, math.min(input.axisX * thruster.factor, thruster.thrustLimit)})
-    elseif thruster.control == '-axisX' and input.axisX < 0 then
-      table.insert(thrusterState, {thruster.id1, thruster.id2, math.min(-input.axisX * thruster.factor, thruster.thrustLimit)})
-    elseif thruster.control == '+axisY' and input.axisY > 0 then
-      table.insert(thrusterState, {thruster.id1, thruster.id2, math.min(input.axisY * thruster.factor, thruster.thrustLimit)})
-    elseif thruster.control == '-axisY' and input.axisY < 0 then
-      table.insert(thrusterState, {thruster.id1, thruster.id2, math.min(-input.axisY * thruster.factor, thruster.thrustLimit)})
+    if thruster.control == "+axisX" and input.axisX > 0 then
+      table.insert(thrusterState, {thruster.id1, thruster.id2, min(input.axisX * thruster.factor, thruster.thrustLimit)})
+    elseif thruster.control == "-axisX" and input.axisX < 0 then
+      table.insert(thrusterState, {thruster.id1, thruster.id2, min(-input.axisX * thruster.factor, thruster.thrustLimit)})
+    elseif thruster.control == "+axisY" and input.axisY > 0 then
+      table.insert(thrusterState, {thruster.id1, thruster.id2, min(input.axisY * thruster.factor, thruster.thrustLimit)})
+    elseif thruster.control == "-axisY" and input.axisY < 0 then
+      table.insert(thrusterState, {thruster.id1, thruster.id2, min(-input.axisY * thruster.factor, thruster.thrustLimit)})
     elseif electrics.values[thruster.control] then
-      table.insert(thrusterState, {thruster.id1, thruster.id2, math.min(electrics.values[thruster.control] * thruster.factor, thruster.thrustLimit)})
+      table.insert(thrusterState, {thruster.id1, thruster.id2, min(electrics.values[thruster.control] * thruster.factor, thruster.thrustLimit)})
     elseif input.keys[thruster.control] then
       table.insert(thrusterState, {thruster.id1, thruster.id2, thruster.thrustLimit})
     end
@@ -105,7 +108,7 @@ local function init()
   impulseState = {}
   activeThrusters = {}
   for _, thruster in pairs(v.data.thrusters) do
-    if thruster.control == 'auto' then
+    if thruster.control == "auto" then
       table.insert(autoThrusters, thruster)
     else
       table.insert(activeThrusters, thruster)
@@ -119,10 +122,10 @@ local function init()
 end
 
 -- public interface
-M.reset       = init
-M.init        = init
-M.update      = nop
-M.updateGFX   = nop
+M.reset = init
+M.init = init
+M.update = nop
+M.updateGFX = nop
 M.applyImpulse = applyImpulse
 
 return M

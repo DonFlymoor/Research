@@ -21,11 +21,11 @@ float log_conv ( float x0, float X, float y0, float Y )
 
 uniform_sampler2D( diffuseMap0 , 0 );
 
-float4 main(   ConnectData IN,               
-               uniform float texSize : register(C0),
-               uniform float2 blurDimension : register(C2),
-               uniform float2 blurBoundaries : register(C3)
-   ) : SV_TARGET0
+uniform float texSize;
+uniform float2 blurDimension;
+uniform float2 blurBoundaries;
+
+float4 main( ConnectData IN ) : SV_TARGET0
 {   
    // 5x5
    if (IN.tex0.x <= blurBoundaries.x)

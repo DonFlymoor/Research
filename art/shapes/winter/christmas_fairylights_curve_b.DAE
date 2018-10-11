@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2017-11-29T16:20:02Z</created><keywords></keywords><modified>2017-11-29T16:20:02Z</modified><revision></revision><subject></subject><title></title><unit meter="1.000000" name="centimeter"></unit><up_axis>Z_UP</up_axis></asset>
+  <library_images>
+    <image id="Map #1-image" name="Map #1"><init_from>file://D:\terrain_source\gameplay_artwork\3D\Levels\Christmas\maps\DDS\fairylights_d.dds</init_from></image>
+  </library_images>
+  <library_materials>
+    <material id="fairylights" name="fairylights">
+      <instance_effect url="#fairylights-fx"/>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="fairylights-fx" name="fairylights">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588000  0.588000 0.588000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <texture texture="Map #1-image" texcoord="CHANNEL0">
+                <extra>
+                  <technique profile="MAYA">
+                    <wrapU sid="wrapU0">TRUE</wrapU>
+                    <wrapV sid="wrapV0">TRUE</wrapV>
+                    <blend_mode>ADD</blend_mode>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="fairylight_curve_b30-lib" name="fairylight_curve_b30Mesh">
+      <mesh>
+        <source id="fairylight_curve_b30-POSITION">
+          <float_array id="fairylight_curve_b30-POSITION-array" count="12">
+-0.500000 -0.070130 -0.000050
+0.500000 -0.070130 -0.000050
+-0.500000 0.070130 -0.000050
+0.500000 0.070130 -0.000050
+</float_array>
+          <technique_common>
+            <accessor source="#fairylight_curve_b30-POSITION-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="fairylight_curve_b30-Normal0">
+          <float_array id="fairylight_curve_b30-Normal0-array" count="18">
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#fairylight_curve_b30-Normal0-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="fairylight_curve_b30-UV0">
+          <float_array id="fairylight_curve_b30-UV0-array" count="8">
+0.000000 0.141547
+1.000000 0.141547
+0.000000 0.281807
+1.000000 0.281807
+</float_array>
+          <technique_common>
+            <accessor source="#fairylight_curve_b30-UV0-array" count="4" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="fairylight_curve_b30-VERTEX">
+          <input semantic="POSITION" source="#fairylight_curve_b30-POSITION"/>
+        </vertices>
+        <triangles count="2" material="fairylights"><input semantic="VERTEX" offset="0" source="#fairylight_curve_b30-VERTEX"/><input semantic="NORMAL" offset="1" source="#fairylight_curve_b30-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#fairylight_curve_b30-UV0"/><p> 3 0 3 2 1 2 0 2 0 3 3 3 0 4 0 1 5 1</p></triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="christmas_fairylights_curve_b" name="christmas_fairylights_curve_b">
+      <node name="base00" id="base00" sid="base00"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="collision-1" id="collision-1" sid="collision-1"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node><node name="start01" id="start01" sid="start01"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="nulldetail1" id="nulldetail1" sid="nulldetail1"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node><node name="fairylight_curve_b30" id="fairylight_curve_b30" sid="fairylight_curve_b30"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000050 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#fairylight_curve_b30-lib"><bind_material><technique_common><instance_material symbol="fairylights" target="#fairylights"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node></node></node>
+      <extra><technique profile="MAX3D"><frame_rate>30.000000</frame_rate></technique><technique profile="FCOLLADA"><start_time>0.000000</start_time><end_time>3.333333</end_time></technique></extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#christmas_fairylights_curve_b"></instance_visual_scene>
+  </scene>
+</COLLADA>

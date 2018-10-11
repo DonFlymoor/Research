@@ -36,7 +36,7 @@
             [6000, 142],
         ],
 
-        "idleRPM":650,
+        "idleRPM":800,
         //max capable
         "maxRPM":5500,
         "inertia":0.14,
@@ -240,6 +240,9 @@
     },
     "slotType": "etk_intake_i4_diesel",
     "turbocharger": {
+        "bovSoundFileName":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_bov"
+        "hissLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_hiss"
+        "whineLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_spin"
         "wastegateStart":21.1,
         "wastegateLimit":21.2,
         "maxExhaustPower": 10500,
@@ -249,6 +252,9 @@
         "inertia":1.30,
         "bovEnabled":false,
         "bovSoundVolumeCoef": 0.0,
+		"hissVolumePerPSI": 0.02,
+		"whineVolumePer10kRPM": 0.05,
+        "whinePitchPer10kRPM": 0.05,
         "damageThresholdTemperature": 610,
         "pressurePSI":[
             //turbineRPM, pressure(PSI)
@@ -344,7 +350,7 @@
             [5000, 252],
             [6000, 130],
         ],
-        "idleRPM":650,
+        "idleRPM":750,
         //max capable
         "maxRPM":5500,
         "revLimiterType": "soft",
@@ -548,6 +554,13 @@
     },
     "slotType": "etk_intake_i6_diesel",
     "turbocharger": {
+        "bovEnabled":false,
+        "hissLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_hiss"
+        "whineLoopEvent":"event:>Vehicle>Forced_Induction>Turbo_01>turbo_spin"
+        "bovSoundVolumeCoef": 0.0,
+    	"hissVolumePerPSI": 0.022,
+    	"whineVolumePer10kRPM": 0.04,
+        "whinePitchPer10kRPM": 0.05,
         "wastegateStart":19,
         "wastegateLimit":19.1,
         "maxExhaustPower": 6050,
@@ -555,8 +568,6 @@
         "pressureRatePSI": 60,
         "frictionCoef": 25.5,
         "inertia":1.30,
-        "bovEnabled":false,
-        "bovSoundVolumeCoef": 0.0,
         "damageThresholdTemperature": 640,
         "pressurePSI":[
             //turbineRPM, pressure(PSI)

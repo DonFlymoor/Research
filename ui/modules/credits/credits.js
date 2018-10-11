@@ -17,6 +17,7 @@ angular.module('beamng.stuff')
       {first: 'Fabian',   last: 'Enkler',            aka: ''},
       {first: 'Timo',     last: 'Stabbert',          aka: ''},
       {first: 'Nour',     last: 'Mohamed',           aka: ''},
+      {first: 'Ludger',   last: 'Meyer-Wülfing',     aka: 'meywue'},
       {first: 'Pascale',  last: 'Maul',              aka: ''},
       {first: 'Mirco',    last: 'Weigel',            aka: 'theshark'},
       {first: 'Xiaoyi',   last: 'Wang',              aka: ''},
@@ -28,8 +29,11 @@ angular.module('beamng.stuff')
       {first: 'Thomas',   last: 'Portassau',         aka: 'thomatoes50'},
       {first: 'Felix',    last: 'Unger',             aka: ''},
       {first: 'Waldenar', last: 'Zeitler',           aka: ''},
-      {first: 'Arthuro',  last: 'Campos',            aka: ''},
-      {first: 'Nicusor',  last: 'Nedelcu',           aka: ''}
+      {first: 'Nicusor',  last: 'Nedelcu',           aka: ''},
+      {first: 'Boluwatife',   last: 'Falaye',        aka: ''},
+      {first: 'Mayowa David', last: 'Abogunrin',     aka: ''},
+      {first: 'Edelamr',  last: 'Schneider',         aka: ''},
+      {first: 'Eike',     last: 'Externest',         aka: ''}
     ]
   },
 
@@ -47,7 +51,12 @@ angular.module('beamng.stuff')
       {first: 'Aaron',         last: 'Sutcliffe',  aka: ''},
       {first: 'Carlos',        last: 'Bergillos',  aka: 'CarlosAir'},
       {first: 'Brandon',       last: 'Proulx',     aka: 'Hondune'},
-      {first: 'Alexandr',      last: 'Shesternin', aka: ''}
+      {first: 'Alexandr',      last: 'Shesternin', aka: ''},
+      {first: 'Sebastian',     last: 'Wessel',     aka: ''},
+      {first: 'Renju',         last: 'Therakathu', aka: ''},
+      {first: 'David',         last: 'Thurlbeck',  aka: ''},
+      {first: 'Jared',         last: 'Samuelson',  aka: ''},
+      {first: 'Mikko',         last: 'Lesonen',    aka: ''}
     ]
   },
 
@@ -68,7 +77,8 @@ angular.module('beamng.stuff')
   { translateId: 'ui.credits.conceptArtists2D',
     members: [
       {first: 'Lisa',     last: 'Steinberg',  aka: ''},
-	  {first: 'Moses',    last: 'Mulinge',    aka: ''}
+      {first: 'Moses',    last: 'Mulinge',    aka: ''},
+      {first: 'Mary Jane',last: 'Pajaron',    aka: ''}
     ]
   },
 
@@ -87,11 +97,12 @@ angular.module('beamng.stuff')
 
   { translateId: 'ui.credits.qa',
     members: [
-      {first: 'Ludger',                last: 'Meyer-Wülfing', aka: 'meywue'},
       {first: 'Colin',                 last: 'Wenz',          aka: 'synsol'},
+      {first: 'Kemisola',              last: 'Adeniyi',       aka: ''},
       {first: 'Safdar',                last: 'Mahmood',       aka: ''},
       {first: 'Rajinder',              last: '',              aka: ''},
       {first: 'Barend van der',        last: 'Meulen',        aka: ''},
+      {first: 'Hala',                  last: 'Mahmoud',       aka: ''},
       {first: 'Jan Niklas',            last: 'Hasse',         aka: ''}
     ]
   },
@@ -108,21 +119,22 @@ angular.module('beamng.stuff')
 
   { translateId: 'ui.credits.sound',
     members: [
-      {first: 'Sebastian',      last: 'Emling',    aka: ''}
+      {first: 'Sebastian',      last: 'Emling',    aka: ''},
+      {first: 'Mark',           last: 'Knight',    aka: 'TDK'}
     ]
   },
 
   { translateId: 'ui.credits.sysops',
     members: [
       {first: 'Charalampos',      last: 'Tsipizidis',    aka: ''},
-      {first: 'Konstantinos',      last: 'Stamou',    aka: ''}
+      {first: 'Konstantinos',     last: 'Stamou',        aka: ''}
     ]
   },
 
   { translateId: 'ui.credits.customerSupport',
     members: [
       {first: 'Ananda Neelam', last: 'Thathayya',  aka: 'Nadeox1'},
-      {first: 'Harm',  last: 'Schulz', aka: ''}
+      {first: 'Harm',          last: 'Schulz',     aka: ''}
     ]
   },
 

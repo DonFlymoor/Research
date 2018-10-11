@@ -1,0 +1,3530 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2017-11-22T09:00:05Z</created><keywords></keywords><modified>2017-11-22T09:00:05Z</modified><revision></revision><subject></subject><title></title><unit meter="1.000000" name="centimeter"></unit><up_axis>Z_UP</up_axis></asset>
+  <library_images>
+    <image id="Map #2-image" name="Map #2"><init_from>file://D:\terrain_source\gameplay_artwork\3D\Levels\West_Coast\files_from_mitch\metal_galvanized_d.dds</init_from></image>
+    <image id="Map #1-image" name="Map #1"><init_from>file://D:\terrain_source\gameplay_artwork\3D\Levels\West_Coast\files_from_mitch\roadsigns.dds</init_from></image>
+    <image id="Map #3-image" name="Map #3"><init_from>file://D:\terrain_source\gameplay_artwork\3D\Levels\West_Coast\files_from_mitch\industrial_d.dds</init_from></image>
+  </library_images>
+  <library_materials>
+    <material id="metal_galvanized" name="metal_galvanized">
+      <instance_effect url="#metal_galvanized-fx"/>
+    </material>
+    <material id="roadsigns" name="roadsigns">
+      <instance_effect url="#roadsigns-fx"/>
+    </material>
+    <material id="industrial" name="industrial">
+      <instance_effect url="#industrial-fx"/>
+    </material>
+    <material id="Material #43 Slot #4" name="Material #43 Slot #4">
+      <instance_effect url="#Material #43 Slot #4-fx"/>
+    </material>
+    <material id="Material #43 Slot #5" name="Material #43 Slot #5">
+      <instance_effect url="#Material #43 Slot #5-fx"/>
+    </material>
+    <material id="Material #43 Slot #6" name="Material #43 Slot #6">
+      <instance_effect url="#Material #43 Slot #6-fx"/>
+    </material>
+    <material id="Material #43 Slot #7" name="Material #43 Slot #7">
+      <instance_effect url="#Material #43 Slot #7-fx"/>
+    </material>
+    <material id="Material #43 Slot #8" name="Material #43 Slot #8">
+      <instance_effect url="#Material #43 Slot #8-fx"/>
+    </material>
+    <material id="Material #43 Slot #9" name="Material #43 Slot #9">
+      <instance_effect url="#Material #43 Slot #9-fx"/>
+    </material>
+    <material id="Material #43 Slot #10" name="Material #43 Slot #10">
+      <instance_effect url="#Material #43 Slot #10-fx"/>
+    </material>
+    <material id="Material #43 Slot #4_ncl1_1" name="Material #43 Slot #4_ncl1_1">
+      <instance_effect url="#Material #43 Slot #4_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #5_ncl1_1" name="Material #43 Slot #5_ncl1_1">
+      <instance_effect url="#Material #43 Slot #5_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #6_ncl1_1" name="Material #43 Slot #6_ncl1_1">
+      <instance_effect url="#Material #43 Slot #6_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #7_ncl1_1" name="Material #43 Slot #7_ncl1_1">
+      <instance_effect url="#Material #43 Slot #7_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #8_ncl1_1" name="Material #43 Slot #8_ncl1_1">
+      <instance_effect url="#Material #43 Slot #8_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #9_ncl1_1" name="Material #43 Slot #9_ncl1_1">
+      <instance_effect url="#Material #43 Slot #9_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #10_ncl1_1" name="Material #43 Slot #10_ncl1_1">
+      <instance_effect url="#Material #43 Slot #10_ncl1_1-fx"/>
+    </material>
+    <material id="Material #43 Slot #4_ncl1_2" name="Material #43 Slot #4_ncl1_2">
+      <instance_effect url="#Material #43 Slot #4_ncl1_2-fx"/>
+    </material>
+    <material id="Material #43 Slot #5_ncl1_2" name="Material #43 Slot #5_ncl1_2">
+      <instance_effect url="#Material #43 Slot #5_ncl1_2-fx"/>
+    </material>
+    <material id="Material #43 Slot #6_ncl1_2" name="Material #43 Slot #6_ncl1_2">
+      <instance_effect url="#Material #43 Slot #6_ncl1_2-fx"/>
+    </material>
+    <material id="Material #43 Slot #7_ncl1_2" name="Material #43 Slot #7_ncl1_2">
+      <instance_effect url="#Material #43 Slot #7_ncl1_2-fx"/>
+    </material>
+    <material id="Material #43 Slot #8_ncl1_2" name="Material #43 Slot #8_ncl1_2">
+      <instance_effect url="#Material #43 Slot #8_ncl1_2-fx"/>
+    </material>
+    <material id="Material #43 Slot #9_ncl1_2" name="Material #43 Slot #9_ncl1_2">
+      <instance_effect url="#Material #43 Slot #9_ncl1_2-fx"/>
+    </material>
+    <material id="Material #43 Slot #10_ncl1_2" name="Material #43 Slot #10_ncl1_2">
+      <instance_effect url="#Material #43 Slot #10_ncl1_2-fx"/>
+    </material>
+    <material id="ColorEffectR225G87B143-material" name="ColorEffectR225G87B143-material">
+      <instance_effect url="#ColorEffectR225G87B143-material-fx"/>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="metal_galvanized-fx" name="metal_galvanized">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588000  0.588000 0.588000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <texture texture="Map #2-image" texcoord="CHANNEL0">
+                <extra>
+                  <technique profile="MAYA">
+                    <wrapU sid="wrapU0">TRUE</wrapU>
+                    <wrapV sid="wrapV0">TRUE</wrapV>
+                    <blend_mode>ADD</blend_mode>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="roadsigns-fx" name="roadsigns">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588000  0.588000 0.588000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <texture texture="Map #1-image" texcoord="CHANNEL0">
+                <extra>
+                  <technique profile="MAYA">
+                    <wrapU sid="wrapU0">TRUE</wrapU>
+                    <wrapV sid="wrapV0">TRUE</wrapV>
+                    <blend_mode>ADD</blend_mode>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="industrial-fx" name="industrial">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588000  0.588000 0.588000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <texture texture="Map #3-image" texcoord="CHANNEL0">
+                <extra>
+                  <technique profile="MAYA">
+                    <wrapU sid="wrapU0">TRUE</wrapU>
+                    <wrapV sid="wrapV0">TRUE</wrapV>
+                    <blend_mode>ADD</blend_mode>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #4-fx" name="Material #43 Slot #4">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #5-fx" name="Material #43 Slot #5">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #6-fx" name="Material #43 Slot #6">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #7-fx" name="Material #43 Slot #7">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #8-fx" name="Material #43 Slot #8">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #9-fx" name="Material #43 Slot #9">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #10-fx" name="Material #43 Slot #10">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #4_ncl1_1-fx" name="Material #43 Slot #4_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #5_ncl1_1-fx" name="Material #43 Slot #5_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #6_ncl1_1-fx" name="Material #43 Slot #6_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #7_ncl1_1-fx" name="Material #43 Slot #7_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #8_ncl1_1-fx" name="Material #43 Slot #8_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #9_ncl1_1-fx" name="Material #43 Slot #9_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #10_ncl1_1-fx" name="Material #43 Slot #10_ncl1_1">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #4_ncl1_2-fx" name="Material #43 Slot #4_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #5_ncl1_2-fx" name="Material #43 Slot #5_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #6_ncl1_2-fx" name="Material #43 Slot #6_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #7_ncl1_2-fx" name="Material #43 Slot #7_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #8_ncl1_2-fx" name="Material #43 Slot #8_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #9_ncl1_2-fx" name="Material #43 Slot #9_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="Material #43 Slot #10_ncl1_2-fx" name="Material #43 Slot #10_ncl1_2">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.200000  0.200000 0.200000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.000000  0.000000 0.000000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.200000  0.200000 0.200000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">20.000006</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="ColorEffectR225G87B143-material-fx" name="ColorEffectR225G87B143-material">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588000  0.588000 0.588000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.588000  0.588000 0.588000 1.000000</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="ClosedRoad_sign_big_b200-lib" name="ClosedRoad_sign_big_b200Mesh">
+      <mesh>
+        <source id="ClosedRoad_sign_big_b200-POSITION">
+          <float_array id="ClosedRoad_sign_big_b200-POSITION-array" count="276">
+-1.070199 -0.811774 0.103776
+-1.070199 0.811774 0.103777
+-1.070199 -0.811774 0.000000
+-1.070199 0.811774 0.000001
+-1.172192 -0.811774 0.103776
+-1.172192 0.811774 0.103777
+-1.172192 -0.811774 0.000000
+-1.172192 0.811774 0.000001
+-1.070199 -0.127166 0.103776
+-1.070198 -0.127166 2.526365
+-1.070199 -0.023390 0.103776
+-1.070198 -0.023390 2.526365
+-1.172192 -0.127166 0.103776
+-1.172191 -0.127166 2.526365
+-1.172192 -0.023390 0.103776
+-1.172191 -0.023390 2.526365
+-1.237878 -0.183541 0.856516
+-1.237879 -0.183541 0.369792
+1.237879 -0.183541 0.856515
+1.237879 -0.183541 0.369791
+0.145189 -0.127166 0.856515
+0.145189 -0.127166 0.369792
+1.237879 -0.127166 0.856515
+-1.237878 -0.127166 0.856516
+-1.237879 -0.127166 0.369792
+0.145189 -0.183541 0.369792
+0.145189 -0.183541 0.856515
+1.237879 -0.127166 0.369791
+1.169726 -0.811773 0.103776
+1.169726 0.811774 0.103776
+1.169726 -0.811773 -0.000001
+1.169726 0.811774 0.000000
+1.067732 -0.811773 0.103776
+1.067732 0.811774 0.103776
+1.067732 -0.811773 -0.000001
+1.067733 0.811774 0.000000
+1.169726 -0.127166 0.103776
+1.169726 -0.127166 2.526364
+1.169726 -0.023390 0.103776
+1.169726 -0.023390 2.526364
+1.067732 -0.127166 0.103776
+1.067733 -0.127166 2.526364
+1.067732 -0.023390 0.103776
+1.067733 -0.023390 2.526364
+-1.237878 -0.183542 1.735631
+-1.237878 -0.183541 1.248906
+1.237879 -0.183542 1.735630
+1.237879 -0.183541 1.248906
+0.145190 -0.127166 1.735630
+0.145190 -0.127166 1.248906
+1.237879 -0.127166 1.735630
+1.237879 -0.127166 1.248906
+-1.237878 -0.127166 1.735631
+-1.237878 -0.127166 1.248906
+0.145190 -0.183542 1.735630
+0.145190 -0.183541 1.248906
+0.145190 -0.183542 2.570348
+-1.237878 -0.183542 2.570348
+-1.237878 -0.183541 2.083624
+1.237879 -0.183542 2.570348
+1.237879 -0.183541 2.083624
+1.237879 -0.127166 2.570348
+1.237879 -0.127166 2.083624
+0.145190 -0.127166 2.083624
+0.145190 -0.127166 2.570348
+-1.237878 -0.127166 2.083624
+-1.237878 -0.127166 2.570348
+0.145190 -0.183541 2.083624
+0.464741 -0.183541 1.021223
+0.464740 -0.183541 1.865927
+-0.594273 -0.183542 1.021223
+-0.594273 -0.183542 1.865926
+0.865506 -0.183824 1.925542
+0.865506 -0.183824 2.757549
+-0.844777 -0.183824 1.925542
+-0.844777 -0.183824 2.757549
+-0.567641 -0.194032 1.132667
+0.438109 -0.194032 1.132667
+-0.567641 -0.194032 1.754484
+0.438109 -0.194032 1.754485
+-0.732431 -0.194314 2.014264
+0.753161 -0.194314 2.014265
+-0.732431 -0.194315 2.668827
+0.753161 -0.194314 2.668828
+0.865506 -0.188665 1.925542
+0.865506 -0.188665 2.757549
+-0.844777 -0.188665 1.925542
+-0.844777 -0.188665 2.757549
+0.464741 -0.188665 1.021223
+0.464740 -0.188665 1.865927
+-0.594273 -0.188665 1.021223
+-0.594273 -0.188665 1.865926
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b200-POSITION-array" count="92" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b200-Normal0">
+          <float_array id="ClosedRoad_sign_big_b200-Normal0-array" count="1044">
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 1.000000 -0.000001
+0.000001 1.000000 -0.000001
+0.000001 1.000000 -0.000001
+0.000001 1.000000 -0.000001
+0.000001 1.000000 -0.000001
+0.000001 1.000000 -0.000001
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000000 1.000000 -0.000001
+0.000000 1.000000 -0.000001
+0.000000 1.000000 -0.000001
+0.000000 1.000000 -0.000001
+0.000000 1.000000 -0.000001
+0.000000 1.000000 -0.000001
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+1.000000 0.000000 -0.000001
+1.000000 0.000000 -0.000001
+1.000000 0.000000 -0.000001
+1.000000 0.000000 -0.000001
+1.000000 0.000000 -0.000001
+1.000000 0.000000 -0.000001
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+0.000000 -0.000002 1.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+-0.000001 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b200-Normal0-array" count="348" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b200-UV0">
+          <float_array id="ClosedRoad_sign_big_b200-UV0-array" count="440">
+0.000946 0.787167
+0.000946 0.717826
+1.085775 0.717826
+1.085775 0.787167
+1.086003 0.787181
+0.000946 0.787181
+0.000946 0.717826
+1.086003 0.717826
+0.000946 0.717826
+1.105312 0.717826
+1.105312 0.787203
+0.000946 0.787203
+-0.066260 0.787203
+-0.066260 0.718940
+0.000946 0.718940
+0.000946 0.787203
+1.105311 0.787203
+0.000946 0.787203
+0.000946 0.717826
+1.105312 0.717826
+-0.066260 0.718940
+-0.066260 0.787093
+-0.133354 0.787093
+-0.133354 0.718940
+0.000946 0.787167
+0.000946 0.717826
+1.619682 0.717825
+1.619682 0.787166
+1.086003 0.787181
+-0.533073 0.787181
+-0.533073 0.717825
+1.086003 0.717826
+0.000946 0.717826
+1.648833 0.717826
+1.648833 0.787204
+0.000946 0.787203
+-0.066259 0.787203
+-0.066259 0.718940
+0.000947 0.718940
+0.000947 0.787203
+1.648833 0.787203
+0.000946 0.787203
+0.000946 0.717826
+1.648834 0.717830
+0.716336 0.256268
+0.674144 0.256268
+0.716336 0.015695
+0.674144 0.015695
+0.674144 0.064444
+0.716336 0.064444
+0.674144 0.256291
+0.716336 0.256291
+0.674144 0.064444
+0.716336 0.064444
+0.674144 0.256291
+0.716336 0.256291
+0.716336 0.256289
+0.674144 0.256289
+0.716336 0.015695
+0.674144 0.015695
+0.369696 0.828806
+0.184848 0.850216
+1.835199 0.828806
+0.000000 0.850216
+0.784677 0.828806
+0.184848 0.828806
+0.369696 0.828806
+0.784677 0.850216
+2.250180 0.828806
+0.369696 0.850216
+0.184848 0.850216
+0.369696 0.850216
+0.000000 0.827290
+2.250180 0.850216
+0.184848 0.827290
+1.835199 0.850216
+1.309938 0.828806
+1.309938 0.850216
+1.309938 0.828806
+1.309938 0.850216
+0.000946 0.787167
+0.000946 0.717826
+1.085775 0.717826
+1.085775 0.787167
+1.086003 0.787181
+0.000946 0.787181
+0.000946 0.717826
+1.086003 0.717826
+0.000946 0.717826
+1.105312 0.717826
+1.105312 0.787203
+0.000946 0.787203
+-0.066260 0.787203
+-0.066260 0.718940
+0.000946 0.718940
+0.000946 0.787203
+1.105311 0.787203
+0.000946 0.787203
+0.000946 0.717826
+1.105312 0.717826
+-0.066260 0.718940
+-0.066260 0.787093
+-0.133354 0.787093
+-0.133354 0.718940
+0.000946 0.787167
+0.000946 0.717826
+1.619682 0.717826
+1.619682 0.787166
+1.086003 0.787181
+-0.533073 0.787181
+-0.533073 0.717825
+1.086003 0.717826
+0.000946 0.717826
+1.648833 0.717826
+1.648833 0.787204
+0.000946 0.787203
+-0.066260 0.787204
+-0.066260 0.718941
+0.000946 0.718941
+0.000947 0.787204
+1.648833 0.787203
+0.000946 0.787203
+0.000946 0.717826
+1.648834 0.717830
+0.716336 0.256289
+0.674144 0.256289
+0.716336 0.015695
+0.674144 0.015695
+0.674144 0.064444
+0.716336 0.064444
+0.674144 0.256291
+0.716336 0.256291
+0.674144 0.064444
+0.716336 0.064444
+0.674144 0.256291
+0.716336 0.256291
+0.716336 0.256289
+0.674144 0.256289
+0.716336 0.015695
+0.674144 0.015695
+0.369696 0.828806
+0.184848 0.850216
+1.835199 0.828806
+0.000000 0.850216
+0.784677 0.828806
+0.184848 0.828806
+0.369696 0.828806
+0.784677 0.850216
+2.250180 0.828806
+0.369696 0.850216
+0.184848 0.850216
+0.369696 0.850216
+0.000000 0.828806
+2.250180 0.850216
+0.184848 0.828806
+1.835199 0.850216
+1.309938 0.828806
+1.309938 0.850216
+1.309938 0.828806
+1.309938 0.850216
+0.716336 0.015695
+0.716336 0.256289
+0.674144 0.256289
+0.674144 0.015695
+0.674144 0.256291
+0.674144 0.064444
+0.716336 0.064444
+0.716336 0.256291
+0.674144 0.256291
+0.716336 0.256291
+0.716336 0.064444
+0.674144 0.064444
+0.716336 0.015695
+0.674144 0.015695
+0.674144 0.256289
+0.716336 0.256289
+0.369696 0.828806
+0.784677 0.828806
+0.784677 0.850216
+0.369696 0.850216
+1.309938 0.828806
+1.309938 0.850216
+0.184848 0.828806
+0.369696 0.828806
+0.369696 0.850216
+0.184848 0.850216
+1.835199 0.828806
+2.250180 0.828806
+2.250180 0.850216
+1.835199 0.850216
+1.309938 0.828806
+1.309938 0.850216
+0.184848 0.850216
+0.000000 0.850216
+0.000000 0.828806
+0.184848 0.828806
+0.179099 0.629342
+0.253857 0.629342
+0.179099 0.816790
+0.253857 0.816790
+0.595871 0.005868
+0.669505 0.005868
+0.595871 0.308594
+0.669506 0.308594
+0.589926 0.316981
+0.678936 0.316981
+0.589926 0.427045
+0.678936 0.427045
+0.687783 0.771785
+0.850644 0.771785
+0.687784 0.915299
+0.850644 0.915300
+0.595871 0.005868
+0.669505 0.005868
+0.595871 0.308594
+0.669506 0.308594
+0.179099 0.629342
+0.253857 0.629342
+0.179099 0.816790
+0.253857 0.816790
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b200-UV0-array" count="220" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b200-VERTEX_COLOR0">
+          <float_array id="ClosedRoad_sign_big_b200-VERTEX_COLOR0-array" count="1392">
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0-array" count="348" stride="4">
+              <param name="R" type="double"/>
+              <param name="G" type="double"/>
+              <param name="B" type="double"/>
+              <param name="A" type="double"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="ClosedRoad_sign_big_b200-VERTEX">
+          <input semantic="POSITION" source="#ClosedRoad_sign_big_b200-POSITION"/>
+        </vertices>
+        <triangles count="16" material="metal_galvanized"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p> 22 0 54 52 21 1 53 54 20 2 52 55 21 3 53 54 22 4 54 52 27 5 55 53 23 6 56 59 20 7 58 56 21 8 59 57 23 9 56 59 21 10 59 57 24 11 57 58 48 12 132 139 50 13 134 136 51 14 135 137 48 15 132 139 51 16 135 137 49 17 133 138 52 18 136 143 48 19 138 140 49 20 139 141 52 21 136 143 49 22 139 141 53 23 137 142 61 24 168 176 63 25 170 178 64 26 171 179 63 27 170 178 61 28 168 176 62 29 169 177 66 30 175 183 64 31 172 180 63 32 173 181 66 33 175 183 63 34 173 181 65 35 174 182 69 36 197 210 68 37 196 209 71 38 199 211 71 39 199 211 68 40 196 209 70 41 198 208 75 42 203 213 73 43 201 214 72 44 200 215 75 45 203 213 72 46 200 215 74 47 202 212</p></triangles>
+        <triangles count="20" material="roadsigns"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p> 17 48 45 46 25 49 47 47 16 50 44 45 26 51 46 44 16 52 44 45 25 53 47 47 25 54 49 50 18 55 50 48 26 56 48 49 18 57 50 48 25 58 49 50 19 59 51 51 45 60 125 130 55 61 127 131 44 62 124 129 54 63 126 128 44 64 124 129 55 65 127 131 55 66 129 134 47 67 131 135 54 68 128 133 46 69 130 132 54 70 128 133 47 71 131 135 58 72 162 170 67 73 163 171 57 74 161 169 56 75 160 168 57 76 161 169 67 77 163 171 67 78 166 174 59 79 164 172 56 80 165 173 59 81 164 172 67 82 166 174 60 83 167 175 78 84 206 216 77 85 205 218 79 86 207 219 77 87 205 218 78 88 206 216 76 89 204 217 82 90 210 220 81 91 209 222 83 92 211 223 81 93 209 222 82 94 210 220 80 95 208 221 87 96 215 227 84 97 212 225 85 98 213 226 84 99 212 225 87 100 215 227 86 101 214 224 91 102 219 231 88 103 216 229 89 104 217 230 88 105 216 229 91 106 219 231 90 107 218 228</p></triangles>
+        <triangles count="80" material="industrial"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p> 2 108 1 1 3 109 2 2 0 110 0 0 1 111 3 3 0 112 0 0 3 113 2 2 4 114 4 4 5 115 5 5 7 116 6 6 4 117 4 4 7 118 6 6 6 119 7 7 5 120 10 10 0 121 8 8 1 122 9 9 0 123 8 8 5 124 10 10 4 125 11 11 5 126 15 15 1 127 12 12 7 128 14 14 1 129 12 12 3 130 13 13 7 131 14 14 6 132 18 18 3 133 16 16 2 134 17 17 3 135 16 16 6 136 18 18 7 137 19 19 0 138 21 21 6 139 23 23 2 140 20 20 6 141 23 23 0 142 21 21 4 143 22 22 9 144 27 27 10 145 25 25 11 146 26 26 10 147 25 25 9 148 27 27 8 149 24 24 15 150 30 30 12 151 28 28 13 152 29 29 12 153 28 28 15 154 30 30 14 155 31 31 9 156 33 33 12 157 35 35 8 158 32 32 12 159 35 35 9 160 33 33 13 161 34 34 11 162 37 37 13 163 39 39 9 164 36 36 13 165 39 39 11 166 37 37 15 167 38 38 15 168 43 43 10 169 41 41 14 170 42 42 10 171 41 41 15 172 43 43 11 173 40 40 26 174 67 62 18 175 71 63 20 176 64 61 22 177 60 60 20 178 64 61 18 179 71 63 16 180 79 66 26 181 67 67 23 182 78 65 20 183 64 64 23 184 78 65 26 185 67 67 18 186 69 70 19 187 70 71 22 188 66 69 22 189 66 69 19 190 70 71 27 191 65 68 19 192 73 74 21 193 62 72 27 194 68 73 21 195 62 72 19 196 73 74 25 197 75 75 25 198 75 78 24 199 76 76 21 200 62 77 24 201 76 76 25 202 75 78 17 203 77 79 23 204 61 80 17 205 72 82 16 206 74 83 17 207 72 82 23 208 61 80 24 209 63 81 30 210 81 85 31 211 82 86 28 212 80 84 29 213 83 87 28 214 80 84 31 215 82 86 32 216 84 88 33 217 85 89 35 218 86 90 32 219 84 88 35 220 86 90 34 221 87 91 33 222 90 94 28 223 88 92 29 224 89 93 28 225 88 92 33 226 90 94 32 227 91 95 33 228 95 99 29 229 92 96 35 230 94 98 29 231 92 96 31 232 93 97 35 233 94 98 30 234 97 101 35 235 99 103 31 236 96 100 35 237 99 103 30 238 97 101 34 239 98 102 28 240 101 105 34 241 103 107 30 242 100 104 34 243 103 107 28 244 101 105 32 245 102 106 37 246 107 111 36 247 104 108 39 248 106 110 39 249 106 110 36 250 104 108 38 251 105 109 43 252 110 114 40 253 108 112 41 254 109 113 40 255 108 112 43 256 110 114 42 257 111 115 41 258 114 118 36 259 112 116 37 260 113 117 36 261 112 116 41 262 114 118 40 263 115 119 43 264 118 122 37 265 116 120 39 266 117 121 37 267 116 120 43 268 118 122 41 269 119 123 43 270 123 127 38 271 121 125 42 272 122 126 38 273 121 125 43 274 123 127 39 275 120 124 54 276 147 146 46 277 151 147 48 278 144 145 50 279 140 144 48 280 144 145 46 281 151 147 44 282 159 150 54 283 147 151 52 284 158 149 48 285 144 148 52 286 158 149 54 287 147 151 46 288 149 154 47 289 150 155 50 290 146 153 50 291 146 153 47 292 150 155 51 293 145 152 47 294 153 158 49 295 142 156 51 296 148 157 49 297 142 156 47 298 153 158 55 299 155 159 55 300 155 162 53 301 156 160 49 302 142 161 53 303 156 160 55 304 155 162 45 305 157 163 52 306 141 164 45 307 152 166 44 308 154 167 45 309 152 166 52 310 141 164 53 311 143 165 56 312 178 186 59 313 179 187 64 314 177 185 61 315 176 184 64 316 177 185 59 317 179 187 57 318 181 190 56 319 178 191 66 320 180 189 64 321 177 188 66 322 180 189 56 323 178 191 59 324 184 194 60 325 185 195 61 326 183 193 61 327 183 193 60 328 185 195 62 329 182 192 60 330 188 198 63 331 186 196 62 332 187 197 63 333 186 196 60 334 188 198 67 335 189 199 67 336 189 202 65 337 190 200 63 338 186 201 65 339 190 200 67 340 189 202 58 341 191 203 66 342 192 204 58 343 194 206 57 344 195 207 58 345 194 206 66 346 192 204 65 347 193 205</p></triangles>
+        <triangles count="0" material="Material #43 Slot #4"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #5"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #6"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #7"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #8"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #9"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #10"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b200-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b200-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b200-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b200-VERTEX_COLOR0"/><p></p></triangles>
+      </mesh>
+    </geometry>
+    <geometry id="ClosedRoad_sign_big_b70-lib" name="ClosedRoad_sign_big_b70Mesh">
+      <mesh>
+        <source id="ClosedRoad_sign_big_b70-POSITION">
+          <float_array id="ClosedRoad_sign_big_b70-POSITION-array" count="276">
+-1.070199 -0.811774 0.103776
+-1.070199 0.811774 0.103777
+-1.070199 -0.811774 0.000000
+-1.070199 0.811774 0.000001
+-1.172192 -0.811774 0.103776
+-1.172192 0.811774 0.103777
+-1.172192 -0.811774 0.000000
+-1.172192 0.811774 0.000001
+-1.070199 -0.127166 0.103776
+-1.070198 -0.127166 2.526365
+-1.070199 -0.023390 0.103776
+-1.070198 -0.023390 2.526365
+-1.172192 -0.127166 0.103776
+-1.172191 -0.127166 2.526365
+-1.172192 -0.023390 0.103776
+-1.172191 -0.023390 2.526365
+-1.237878 -0.183541 0.856516
+-1.237879 -0.183541 0.369792
+1.237879 -0.183541 0.856515
+1.237879 -0.183541 0.369791
+0.145189 -0.127166 0.856515
+0.145189 -0.127166 0.369792
+1.237879 -0.127166 0.856515
+-1.237878 -0.127166 0.856516
+-1.237879 -0.127166 0.369792
+0.145189 -0.183541 0.369792
+0.145189 -0.183541 0.856515
+1.237879 -0.127166 0.369791
+1.169726 -0.811773 0.103776
+1.169726 0.811774 0.103776
+1.169726 -0.811773 -0.000001
+1.169726 0.811774 0.000000
+1.067732 -0.811773 0.103776
+1.067732 0.811774 0.103776
+1.067732 -0.811773 -0.000001
+1.067733 0.811774 0.000000
+1.169726 -0.127166 0.103776
+1.169726 -0.127166 2.526364
+1.169726 -0.023390 0.103776
+1.169726 -0.023390 2.526364
+1.067732 -0.127166 0.103776
+1.067733 -0.127166 2.526364
+1.067732 -0.023390 0.103776
+1.067733 -0.023390 2.526364
+-1.237878 -0.183542 1.735631
+-1.237878 -0.183541 1.248906
+1.237879 -0.183542 1.735630
+1.237879 -0.183541 1.248906
+0.145190 -0.127166 1.735630
+0.145190 -0.127166 1.248906
+1.237879 -0.127166 1.735630
+1.237879 -0.127166 1.248906
+-1.237878 -0.127166 1.735631
+-1.237878 -0.127166 1.248906
+0.145190 -0.183542 1.735630
+0.145190 -0.183541 1.248906
+0.145190 -0.183542 2.570348
+-1.237878 -0.183542 2.570348
+-1.237878 -0.183541 2.083624
+1.237879 -0.183542 2.570348
+1.237879 -0.183541 2.083624
+1.237879 -0.127166 2.570348
+1.237879 -0.127166 2.083624
+0.145190 -0.127166 2.083624
+0.145190 -0.127166 2.570348
+-1.237878 -0.127166 2.083624
+-1.237878 -0.127166 2.570348
+0.145190 -0.183541 2.083624
+0.464741 -0.183541 1.021223
+0.464740 -0.183541 1.865927
+-0.594273 -0.183542 1.021223
+-0.594273 -0.183542 1.865926
+0.865506 -0.183824 1.925542
+0.865506 -0.183824 2.757549
+-0.844777 -0.183824 1.925542
+-0.844777 -0.183824 2.757549
+-0.567641 -0.194032 1.132667
+0.438109 -0.194032 1.132667
+-0.567641 -0.194032 1.754484
+0.438109 -0.194032 1.754485
+-0.732431 -0.194314 2.014264
+0.753161 -0.194314 2.014265
+-0.732431 -0.194315 2.668827
+0.753161 -0.194314 2.668828
+0.865506 -0.188665 1.925542
+0.865506 -0.188665 2.757549
+-0.844777 -0.188665 1.925542
+-0.844777 -0.188665 2.757549
+0.464741 -0.188665 1.021223
+0.464740 -0.188665 1.865927
+-0.594273 -0.188665 1.021223
+-0.594273 -0.188665 1.865926
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b70-POSITION-array" count="92" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b70-Normal0">
+          <float_array id="ClosedRoad_sign_big_b70-Normal0-array" count="576">
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+-1.000000 0.000000 -0.000001
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+0.000001 0.000000 1.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+-1.000000 0.000001 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b70-Normal0-array" count="192" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b70-UV0">
+          <float_array id="ClosedRoad_sign_big_b70-UV0-array" count="256">
+0.000946 0.787167
+0.000946 0.717826
+1.085775 0.717826
+1.085775 0.787167
+1.086003 0.787181
+0.000946 0.787181
+0.000946 0.717826
+1.086003 0.717826
+0.000946 0.717826
+1.105312 0.717826
+1.105312 0.787203
+0.000946 0.787203
+0.000946 0.787167
+0.000946 0.717826
+1.619682 0.717825
+1.619682 0.787166
+1.086003 0.787181
+-0.533073 0.787181
+-0.533073 0.717825
+1.086003 0.717826
+0.000946 0.717826
+1.648833 0.717826
+1.648833 0.787204
+0.000946 0.787203
+1.648833 0.787203
+0.000946 0.787203
+0.000946 0.717826
+1.648834 0.717830
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.000946 0.787167
+0.000946 0.717826
+1.085775 0.717826
+1.085775 0.787167
+1.086003 0.787181
+0.000946 0.787181
+0.000946 0.717826
+1.086003 0.717826
+0.000946 0.717826
+1.105312 0.717826
+1.105312 0.787203
+0.000946 0.787203
+0.000946 0.787167
+0.000946 0.717826
+1.619682 0.717826
+1.619682 0.787166
+1.086003 0.787181
+-0.533073 0.787181
+-0.533073 0.717825
+1.086003 0.717826
+0.000946 0.717826
+1.648833 0.717826
+1.648833 0.787204
+0.000946 0.787203
+1.648833 0.787203
+0.000946 0.787203
+0.000946 0.717826
+1.648834 0.717830
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.716778 0.014133
+0.716778 0.258940
+0.673702 0.258940
+0.673702 0.014133
+0.673702 0.256291
+0.673702 0.062882
+0.716778 0.062882
+0.716778 0.256291
+0.673702 0.256291
+0.716778 0.256291
+0.716778 0.062882
+0.673702 0.062882
+0.716778 0.014133
+0.673702 0.014133
+0.673702 0.258940
+0.716778 0.258940
+0.179099 0.629342
+0.253857 0.629342
+0.179099 0.816790
+0.253857 0.816790
+0.595871 0.005868
+0.669505 0.005868
+0.595871 0.308594
+0.669506 0.308594
+0.589926 0.316981
+0.678936 0.316981
+0.589926 0.427045
+0.678936 0.427045
+0.687783 0.771785
+0.850644 0.771785
+0.687784 0.915299
+0.850644 0.915300
+0.595871 0.005868
+0.669505 0.005868
+0.595871 0.308594
+0.669506 0.308594
+0.179099 0.629342
+0.253857 0.629342
+0.179099 0.816790
+0.253857 0.816790
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b70-UV0-array" count="128" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b70-VERTEX_COLOR0">
+          <float_array id="ClosedRoad_sign_big_b70-VERTEX_COLOR0-array" count="768">
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0-array" count="192" stride="4">
+              <param name="R" type="double"/>
+              <param name="G" type="double"/>
+              <param name="B" type="double"/>
+              <param name="A" type="double"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="ClosedRoad_sign_big_b70-VERTEX">
+          <input semantic="POSITION" source="#ClosedRoad_sign_big_b70-POSITION"/>
+        </vertices>
+        <triangles count="44" material="metal_galvanized"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p> 2 0 1 1 3 1 2 2 0 2 0 0 1 3 3 3 0 4 0 0 3 5 2 2 4 6 4 4 5 7 5 5 7 8 6 6 4 9 4 4 7 10 6 6 6 11 7 7 5 12 10 10 0 13 8 8 1 14 9 9 0 15 8 8 5 16 10 10 4 17 11 11 9 18 15 15 10 19 13 13 11 20 14 14 10 21 13 13 9 22 15 15 8 23 12 12 15 24 18 18 12 25 16 16 13 26 17 17 12 27 16 16 15 28 18 18 14 29 19 19 9 30 21 21 12 31 23 23 8 32 20 20 12 33 23 23 9 34 21 21 13 35 22 22 15 36 27 27 10 37 25 25 14 38 26 26 10 39 25 25 15 40 27 27 11 41 24 24 22 42 38 36 21 43 37 38 20 44 36 39 21 45 37 38 22 46 38 36 27 47 39 37 23 48 40 43 20 49 42 40 21 50 43 41 23 51 40 43 21 52 43 41 24 53 41 42 30 54 45 45 31 55 46 46 28 56 44 44 29 57 47 47 28 58 44 44 31 59 46 46 32 60 48 48 33 61 49 49 35 62 50 50 32 63 48 48 35 64 50 50 34 65 51 51 33 66 54 54 28 67 52 52 29 68 53 53 28 69 52 52 33 70 54 54 32 71 55 55 37 72 59 59 36 73 56 56 39 74 58 58 39 75 58 58 36 76 56 56 38 77 57 57 43 78 62 62 40 79 60 60 41 80 61 61 40 81 60 60 43 82 62 62 42 83 63 63 41 84 66 66 36 85 64 64 37 86 65 65 36 87 64 64 41 88 66 66 40 89 67 67 43 90 71 71 38 91 69 69 42 92 70 70 38 93 69 69 43 94 71 71 39 95 68 68 48 96 80 83 50 97 82 80 51 98 83 81 48 99 80 83 51 100 83 81 49 101 81 82 52 102 84 87 48 103 86 84 49 104 87 85 52 105 84 87 49 106 87 85 53 107 85 86 61 108 96 96 63 109 98 98 64 110 99 99 63 111 98 98 61 112 96 96 62 113 97 97 66 114 103 103 64 115 100 100 63 116 101 101 66 117 103 103 63 118 101 101 65 119 102 102 69 120 105 106 68 121 104 105 71 122 107 107 71 123 107 107 68 124 104 105 70 125 106 104 75 126 111 109 73 127 109 110 72 128 108 111 75 129 111 109 72 130 108 111 74 131 110 108</p></triangles>
+        <triangles count="20" material="roadsigns"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p> 17 132 29 30 25 133 31 31 16 134 28 29 26 135 30 28 16 136 28 29 25 137 31 31 25 138 33 34 18 139 34 32 26 140 32 33 18 141 34 32 25 142 33 34 19 143 35 35 45 144 73 74 55 145 75 75 44 146 72 73 54 147 74 72 44 148 72 73 55 149 75 75 55 150 77 78 47 151 79 79 54 152 76 77 46 153 78 76 54 154 76 77 47 155 79 79 58 156 90 90 67 157 91 91 57 158 89 89 56 159 88 88 57 160 89 89 67 161 91 91 67 162 94 94 59 163 92 92 56 164 93 93 59 165 92 92 67 166 94 94 60 167 95 95 78 168 114 112 77 169 113 114 79 170 115 115 77 171 113 114 78 172 114 112 76 173 112 113 82 174 118 116 81 175 117 118 83 176 119 119 81 177 117 118 82 178 118 116 80 179 116 117 87 180 123 123 84 181 120 121 85 182 121 122 84 183 120 121 87 184 123 123 86 185 122 120 91 186 127 127 88 187 124 125 89 188 125 126 88 189 124 125 91 190 127 127 90 191 126 124</p></triangles>
+        <triangles count="0" material="industrial"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #4_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #5_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #6_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #7_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #8_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #9_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #10_ncl1_1"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b70-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b70-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b70-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b70-VERTEX_COLOR0"/><p></p></triangles>
+      </mesh>
+    </geometry>
+    <geometry id="ClosedRoad_sign_big_b35-lib" name="ClosedRoad_sign_big_b35Mesh">
+      <mesh>
+        <source id="ClosedRoad_sign_big_b35-POSITION">
+          <float_array id="ClosedRoad_sign_big_b35-POSITION-array" count="180">
+-1.237878 -0.183541 0.856516
+-1.237879 -0.183541 0.369792
+1.237879 -0.183541 0.856515
+1.237879 -0.183541 0.369791
+0.145189 -0.127166 0.856515
+0.145189 -0.127166 0.369792
+1.237879 -0.127166 0.856515
+-1.237878 -0.127166 0.856516
+-1.237879 -0.127166 0.369792
+0.145189 -0.183541 0.369792
+0.145189 -0.183541 0.856515
+1.237879 -0.127166 0.369791
+-1.237878 -0.183542 1.735631
+-1.237878 -0.183541 1.248906
+1.237879 -0.183542 1.735630
+1.237879 -0.183541 1.248906
+0.145190 -0.127166 1.735630
+0.145190 -0.127166 1.248906
+1.237879 -0.127166 1.735630
+1.237879 -0.127166 1.248906
+-1.237878 -0.127166 1.735631
+-1.237878 -0.127166 1.248906
+0.145190 -0.183542 1.735630
+0.145190 -0.183541 1.248906
+0.145190 -0.183542 2.570348
+-1.237878 -0.183542 2.570348
+-1.237878 -0.183541 2.083624
+1.237879 -0.183542 2.570348
+1.237879 -0.183541 2.083624
+1.237879 -0.127166 2.570348
+1.237879 -0.127166 2.083624
+0.145190 -0.127166 2.083624
+0.145190 -0.127166 2.570348
+-1.237878 -0.127166 2.083624
+-1.237878 -0.127166 2.570348
+0.145190 -0.183541 2.083624
+0.464741 -0.183541 1.021223
+0.464740 -0.183541 1.865927
+-0.594273 -0.183542 1.021223
+-0.594273 -0.183542 1.865926
+0.865506 -0.183824 1.925542
+0.865506 -0.183824 2.757549
+-0.844777 -0.183824 1.925542
+-0.844777 -0.183824 2.757549
+-0.567641 -0.194032 1.132667
+0.438109 -0.194032 1.132667
+-0.567641 -0.194032 1.754484
+0.438109 -0.194032 1.754485
+-0.732431 -0.194314 2.014264
+0.753161 -0.194314 2.014265
+-0.732431 -0.194315 2.668827
+0.753161 -0.194314 2.668828
+0.865506 -0.188665 1.925542
+0.865506 -0.188665 2.757549
+-0.844777 -0.188665 1.925542
+-0.844777 -0.188665 2.757549
+0.464741 -0.188665 1.021223
+0.464740 -0.188665 1.865927
+-0.594273 -0.188665 1.021223
+-0.594273 -0.188665 1.865926
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b35-POSITION-array" count="60" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b35-Normal0">
+          <float_array id="ClosedRoad_sign_big_b35-Normal0-array" count="324">
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b35-Normal0-array" count="108" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b35-UV0">
+          <float_array id="ClosedRoad_sign_big_b35-UV0-array" count="144">
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.673702 0.062882
+0.716778 0.062882
+0.673702 0.256291
+0.716778 0.256291
+0.716778 0.258940
+0.673702 0.258940
+0.716778 0.014133
+0.673702 0.014133
+0.716778 0.014133
+0.716778 0.258940
+0.673702 0.258940
+0.673702 0.014133
+0.673702 0.256291
+0.673702 0.062882
+0.716778 0.062882
+0.716778 0.256291
+0.673702 0.256291
+0.716778 0.256291
+0.716778 0.062882
+0.673702 0.062882
+0.716778 0.014133
+0.673702 0.014133
+0.673702 0.258940
+0.716778 0.258940
+0.179099 0.629342
+0.253857 0.629342
+0.179099 0.816790
+0.253857 0.816790
+0.595871 0.005868
+0.669505 0.005868
+0.595871 0.308594
+0.669506 0.308594
+0.589926 0.316981
+0.678936 0.316981
+0.589926 0.427045
+0.678936 0.427045
+0.687783 0.771785
+0.850644 0.771785
+0.687784 0.915299
+0.850644 0.915300
+0.595871 0.005868
+0.669505 0.005868
+0.595871 0.308594
+0.669506 0.308594
+0.179099 0.629342
+0.253857 0.629342
+0.179099 0.816790
+0.253857 0.816790
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b35-UV0-array" count="72" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="ClosedRoad_sign_big_b35-VERTEX_COLOR0">
+          <float_array id="ClosedRoad_sign_big_b35-VERTEX_COLOR0-array" count="432">
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+0.843137 0.843137 0.843137 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+1.000000 1.000000 1.000000 1.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+0.000000 0.000000 0.000000 0.000000
+</float_array>
+          <technique_common>
+            <accessor source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0-array" count="108" stride="4">
+              <param name="R" type="double"/>
+              <param name="G" type="double"/>
+              <param name="B" type="double"/>
+              <param name="A" type="double"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="ClosedRoad_sign_big_b35-VERTEX">
+          <input semantic="POSITION" source="#ClosedRoad_sign_big_b35-POSITION"/>
+        </vertices>
+        <triangles count="16" material="metal_galvanized"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p> 6 0 10 8 5 1 9 10 4 2 8 11 5 3 9 10 6 4 10 8 11 5 11 9 7 6 12 15 4 7 14 12 5 8 15 13 7 9 12 15 5 10 15 13 8 11 13 14 16 12 24 27 18 13 26 24 19 14 27 25 16 15 24 27 19 16 27 25 17 17 25 26 20 18 28 31 16 19 30 28 17 20 31 29 20 21 28 31 17 22 31 29 21 23 29 30 29 24 40 40 31 25 42 42 32 26 43 43 31 27 42 42 29 28 40 40 30 29 41 41 34 30 47 47 32 31 44 44 31 32 45 45 34 33 47 47 31 34 45 45 33 35 46 46 37 36 49 50 36 37 48 49 39 38 51 51 39 39 51 51 36 40 48 49 38 41 50 48 43 42 55 53 41 43 53 54 40 44 52 55 43 45 55 53 40 46 52 55 42 47 54 52</p></triangles>
+        <triangles count="20" material="roadsigns"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p> 1 48 1 2 9 49 3 3 0 50 0 1 10 51 2 0 0 52 0 1 9 53 3 3 9 54 5 6 2 55 6 4 10 56 4 5 2 57 6 4 9 58 5 6 3 59 7 7 13 60 17 18 23 61 19 19 12 62 16 17 22 63 18 16 12 64 16 17 23 65 19 19 23 66 21 22 15 67 23 23 22 68 20 21 14 69 22 20 22 70 20 21 15 71 23 23 26 72 34 34 35 73 35 35 25 74 33 33 24 75 32 32 25 76 33 33 35 77 35 35 35 78 38 38 27 79 36 36 24 80 37 37 27 81 36 36 35 82 38 38 28 83 39 39 46 84 58 56 45 85 57 58 47 86 59 59 45 87 57 58 46 88 58 56 44 89 56 57 50 90 62 60 49 91 61 62 51 92 63 63 49 93 61 62 50 94 62 60 48 95 60 61 55 96 67 67 52 97 64 65 53 98 65 66 52 99 64 65 55 100 67 67 54 101 66 64 59 102 71 71 56 103 68 69 57 104 69 70 56 105 68 69 59 106 71 71 58 107 70 68</p></triangles>
+        <triangles count="0" material="industrial"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #4_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #5_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #6_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #7_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #8_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #9_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+        <triangles count="0" material="Material #43 Slot #10_ncl1_2"><input semantic="VERTEX" offset="0" source="#ClosedRoad_sign_big_b35-VERTEX"/><input semantic="NORMAL" offset="1" source="#ClosedRoad_sign_big_b35-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#ClosedRoad_sign_big_b35-UV0"/><input semantic="COLOR" offset="3" set="0" source="#ClosedRoad_sign_big_b35-VERTEX_COLOR0"/><p></p></triangles>
+      </mesh>
+    </geometry>
+    <geometry id="colmesh-1-lib" name="colmesh-1Mesh">
+      <mesh>
+        <source id="colmesh-1-POSITION">
+          <float_array id="colmesh-1-POSITION-array" count="120">
+-1.142107 -0.374274 0.000000
+1.142107 -0.374274 0.000000
+-1.237879 -0.036392 0.000000
+1.237879 -0.036392 0.000000
+-1.142107 -0.374274 2.757549
+1.237879 -0.246989 2.757549
+-1.237879 -0.036392 2.757549
+1.142107 0.090894 2.757549
+-1.280613 0.811774 -0.246224
+-0.962989 0.811774 -0.246224
+-1.280613 0.811774 0.008004
+-0.962989 0.811774 0.008004
+-1.280613 -0.811774 -0.246224
+-0.962989 -0.811774 -0.246224
+-1.280613 -0.811774 0.008004
+-1.058761 -0.811774 0.103776
+0.961979 0.811774 -0.246224
+1.279602 0.811774 -0.246224
+0.961979 0.811774 0.008004
+1.279602 0.811774 0.008004
+0.961979 -0.811774 -0.246224
+1.279602 -0.811774 -0.246224
+0.961979 -0.811774 0.008004
+1.183830 -0.811774 0.103776
+-1.237879 -0.246989 0.000000
+1.237879 -0.246989 0.000000
+-1.142107 0.090894 0.000000
+1.142107 0.090894 0.000000
+-1.237879 -0.246989 2.757549
+1.142107 -0.374274 2.757549
+-1.142107 0.090894 2.757549
+1.237879 -0.036392 2.757549
+-1.184841 0.811774 0.103776
+-1.058761 0.811774 0.103776
+-1.184841 -0.811774 0.103776
+-0.962989 -0.811774 0.008004
+1.057751 0.811774 0.103776
+1.183830 0.811774 0.103776
+1.057751 -0.811774 0.103776
+1.279602 -0.811774 0.008004
+</float_array>
+          <technique_common>
+            <accessor source="#colmesh-1-POSITION-array" count="40" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="colmesh-1-Normal0">
+          <float_array id="colmesh-1-Normal0-array" count="612">
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 -1.000000 0.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+0.000000 0.000000 -1.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+1.000000 0.000000 0.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+-1.000000 0.000000 0.000000
+0.799072 -0.601235 0.000000
+0.799072 -0.601235 0.000000
+0.799072 -0.601235 0.000000
+0.799072 -0.601235 0.000000
+0.799072 -0.601235 0.000000
+0.799072 -0.601235 0.000000
+-0.799072 -0.601235 0.000000
+-0.799072 -0.601235 0.000000
+-0.799072 -0.601235 0.000000
+-0.799072 -0.601235 0.000000
+-0.799072 -0.601235 0.000000
+-0.799072 -0.601235 0.000000
+0.799072 0.601235 0.000000
+0.799072 0.601235 0.000000
+0.799072 0.601235 0.000000
+0.799072 0.601235 0.000000
+0.799072 0.601235 0.000000
+0.799072 0.601235 0.000000
+-0.799072 0.601235 0.000000
+-0.799072 0.601235 0.000000
+-0.799072 0.601235 0.000000
+-0.799072 0.601235 0.000000
+-0.799072 0.601235 0.000000
+-0.799072 0.601235 0.000000
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+0.707107 0.000000 0.707107
+-0.707106 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707106 0.000000 0.707107
+-0.707106 0.000000 0.707107
+-0.707107 0.000000 0.707107
+-0.707106 0.000000 0.707107
+</float_array>
+          <technique_common>
+            <accessor source="#colmesh-1-Normal0-array" count="204" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="colmesh-1-UV0">
+          <float_array id="colmesh-1-UV0-array" count="208">
+0.961316 0.000000
+0.038684 0.000000
+1.000000 0.726366
+0.000000 0.726366
+0.038684 0.000000
+1.000000 0.273634
+0.000000 0.726366
+0.961316 1.000000
+0.038684 0.000000
+0.961316 0.000000
+0.038684 1.000000
+0.961316 1.000000
+0.273634 0.000000
+0.726366 0.000000
+0.273634 1.000000
+0.726366 1.000000
+0.038684 0.000000
+0.961316 0.000000
+0.038684 1.000000
+0.961316 1.000000
+0.273634 0.000000
+0.726366 0.000000
+0.273634 1.000000
+0.726366 1.000000
+1.000000 0.000000
+0.000000 0.000000
+1.000000 0.726366
+0.000000 0.726366
+0.000000 0.000000
+1.000000 0.000000
+0.000000 0.726366
+0.698474 1.000000
+0.000000 0.000000
+1.000000 0.000000
+0.000000 1.000000
+1.000000 1.000000
+0.000000 0.000000
+0.726366 0.000000
+0.000000 1.000000
+0.726366 1.000000
+0.301526 0.000000
+0.698474 0.000000
+0.301526 1.000000
+0.698474 1.000000
+0.273634 0.000000
+1.000000 0.000000
+0.273634 1.000000
+1.000000 1.000000
+1.000000 0.000000
+0.000000 0.000000
+1.000000 0.726366
+0.000000 0.726366
+0.000000 0.000000
+1.000000 0.000000
+0.000000 0.726366
+0.698474 1.000000
+0.000000 0.000000
+1.000000 0.000000
+0.000000 1.000000
+1.000000 1.000000
+0.000000 0.000000
+0.726366 0.000000
+0.000000 1.000000
+0.726366 1.000000
+0.301526 0.000000
+0.698474 0.000000
+0.301526 1.000000
+0.698474 1.000000
+0.273634 0.000000
+1.000000 0.000000
+0.273634 1.000000
+1.000000 1.000000
+1.000000 0.273634
+0.000000 0.273634
+0.961316 1.000000
+0.038684 1.000000
+0.000000 0.273634
+0.961316 0.000000
+0.038684 1.000000
+1.000000 0.726366
+-0.017045 -0.000000
+-0.017045 1.000000
+1.017045 1.000000
+1.017045 0.000000
+-0.120567 -0.000000
+-0.120567 1.000000
+-0.017045 -0.000000
+-0.017045 1.000000
+0.698474 1.000000
+0.301526 1.000000
+0.301526 1.000000
+1.000000 0.726366
+0.698474 1.000000
+0.301526 1.000000
+0.301526 1.000000
+1.000000 0.726366
+0.193975 -0.000000
+0.193975 1.000000
+0.213748 -0.000000
+0.213748 1.000000
+0.193975 -0.000000
+0.193975 1.000000
+0.213748 -0.000000
+0.213748 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#colmesh-1-UV0-array" count="104" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="colmesh-1-VERTEX">
+          <input semantic="POSITION" source="#colmesh-1-POSITION"/>
+        </vertices>
+        <triangles count="68" material="ColorEffectR225G87B143-material"><input semantic="VERTEX" offset="0" source="#colmesh-1-VERTEX"/><input semantic="NORMAL" offset="1" source="#colmesh-1-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#colmesh-1-UV0"/><p> 24 0 72 2 1 2 26 2 74 26 3 74 27 4 75 3 5 3 24 6 72 26 7 74 3 8 3 3 9 3 25 10 73 1 11 1 24 12 72 3 13 3 1 14 1 0 15 0 24 16 72 1 17 1 4 18 4 29 19 77 5 20 5 5 21 5 31 22 79 7 23 7 4 24 4 5 25 5 7 26 7 7 27 7 30 28 78 6 29 6 4 30 4 7 31 7 6 32 6 28 33 76 4 34 4 6 35 6 0 36 8 1 37 9 29 38 11 29 39 11 4 40 10 0 41 8 25 42 12 3 43 13 31 44 15 31 45 15 5 46 14 25 47 12 27 48 16 26 49 17 30 50 19 30 51 19 7 52 18 27 53 16 2 54 20 24 55 21 28 56 23 28 57 23 6 58 22 2 59 20 8 60 24 10 61 26 32 62 88 32 63 88 33 64 89 11 65 27 8 66 24 32 67 88 11 68 27 8 69 24 11 70 27 9 71 25 13 72 29 35 73 91 15 74 31 12 75 28 13 76 29 15 77 31 15 78 31 34 79 90 14 80 30 12 81 28 15 82 31 14 83 30 8 84 32 9 85 33 13 86 35 13 87 35 12 88 34 8 89 32 9 90 36 11 91 37 35 92 39 35 93 39 13 94 38 9 95 36 33 96 40 32 97 41 34 98 43 34 99 43 15 100 42 33 101 40 10 102 44 8 103 45 12 104 47 12 105 47 14 106 46 10 107 44 16 108 48 18 109 50 36 110 92 36 111 92 37 112 93 19 113 51 16 114 48 36 115 92 19 116 51 16 117 48 19 118 51 17 119 49 21 120 53 39 121 95 23 122 55 20 123 52 21 124 53 23 125 55 23 126 55 38 127 94 22 128 54 20 129 52 23 130 55 22 131 54 16 132 56 17 133 57 21 134 59 21 135 59 20 136 58 16 137 56 17 138 60 19 139 61 39 140 63 39 141 63 21 142 62 17 143 60 37 144 64 36 145 65 38 146 67 38 147 67 23 148 66 37 149 64 18 150 68 16 151 69 20 152 71 20 153 71 22 154 70 18 155 68 1 156 80 25 157 12 5 158 14 5 159 14 29 160 81 1 161 80 4 162 82 28 163 23 24 164 21 24 165 21 0 166 83 4 167 82 3 168 84 27 169 16 7 170 18 7 171 18 31 172 85 3 173 84 26 174 86 2 175 20 6 176 22 6 177 22 30 178 87 26 179 86 11 180 96 33 181 40 15 182 42 15 183 42 35 184 97 11 185 96 32 186 98 10 187 44 14 188 46 14 189 46 34 190 99 32 191 98 19 192 100 37 193 64 23 194 66 23 195 66 39 196 101 19 197 100 36 198 102 18 199 68 22 200 70 22 201 70 38 202 103 36 203 102</p></triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="construction_sign_big_b" name="construction_sign_big_b">
+      <node name="base00" id="base00" sid="base00"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="collision-1" id="collision-1" sid="collision-1"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node><node name="start01" id="start01" sid="start01"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra><node name="nulldetail1" id="nulldetail1" sid="nulldetail1"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node></node><node name="ClosedRoad_sign_big_b200" id="ClosedRoad_sign_big_b200" layer="construction_sign_big_b" sid="ClosedRoad_sign_big_b200"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#ClosedRoad_sign_big_b200-lib"><bind_material><technique_common><instance_material symbol="metal_galvanized" target="#metal_galvanized"/><instance_material symbol="roadsigns" target="#roadsigns"/><instance_material symbol="industrial" target="#industrial"/><instance_material symbol="Material #43 Slot #4" target="#Material #43 Slot #4"/><instance_material symbol="Material #43 Slot #5" target="#Material #43 Slot #5"/><instance_material symbol="Material #43 Slot #6" target="#Material #43 Slot #6"/><instance_material symbol="Material #43 Slot #7" target="#Material #43 Slot #7"/><instance_material symbol="Material #43 Slot #8" target="#Material #43 Slot #8"/><instance_material symbol="Material #43 Slot #9" target="#Material #43 Slot #9"/><instance_material symbol="Material #43 Slot #10" target="#Material #43 Slot #10"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node><node name="ClosedRoad_sign_big_b70" id="ClosedRoad_sign_big_b70" layer="construction_sign_big_b" sid="ClosedRoad_sign_big_b70"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#ClosedRoad_sign_big_b70-lib"><bind_material><technique_common><instance_material symbol="metal_galvanized" target="#metal_galvanized"/><instance_material symbol="roadsigns" target="#roadsigns"/><instance_material symbol="industrial" target="#industrial"/><instance_material symbol="Material #43 Slot #4_ncl1_1" target="#Material #43 Slot #4_ncl1_1"/><instance_material symbol="Material #43 Slot #5_ncl1_1" target="#Material #43 Slot #5_ncl1_1"/><instance_material symbol="Material #43 Slot #6_ncl1_1" target="#Material #43 Slot #6_ncl1_1"/><instance_material symbol="Material #43 Slot #7_ncl1_1" target="#Material #43 Slot #7_ncl1_1"/><instance_material symbol="Material #43 Slot #8_ncl1_1" target="#Material #43 Slot #8_ncl1_1"/><instance_material symbol="Material #43 Slot #9_ncl1_1" target="#Material #43 Slot #9_ncl1_1"/><instance_material symbol="Material #43 Slot #10_ncl1_1" target="#Material #43 Slot #10_ncl1_1"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node><node name="ClosedRoad_sign_big_b35" id="ClosedRoad_sign_big_b35" layer="construction_sign_big_b" sid="ClosedRoad_sign_big_b35"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#ClosedRoad_sign_big_b35-lib"><bind_material><technique_common><instance_material symbol="metal_galvanized" target="#metal_galvanized"/><instance_material symbol="roadsigns" target="#roadsigns"/><instance_material symbol="industrial" target="#industrial"/><instance_material symbol="Material #43 Slot #4_ncl1_2" target="#Material #43 Slot #4_ncl1_2"/><instance_material symbol="Material #43 Slot #5_ncl1_2" target="#Material #43 Slot #5_ncl1_2"/><instance_material symbol="Material #43 Slot #6_ncl1_2" target="#Material #43 Slot #6_ncl1_2"/><instance_material symbol="Material #43 Slot #7_ncl1_2" target="#Material #43 Slot #7_ncl1_2"/><instance_material symbol="Material #43 Slot #8_ncl1_2" target="#Material #43 Slot #8_ncl1_2"/><instance_material symbol="Material #43 Slot #9_ncl1_2" target="#Material #43 Slot #9_ncl1_2"/><instance_material symbol="Material #43 Slot #10_ncl1_2" target="#Material #43 Slot #10_ncl1_2"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node></node>
+      <node name="colmesh-1" id="colmesh-1" layer="construction_sign_big_b" sid="colmesh-1"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#colmesh-1-lib"><bind_material><technique_common><instance_material symbol="ColorEffectR225G87B143-material" target="#ColorEffectR225G87B143-material"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node>
+      <extra><technique profile="MAX3D"><frame_rate>30.000000</frame_rate></technique><technique profile="FCOLLADA"><start_time>0.000000</start_time><end_time>3.333333</end_time></technique></extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#construction_sign_big_b"></instance_visual_scene>
+  </scene>
+</COLLADA>

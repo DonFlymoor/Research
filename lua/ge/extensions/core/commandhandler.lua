@@ -53,6 +53,16 @@ local function onSchemeCommand(scheme)
     log('I', 'commandhandler', 'downloading mod: ' .. tostring(data))
     extensions.core_repository.installMod(data, filename, 'mods/repo/')
     return
+  elseif cmd == "updateZipMod" and version == "v1"then
+    -- args = { "v1", "updateZipMod", "crepe.zip", "crepe.zip.tmp" }
+    local tmp = split(data, '/')
+    if #tmp < 2 then
+      log("E","commandhandler","Wrond argument count!")
+      return
+    end
+    log('I', 'commandhandler', "updateZipMod '" .. tostring(tmp[1]).. "' with new '"..tostring(tmp[2]) .."'")
+    extensions.core_modmanager.updateZipMod(tmp[1],tmp[2])
+    return
   end
 
   log('E', 'scheme', 'unsupported scheme command: ' .. dumps(args))

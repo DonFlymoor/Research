@@ -167,6 +167,19 @@ angular.module('beamng.stuff')
 
   });
 
+  $scope.toggleActivation = function(evt, mod, id) {
+    evt.stopPropagation();    // we need to prevent propagation so click doesn't register on the tile
+    $scope.$emit('app:waiting', true, function () {
+      setTimeout(function() {
+        if (mod.active) {
+          bngApi.engineLua('core_modmanager.deactivateModId(' + bngApi.serializeToLua(mod.modID || mod.modname) + ')');
+        } else {
+          bngApi.engineLua('core_modmanager.activateModId(' + bngApi.serializeToLua(mod.modID || mod.modname) + ')');
+        }
+      }, 10);
+    });
+  };
+
     // unicode conversion obtained from: https://stackoverflow.com/questions/17267329/converting-unicode-character-to-string-format
     function unicodeToChar(text) {
       return text.replace(/\\u[\dA-Fa-f]{4}/g, function (match) {

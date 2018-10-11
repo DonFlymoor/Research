@@ -1,0 +1,127 @@
+{
+  "options": {
+    "plate": "BeamNG",
+    "models": ["hopper","hatch"],
+    "views": ["default", "frontGarage", "sideGarage"]
+  },
+  "views": {
+    "default": {
+      // jenknins is now percentage based (50%), so this will output a 500x281px image 
+      "width": 1000,
+      "height": 562,
+      "rotation": 125,
+      "dist": 0.43,
+      "offset": [0, 0, 3],
+      "freeOffset": [0.3, -1.5, -0.75],
+      "fov": 24,
+      "models": {
+        "hopper":{
+          "dist": 0.45
+        },
+        "pigeon": {
+          "dist": 0.50,
+          "offset": [0, 0, 3.2],
+          "freeOffset": [0.0, -0.2, -0.1],
+          "configs": {
+            "streetcleaning": {
+              "dist": 0.45
+            },
+            "boxed": {
+              "dist": 0.53
+            }
+          }
+        },
+        "semi": {
+          "dist": 0.47,
+          "configs": {
+            "t65_ramplow": {
+              "dist": 0.50,
+              "freeOffset": [28, -1.5, -0.75]
+            },
+            "t65_cargobox": {
+              "dist": 0.461
+            },
+            "t75_mixer": {
+              "dist": 0.43
+            }
+          }
+        }
+        "citybus":{
+            "dist": 0.45,
+        }
+      }
+    },
+    "frontGarage": {
+      // jenkins is now percentage based (50%), so this will output a 500x281px image 
+      "width": 1000,
+      "height": 562,
+      "rotation": -140,
+      "dist": 0.45,
+      "offset": [0, 0, 10],
+      "freeOffset": [-1.5, 0, -1.5],
+      "fov": 30,
+      "suffix": "_garage_front",
+      "allow": ["onlyDefault"],
+      "annotation":"true",
+      "ligth": "true",
+      "models":{
+        "citybus": {
+          "offset": [50, 20, 10],
+          "dist": 0.40,
+          }
+      }
+	},
+    "sideGarage": {
+      // jenkins is now percentage based (50%), so this will output a 800x450px image       
+      "width": 1800,
+      "height": 1012.5,
+      "rotation": 130,
+      "dist": 0.65,
+      "offset": [0, 0, 20],
+      "freeOffset": [0, 0, 0],
+      "fov": 20,
+      "suffix": "_garage_side",
+      "annotation":"true",
+      "ligth": "true",
+	  "models":{
+        "barstow": {
+          "freeOffset": [0.2, 0.0, 0.0]
+        },
+        "burnside": {
+          "freeOffset": [0.2, 0.0, 0.0]
+        },
+        "hatch": {
+          "offset": [0, 0, 18],
+          "freeOffset": [0.2, 0.0, 0.0]
+        },
+        "hopper": {
+          "freeOffset": [0.1, 0.0, 0.0]
+        },
+        "legran": {
+          "freeOffset": [0.2, 0.0, 0.0]
+        },
+        "miramar": {
+          "freeOffset": [0.2, 0.0, 0.0]
+        },
+        "moonhawk": {
+        "offset": [0, 0, 22],
+          "freeOffset": [0.1, 0.0, 0.0]
+        },
+        "pickup": {
+          "offset": [0, 0, 22],
+          "freeOffset": [0.1, 0.0, 0.0]
+        },
+        "pigeon": {
+          "offset": [0, 0, 18],
+          "freeOffset": [0.1, 0.0, 0.0]
+        },
+        "sbr": {
+          "freeOffset": [0.1, 0.0, 0.0]
+        }
+        "citybus": {
+          "dist": 0.60,
+        }
+      }
+    }
+  }
+}

@@ -21,27 +21,6 @@ singleton Material(decalroad_concrete)
     annotation = "STREET";
 };
 
-singleton Material(AsphaltRoad_edge_concrete)
-{
-    mapTo = "unmapped_mat";
-    diffuseMap[0] = "levels/west_coast_usa/art/road/AsphaltRoad_edge_concrete_d.dds";
-    doubleSided = "0";
-    translucentBlendOp = "LerpAlpha";
-    normalMap[0] = "levels/west_coast_usa/art/road/AsphaltRoad_edge_concrete_n.dds";
-    specularPower[0] = "1";
-    useAnisotropic[0] = "1";
-    materialTag0 = "RoadAndPath";
-    materialTag1 = "beamng";
-    specularMap[0] = "levels/west_coast_usa/art/road/AsphaltRoad_edge_concrete_s.dds";
-    translucent = "1";
-    translucentZWrite = "1";
-    alphaTest = "1";
-    alphaRef = "32";
-    castShadows = "0";
-    specularStrength[0] = "0";
-    annotation = "STREET";
-};
-
 singleton Material(road1_concrete)
 {
     mapTo = "unmapped_mat";
@@ -78,6 +57,21 @@ singleton Material(road_blue)
     materialTag2 = "RoadAndPath";
     specularPower[0] = "14";
     diffuseColor[0] = "0.37 0.59 0.9 0.87";
+};
+
+singleton Material(road_red)
+{
+    mapTo = "unmapped_mat";
+    diffuseMap[0] = "levels/west_coast_usa/art/road/chalk_marking_d.dds";
+    useAnisotropic[0] = "1";
+    castShadows = "0";
+    translucent = "1";
+    translucentZWrite = "1";
+    materialTag0 = "beamng";
+    materialTag1 = "decal";
+    materialTag2 = "RoadAndPath";
+    specularPower[0] = "14";
+    diffuseColor[0] = "0.8 0.3 0.3 0.87";
 };
 
 singleton Material(sidewalk_concrete)
@@ -254,28 +248,6 @@ singleton Material(road_dirt_tracks)
     materialTag0 = "RoadAndPath";
     materialTag1 = "beamng";
     specularMap[0] = "levels/west_coast_usa/art/road/road_dirt_s.dds";
-    //reflectivityMap[0] = "levels/west_coast_usa/art/road/road_asphalt_2lane_r.dds";
-    cubemap = "cubemap_road_sky_reflection";
-    translucent = "1";
-    translucentZWrite = "1";
-    alphaTest = "0";
-    alphaRef = "255";
-    castShadows = "0";
-    specularStrength[0] = "0";
-};
-
-singleton Material(track_edge)
-{
-    mapTo = "unmapped_mat";
-    diffuseMap[0] = "levels/west_coast_usa/art/road/track_edge_d.dds";
-    doubleSided = "0";
-    translucentBlendOp = "LerpAlpha";
-    normalMap[0] = "levels/west_coast_usa/art/road/track_edge_n.dds";
-    specularPower[0] = "1";
-    useAnisotropic[0] = "1";
-    materialTag0 = "RoadAndPath";
-    materialTag1 = "beamng";
-    specularMap[0] = "levels/west_coast_usa/art/road/track_edge_s.dds";
     //reflectivityMap[0] = "levels/west_coast_usa/art/road/road_asphalt_2lane_r.dds";
     cubemap = "cubemap_road_sky_reflection";
     translucent = "1";
@@ -521,28 +493,6 @@ singleton Material(line_white)
    materialTag2 = "driver_training";
 };
 
-singleton Material(line_white)
-{
-    mapTo = "unmapped_mat";
-    diffuseMap[0] = "levels/west_coast_usa/art/road/line_white_d.dds";
-    doubleSided = "0";
-    translucentBlendOp = "LerpAlpha";
-    normalMap[0] = "levels/west_coast_usa/art/road/line_white_n.dds";
-    specularPower[0] = "1";
-    useAnisotropic[0] = "1";
-    materialTag0 = "RoadAndPath";
-    materialTag1 = "beamng";
-    //cubemap = "cubemap_road_sky_reflection";
-    //specularMap[0] = "levels/west_coast_usa/art/road/line_yellowblack_s.dds";
-    translucent = "1";
-    translucentZWrite = "1";
-    alphaTest = "0";
-    alphaRef = "255";
-    castShadows = "0";
-    specularStrength[0] = "0";
-    annotation = "SOLID_LINE";
-};
-
 singleton Material(line_yellow)
 {
     mapTo = "unmapped_mat";
@@ -583,6 +533,29 @@ singleton Material(line_dashed_short)
     translucentZWrite = "1";
     alphaTest = "0";
     alphaRef = "255";
+    castShadows = "0";
+    specularStrength[0] = "0";
+    annotation = "DASHED_LINE";
+};
+
+singleton Material(line_dashed_short_yellow)
+{
+    mapTo = "unmapped_mat";
+    diffuseMap[0] = "levels/west_coast_usa/art/road/line_dashed_short_d.dds";
+    doubleSided = "0";
+    translucentBlendOp = "LerpAlpha";
+    //normalMap[0] = "levels/west_coast_usa/art/road/line_yellowblack_n.dds";
+    specularPower[0] = "1";
+    useAnisotropic[0] = "1";
+    materialTag0 = "RoadAndPath";
+    materialTag1 = "beamng";
+    //cubemap = "cubemap_road_sky_reflection";
+    //specularMap[0] = "levels/west_coast_usa/art/road/line_yellowblack_s.dds";
+    translucent = "1";
+    translucentZWrite = "1";
+    alphaTest = "0";
+    alphaRef = "255";
+    diffuseColor[0] = "1 0.8 0.2 1";
     castShadows = "0";
     specularStrength[0] = "0";
     annotation = "DASHED_LINE";
@@ -763,7 +736,7 @@ singleton Material(AsphaltRoad_variation_01)
     castShadows = "0";
 };
 
-singleton Material(AsphaltRoad_variation_02)
+singleton Material(AsphaltRoad_variation_01)
 {
     mapTo = "AsphaltRoad_variation_01";
     diffuseMap[0] = "AsphaltRoad_variation_02_d.dds";

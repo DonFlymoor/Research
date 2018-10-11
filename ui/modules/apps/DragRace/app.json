@@ -1,0 +1,19 @@
+{
+  "domElement": "<drag-race></drag-race>",
+  "name": "Drag Race POC",
+  "types": [
+    "ui.apps.categories.vehicle_control"
+  ],
+  "css": {
+    "min-width": "500px",
+    "height": "130px",
+    "width": "620px",
+    "left": "200px",
+    "min-height": "160px",
+    "bottom": "0px"
+  },
+  "description": "Drag Race POC.",
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "dragRace"
+}

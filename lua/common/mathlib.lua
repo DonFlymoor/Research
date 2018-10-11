@@ -274,6 +274,10 @@ function LuaVec3:xnormsSphereWithLine(radius, a, b)
   end
 end
 
+function LuaVec3:componentMul(b)
+  return newLuaVec3xyz(self.x * b.x, self.y * b.y, self.z * b.z)
+end
+
 -- Based on http://geomalgorithms.com/a07-_distance.html
 -- returns xnormals for the two lines
 function closestLinePoints(l1p0, l1p1, l2p0, l2p1)
@@ -324,13 +328,12 @@ else
   end
 end
 
--- Returns quat. Input should be normalized
+-- Returns quat. Both inputs should be normalized
 function LuaVec3:getRotationTo(v)
-  local nunv = sqrt(self:squaredLength()*v:squaredLength())
-  local w = nunv + self:dot(v)
+  local w = 1 + self:dot(v)
   local qv
 
-  if (w < 1e-6 * nunv) then
+  if (w < 1e-6) then
     w = 0
     qv = v:perpendicular()
   else
@@ -390,6 +393,7 @@ end
 function LuaQuat:normalize()
   local r = 1/(self:norm() + 1e-30)
   self.x, self.y, self.z, self.w = self.x * r, self.y * r, self.z * r, self.w * r
+  return self
 end
 
 function LuaQuat:normalized()
@@ -440,14 +444,39 @@ function LuaQuat:dot(a)
 end
 
 function LuaQuat:nlerp(a, t)
-  local ti = 1 - t
-  if self:dot(a) < 0 then
-  t = -t
-  end
-  return (self * ti + t * a):normalized()
+  return ((1 - t) * self + (self:dot(a) < 0 and -t or t) * a):normalize()
 end
 
-function quatFromAxesMatrix(m)
+-- returns reverse rotation
+function LuaQuat:conjugated()
+  return newLuaQuatxyzw(-self.x, -self.y, -self.z, self.w)
+end
+
+function LuaQuat:scale(a)
+  self.x, self.y, self.z, self.w = self.x * a, self.y * a, self.z * a, self.w * a
+  return self
+end
+
+--http://bediyap.com/programming/convert-quaternion-to-euler-rotations/
+function LuaQuat.toEulerYXZ(q)
+  local wxsq = q.w*q.w-q.x*q.x
+  local yzsq = q.z*q.z-q.y*q.y
+  return newLuaVec3xyz(
+    math.atan2(2*(q.x*q.y + q.w*q.z), wxsq-yzsq),
+    math.asin(max(-1,min(1,-2*(q.y*q.z - q.w*q.x)))),
+    math.atan2(2*(q.x*q.z + q.w*q.y), wxsq+yzsq))
+end
+
+-- function LuaQuat:pow(a)
+--   self:scale(a)
+--   local vlen = sqrt( self.x*self.x + self.y*self.y + self.z*self.z )
+--   local ret = math.exp(self.w)
+--   local coef = ret * math.sin(vlen) / (vlen + 1e-60)
+
+--   return newLuaQuatxyzw( coef*self.x, coef*self.y, coef*self.z, -ret* math.cos(vlen) )
+-- end
+
+local function quatFromAxesMatrix(m)
   local q = {[0] = 0, 0, 0, 0}
   local trace = m[0][0] + m[1][1] + m[2][2];
   if trace > 0 then
@@ -520,6 +549,24 @@ end
 
 --------------------------------------------------------------------------------
 -- generic things
+function sign2(n)
+  if n >= 0 then return 1 else return -1 end
+end
+
+function sign(n)
+  if n > 0 then return 1 end
+  if n < 0 then return -1 end
+  return 0
+end
+
+function fsign(x) --branchless
+  return x / (abs(x) + 1e-307)
+end
+
+function guardZero(x) --branchless
+  return 1 / max(min(1/x, 1e300), -1e300)
+end
+
 function clamp(x, minValue, maxValue )
   return min(max(x, minValue), maxValue)
 end

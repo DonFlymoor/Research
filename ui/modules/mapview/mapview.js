@@ -103,7 +103,9 @@ angular.module('beamng.stuff')
     ready: 'green',
     bronze: '#cd7f32',
     silver: '#c0c0c0',
-    gold: '#d4af37'
+    gold: '#d4af37',
+    found: 'grey',
+    notFound: 'white'
   }
 
 
@@ -115,6 +117,8 @@ angular.module('beamng.stuff')
       bronze: {color: $scope.colors.bronze, enabled: true},
       silver: {color: $scope.colors.silver, enabled: true},
       gold: {color: $scope.colors.gold, enabled: true},
+      found: {color: $scope.colors.found, enabled: true},
+      notFound: {color: $scope.colors.notFound, enabled: true},
     },
     type: {},
     subtype: {}
@@ -267,9 +271,11 @@ angular.module('beamng.stuff')
       function categorize () {
         if (scope.points !== undefined) {
           scope.cat = [
-            {list: scope.points.filter(e => 'ready' === e.state && e.type !== 'site'), name: "Open"},
+            {list: scope.points.filter(e => ['ready', 'bronze', 'silver'].indexOf(e.state) !== -1 && e.type !== 'site'), name: "Open"},
             {list: scope.points.filter(e => e.state === 'failed' || e.state === 'skipped'), name: "Failed"},
-            {list: scope.points.filter(e => ['bronze', 'silver'].indexOf(e.state) !== -1), name: "Closed"}]
+            {list: scope.points.filter(e => ['gold'].indexOf(e.state) !== -1), name: "Closed"},
+            {list: scope.points.filter(e => e.type === 'photoSafari'), name: "Photo Safari"}
+          ]
         }
       }
       scope.$watch('points', categorize);

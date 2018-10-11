@@ -96,11 +96,15 @@ local function debugDraw(focusPos)
 end
 
 local function settingsChanged()
-  for _,v in pairs(loadedControllers) do
+  for _, v in pairs(loadedControllers) do
     if v.settingsChanged then
       v.settingsChanged()
     end
   end
+end
+
+local function getAllControllers(name)
+  return loadedControllers
 end
 
 local function getController(name)
@@ -120,7 +124,7 @@ end
 
 local function getControllersByType(typeName)
   local controllers = {}
-  for _,v in pairs(loadedControllers) do
+  for _, v in pairs(loadedControllers) do
     if v.typeName == typeName then
       table.insert(controllers, v)
     end
@@ -139,8 +143,8 @@ local function adjustControllersPreInit(controllers)
   local escBehavior = settings.getValue("escBehavior") or "realistic"
   if escBehavior ~= "realistic" then
     if escBehavior == "arcade" and controllers.esc == nil then --only add arcade esc if we don't have a factory esc
-      --we want arcade esc so we add that controller
-      --controllers.escArcade = {fileName = "escArcade"}
+    --we want arcade esc so we add that controller
+    --controllers.escArcade = {fileName = "escArcade"}
     end
   end
   return controllers
@@ -160,9 +164,14 @@ local function init()
   --happily accepts all indexes and can be called without throwing errors
   M.nilController = {}
   local mt = {
-    __index = function(t, _) return t end, --return self when indexing
-    __call = function(t, ...) return t end, --return self when being called
-    __newindex = function(_, _, _) end, --prevent any write access
+    __index = function(t, _)
+      return t
+    end, --return self when indexing
+    __call = function(t, ...)
+      return t
+    end, --return self when being called
+    __newindex = function(_, _, _)
+    end, --prevent any write access
     __metatable = false --hide metatable to prevent any changes to it
   }
   setmetatable(M.nilController, mt)
@@ -174,12 +183,12 @@ local function init()
   end
 
   blacklistLookup = {}
-  for _,v in pairs(blacklist) do
+  for _, v in pairs(blacklist) do
     blacklistLookup[v] = true
   end
 
   local controllers = {}
-  for _,v in pairs(jbeamControllers) do
+  for _, v in pairs(jbeamControllers) do
     if v.fileName and not blacklistLookup[v.fileName] then
       local name = v.name or v.fileName
       controllers[name] = v
@@ -188,9 +197,9 @@ local function init()
 
   controllers = adjustControllersPreInit(controllers)
 
-  local directory = 'controller/'
-  for k,c in pairs(controllers) do
-    local filePath = directory..c.fileName
+  local directory = "controller/"
+  for k, c in pairs(controllers) do
+    local filePath = directory .. c.fileName
     local loadFunc = function()
       local controller = rerequire(filePath)
       if controller then
@@ -225,7 +234,7 @@ local function init()
   if not M.mainController then
     log("W", "controller.init", "No main controller found, adding a dummy controller!")
     local dummyName = "dummy"
-    local controller = require(directory..dummyName)
+    local controller = require(directory .. dummyName)
     if controller then
       loadedControllers[dummyName] = controller
       controller.init()
@@ -242,9 +251,10 @@ local function init()
   for k, v in ipairs(powertrain.getOrderedDevices()) do
     ranks[v.name] = k * 100
   end
-  table.sort(sortedControllers,
-    function(a,b)
-      local ra, rb = ranks[a.relevantDevice or ''] or a.manualOrder or a.defaultOrder or 100000, ranks[b.relevantDevice or ''] or b.manualOrder or b.defaultOrder or 100000
+  table.sort(
+    sortedControllers,
+    function(a, b)
+      local ra, rb = ranks[a.relevantDevice or ""] or a.manualOrder or a.defaultOrder or 100000, ranks[b.relevantDevice or ""] or b.manualOrder or b.defaultOrder or 100000
       a.order = ra
       b.order = rb
       if ra == rb then
@@ -252,14 +262,16 @@ local function init()
       else
         return ra < rb
       end
-    end)
+    end
+  )
 
---  for k,v in pairs(sortedControllers) do
---    print(string.format("%s -> %d", v.name, v.order))
---  end
+  --  for k,v in pairs(sortedControllers) do
+  --    print(string.format("%s -> %d", v.name, v.order))
+  --  end
 
   --backwards compatiblity for old scenario.lua:freeze(), we don't know if any mod ever used this, just here as a precaution
-  scenario = {freeze = function(mode)
+  scenario = {
+    freeze = function(mode)
       log("W", "controller", "scenario.freeze(mode) is deprecated. Please switch to controller.setFreeze(mode)")
       setFreeze(mode)
     end
@@ -334,7 +346,7 @@ local function cacheAllControllerFunctions()
   gameplayEvents = {}
   debugDraws = {}
 
-  for _,controller in ipairs(sortedControllers) do
+  for _, controller in ipairs(sortedControllers) do
     cacheControllerFunctions(controller)
   end
 
@@ -342,7 +354,7 @@ local function cacheAllControllerFunctions()
 end
 
 local function initSecondStage()
-  for _,v in pairs(sortedControllers) do
+  for _, v in pairs(sortedControllers) do
     if v.initSecondStage then
       v.initSecondStage()
     end
@@ -351,8 +363,18 @@ local function initSecondStage()
   cacheAllControllerFunctions()
 end
 
+local function initLastStage()
+  for _, v in pairs(sortedControllers) do
+    if v.initLastStage then
+      v.initLastStage()
+    end
+  end
+
+  cacheAllControllerFunctions()
+end
+
 local function initSounds()
-  for _,v in pairs(sortedControllers) do
+  for _, v in pairs(sortedControllers) do
     if v.initSounds then
       v.initSounds()
     end
@@ -362,7 +384,7 @@ local function initSounds()
 end
 
 local function reset()
-  for _,v in pairs(sortedControllers) do
+  for _, v in pairs(sortedControllers) do
     if not v.reset then
       v.init(controllerJbeamData[v.name])
     end
@@ -370,7 +392,7 @@ local function reset()
 end
 
 local function resetSecondStage()
-  for _,v in pairs(sortedControllers) do
+  for _, v in pairs(sortedControllers) do
     if v.reset then
       v.reset()
     elseif v.initSecondStage then
@@ -381,8 +403,18 @@ local function resetSecondStage()
   cacheAllControllerFunctions()
 end
 
+local function resetLastStage()
+  for _, v in pairs(sortedControllers) do
+    if v.resetLastStage then
+      v.resetLastStage()
+    end
+  end
+
+  cacheAllControllerFunctions()
+end
+
 local function resetSounds()
-  for _,v in pairs(sortedControllers) do
+  for _, v in pairs(sortedControllers) do
     if v.resetSounds then
       v.resetSounds()
     end
@@ -405,7 +437,7 @@ end
 
 local function onSerialize()
   local data = {}
-  for _,controller in ipairs(sortedControllers) do
+  for _, controller in ipairs(sortedControllers) do
     if controller.serialize then
       data[controller.name] = controller.serialize()
     end
@@ -417,6 +449,8 @@ M.init = init
 M.reset = reset
 M.resetSecondStage = resetSecondStage
 M.initSecondStage = initSecondStage
+M.resetLastStage = resetLastStage
+M.initLastStage = initLastStage
 M.initSounds = initSounds
 M.resetSounds = resetSounds
 
@@ -438,11 +472,12 @@ M.onCouplerDetached = nop
 M.onGameplayEvent = nop
 
 M.getController = getController
+M.getAllControllers = getAllControllers
 M.getControllerSafe = getControllerSafe
 M.getControllersByType = getControllersByType
 
 M.settingsChanged = settingsChanged
-M.onDeserialize  = onDeserialize
-M.onSerialize  = onSerialize
+M.onDeserialize = onDeserialize
+M.onSerialize = onSerialize
 
 return M

@@ -101,7 +101,7 @@ end
 local function createVehicle(vehicleName) 
   local modDIR = '/mods/unpacked/' .. vehicleName .. '/vehicles/'.. vehicleName
   -- copying template files to mod directory
-  copyTemplate('game:/ui/modules/modwizard/templates/vehicle/VEHICLE_TEMPLATE/', 'vehicles', vehicleName, nil) 
+  copyTemplate('/ui/modules/modwizard/templates/vehicle/VEHICLE_TEMPLATE/', 'vehicles', vehicleName, nil) 
   -- loading of template files
   local jbeamTemp = readFile(modDIR .. '/VEHICLE_TEMPLATE.jbeam')  
   -- modifying jbeam file   
@@ -115,7 +115,7 @@ end
 -- method used to generate terrain files
 local function createTerrain(terrainName)    
   -- copying template files to mod directory
-  copyTemplate('game:/ui/modules/modwizard/templates/terrain/TERRAIN_TEMPLATE/', 'levels', terrainName, nil)
+  copyTemplate('/ui/modules/modwizard/templates/terrain/TERRAIN_TEMPLATE/', 'levels', terrainName, nil)
   -- template file names
   local fileNames = {
                       'main.level.json', 'info.json', 'TERRAIN_TEMPLATE.ter', 'TERRAIN_TEMPLATE.terrain.json',

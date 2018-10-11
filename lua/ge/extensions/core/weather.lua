@@ -4,22 +4,223 @@
 
 local M = {}
 
+local logTag = "weather.lua"
+--table of values that need to be changed over time
+local values = {}
 local presets = {}
-local currentValues = {}
+--weather condition when starting weather switching
+local formerValues = {}
+--diff values between starting condition and desired weather conditions
+local diff = {}
 
-local function activate(presetName)
-  local p = presets[presetName]
+local timer = 0
+local switchWeatherTimer = 0
+local switch = false
+
+local selectedWeatherPreset = nil
+
+local function getCurrentWeatherPreset()
+  return selectedWeatherPreset
+end
+
+--setter functions
+local function setPoint2F(former, diff)
+  -- log('I', logTag, "weather.lua:setPoint2F()")
+  return Point2F(
+    former[1] + diff[1] * timer / switchWeatherTimer,
+    former[2] + diff[2] * timer / switchWeatherTimer
+  )
+end
+
+local function setPoint3F(former, diff)
+  -- log('I', logTag, "weather.lua:setPoint3F()")
+  return Point3F(
+    former[1] + diff[1] * timer / switchWeatherTimer,
+    former[2] + diff[2] * timer / switchWeatherTimer,
+    former[3] + diff[3] * timer / switchWeatherTimer
+  )
+end
+
+local function setPoint4F(former, diff)
+  -- log('I', logTag, "weather.lua:setPoint4F()")
+  return Point4F(
+    former[1] + diff[1] * timer / switchWeatherTimer,
+    former[2] + diff[2] * timer / switchWeatherTimer,
+    former[3] + diff[3] * timer / switchWeatherTimer,
+    former[4] + diff[4] * timer / switchWeatherTimer
+  )
+end
+
+local function setColor4F(former, diff)
+  -- log('I', logTag, "weather.lua:setColor4F()")
+  return Point4F(
+    former[1] + diff[1] * timer / switchWeatherTimer,
+    former[2] + diff[2] * timer / switchWeatherTimer,
+    former[3] + diff[3] * timer / switchWeatherTimer,
+    former[4] + diff[4] * timer / switchWeatherTimer
+  )
+end
+
+local function setNumber(former, diff)
+  -- log('I', logTag, "weather.lua:setNumber()")
+  return former + diff * timer / switchWeatherTimer
+end
+
+local function getFormerValues(presetName)
+  formerValues = {}
+  local p = deepcopy(presets[presetName])
+
   if not p then
     log('E', 'weather', 'Weather preset not found: ' .. tostring(presetName))
     return
   end
 
   for objClassStr, attribTable in pairs(p) do
+    local objs = getObjectsByClass(objClassStr)
+
+    if objs == nil then
+      log('E', 'weather', 'object class not found: ' .. tostring(objClassStr))
+      goto continue
+    else
+      formerValues[objClassStr] = {}
+      for _, obj in pairs(objs) do
+        local id = obj:getId()
+        formerValues[objClassStr][id] = {}
+        local fields =  obj:getFields()
+        for attrName, attrValue in pairs(attribTable) do
+          formerValues[objClassStr][id][attrName] = {}
+          if fields[attrName].type == 'int' or fields[attrName].type == 'float' and type(attrValue) == 'number' then
+            formerValues[objClassStr][id][attrName]['value'] = obj[attrName]
+            formerValues[objClassStr][id][attrName]['setter'] = setNumber
+          elseif fields[attrName].type == 'ColorF' and type(attrValue) == 'table' and #attrValue == 4 then
+            formerValues[objClassStr][id][attrName]['value'] = stringToTable(obj:getField(attrName, ' '))
+            for k,v in pairs(formerValues[objClassStr][id][attrName]['value']) do
+              formerValues[objClassStr][id][attrName]['value'][k] = tonumber(v)
+            end
+            formerValues[objClassStr][id][attrName]['setter'] = setColor4F
+          elseif fields[attrName].type == 'Point4F' and type(attrValue) == 'table' and #attrValue == 4 then
+            formerValues[objClassStr][id][attrName]['value'] = stringToTable(obj:getField(attrName, ' '))
+            for k,v in pairs(formerValues[objClassStr][id][attrName]['value']) do
+              formerValues[objClassStr][id][attrName]['value'][k] = tonumber(v)
+            end
+            formerValues[objClassStr][id][attrName]['setter'] = setPoint4F
+          elseif fields[attrName].type == 'Point3F' and type(attrValue) == 'table' and #attrValue == 3 then
+            formerValues[objClassStr][id][attrName]['value'] = stringToTable(obj:getField(attrName, ' '))
+            for k,v in pairs(formerValues[objClassStr][id][attrName]['value']) do
+              formerValues[objClassStr][id][attrName]['value'][k] = tonumber(v)
+            end
+            formerValues[objClassStr][id][attrName]['setter'] = setPoint3F
+          elseif type(attrValue) == 'string' then
+            formerValues[objClassStr][id][attrName] = obj[attrName]
+          else
+            log('E', logTag, "Type of attribute " .. attrName .. " not defined yet.")
+            formerValues[objClassStr][id][attrName] = obj[attrName]
+          end
+        end
+      end
+    end
+    ::continue::
+  end
+end
+
+local function diffTable(ta, tb)
+  local t = {}
+  for k,v in pairs(ta) do
+    t[k] = v - tb[k]
+  end
+  return t
+end
+
+local function getDiff(presetName)
+  diff = {}
+  local p = presets[presetName]
+
+  for objClassStr, objs in pairs(formerValues) do
+    diff[objClassStr] = {}
+    for id, obj in pairs(objs) do
+      diff[objClassStr][id] = {}
+      for attrName, attrVal in pairs(obj) do
+        if type(attrVal.value) == 'number' and p[objClassStr][attrName] ~= nil then
+          diff[objClassStr][id][attrName] = (p[objClassStr][attrName] - attrVal.value)
+        elseif type(attrVal.value) == 'table' and p[objClassStr][attrName] ~= nil then
+          diff[objClassStr][id][attrName] = diffTable(p[objClassStr][attrName], attrVal.value)
+        end
+      end
+    end
+  end
+end
+
+local function getValues()
+  values = {}
+
+  for objName, objVal in pairs(formerValues) do
+    local objects = getObjectsByClass(objName)
+    values[objName] = {}
+    for k,object in pairs(objects) do
+      values[objName][object:getId()] = object
+    end
+  end
+end
+
+local function multiplyTable( tbl, factor )
+  for k,v in pairs(tbl) do
+    tbl[k] = tbl[k] * factor
+  end
+  -- dump(tbl)
+end
+
+local function updateWeather()
+  if diff and formerValues then
+    for objClassStr, obs in pairs(formerValues) do
+      for id, o in pairs(obs) do
+        for attrName, attrVal in pairs(o) do
+          values[objClassStr][id][attrName] = formerValues[objClassStr][id][attrName]['setter'](formerValues[objClassStr][id][attrName]['value'], diff[objClassStr][id][attrName])
+        end
+      end
+    end
+  end
+end
+
+local function switchWeather(presetName, t)
+  local p = presets[presetName]
+  if not p then
+    log('I', logTag, "Preset does not exist")
+    return
+  end
+
+  selectedWeatherPreset = presetName
+
+  getFormerValues(presetName)
+  getDiff(presetName)
+  getValues()
+
+  if not t then
+    switchWeatherTimer = 15
+  else
+    switchWeatherTimer = t
+  end
+
+  if switch == false then switch = true end
+
+  timer = 0
+end
+
+local function activate(presetName)
+  -- dump(presets)
+  local p = presets[presetName]
+  if not p then
+    log('E', 'weather', 'Weather preset not found: ' .. tostring(presetName))
+    return
+  end
+
+  selectedWeatherPreset = presetName
+
+  for objClassStr, attribTable in pairs(p) do
     if type(objClassStr) ~= 'string' or type(attribTable) ~= 'table' then
       log('E', 'weather', 'object class or attrib table invalid: ' .. tostring(objClassStr))
       goto continue
     end
-    
+
     local objs = getObjectsByClass(objClassStr)
     if objs == nil then
       log('E', 'weather', 'object class not found: ' .. tostring(objClassStr))
@@ -31,7 +232,7 @@ local function activate(presetName)
             log('E', 'weather', 'object attribute invalid: class = ' .. tostring(objClassStr) .. ', attribute = ' .. tostring(attrName))
             goto continue
           end
-          
+
           local val = nil
           if type(attrValue) == fields[attrName].type then
             val = attrValue
@@ -54,38 +255,30 @@ local function activate(presetName)
           else
             log('D', 'weather',  ' * ' .. tostring(obj.name or '(no name)') .. ' [' .. objClassStr .. '].' .. tostring(attrName) .. ' = ' .. dumps(attrValue) .. ' / ' .. tostring(val))
             obj[attrName] = val
-            currentValues[attrName] = val
+          end
+
+          if objClassStr == "LevelInfo" then
+            obj:postApply()
           end
         end
       end
     end
     ::continue::
   end
-
-
   -- TODO:
   -- materials: specularity change, darken the colors
 end
 
-
---[[
--- test code:
-local time = 0
-local switch = true
 local function onPreRender(dt)
-  time = time + dt
-  print(time)
-  if time > 3 then
-    if not switch then
-      activate('sunny')
-    else
-      activate('rainy')
+  if switch == true then
+    timer = timer + dt
+    updateWeather()
+    if timer > switchWeatherTimer then
+      switch = false
+      timer = 0
     end
-    switch = not switch
-    time = time - 3
   end
 end
---]]
 
 -- loads one preset
 local function loadPreset(filename)
@@ -100,42 +293,64 @@ end
 
 -- loads the global weather files and then the local weather of the level if existing
 local function loadPresets()
-  local missionFile = getMissionFilename()
+  local missionFile = getMissionFilename() -- /levels/small_island/info.json
   if type(missionFile) ~= 'string' or string.len(missionFile) == 0 then return end
 
-  local globalFiles = FS:findFilesByRootPattern('game:art/weather/', '*.json', -1, true, false)
+  -- global weather presets - all weather files saved in /art/weather/
+  local globalFiles = FS:findFilesByRootPattern('art/weather/', '*.json', -1, true, false) -- {"art/weather/defaults.json"}
   for _, v in pairs(globalFiles) do
     loadPreset(v)
   end
 
+  -- level specific weather presets - all weather files saved in the level's weather folder e.g. \levels\driver_training/weather/
+  -- are overriding global presets
   local levelDir, filename, ext = string.match(missionFile, "(.-)([^/]-([^%.]*))$")
-  local levelFiles = FS:findFilesByRootPattern('game:' .. levelDir..'/weather/', '*.json', -1, true, false)
+  local levelFiles = FS:findFilesByRootPattern(levelDir..'/weather/', '*.json', -1, true, false) -- {"levels/driver_training/weather/weather.json"}
   for _, v in pairs(levelFiles) do
     loadPreset(v)
   end
 end
 
+local function getPresets()
+  local p = {}
+  for k,v in pairs(presets) do
+    table.insert(p,k)
+  end
+  return p
+end
+
 local function onExtensionLoaded()
   --log('I', 'weather', "module loaded")
+  formerValues = {}
+  diff = {}
+
+  timer = 0
+  switchWeatherTimer = 0
+  switch = false
+
+  selectedWeatherPreset = nil
+
   loadPresets()
 end
 
 local function onClientPostStartMission(missionFile)
   --log('I', 'weather', "map loaded: " .. tostring(mission))
   loadPresets()
+end
 
-  -- load default preset
-  --if presets['sunny'] then
-  --  activate('sunny')
-  --end
+local function dumpWeatherPresets()
+  dump(presets)
 end
 
 -- public interface below
-
 M.onExtensionLoaded = onExtensionLoaded
 M.onClientPostStartMission = onClientPostStartMission
 --M.loadPresets = loadPresets
 M.activate = activate
---M.onPreRender = onPreRender
+M.switchWeather = switchWeather
+M.getPresets = getPresets
+M.onPreRender = onPreRender
+M.dumpWeather = dumpWeatherPresets
+M.getCurrentWeatherPreset = getCurrentWeatherPreset
 
 return M

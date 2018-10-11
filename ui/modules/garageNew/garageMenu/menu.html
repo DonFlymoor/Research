@@ -1,5 +1,5 @@
 <!-- Header with icons -->
-<div layout="row" layout-align="center center" style="height: 150px;">
+<div layout="row" layout-align="center center" style="height: 120px; position: relative;">
 <!--   <div class="menuItem" layout layout-align="center center">
     <object class="controllerKey" type="image/svg+xml" data="modules/garageNew/elements/lb.svg"></object>
   </div>
@@ -7,8 +7,10 @@
   <!-- <div class="menuItem btn" ng-class="{'active': gp.isState(item.href)}" ui-sref="{{item.href}}" ng-repeat="item in gp.menus" bng-blur radius="30px" layout layout-align="center center" ng-style="{'margin-left': gp.spaceBefore.indexOf(item.name) !== -1 ? '40px' : ''}">
     <md-icon class="material-icons" style="color: inherit; font-size: 48px;">{{:: item.icon}}</md-icon>
   </div> -->
-  
-  <gp-menu-btn class="menuItem" title="{{:: item.name}}" active="gp.isActive(item)" ng-click="gp.handleMenuChange(undefined, $index)" icon="item.icon" ng-repeat="item in gp.menus track by $index" ng-style="{'margin-left': gp.spaceBefore.indexOf(item.name) !== -1 ? '40px' : ''}"></gp-menu-btn>
+
+  <bng-box1x1 class="menuItem" ng-repeat="item in gp.menus track by $index" ng-style="{'margin-left': gp.spaceBefore.indexOf(item.name) !== -1 ? '40px' : ''}">
+    <gp-menu-btn title="{{:: item.name}}" active="gp.isActive(item)" ng-click="gp.handleMenuChange(undefined, $index)" icon="item.icon"></gp-menu-btn>
+  </bng-box1x1>
 
 
   <!-- <div class="menuItem" layout layout-align="center center">
@@ -21,6 +23,6 @@
 <div style="position: relative" flex ui-view></div>
 
 <!-- footer with hints -->
-<div style="height: 100px; margin: 0 5%; font-size: 22px;" layout="row" layout-align="end center">
+<div style="min-height: 40px; height: 10%; max-height: 140px; margin: 0 5%; font-size: 22px;" layout="row" layout-align="end center">
   <bng-nav-possible-actions></bng-nav-possible-actions>
 </div>

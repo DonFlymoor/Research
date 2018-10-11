@@ -83,8 +83,8 @@ local function validateGoalSchema()
   end
 end
 --[[
-this function checks if the passing param is table or array 
-@param t table 
+this function checks if the passing param is table or array
+@param t table
 ]]
 local function istable(t)
     for k, _ in pairs(t) do
@@ -92,7 +92,7 @@ local function istable(t)
             return true
         end
     end
-    return false 
+    return false
 end
 
 local function loadGoals(scenario)
@@ -101,21 +101,21 @@ local function loadGoals(scenario)
   local goals = M.state.goals
   for _,instance in ipairs(scenario.goals.vehicles) do
     local goalName = instance.id
-    local goalPaths = {'scenario/'..goalName, 'scenario/'..goalName..'goal'}    
+    local goalPaths = {'scenario/'..goalName, 'scenario/'..goalName..'goal'}
     local goal = goals[goalName]
     if not goal then
       for _, file in ipairs(goalPaths) do
         if FS:fileExists('lua/ge/extensions/'..file..'.lua') then
           goal = require(file)
-          log("D", logTag, 'Loaded goal: '..file)      
+          log("D", logTag, 'Loaded goal: '..file)
           goals[goalName] = goal
           goto continue
         end
       end
-      ::continue:: 
+      ::continue::
       if not goal then
         log("E", logTag, 'Cannot find goal: '..dumps(goalPaths))
-      end 
+      end
     end
   end
 
@@ -167,7 +167,7 @@ local function initialiseGoals()
           if fobj then
             goal.startPos = fobj:getPosition()
           end
-          table.insert(scenario.goals.vehicles, goal)          
+          table.insert(scenario.goals.vehicles, goal)
         end
          --dump(scenario.goals.vehicles)
       end
@@ -175,55 +175,55 @@ local function initialiseGoals()
   end
   validateGoalSchema()
   loadGoals(scenario)
-  
-  extensions.hook('onRaceGoalsInitilised', scenario) 
+
+  extensions.hook('onRaceGoalsInitilised', scenario)
 end
 
 local function updateGoalsFinalStatus()
   local scenario = scenario_scenarios.getScenario()
   if not scenario then return end
-  
+
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.updateFinalStatus(scenario)
-  end      
+  end
 end
 
 local function onRaceStart()
   local scenario = scenario_scenarios.getScenario()
   if not scenario then return end
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.processState(scenario, 'onRaceStart')
-  end      
+  end
 end
 
 local function onRaceInit()
   local scenario = scenario_scenarios.getScenario()
-  if not scenario then return end  
+  if not scenario then return end
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.processState(scenario, 'onRaceInit')
-  end   
+  end
 end
 
 local function onRaceWaypointReached(data)
   local scenario = scenario_scenarios.getScenario()
-  if not scenario then return end  
+  if not scenario then return end
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.processState(scenario, 'onRaceWaypointReached', data)
-  end  
+  end
 end
 
 local function onRaceTick(raceTickTime, scenarioTimer)
   local scenario = scenario_scenarios.getScenario()
-  if not scenario then return end  
+  if not scenario then return end
   local data = {raceTickTime=raceTickTime, scenarioTimer=scenarioTimer}
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.processState(scenario, 'onRaceTick', data)
-  end    
+  end
 end
 
 local function onRaceResult(status)
@@ -232,18 +232,18 @@ local function onRaceResult(status)
 
   scenario.finalStatus = status
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.processState(scenario, 'onRaceResult')
   end
 end
 
 local function onCountdownEnded()
   local scenario = scenario_scenarios.getScenario()
-  if not scenario then return end  
+  if not scenario then return end
   local goals = M.state.goals
-  for i, goal in pairs(goals) do                         
+  for i, goal in pairs(goals) do
     goal.processState(scenario, 'onCountdownEnded')
-  end  
+  end
 end
 
 M.onRaceWaypointReached = onRaceWaypointReached
@@ -255,4 +255,5 @@ M.onRaceEnd = onRaceEnd
 M.updateGoalsFinalStatus = updateGoalsFinalStatus
 M.onCountdownEnded = onCountdownEnded
 M.initialiseGoals = initialiseGoals
+
 return M

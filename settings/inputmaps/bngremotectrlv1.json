@@ -1,0 +1,20 @@
+{
+"bindings" :   [
+    {
+    "isInverted"        : true                , 
+    "filterType"        : 2,
+    "action"            : "steering"      , 
+    "control"           : "xaxis"             , 
+    }, 
+    {
+    "action"            : "accelerate"        , 
+    "control"           : "button1"           , 
+    }, 
+    {
+    "action"            : "brake"             , 
+    "control"           : "button0"           , 
+    }, 
+  ], 
+"name"              : "BeamNG Remote Controller", 
+"vidpid"            : "bngremotectrlv1"   
+}, 

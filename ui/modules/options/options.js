@@ -19,7 +19,7 @@ angular.module('beamng.stuff')
 
       checkboxGroup2: [
         { name: 'ui.options.graphics.GraphicAntialiasType',   key: 'GraphicAntialiasType',   customOnly: false},
-        { name: 'ui.options.graphicsGraphicMeshQuality',      key: 'GraphicMeshQuality',     customOnly: true},
+        { name: 'ui.options.graphics.GraphicMeshQuality',     key: 'GraphicMeshQuality',     customOnly: true},
         { name: 'ui.options.graphics.GraphicTextureQuality',  key: 'GraphicTextureQuality',  customOnly: false},
         { name: 'ui.options.graphics.GraphicLightingQuality', key: 'GraphicLightingQuality', customOnly: false},
         { name: 'ui.options.graphics.GraphicShaderQuality',   key: 'GraphicShaderQuality',   customOnly: false},
@@ -38,7 +38,6 @@ angular.module('beamng.stuff')
     audio: {
       selectGroup1: [
         { name: 'ui.options.audio.audioProvider', key: 'AudioProvider'},
-        { name: 'ui.options.audio.audioDevice',   key: 'AudioDevice'}
       ],
 
       volumeSliders: [
@@ -675,9 +674,9 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
         <md-list-item layout>
           <span flex="35">Fast Smoothing</span>
           <md-tooltip md-direction="">Amount of filtering during <strong>sudden</strong> steering wheel movements</md-tooltip>
-          <md-slider ng-model="data.ffb.smoothingHF" flex min="0" max="250" step="10" aria-label="_"></md-slider>
+          <md-slider ng-model="data.ffb.smoothingHF" flex min="0" max="500" step="10" aria-label="_"></md-slider>
           <md-input-container class="bng-controls-aux-input">
-            <input aria-label="_" type="number" min="0" max="250" step="10" ng-model="data.ffb.smoothingHF">
+            <input aria-label="_" type="number" min="0" max="500" step="10" ng-model="data.ffb.smoothingHF">
           </md-input-container>
         </md-list-item>
 

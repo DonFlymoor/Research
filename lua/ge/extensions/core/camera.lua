@@ -169,7 +169,8 @@ local function isCameraInside(player)
 end
 
 local function getCameraDataById(vid)
-  return vehicleData[vid].cameras
+  return (vehicleData[vid] or vehicleDataOld[vid]).cameras
+  -- return vehicleDataOld[vid].cameras
 end
 
 local function getActiveCamName(player)
@@ -303,7 +304,7 @@ local function processVehicleCameraConfigChanged(vid)
     -- and then deserialize, so we can follow the user settings
     savedConfiguration = readJsonData(savedConfiguration)
     -- if user settings version is good, go ahead and use it
-    if (savedConfiguration.version or 0) >= currentVersion then
+    if savedConfiguration and (savedConfiguration.version or 0) >= currentVersion then
       initialConfiguration = savedConfiguration.data
     end
   end
@@ -464,8 +465,6 @@ local function onUpdate(dtReal, dtSim, dtRaw)
   local player = 0
   local veh = be:getPlayerVehicle(player)
   if not veh then return end
-  local interiorValue=nil
-  local cameraPosition=nil
   local vid = veh:getID()
   local vdata = vehicleData[vid]
 

@@ -1,0 +1,17 @@
+{
+  "domElement": "<sandbox-test-app></sandbox-test-app>",
+  "name": "Sandbox Test App",
+  "types": [
+    "ui.apps.categories.utility"
+  ],
+  "description": "",
+  "css": {
+    "left": "0px",
+    "top": "0px",
+    "height": "40px",
+    "width": "80px"
+  },
+  "author": "BeamNG",
+  "version": "0.1",
+  "directive": "sandboxTestApp"
+}

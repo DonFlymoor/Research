@@ -194,5 +194,13 @@ function ($scope, $rootScope, $timeout, logger, bngApi, InstalledContent, Utils,
     bngApi.engineLua('core_vehicles.getCurrentVehicleDetails()', (res) => { // Getting currently used vehicle details.
       vm.current = res.current;
     })
+        loadVehicle();
+      }
+    })
+  };
+
+  bngApi.engineLua('core_vehicles.getCurrentVehicleDetails()', (res) => { // Getting currently used vehicle details.
+    vm.current = res.current;
+  })
 
 }])

@@ -86,11 +86,14 @@ local function startLevelActual(missionFileName)
 
 
   server.createGame(missionFile)
-  core_gamestate.requestExitLoadingScreen()
+  core_gamestate.requestExitLoadingScreen(logTag)
 end
 
 local function startLevelWrapper (missionFile)
-  core_gamestate.requestEnterLoadingScreen()
+  -- restirct from calling again until done
+  if core_gamestate.getLoadingStatus(logTag) then return end
+
+  core_gamestate.requestEnterLoadingScreen(logTag)
   local function help ()
     return startLevelActual(missionFile)
   end

@@ -127,7 +127,7 @@ local function _parseVehicleNameBackwardCompatibility(vehicleName)
     end
 
     -- get .pc files and fix them up for the new system
-    local pcfiles = FS:findFilesByRootPattern("game:vehicles/" .. vehicleName .. "/", "*.pc", 0, true, false)
+    local pcfiles = FS:findFilesByRootPattern("vehicles/" .. vehicleName .. "/", "*.pc", 0, true, false)
     for k,v in pairs(pcfiles) do
         local dir, filename, ext = path.split(v)
         if dir and filename and ext and ext == "pc" then
@@ -215,7 +215,7 @@ end
 
 -- gets all files related to vehicle info
 local function _getFiles ()
-  local jfiles = FS:findFilesByRootPattern("game:/vehicles/", "*.j*\t*.pc", -1, true, false)
+  local jfiles = FS:findFilesByRootPattern("vehicles/", "*.j*\t*.pc", -1, true, false)
   files = {}
   filesJBEAM = {}
   filesPC = {}
@@ -232,9 +232,9 @@ local function _getFiles ()
   filesJBEAM = addDirs(filesJBEAM)
   filesPC = addDirs(filesPC)
 
-  -- files       = FS:findFilesByRootPattern("game:/vehicles/", "*.json", -1, true, true)
-  -- filesJBEAM  = FS:findFilesByRootPattern("game:/vehicles/", "*.jbeam", -1, true, true)
-  -- filesPC     = FS:findFilesByRootPattern("game:/vehicles/", "*.pc", 1, true, true)
+  -- files       = FS:findFilesByRootPattern("vehicles/", "*.json", -1, true, true)
+  -- filesJBEAM  = FS:findFilesByRootPattern("vehicles/", "*.jbeam", -1, true, true)
+  -- filesPC     = FS:findFilesByRootPattern("vehicles/", "*.pc", 1, true, true)
 end
 
 -- returns all found model names
@@ -337,7 +337,7 @@ local function _modelConfigsHelper (key, model, ignoreCache, pcs)
       local fn = "vehicles/" .. key .. "/info_" .. configName .. ".json"
       local readData = {}
       if FS:fileExists(fn) then
-        readData = readJsonFile("game:" .. fn)
+        readData = readJsonFile(fn)
         if readData == nil then
           log('E', 'vehicles', 'unable to read info file, ignoring: '.. fn)
           readData = {}
@@ -417,7 +417,7 @@ local function getModel (key, ignoreCache, forcePcs)
 
     local model = {}
 
-    local data = readJsonFile("game:vehicles/"..key.."/info.json")
+    local data = readJsonFile("vehicles/"..key.."/info.json")
 
     local fixedVehicle = false
     if data == nil then
@@ -651,7 +651,7 @@ end
 local function sendSimpleVehicleList ()
   local models = getModelNames()
   local res = {}
-  local acceptTypes = {'Car', 'Truck'}
+  local acceptTypes = {'Car', 'Truck', 'Automation'}
 
   for _, key in pairs(models) do
     local model = getModel(key)
@@ -726,8 +726,7 @@ end
 -- config: key
 -- color can be a key from the colors list or an rgb string with spaces as seperators i.e "5 5 5"
 -- pos should be a string with xyz coordinates as string with spaces as seperators i.e "5 5 5"
-local function spawnNewVehicle (key, opt)
-  local firstVehicle = (be:getObjectCount() == 0)
+local function sanitizeOptions(key, opt)
   local options = spawnFilldefaults(key, opt)
 
   if type(options.color) == 'string' then
@@ -756,7 +755,10 @@ local function spawnNewVehicle (key, opt)
     options.color3 = nil
   end
 
-  local rot = quat(1, 0, 0, 0)
+  options.licenseText = opt.licenseText
+  options.vehicleName = opt.vehicleName
+
+  options.rot = quat(1, 0, 0, 0)
   local dir = vec3(0, -1, 0)
 
   if getCamera() and getCamera():isSubClassOf('BeamNGVehicle') then
@@ -764,38 +766,67 @@ local function spawnNewVehicle (key, opt)
     for k, v in pairs(map.objects) do
       if k == playerVehicleID then
         dir = v.dirVec:normalized()
-        rot = quatFromDir(dir)
+        options.rot = quatFromDir(dir)
       end
     end
-    if options.pos then
-      spawn.spawnVehicle(key, options.config, options.pos, rot, options.color, options.color2, options.color3)
-    else
+    if not options.pos then
       local playerVehicle = be:getPlayerVehicle(0)
       local offset = vec3(-dir.y, dir.x, 0)
-      local pos = vec3(playerVehicle:getPosition()) + offset*5
-      spawn.spawnVehicle(key, options.config, pos, rot, options.color, options.color2, options.color3)
+      options.pos = vec3(playerVehicle:getPosition()) + offset * 5
     end
   else
+    if not options.pos then
+      options.pos = vec3(0, 0, 0)
+    end
+
     local camera = commands.getCamera(commands.getGame())
-    local freecam = vec3(0, 0, 0)
-    if camera then freecam = camera:getPosition(); rot = camera:getRotation() end
-    spawn.spawnVehicle(key, options.config, freecam, quat(rot.x, rot.y, rot.z, rot.w), options.color, options.color2, options.color3)
+    if camera then
+      options.pos = camera:getPosition();
+      local camRot = camera:getRotation()
+      options.rot = quat(camRot.x, camRot.y, camRot.z, camRot.w)
+    end
   end
 
+  return options
+end
+
+local function finalizeSpawn(options)
+  local firstVehicle = (be:getObjectCount() == 0)
   if firstVehicle then
     local player = 0
     be:enterNextVehicle(player, 0) -- enter any vehicle
   end
   commands.setGameCamera()
 
-  if opt.licenseText then
-    local vehicle = be:getPlayerVehicle(0)
-    vehicle:setDynDataFieldbyName("licenseText", 0, opt.licenseText)
+  local vehicle = be:getPlayerVehicle(0)
+  if options.licenseText then
+    vehicle:setDynDataFieldbyName("licenseText", 0, options.licenseText)
+  end
+
+  if options.vehicleName then
+    vehicle:setField('name', '', options.vehicleName)
   end
 
   if be:getObjectCount() > 1 then
     ui_message("Press [action=switch_next_vehicle] or [action=switch_previous_vehicle] to switch vehicle", 10, "spawn")
   end
+end
+
+local function spawnNewVehicle (key, opt)
+  local options = sanitizeOptions(key, opt)
+
+  spawn.spawnVehicle(key, options.config, options.pos, options.rot, options.color, options.color2, options.color3)
+
+  finalizeSpawn(options)
+end
+
+local function replaceCurrentVehicle (key, opt)
+  local options = sanitizeOptions(key, opt)
+
+  local playerVehicle = be:getPlayerVehicle(0)
+  spawn.setVehicleObject(playerVehicle, key, options.config, options.pos, options.rot, options.color, options.color2, options.color3)
+
+  finalizeSpawn(options)
 end
 
 local function removeCurrent()
@@ -823,8 +854,8 @@ local function replaceVehicle (key, opt)
   else -- spawn new vehicle in place and remove current
     local current = be:getPlayerVehicle(0)
     opt.pos = current:getPosition()
-    spawnNewVehicle(key, opt)
-    current:delete()
+    opt.vehicleName = current:getField('name', '')
+    replaceCurrentVehicle(key, opt)
   end
 end
 
@@ -905,7 +936,7 @@ local function spawnDefault ()
     local data = readJsonFile('settings/default.pc')
     spawnNewVehicle(data.model, {config = 'settings/default.pc'})
   else
-    spawnNewVehicle("etk800")
+    spawnNewVehicle(defaultVehicleModel)
   end
 end
 

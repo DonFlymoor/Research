@@ -13,9 +13,9 @@
         </div>
       </div>
     </div>
-  
+
     <gp-panel class="infoPanelLeft" rotated="true" style="width: 300px; position: absolute; top: 25%; left: 5%;" no-padding="true" default-active="true">
-      <gp-panel-tab icon="photo_camera" title="{{:: 'ui.garage.photo.camera' | translate}}" style="direction: ltr;" bng-nav-root>
+      <gp-panel-tab icon="material_photo_camera" title="{{:: 'ui.garage.photo.camera' | translate}}" style="direction: ltr;" bng-nav-root>
         <div style="min-height: 150px;">
           <gp-input-list-item title="ui.photomode.fov" val="gpPhoto.settings.fov" fixed="1" flex root-active="true">
             <bng-slider flex ng-model="gpPhoto.settings.fov" min="5" max="120" step="0.5" aria-label="_"></bng-slider>
@@ -24,7 +24,7 @@
           <gp-input-list-item title="ui.photomode.roll" val="gpPhoto.settings.roll" fixed="0" flex>
             <bng-slider flex ng-model="gpPhoto.settings.roll" min="-200" max="200" step="1" aria-label="_"></bng-slider>
           </gp-input-list-item>
-        
+
           <gp-input-list-item title="ui.photomode.cameraSpeed" val="gpPhoto.settings.cameraSpeed" fixed="1" flex>
             <bng-slider flex ng-model="gpPhoto.settings.cameraSpeed" min="2" max="100" step="0.5" aria-label="_"></bng-slider>
           </gp-input-list-item>
@@ -37,7 +37,7 @@
       </gp-panel-tab>
 
 
-      <gp-panel-tab icon="cloud_queue" title="{{:: 'ui.environment.environment' | translate}}" style="direction: ltr;" bng-nav-root>
+      <gp-panel-tab icon="material_cloud_queue" title="{{:: 'ui.environment.environment' | translate}}" style="direction: ltr;" bng-nav-root>
         <div style="min-height: 150px;">
           <md-list-item layout flex md-no-ink bng-nav-item root-active-focus="true" ng-focus="selectFocused = true" ng-blur="selectFocused = false" ng-class="{color1: selectFocused}">
             <p flex>{{ 'ui.environment.play' | translate}}</p>
@@ -64,7 +64,7 @@
 
       <!-- Extra hidden features! whoa! -->
       <!-- but no gamepad nav for this atm -->
-      <gp-panel-tab icon="add" title="{{:: 'ui.garage.photo.special' | translate}}" ng-if="!gpPhoto.shipping && gpPhoto.devMode" style="direction: ltr;" bng-nav-root>
+      <gp-panel-tab icon="material_add" title="{{:: 'ui.garage.photo.special' | translate}}" ng-if="!gpPhoto.shipping && gpPhoto.devMode" style="direction: ltr;" bng-nav-root>
         <div style="min-height: 250px; width: 100%;" layout="column">
           <md-button md-no-ink ng-click="gpPhoto.openPostFXManager()" class="md-raised">
             {{ 'ui.photomode.postfx' | translate}}

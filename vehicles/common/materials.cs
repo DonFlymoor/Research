@@ -1945,6 +1945,27 @@ singleton Material(bigwing_03a)
     materialTag0 = "beamng"; materialTag1 = "vehicle";
 };
 
+singleton Material(racingseat)
+{
+    mapTo = "racingseat";
+    diffuseMap[0] = "vehicles/common/null.dds";
+    diffuseMap[1] = "vehicles/common/racingseat_d.dds";
+    normalMap[0] = "vehicles/common/racingseat_n.dds";
+    normalMap[1] = "vehicles/common/racingseat_n.dds";
+    specularMap[0] = "vehicles/common/null.dds";
+    specularMap[1] = "vehicles/common/racingseat_s.dds";
+    specularPower[0] = "32";
+    specularPower[1] = "8";
+    useAnisotropic[1] = "1";
+    diffuseColor[0] = "1 1 1 1";
+    diffuseColor[1] = "1 1 1 1";
+    castShadows = "1";
+    alphaTest = "0";
+    alphaRef = "0";
+    cubemap = "global_cubemap_metalblurred";
+    materialTag0 = "beamng"; materialTag1 = "vehicle";
+};
+
 singleton Material(semi_reverselight)
 {
     mapTo = "semi_reverselight";

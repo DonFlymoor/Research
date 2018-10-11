@@ -19,7 +19,7 @@ local endUIDisplayed = false
 local inputActionFilter = require('input_action_filter')
 inputActionFilter.setGroup('camera_blacklist', {"toggleCamera", "switch_camera_next", "dropCameraAtPlayer"} )
 inputActionFilter.setGroup('default_blacklist_scenario', {"switch_next_vehicle", "switch_previous_vehicle", "loadHome", "saveHome", "recover_vehicle", "reload_vehicle",
-  "vehicle_selector", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender", "slower_motion", "faster_motion", "realtime_motion", "slow_motion"} )
+                            "vehicle_selector", "parts_selector", "dropPlayerAtCamera", "nodegrabberRender", "slower_motion", "faster_motion", "realtime_motion", "slow_motion"} )
 inputActionFilter.setGroup('default_whitelist_scenario', {} )
 inputActionFilter.setGroup('default_whitelist_campaign', {} )
 
@@ -107,6 +107,7 @@ end
 
 local function changeState(newState)
   if not scenario then return end
+ 
   log('D', logTag, 'changeState: ' .. tostring(newState))
 
   scenario.state = newState
@@ -133,7 +134,7 @@ local function changeState(newState)
     raceMarker.init()
     if scenario_raceGoals then scenario_raceGoals.initialiseGoals() end
     scenario_waypoints.initialise()
-
+    
     freezeAll(1)
   elseif scenario.state == 'running' and scenario.raceState == '' then
     -- the scenario just entered running state
@@ -204,10 +205,10 @@ local function getRaceDistance(scenario)
       distance = distance + (pos2 - pos1):len()
     else
       if not node2 then
-        log('I', 'scenario.race', 'node2 is null: '..scenario.lapConfig[i + 1])
+        log('D', 'scenario.race', 'node2 is null: '..scenario.lapConfig[i + 1])
       end
       if not node1 then
-        log('I', 'scenario.race', 'node1 is null: '..scenario.lapConfig[i])
+        log('D', 'scenario.race', 'node1 is null: '..scenario.lapConfig[i])
       end
     end
   end
@@ -230,12 +231,8 @@ local function continueScenario()
   bullettime.pause(false)
 end
 
-local function onRaceEnd()
-
-end
-
 local function endRace(countDownTime)
-  log('I', logTag, 'endRace called...'..tostring(countDownTime))
+  -- log('D', logTag, 'endRace called...'..tostring(countDownTime))
 
   if not scenario then return end
 
@@ -330,8 +327,6 @@ local function stop()
   -- revert filtered bindings
   inputActionFilter.clear(0)
 
-  restoreLevelState()
-
   scenario = nil
 
   guihooks.trigger('ScenarioChange', scenario)
@@ -366,7 +361,7 @@ local function gatherEndStats()
     if campaign_campaigns.isCampaignOver(scenario) then
       buttonLabel = 'ui.common.finish'
     end
-    statsData.buttons={{label='ui.common.retry', cmd='campaign_campaigns.uiEventRetry()', active = scenario.result.failed}, {label='ui.common.menu', cmd='openMenu'}, {label=buttonLabel, cmd='campaign_campaigns.uiEventNext()', active = not scenario.result.failed}}
+    statsData.buttons={{label='ui.common.retry', cmd='scenario_scenarios.uiEventRetry()', active = scenario.result.failed}, {label='ui.common.menu', cmd='openMenu'}, {label=buttonLabel, cmd='campaign_campaigns.uiEventNext()', active = not scenario.result.failed}}
   elseif scenario_quickRace then
     statsData.buttons={{label='ui.common.retry', cmd='scenario_scenarios.uiEventRetry()', active = scenario.result.failed}, {label='ui.scenarios.end.freeroam', cmd='scenario_scenarios.uiEventFreeRoam()'}, {label='ui.common.menu', cmd='openMenu'}, {label='ui.quickrace.changeConfig', cmd='openQuickrace'}}
   else
@@ -512,7 +507,10 @@ end
 -- failed: if not nil, the scenario is considered to be failed. Contains a string with the failure reason
 -- msg: the message to be displayed if successful
 -- tl;dr: set 'failed'  to a string on failure, otherwise do not specify it. Set msg on success.
+
+-- TODO(AK): We should pool results for everywhere instead of having each one try to set the scenario final outcome
 local function finish(result)
+  -- IMPORTANT: Do NOT add a check for scenario.state == 'finished'. This prevents goals and custom lua from setting their result state
   if scenario.state == 'post' then
     if not scenario.displayedMultipleFinished then
       log('W', logTag, 'Scenario: '..scenario.name..' already finished. Aborting extra finish call.')
@@ -521,13 +519,13 @@ local function finish(result)
     return
   end
 
-  scenario.cachedFinshResult = result
+  scenario.cachedFinishResult = result
   endRace(0)
 end
 
 -- called on level unloading
 local function onClientEndMission(mission)
-  log('I', logTag, 'onClientEndMission called - mision = '.. tostring(mission)..' scenario.mission = '..tostring(scenario and scenario.mission or 'nil'))
+  log('D', logTag, 'onClientEndMission called - mision = '.. tostring(mission)..' scenario.mission = '..tostring(scenario and scenario.mission or 'nil'))
   if scenario ~= nil and mission == scenario.mission then
     stop()
   end
@@ -640,7 +638,7 @@ local function processVehiclesInScene()
   if not scenario then return end
 
   local vehicles = scenetree.findClassObjects('BeamNGVehicle')
-  log('D', logTag, "found " .. #vehicles .. " vehicles")
+  log('D', logTag, "processing vehicles. Found " .. #vehicles .. " vehicles")
   scenario.vehicleNameToId = {}
   scenario.vehicleIdToName = {}
   scenario.playerUsableVehicles = {}
@@ -741,7 +739,7 @@ local function processWaypointsInScene()
           scenario.nodes[wp].pos = vec3(scenario.nodes[wp].pos)
           scenario.nodes[wp].rot = vec3(scenario.nodes[wp].rot)
         else
-          log('E', logTag, 'unable to find waypoint: ' .. tostring(wp))
+          log('E', logTag, 'unable to find waypoint: ' .. dumps(wp))
         end
       end
     end
@@ -809,6 +807,10 @@ local function onClientStartMission(mission)
       end
     end
   end
+
+  -- TODO(AK): this is only here to fix http://home/redmine/issues/2863 - [QA] Prefab loose collisions on campaign mode
+  -- We do not ultimately want this here. This should be part of the flow and not in a callback.
+  be:physicsStartSimulation()
 
   -- Spawn any user selected vehicles
   if scenario.userSelectedVehicle then
@@ -934,14 +936,6 @@ local function executeScenario(sc)
   displayEndUITimer = 0
   endUIDisplayed = false
 
-  -- improve the data a little bit
-  scenario.mission = 'levels/'..scenario.levelName..'/main.level.json'
-
-  if not FS:fileExists(scenario.mission) then
-    -- Fallback to old MIS file
-    scenario.mission = 'levels/'..scenario.levelName..'/'..scenario.levelName..'.mis'
-  end
-
   --load the scenario extension
   loadExtentions(scenario)
 
@@ -951,8 +945,7 @@ local function executeScenario(sc)
     -- yes, change level, but disable the player autospawning
     log('D', logTag, 'loading level: ' .. scenario.mission)
     TorqueScript.eval('$preventPlayerSpawning="1";')
-
-    beamng_cef.startLevel('levels/'..scenario.levelName..'/')--Tested&Works
+    beamng_cef.startLevel(scenario.mission)
   else
     -- already in the level, just load the scenario
     log('D', logTag, 'no need to load the level, already in there')
@@ -976,7 +969,7 @@ local function restartScenario()
   scenario.playerHasStopped = nil
   scenario.displayEndUIRefs = 0
   scenario.stats = nil
-  scenario.cachedFinshResult = nil
+  scenario.cachedFinishResult = nil
   scenario.lapConfig = deepcopy(scenario.initialLapConfig)
 
   -- TODO(AK): This is such a bad approach. If you add a temp field and forget to delete it like those above, it persists to next try
@@ -1295,45 +1288,6 @@ local function onCameraModeChanged(modeName)
   end
 end
 
--- dialog stuff:
-local dialog;
-local dialogQueue
-
-local function processdialogQueue ()
-  if #dialogQueue > 0 then
-    dialog = table.remove(dialogQueue, 1);
-
-    if dialog.type == 'dialog' then
-      guihooks.trigger('loadDialog', {path = dialog.path})
-    end
-
-    if dialog.type == 'images' then
-      guihooks.trigger('ChangeState', {state ='imageviewer', params = {useKeys = true}})
-    end
-
-    if dialog.type == 'dialogImgs' then
-      guihooks.trigger('ChangeState', {state ='imageviewer', params = {useKeys = false}})
-    end
-  else
-    guihooks.trigger('ScenarioFlashMessage', {{3,1, true},{2,1, true},{1,1, true},{"go!", 1, "extensions.hook('onContinueScenario')", true}})
-  end
-end
-
-local function onRaceWaypointReached (data)
-  local playerVehicleId = be:getPlayerVehicleID(0)
-  if data.vehicleId ~= playerVehicleId then return end
-
-  dialog = nil -- just in case
-  dialogQueue = nil -- just in case
-
-  if scenario.dialogs and scenario.dialogs[data.waypointName] ~= nil  then
-    dialogQueue = scenario.dialogs[data.waypointName];
-    extensions.hook('onPauseScenario')
-    log('D', logTag, 'Found dialog option. paused physics')
-    processdialogQueue()
-  end
-end
-
 local function onDespawnObject(id, isReloading)
   --print('onDespawnObject '..tostring(id)..' '..tostring(isReloading))
 end
@@ -1359,7 +1313,7 @@ end
 
 local function uiEventRetry()
   log('D', logTag, 'uiEventRetry Triggered')
-  be:resetVehicle(0);
+  restartScenario()
   prepareStartUI()
 end
 
@@ -1407,7 +1361,7 @@ local function getVehicleName(vehicleID)
 end
 
 local function trackVehicleMovementAfterDamage(vehicleName, trackingOptions)
-  log('A', logTag, 'trackVehicleMovementAfterDamage called....')
+  -- log('D', logTag, 'trackVehicleMovementAfterDamage called....')
   if scenario then
     if not  scenario.vehicleTrackingTable then
        scenario.vehicleTrackingTable = {}
@@ -1425,7 +1379,7 @@ local function trackVehicleMovementAfterDamage(vehicleName, trackingOptions)
                                                     initialDamage=vehicleDamage, lastDamage=vehicleDamage,
                                                     vehMomentumLimit=vehMomentumLimit, waitTimerLimit=waitTimerLimit, crashedWaitTimer=0.0}
     else
-      log('W', logTag, 'could not find vehicle: '..vehicleName)
+      log('W', logTag, 'track vehicle movment could not find vehicle: '..vehicleName)
     end
     --dump(scenario.vehicleTrackingTable)
   end
@@ -1591,10 +1545,10 @@ local function tickRunning(dt, dtSim)
         local vehicleData = map.objects[vehicleID]
         -- log('A', logTag, 'vehName: '..vehName..', No. Collisions: '..tableSize(vehicleData.objectCollisions))
         -- dump(vehicleData.objectCollisions)
-        if vehicleData and tableSize(vehicleData.objectCollisions) > 0 then
+        if vehicleData and vehicleData.objectCollisions then
           -- log('A', logTag, 'vehicleData.objectCollisions')
           -- dump(vehicleData.objectCollisions)
-          for otherObjID,state in pairs(vehicleData.objectCollisions) do
+          for otherObjID, state in pairs(vehicleData.objectCollisions) do
             -- log('A', logTag, 'otherObjID: '..otherObjID..', State: '..state)
             if state == 1 then
               local vehEventTable = reportedEvents[vehicleID]
@@ -1688,7 +1642,7 @@ local function tickFinished(dt, dtSim)
     return
   end
 
-  log( 'I', logTag, 'endRaceCountdown triggered...' )
+  -- log( 'D', logTag, 'endRaceCountdown triggered...' )
   endRaceCountdown = 0
 
   finalTime = finalTime or scenario.timer or 0
@@ -1696,7 +1650,7 @@ local function tickFinished(dt, dtSim)
 
   extensions.hook('onRaceResult', { finalTime = finalTime } )
 
-  local result =  scenario.cachedFinshResult or {msg = scenario.defaultWin} or {msg = {txt = 'extensions.scenario.onRaceEnd.default.win', context = {timeStr = timeStr}}}
+  local result =  scenario.cachedFinishResult or {msg = scenario.defaultWin} or {msg = {txt = 'extensions.scenario.onRaceEnd.default.win', context = {timeStr = timeStr}}}
   result.finalTime = finalTime
   result.finalTimeStr = timeStr
 
@@ -1805,7 +1759,7 @@ local function onVehicleSpawned(vehicleId)
     ::continue::
   elseif scenario and scenario.userSelectedVehicle and scenario.userSpawningData then
     local playerVehId = be:getPlayerVehicleID(0)
-    log('I', logTag, 'onVehicleSpawned PlayerID: '..tostring(playerVehId)..' Spawned: '..tostring(vehicleId))
+    -- log('D', logTag, 'onVehicleSpawned PlayerID: '..tostring(playerVehId)..' Spawned: '..tostring(vehicleId))
     -- TODO(AK): Find a match instead of assuming it is correct
     if not playerVehId or (vehicleId == playerVehId) then
         spawnedVehicle:setField('name', '', 'scenario_player0')
@@ -1821,14 +1775,31 @@ local function onVehicleSpawned(vehicleId)
           end
 
           spawnedVehicle:setPositionRotation(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+          processVehicleStartingTransform()
         end
     end
   end
 end
 
+local function onVehicleSelected(vehicleData)
+  -- log('I', logTag, 'onVehicleSelected called ...')
+  -- dump(vehicleData)
+  if vehicleData.model and vehicleData.config then
+    scenario.userSpawningData = createPlayerSpawningData(vehicleData.model, vehicleData.config, vehicleData.color, vehicleData.licenseText)
+    local currentUserVehicle = be:getPlayerVehicle(0)
+    if currentUserVehicle then
+      core_vehicles.replaceVehicle(scenario.userSpawningData.model, scenario.userSpawningData.options)
+    else
+      --Add set to correct Loading spot. if not the new car spawns at 0,0,0 (more likely at a random place)
+      core_vehicles.spawnNewVehicle(scenario.userSpawningData.model, scenario.userSpawningData.options)
+    end
+    freezeAll(1)
+  end
+end
+
 local function onVehicleResetted(vehicleID)
-  -- log('I', logTag, 'onVehicleResetted called for '..vehicleID)
   if scenario and scenario.state == 'restart' and scenario.restartStagePendingResets > 0 then
+    -- log('I', logTag, 'onVehicleResetted called for '..vehicleID..'  name: '..tostring(be:getObjectByID(vehicleID):getField('name', '')))
     scenario.restartStagePendingResets = scenario.restartStagePendingResets - 1
   end
 end
@@ -1859,18 +1830,9 @@ local function tickRestart(dt, dtSim)
       end
     end
 
-    -- reset everything - EXCEPT the player vehicle
-    -- otherwise, the setTrigger on the first waypoint is lost in the reset
-    scenario.restartStagePendingResets = 1 -- we have already asked for the player to reset
+    scenario.restartStagePendingResets = 0
     for _, vid in pairs(scenario.vehicleNameToId or {}) do
-      if vid ~= scenario.focusSlot then
-        local bo = be:getObjectByID(vid)
-        if bo then
-          bo:queueLuaCommand('obj:requestReset(RESET_PHYSICS)')
-          bo:resetBrokenFlexMesh()
-          scenario.restartStagePendingResets = scenario.restartStagePendingResets + 1
-        end
-      end
+      scenario.restartStagePendingResets = scenario.restartStagePendingResets + 1
     end
 
     if isMultiseatScenario() then
@@ -1882,6 +1844,12 @@ local function tickRestart(dt, dtSim)
          scenario.restartStagePendingResets = scenario.restartStagePendingResets + 1
        end
     end
+
+    if not be:getEnabled() then 
+      be:toggleEnabled() 
+    end
+
+    be:resetAll()
 
     scenario.restartStage = 1
   elseif scenario.restartStage == 1 then
@@ -1900,6 +1868,7 @@ local function tickRestart(dt, dtSim)
           local rot = initialTransform.rot
           --TODO(AK): We have a better function which we will call when the reset system is completed
           vehicle:setPositionRotation(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+          vehicle:resetBrokenFlexMesh()
         else
           log('E', logTag, 'Reseting failed to find starting transform for vehicle: '..vName)
         end
@@ -1966,17 +1935,9 @@ local function onVehicleStoppedMoving(vehicleID)
   end
 end
 
--- called on physics engine events
-local function onPhysicsEngineEvent(type, a1)
+local function onResetGameplay(playerID)
   if not scenario then return end
-
-  --log( 'D', logTag, 'onPhysicsEngineEvent: '..tostring(type)..', '..tostring(a1) )
-  if type == 'reset' then
-    -- handle inestabilities
-    if not be:getEnabled() then be:toggleEnabled() end
-
-    restartScenario()
-  end
+  restartScenario()
 end
 
 local function onPhysicsUnpaused()
@@ -2016,7 +1977,6 @@ local function onSerialize()
     data.goals = scenario.goals
     data.extensions = scenario.extensions
     data.startingTransforms = scenario.startingTransforms
-    -- serializeJsonToFile("scenario_data.txt", data, true)
   end
 
   -- dump(data)
@@ -2052,6 +2012,11 @@ local function onDeserialized(data)
     processVehiclesInScene()
     processWaypointsInScene()
   end
+end
+
+local function getscenarioName ()
+  local scenarioName = scenario.name
+  return scenarioName
 end
 
 local function onExtensionUnloaded()
@@ -2111,7 +2076,7 @@ M.onClientEndMission              = onClientEndMission
 M.onScenarioUIReady               = onScenarioUIReady
 M.onDrawDebug                     = onDrawDebug
 M.onCameraHandlerSet              = onCameraHandlerSet
-M.onPhysicsEngineEvent            = onPhysicsEngineEvent
+M.onResetGameplay                 = onResetGameplay
 M.changeState                     = changeState
 M.onRaceWaypointReached           = onRaceWaypointReached
 M.onDespawnObject                 = onDespawnObject
@@ -2144,5 +2109,8 @@ M.continueScenario = continueScenario
 M.getRaceDistance = getRaceDistance
 M.onVehicleResetted = onVehicleResetted
 M.onVehicleSpawned  = onVehicleSpawned
+M.onVehicleSelected = onVehicleSelected
+
+M.getscenarioName = getscenarioName
 
 return M

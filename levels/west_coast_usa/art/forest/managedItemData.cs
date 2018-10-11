@@ -401,6 +401,28 @@ datablock TSForestItemData(flag_usa1)
    detailAmp = "0.1";
    detailFreq = "0.4";
 };
+
+datablock TSForestItemData(featherflag_gavril)
+{
+   internalName = "featherflag_gavril";
+   shapeFile = "levels/west_coast_usa/art/shapes/objects/featherflag_gavril.dae";
+   windScale = "0.7";
+   trunkBendScale = "0.1";
+   branchAmp = "0.6";
+   detailAmp = "0.1";
+   detailFreq = "0.4";
+};
+
+datablock TSForestItemData(featherflag_beamng)
+{
+   internalName = "featherflag_beamng";
+   shapeFile = "levels/west_coast_usa/art/shapes/objects/featherflag_beamng.dae";
+   windScale = "0.7";
+   trunkBendScale = "0.1";
+   branchAmp = "0.6";
+   detailAmp = "0.1";
+   detailFreq = "0.4";
+};
 //--------------------------------------------------HOUSES
 
 datablock TSForestItemData(house1)
@@ -439,245 +461,33 @@ datablock TSForestItemData(house4)
     mode = "Override";
 };
 
-//--------------------------------------------------TOWNHOUSES
-
-datablock TSForestItemData(townhouse_01l)
+datablock TSForestItemData(tent1)
 {
-    internalName = "townhouse_01l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_01l.dae";
+    internalName = "tent1";
+    shapeFile = "levels/west_coast_usa/art/shapes/buildings/tent1.dae";
     radius = "0";
+    annotation = "BUILDINGS";
+    mode = "Override";
 };
 
-datablock TSForestItemData(townhouse_02l)
+datablock TSForestItemData(marshaltower)
 {
-    internalName = "townhouse_02l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_02l.dae";
+    internalName = "marshaltower";
+    shapeFile = "levels/west_coast_usa/art/shapes/buildings/marshaltower.dae";
     radius = "0";
+    annotation = "BUILDINGS";
+    mode = "Override";
 };
 
-datablock TSForestItemData(townhouse_03l)
+datablock TSForestItemData(seating1)
 {
-    internalName = "townhouse_03l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_03l.dae";
+    internalName = "seating1";
+    shapeFile = "levels/west_coast_usa/art/shapes/buildings/seating1.dae";
     radius = "0";
+    annotation = "BUILDINGS";
+    mode = "Override";
 };
 
-datablock TSForestItemData(townhouse_04l)
-{
-    internalName = "townhouse_04l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_04l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_05l)
-{
-    internalName = "townhouse_05l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_05l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_06l)
-{
-    internalName = "townhouse_06l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_06l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_07l)
-{
-    internalName = "townhouse_07l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_07l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_08l)
-{
-    internalName = "townhouse_08l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_08l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_09l)
-{
-    internalName = "townhouse_09l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_09l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_10l)
-{
-    internalName = "townhouse_10l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_10l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_11l)
-{
-    internalName = "townhouse_11l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_11l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_12l)
-{
-    internalName = "townhouse_12l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_12l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_13l)
-{
-    internalName = "townhouse_13l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_13l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_14l)
-{
-    internalName = "townhouse_14l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_14l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_15l)
-{
-    internalName = "townhouse_015l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_15l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_16l)
-{
-    internalName = "townhouse_16l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_16l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_17l)
-{
-    internalName = "townhouse_17l";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_17l.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_01r)
-{
-    internalName = "townhouse_01r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_01r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_02r)
-{
-    internalName = "townhouse_02r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_02r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_03r)
-{
-    internalName = "townhouse_03r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_03r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_04r)
-{
-    internalName = "townhouse_04r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_04r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_05r)
-{
-    internalName = "townhouse_05r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_05r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_06r)
-{
-    internalName = "townhouse_06r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_06r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_07r)
-{
-    internalName = "townhouse_07r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_07r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_08r)
-{
-    internalName = "townhouse_08r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_08r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_09r)
-{
-    internalName = "townhouse_09r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_09r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_10r)
-{
-    internalName = "townhouse_10r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_10r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_11r)
-{
-    internalName = "townhouse_11r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_11r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_12r)
-{
-    internalName = "townhouse_12r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_12r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_13r)
-{
-    internalName = "townhouse_13r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_13r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_14r)
-{
-    internalName = "townhouse_14r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_14r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_15r)
-{
-    internalName = "townhouse_015r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_15r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_16r)
-{
-    internalName = "townhouse_16r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_16r.dae";
-    radius = "0";
-};
-
-datablock TSForestItemData(townhouse_17r)
-{
-    internalName = "townhouse_17r";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/townhouse_17r.dae";
-    radius = "0";
-};
 
 //--------------------------------------------------WAREHOUSES
 
@@ -901,6 +711,15 @@ datablock TSForestItemData(powerpole3)
     mode = "Override";
 };
 
+datablock TSForestItemData(powerpole4)
+{
+    internalName = "powerpole4";
+    shapeFile = "levels/west_coast_usa/art/shapes/objects/powerpole4.dae";
+    radius = "0";
+    annotation = "POLE";
+    mode = "Override";
+};
+
 //-------------------------------------------FENCES
 
 datablock TSForestItemData(fence_metal1)
@@ -1043,10 +862,10 @@ datablock TSForestItemData(leanto_large)
     mode = "Override";
 };
 
-datablock TSForestItemData(rack)
+datablock TSForestItemData(storagerack)
 {
-    internalName = "rack";
-    shapeFile = "levels/west_coast_usa/art/shapes/buildings/rack.dae";
+    internalName = "storagerack";
+    shapeFile = "levels/west_coast_usa/art/shapes/buildings/storagerack.dae";
     radius = "0";
     annotation = "BUILDINGS";
     mode = "Override";
@@ -1122,6 +941,15 @@ datablock TSForestItemData(pole_fence1)
     mode = "Override";
 };
 
+datablock TSForestItemData(pole_fence2)
+{
+    internalName = "pole_fence2";
+    shapeFile = "levels/west_coast_usa/art/shapes/objects/pole_fence2.dae";
+    radius = "0";
+    annotation = "POLE";
+    mode = "Override";
+};
+
 datablock TSForestItemData(pole_light_bridge)
 {
     internalName = "pole_light_bridge";
@@ -1171,15 +999,6 @@ datablock TSForestItemData(pole_thick)
 {
     internalName = "pole_thick";
     shapeFile = "levels/west_coast_usa/art/shapes/objects/pole_thick.dae";
-    radius = "0";
-    annotation = "POLE";
-    mode = "Override";
-};
-
-datablock TSForestItemData(pole_boom)
-{
-    internalName = "pole_boom";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/pole_boom.dae";
     radius = "0";
     annotation = "POLE";
     mode = "Override";
@@ -1292,60 +1111,6 @@ datablock TSForestItemData(sign_turboburger)
 
 //-------------------------------------------TRAFFIC LIGHTS
 
-datablock TSForestItemData(trafficlight1a)
-{
-    internalName = "trafficlight1a";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/trafficlight1a.dae";
-    radius = "0";
-    annotation = "TRAFFIC_SIGNALS";
-    mode = "Override";
-};
-
-datablock TSForestItemData(trafficlight1b)
-{
-    internalName = "trafficlight1b";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/trafficlight1b.dae";
-    radius = "0";
-    annotation = "TRAFFIC_SIGNALS";
-    mode = "Override";
-};
-
-datablock TSForestItemData(trafficlight1c)
-{
-    internalName = "trafficlight1c";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/trafficlight1c.dae";
-    radius = "0";
-    annotation = "TRAFFIC_SIGNALS";
-    mode = "Override";
-};
-
-datablock TSForestItemData(trafficlight2a)
-{
-    internalName = "trafficlight2a";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/trafficlight2a.dae";
-    radius = "0";
-    annotation = "TRAFFIC_SIGNALS";
-    mode = "Override";
-};
-
-datablock TSForestItemData(trafficlight2b)
-{
-    internalName = "trafficlight2b";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/trafficlight2b.dae";
-    radius = "0";
-    annotation = "TRAFFIC_SIGNALS";
-    mode = "Override";
-};
-
-datablock TSForestItemData(trafficlight2c)
-{
-    internalName = "trafficlight2c";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/trafficlight2c.dae";
-    radius = "0";
-    annotation = "TRAFFIC_SIGNALS";
-    mode = "Override";
-};
-
 datablock TSForestItemData(trafficlight_city1)
 {
     internalName = "trafficlight_city1";
@@ -1438,15 +1203,6 @@ datablock TSForestItemData(planterbox)
     mode = "Override";
 };
 
-datablock TSForestItemData(busstop)
-{
-    internalName = "busstop";
-    shapeFile = "levels/west_coast_usa/art/shapes/objects/busstop.dae";
-    radius = "0";
-    annotation = "BUILDINGS";
-    mode = "Override";
-};
-
 datablock TSForestItemData(trafficlightbox_green)
 {
     internalName = "trafficlightbox_green";
@@ -1498,6 +1254,24 @@ datablock TSForestItemData(constructionbarrier)
 {
     internalName = "constructionbarrier";
     shapeFile = "levels/west_coast_usa/art/shapes/objects/constructionbarrier.dae";
+    radius = "0";
+    annotation = "ROADBLOCK";
+    mode = "Override";
+};
+
+datablock TSForestItemData(jerseybarrier_3m)
+{
+    internalName = "jerseybarrier_3m";
+    shapeFile = "levels/west_coast_usa/art/shapes/objects/jerseybarrier_3m.dae";
+    radius = "0";
+    annotation = "ROADBLOCK";
+    mode = "Override";
+};
+
+datablock TSForestItemData(jerseybarrier_end)
+{
+    internalName = "jerseybarrier_end";
+    shapeFile = "levels/west_coast_usa/art/shapes/objects/jerseybarrier_end.dae";
     radius = "0";
     annotation = "ROADBLOCK";
     mode = "Override";
@@ -1561,3 +1335,9 @@ datablock TSForestItemData(sign_truss4)
 
 
 
+
+datablock TSForestItemData(excavator)
+{
+   internalName = "excavator";
+   shapeFile = "levels/west_coast_usa/art/shapes/objects/excavator.dae";
+};

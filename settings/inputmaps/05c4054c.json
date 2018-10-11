@@ -1,0 +1,34 @@
+{
+    "name": "Dualshock 4 Playstation Controller (Wireless Controller) - wired"
+    "guid": " {05C4054C-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        {"control": "xaxis" ,   "action": "steering"    ,   "deadzone": {"end": 0.05 }, "linearity": 1.3},
+        {"control": "rxaxis"    ,   "action": "brake"},
+        {"control": "ryaxis"    ,   "action": "accelerate"},
+        {"control": "button4"   ,   "action": "clutch"},
+        {"control": "zaxis" ,   "action": "rotate_camera_horizontal"    ,   "deadzone": {"end": 0.05 }},
+        {"control": "rzaxis"    ,   "action": "rotate_camera_vertical"  ,   "deadzone": {"end": 0.05 }},
+        {"control": "button2"   ,   "action": "increase_zoom"},
+        {"control": "button3"   ,   "action": "decrease_zoom"},
+        {"control": "button8"   ,   "action": "switch_camera_next"},
+        {"control": "upov", "action": "toggle_headlights"},
+        {"control": "dpov", "action": "activateStarterMotor"},
+        { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+        { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+        { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+        { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+        { "action" : "shiftDown", "control" : "button0" },
+        { "action" : "menu_item_radial_x", "control" : "xaxis" },
+        { "action" : "pause", "control" : "button9" },
+        { "action" : "menu_item_select", "control" : "button1" },
+        { "action" : "toggleMenues", "control" : "button10" },
+        { "action" : "center_camera", "control" : "button11" },
+        { "action" : "menu_item_back", "control" : "button2" },
+        { "action" : "menu_item_radial_y", "control" : "yaxis" },
+        { "action" : "shiftUp", "control" : "button1" },
+        { "action" : "parkingbrake", "control" : "button5" },
+        { "action" : "recover_vehicle", "control" : "lpov" },
+        { "action" : "reset_physics", "control" : "rpov" }
+    ]
+}

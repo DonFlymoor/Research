@@ -21,6 +21,7 @@ local nitrousOxideTorqueLookup = nil
 local nitrousOxideOverrideTorqueLookup = nil
 local noArmName = nil
 local noOverrideName = nil
+local noActiveName = nil
 local minimumGear = nil
 local volumeCoef = nil
 
@@ -38,17 +39,16 @@ local hasLiquid = true
 local energyStorageRatios = {}
 
 local function updateSounds(dt)
-
 end
 
 local function purgeLines(purgeTime)
-  purgeActiveTime = (#purgeValveNodes > 0  and hasLiquid) and purgeTime or 0
+  purgeActiveTime = (#purgeValveNodes > 0 and hasLiquid) and purgeTime or 0
 end
 
 local function getTankRatio()
   local ratio = 0
   local counter = 0
-  for _,s in pairs(registeredEnergyStorages) do
+  for _, s in pairs(registeredEnergyStorages) do
     local storage = energyStorage.getStorage(s)
     if storage then
       ratio = ratio + storage.remainingRatio
@@ -60,7 +60,7 @@ local function getTankRatio()
 end
 
 local function updateEnergyStorageRatios()
-  for _,s in pairs(registeredEnergyStorages) do
+  for _, s in pairs(registeredEnergyStorages) do
     local storage = energyStorage.getStorage(s)
     if storage then
       if storage.storedEnergy > 0 then
@@ -79,7 +79,7 @@ local function updateFuelUsage()
 
   local hasLiquidTmp = false
   local previousTankCount = storageWithEnergyCounter
-  for _,s in pairs(registeredEnergyStorages) do
+  for _, s in pairs(registeredEnergyStorages) do
     local storage = energyStorage.getStorage(s)
     if storage then
       local previous = previousEnergyLevels[storage.name]
@@ -110,11 +110,12 @@ local function updateGFX(dt)
   end
 
   updateFuelUsage()
+
   local purgeActive = purgeActiveTime > 0
   if purgeActive then
     purgeParticleTick = purgeParticleTick + dt
     if purgeParticleTick > 0.02 then
-      for _,v in ipairs(purgeValveNodes) do
+      for _, v in ipairs(purgeValveNodes) do
         obj:addParticleByNodesRelative(v.cid1, v.cid2, -2, 70, 0, 1)
         obj:addParticleByNodesRelative(v.cid1, v.cid2, -4, 71, 0, 1)
         obj:addParticleByNodesRelative(v.cid1, v.cid2, -8, 72, 0, 1)
@@ -136,7 +137,9 @@ local function updateGFX(dt)
   local torqueLookup = manualOverride and nitrousOxideOverrideTorqueLookup or nitrousOxideTorqueLookup
   local noTorque = n2oActive and torqueLookup[engineRPM] or 0
   M.isArmed = isArmed
-  M.isActive = n2oActive
+  M.isActive = n2oActive and 1 or 0
+
+  electrics.values[noActiveName] = n2oActive
 
   --assignedEngine.continuousAfterFireFuel = assignedEngine.continuousAfterFireFuel + (n2oActive and 100 * dt or 0)
   assignedEngine.nitrousOxideTorque = assignedEngine.nitrousOxideTorque + noTorque
@@ -196,6 +199,7 @@ local function init(device, data)
 
   noArmName = data.electricsArmName or "nitrousOxideArm"
   noOverrideName = data.electricsOverrideName or "nitrousOxideOverride"
+  noActiveName = data.electricsActiveName or "nitrousOxideActive"
   minimumGear = tonumber(data.minimumGear) or 0
   volumeCoef = data.volumeCoef or 1.5
 
@@ -224,16 +228,14 @@ local function init(device, data)
 end
 
 local function initSounds()
-
 end
 
 local function resetSounds()
-
 end
 
 local function getAddedTorque()
   local addedTorque = {}
-  for k,_ in pairs(assignedEngine.torqueCurve) do
+  for k, _ in pairs(assignedEngine.torqueCurve) do
     if type(k) == "number" and k < assignedEngine.maxRPM then
       local rpm = floor(k)
       addedTorque[k + 1] = nitrousOxideTorqueLookup[rpm] or 0
@@ -243,12 +245,12 @@ local function getAddedTorque()
 end
 
 -- public interface
-M.init          = init
-M.initSounds    = initSounds
-M.updateSounds  = nop
-M.reset         = reset
-M.resetSounds   = resetSounds
-M.updateGFX   = nop
+M.init = init
+M.initSounds = initSounds
+M.updateSounds = nop
+M.reset = reset
+M.resetSounds = resetSounds
+M.updateGFX = nop
 M.getAddedTorque = getAddedTorque
 M.registerStorage = registerStorage
 M.getTankRatio = getTankRatio

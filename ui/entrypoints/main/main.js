@@ -352,26 +352,6 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
         }
       })
 
-
-    .state('controls-wizard', {
-      url: '/controls-wizard',
-      templateUrl: 'modules/options/controls-wizard-wrapper.html',
-      abstract: true,
-      controller: 'ControlsWizardCtrl as wizard'
-    })
-
-      .state('controls-wizard.devices', {
-        url: '/devices',
-        templateUrl: 'modules/options/controls-wizard-devices.html'
-      })
-
-      .state('controls-wizard.setup', {
-        url: '/setup/:deviceKey',
-        controller: 'ControlsWizardSetupCtrl as wizardSetup',
-        templateUrl: 'modules/options/controls-wizard-setup.html'
-      })
-
-
     .state('menu.debug', {
       url: '/debug',
       templateUrl: 'modules/debug/debug.html',
@@ -463,6 +443,39 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
         }
       })
 
+      .state('menu.mods.automation', {
+        url: '/automation?query',
+        views: {
+          '': {
+            controller: 'AutomationController as automation',
+            templateUrl: 'modules/modmanager/mods.html'
+          },
+          'content@menu.mods.automation': {
+            templateUrl: 'modules/automation/automation.html'
+          },
+          'filter@menu.mods.automation': {
+            templateUrl: 'modules/automation/filter.html'
+          }
+        },
+
+      })
+
+      .state('menu.mods.automationDetails', {
+        url: '/automation/detail/{modId:[0-9A-Z]+}?page&param',
+        views: {
+          '': {
+            controller: 'AutomationDetailsController as automationDetailCtrl',
+            templateUrl: 'modules/modmanager/mods.html'
+          },
+          'content@menu.mods.automationDetails': {
+            templateUrl: 'modules/automation/automation-details.html'
+          },
+          'filter@menu.mods.automationDetails': {
+            templateUrl: 'modules/automation/info.html'
+          }
+        },
+      })
+
       .state('menu.mods.details', {
         url: '/detail/{modId:[0-9A-Z]+}?page&param',
         views: {
@@ -476,7 +489,7 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
           'filter@menu.mods.details': {
             templateUrl: 'modules/repository/info.html'
           }
-        }
+        },
       })
 
     .state('menu.modsDetails', {
@@ -674,6 +687,16 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
       //   points: [],
       //   onClick: ''
       // }
+    })
+
+    //Dragrace states WIP
+    .state('menu.dragRaceOverview', {
+      url: '/dragrace/overview',
+      templateUrl: 'modules/dragrace/overview.html',
+      controller: 'DragRaceController',
+      params: {
+        results: {}
+      }
     })
 
     //Quickrace states WIP
@@ -1130,6 +1153,10 @@ angular.module('beamng.stuff')
 
   bngApi.engineLua('extensions.hook("onUIInitialised")');
 
+$scope.$on('requestUIInitialised', () => {
+    bngApi.engineLua('core_gamestate.onUIInitialised()');
+  })
+
   vm.shipping = beamng.shipping;
 
   vm.replayPaused = false;
@@ -1166,6 +1193,9 @@ angular.module('beamng.stuff')
     // if (fromState.name === 'loading') {
     //   bngApi.engineLua('requestGameState()');
     // }
+    if (toState.name === 'loading') {
+      $scope.$broadcast('StickyState', null);
+    }
   });
 
   $scope.$on('ChangeState', function (event, data, ifCurrent) {
@@ -1233,6 +1263,7 @@ angular.module('beamng.stuff')
   if(!beamng.shipping) {
     vm.menuEntries.freeroam.push({ translateid: 'ui.dashboard.luadebug', icon: 'low_priority', state: 'luadebug', advanced: true });
     vm.menuEntries.freeroam.push({ translateid: 'Icons', icon: 'new_releases', state: 'iconViewer', advanced: true });
+    vm.menuEntries.freeroam.push({ translateid: 'Drag Race', icon: 'flag', state: 'menu.dragRaceOverview', advanced: false });
     // vm.menuEntries.freeroam.push({ translateid: 'ui.dashboard.template', icon: 'crop_free',    state: 'template', advanced: true});
     // vm.menuEntries.freeroam.push({ translateid: 'ui.dashboard.terraingen', icon: 'gradient',    state: 'terraingen', advanced: true});
     vm.menuEntries.freeroam.push({ translateid: 'UI Protoype', icon: 'new_releases',    state: '.', action: () => window.location.href = "local://local/ui2/Entrypoints/Main/index.html"});
@@ -1325,7 +1356,7 @@ angular.module('beamng.stuff')
   var toasts = {};
 
   $scope.$on('toastrMsg', function (ev, data) {
-    toasts[data.title] = toastr[data.type](data.msg, data.title, data.config);
+    toasts[data.title] = toastr[data.type]($translate.instant(data.msg, data.context), $translate.instant(data.title, data.context), data.config);
   });
 
   $scope.$on('toastrClose', function (ev, name) {
@@ -1361,7 +1392,6 @@ angular.module('beamng.stuff')
     logger.AppCtrl.log(`got game state: ${data.state}`, data);
 
     vm.gameState = data.menuItems;
-    vm.stickyState = null;
   });
 
   $scope.$on('ShowApps', function (event, data) {

@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="modules/vehicleselect/vehicleselect.css" />
+
 <md-content flex="65" style="max-width:1200px; height: 100%" layout="column" class="VehicleSelect">
   <md-toolbar>
     <div class="md-toolbar-tools">
@@ -12,31 +14,19 @@
     <md-grid-list flex
           md-cols-sm="1" md-cols-md="2" md-cols-lg="3" md-cols-gt-lg="4"
           md-row-height-gt-md="25:12" md-row-height="25:12"
-          md-gutter="4px" md-gutter-gt-sm="4px"
-          class="gridMarkSelected">
-      <md-grid-tile ng-repeat="config in vehicle.configs | orderObjectBy:'Value'"
+          md-gutter="4px" md-gutter-gt-sm="4px">
+      <md-grid-tile ng-repeat="config in vehicle.configs | orderObjectBy:'Value'" class="gridItem"
         bng-all-clicks-no-nav single="vehicle.selectConfig(config.key, false)" double="vehicle.launchConfig(false)" ng-focus="vehicle.selectConfig(config.key, false)" ng-class="(config.key === vehicle.selectedConfig.key) ? 'selectedGridItem' : ''">
 
         <imageslider imageurls="config.preview" style="height: 100%; width: 100%"></imageslider>
 
-        <div style="position:absolute; right:2px; top:2px" ng-if=":: config.Source === 'BeamNG - Official'"  layout="row" layout-align="center center">
-          <img src="images/beamng_logo_50x50.png" height="16px" style="padding-left:4px; -webkit-filter:  grayscale(1) brightness(0.5) invert(1);" />
-          <md-tooltip md-direction="top">
-            BeamNG - Official
-          </md-tooltip>
-        </div>
-
-        
-        <md-grid-tile-footer style="height: 20px">
-          <div layout="row" layout-align="start left" style="margin:0px; margin-left:8px">
-            <h3 style="margin:0">{{ ::config.Configuration || config.Name || 'Default' }}</h3>
-<!--
-          <button class="md-icon-button md-button bng-tile-button-secondary" ng-click="vehicle.selectConfig(config.key, true)">
-            <md-icon class="material-icons" style="color: white">play_arrow</md-icon>
-          </button>
--->
+        <div class="vehicleFooter" style="position: absolute; left: 0; bottom: 0; right: 0;" layout="row" layout-align="start center">
+          <bng-icon style="margin-left: 0.5em; width: 1em; position: relative;" src="'general_beamng_logo_bw'" type="sprite" ng-if=":: config.Source === 'BeamNG - Official'"></bng-icon>
+          <bng-icon style="margin-left: 0.5em; width: 1em; position: relative;" src="'Assets/camshaft_automation_logo.svg'" type="img" ng-if=":: config.Type === 'Automation'"></bng-icon>
+          <div layout-align="center center" style="margin-left: 0.5em; width: calc(100% - 2em);" class="truncate">
+            {{ ::config.Configuration || config.Name || 'Default' }}
           </div>
-        </md-grid-tile-footer>
+        </div>
       </md-grid-tile>
     </md-grid-list>
   </div>

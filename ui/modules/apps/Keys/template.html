@@ -1,9 +1,21 @@
+
 <div style="max-height:100%; max-width: 100%; overflow:auto;">
-  <div layout="row" layout-align="end start">
+  <style>
+    .keys {
+      opacity: 0.7;
+      transition-duration: 0.3s;
+    }
+    .keys:hover {
+      opacity: 1;
+      transition-duration: 0.3s;
+    }
+  </style>
+  <div layout="row" layout-align="end start" ng-class="{'keys': small}">
     <div layout="row" layout-align="center" ng-click="toggleSmall()" ng-if="bindings[show].length > 0" ng-switch="small" style="padding: 2%;" class="bngApp">
-      <div ng-switch-when="true" style="width: 100px;">
-        <md-icon class="material-icons" style="color:#FFF">keyboard_arrow_left</md-icon>
-        <span>Controls</span>
+      <div ng-switch-when="true" style="width: 10px; height: 25px; overflow: hidden">
+        <span>
+          <md-icon class="material-icons" style="margin-left: 5px; position: absolute; right: 0px; color: white">keyboard_arrow_left</md-icon>
+        </span>
       </div>
 
       <div ng-switch-default>

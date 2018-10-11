@@ -22,7 +22,7 @@
         "gearRatios":[-2.00, 0, 2.4, 1.47, 1.0, 0.68],
         "parkLockTorque":2500,
         "oneWayViscousCoef":60,
-        "friction": 8,
+        "friction": 10,
         "gearboxNode:":"tra1",
     },
     "vehicleController": {
@@ -90,7 +90,7 @@
         "gearRatios":[-3.02, 0, 3.70, 2.08, 1.35, 1.02, 0.89, 0.62],
         "parkLockTorque":2500,
         "oneWayViscousCoef":60,
-        "friction": 1,
+        "friction": 10,
         "gearboxNode:":"tra1",
     },
     "vehicleController": {
@@ -154,7 +154,7 @@
     "gearbox": {
         "uiName":"Gearbox",
         "gearRatios":[-3.39, 0, 3.9, 2.25, 1.5, 1.0, 0.8],
-        "friction": 1,
+        "friction": 6,
         "gearboxNode:":"tra1",
     },
     "clutch": {

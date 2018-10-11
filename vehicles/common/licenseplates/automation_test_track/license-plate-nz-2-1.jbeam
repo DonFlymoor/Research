@@ -1,0 +1,11 @@
+{
+	"license_plate_nz_1": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"New Zealand Plate Design",
+        "value":50,
+    }
+    "slotType" : "licenseplate_design_2_1",
+    "licenseplate_path" : "vehicles/common/licenseplates/automation_test_track/automation_test_track-default.json",
+	}
+}

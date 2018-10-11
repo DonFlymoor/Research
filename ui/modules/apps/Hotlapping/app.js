@@ -34,10 +34,8 @@ angular.module('beamng.apps')
         scope.renaming = false;
         var originalFilename = '';
 
-        bngApi.engineLua('extensions.load("core_hotlapping")');
-
         scope.startHotlapping = function () {
-            bngApi.engineLua('core_hotlapping.startHotlapping()');
+            bngApi.engineLua('scenario_quickRaceLoader.uiEventStartHotlapping()');
             scope.resetTimes();
 
             scope.timer = 0;
@@ -48,7 +46,6 @@ angular.module('beamng.apps')
             bngApi.engineLua('setCEFFocus(false)');
         };
 
-
         scope.toggleSettings = function () {
             scope.$evalAsync(() => {
                scope.showSettings = !scope.showSettings;
@@ -57,6 +54,10 @@ angular.module('beamng.apps')
             });
 
         };
+        
+        scope.$on('$destroy', function() {
+            bngApi.engineLua('scenario_quickRaceLoader.uiHotlappingAppDestroyed()');
+        });
 
         scope.$on('RaceLapChange', function (event, data) {
             if(data === null) return; 
@@ -88,7 +89,6 @@ angular.module('beamng.apps')
 
         scope.clearAllCP = function () {
             bngApi.engineLua('core_hotlapping.stopHotlapping()');
-            bngApi.engineLua('extensions.load("core_hotlapping")');
             scope.$evalAsync(() => {scope.current=null;});   
             scope.started = false;
             scope.closed = false;    
@@ -343,6 +343,7 @@ angular.module('beamng.apps')
         };
 
         scope.$on('HotlappingResetApp',function(event, data) {
+            $log.debug('ResetApp');
            scope.resetVariables();
         });
 
@@ -354,18 +355,19 @@ angular.module('beamng.apps')
                 scope.stop=false;
                 scope.current=null;
                 scope.timer=0;
-                bngApi.engineLua('core_hotlapping.stopTimer()');
+                bngApi.engineLua('if core_hotlapping then core_hotlapping.stopTimer() end');
 
             }
           
         });
 
         scope.$on('setQuickRaceMode',function(event, data) {
+            $log.debug('SetQuickRace');
            scope.controlsEnabled = false;
         });
 
         scope.resetVariables = function() {
-             scope.started = false;
+            scope.started = false;
             //scope.selectedFile = null;
             scope.times = [];
             scope.times.normal = [];
@@ -389,20 +391,21 @@ angular.module('beamng.apps')
             bngApi.engineLua('core_hotlapping.refreshTracklist()');
             scope.cancelRename();
         };
+
         scope.$on('ChangeState',function(event, data) {
-           if(data['state'] == 'freeroam')
-                controlsEnabled = true;
-           else
-                controlsEnabled = false;
+            if(data == 'menu')
+                scope.controlsEnabled = true;
+            else
+                scope.controlsEnabled = false;
+            if(data == 'loading')
+                bngApi.engineLua('scenario_quickRaceLoader.uiHotlappingAppDestroyed()');
         });
        
         scope.$on('newBestRound',function(event,data) {
             if(data.place == 1)
                 scope.bestTime = {lap:'Best Lap', duration:'', diff:'', diffColor:''};
             scope.loadedFile = data;
-        });
-
-
+        });  
     }
   };
 }]);

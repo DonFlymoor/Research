@@ -10,10 +10,10 @@ struct ConnectData
 
 uniform_sampler2D( layerTex, 0 );
 uniform_sampler2D( textureMap, 1 );
+uniform float texId;
+uniform float layerSize;
 
-float4 main(   ConnectData IN,
-               uniform float texId,
-               uniform float layerSize ) : SV_Target
+float4 main( ConnectData IN ) : SV_Target
 {
    float4 layerSample = round( tex2D( layerTex, IN.layerCoord ) * 255.0f );
 

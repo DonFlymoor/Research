@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Asphalt Derby Race",
+
+    "description": "A 5-lap race in the pit lane parking lot",
+
+    "authors": "BeamNG",
+
+    "introType": "none",
+
+    "difficulty": "22",
+
+    "date": 1508206847,
+
+    "restrictToCampaign": false,
+
+    "levelObjects": {
+      "tod": {
+        "time" : 0.11,
+        "dayLength" : 120,
+        "play" : false
+      }
+    },
+
+    "vehicles": {
+      "scenario_player0": {"playerUsable": true, "startFocus": true},
+      "*": {"playerUsable": false}
+    },
+
+    "lapConfig": ["drifttrack_wp1", "drifttrack_wp2", "drifttrack_wp3", "drifttrack_wp4", "drifttrack_wp0"],
+
+    "lapCount": 5,
+
+    "radiusMultiplierAI": 2,
+    "statistics": {"disableEndUI": true}
+  }
+]

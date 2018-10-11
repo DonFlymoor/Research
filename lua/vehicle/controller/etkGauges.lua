@@ -3,7 +3,7 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 
 local htmlTexture = require("htmlTexture")
@@ -15,8 +15,8 @@ local gaugesScreenName = nil
 local htmlPath = nil
 
 local previousFuel = 0
-local fuelSmoother = newTemporalSmoothing(50,50)
-local fuelDisplaySmoother = newTemporalSmoothing(5,3)
+local fuelSmoother = newTemporalSmoothing(50, 50)
+local fuelDisplaySmoother = newTemporalSmoothing(5, 3)
 local avgFuelSum = 0
 local avgFuelCounter = 0
 local updateTimer = 0
@@ -31,7 +31,7 @@ local function updateGFX(dt)
     data.gear = electrics.values.gear
 
     local fuelVolume = electrics.values.fuelVolume or 0
-    local fuelConsumption = min(max((previousFuel - fuelVolume) / (updateTimer * wheelspeed) * 1000 * 100, 0), 100); -- l/(s*(m/s)) = l/m
+    local fuelConsumption = min(max((previousFuel - fuelVolume) / (updateTimer * wheelspeed) * 1000 * 100, 0), 100) -- l/(s*(m/s)) = l/m
     previousFuel = fuelVolume
     local fuelConsumptionSmooth = fuelSmoother:getUncapped(fuelConsumption, updateTimer)
 
@@ -45,7 +45,7 @@ local function updateGFX(dt)
     if (electrics.values.engineLoad or 0) <= 0 then
       fuelDisplay = -1
     end
-    if wheelspeed < 1 and (electrics.values.throttle or 0) <= 0  then
+    if wheelspeed < 1 and (electrics.values.throttle or 0) <= 0 then
       fuelDisplay = 0
     end
     data.fuelDisplay = fuelDisplaySmoother:getUncapped(fuelDisplay, updateTimer)
@@ -67,18 +67,23 @@ local function init(jbeamData)
   fuelSmoother:reset()
   fuelDisplaySmoother:reset()
 
-  gaugesScreenName = jbeamData.materialName or gaugesScreenName
+  gaugesScreenName = jbeamData.materialName
   htmlPath = jbeamData.htmlPath
   local unitType = jbeamData.unitType or "metric"
   local width = jbeamData.textureWidth or 512
   local height = jbeamData.textureHeight or 256
 
-  if htmlPath then
-    htmlTexture.create(gaugesScreenName, htmlPath, width, height, updateFPS, 'automatic')
-    htmlTexture.call(gaugesScreenName, "setUnits", {unitType = unitType})
-  else
-    log("E", "etkGauges", "Got no html path for the texture, can't display anything...")
+  if not gaugesScreenName then
+    log("E", "etkGauges", "Got no material name for the texture, can't display anything...")
     M.updateGFX = nop
+  else
+    if htmlPath then
+      htmlTexture.create(gaugesScreenName, htmlPath, width, height, updateFPS, "automatic")
+      htmlTexture.call(gaugesScreenName, "setUnits", {unitType = unitType})
+    else
+      log("E", "etkGauges", "Got no html path for the texture, can't display anything...")
+      M.updateGFX = nop
+    end
   end
 end
 

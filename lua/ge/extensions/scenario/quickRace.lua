@@ -237,6 +237,34 @@ local function onRaceResult(final)
   end
 end
 
+local showingTimeScreen = false
+
+local function changeTimeTrialConfig()
+  -- dump('toggleTimeTrialsScreen called....')
+  if M.timeTrialOpen == nil then
+    M.timeTrialOpen = false
+  end
+
+  M.timeTrialOpen = not M.timeTrialOpen
+  if M.timeTrialOpen then
+    guihooks.trigger('MenuItemNavigation', 'toggleMenues')
+    guihooks.trigger('ChangeState', {state = 'menu.quickraceOverview'})
+    bullettime.pause(true)
+  else
+    bullettime.pause(false)
+  end
+end
+
+local function onUiChangedState (curUIState, prevUIState)
+  if curUIState == 'menu' and prevUIState == 'menu.quickraceOverview' then
+    if M.timeTrialOpen then
+      changeTimeTrialConfig()
+    end
+  end  
+end
+
+M.changeTimeTrialConfig = changeTimeTrialConfig
+M.onUiChangedState = onUiChangedState
 
 M.onScenarioLoaded = onScenarioLoaded
 M.onLoadCustomPrefabs = onLoadCustomPrefabs

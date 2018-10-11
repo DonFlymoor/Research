@@ -1,0 +1,28 @@
+{
+    "name": "Logitech Dual Action"
+    "guid": "{C216046D-0000-0000-0000-504944564944}"
+    "bindings":
+    [
+        // camera
+        {"control": "rpov"  ,   "action": "rotate_camera_left"},
+        {"control": "lpov"  ,   "action": "rotate_camera_right"},
+        {"control": "upov"  ,   "action": "rotate_camera_up"},
+        {"control": "dpov"  ,   "action": "rotate_camera_down"},
+        //movement
+        {"control": "xaxis" ,   "action": "steering", "linearity": 1.3},
+        {"control": "yaxis" ,   "action": "brake"   ,   "isInverted": true},
+        {"control": "rzaxis"    ,   "action": "accelerate"  ,   "isInverted": true},
+        {"control": "button5"   ,   "action": "brake"},
+        {"control": "button7"   ,   "action": "parkingbrake"},
+        {"control": "button6"   ,   "action": "shiftDown"},
+        {"control": "button4"   ,   "action": "shiftUp"},
+        {"control": "button3"   ,   "action": "toggleShifterMode"},
+        {"control": "button0"   ,   "action": "switch_camera_next"},
+        {"control": "button10"  ,   "action": "center_camera"},
+    { "action"            : "menu_item_select"    , "control"           : "button10"             }, 
+    { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+    { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+    { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+    { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+    ]
+}

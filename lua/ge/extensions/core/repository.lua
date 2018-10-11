@@ -14,6 +14,7 @@ local updatingRepo = false
 
 local repoMsg = {}
 local repoCmd = {}
+local repoAutomationMsg = {}
 
 local optoutFile = 'settings/cloud/mods-optout.json'
 
@@ -274,6 +275,7 @@ local function requestMods(query, order_by, order, page, categories)
       request.responseData.metered = not Engine.Platform.isNetworkUnrestricted()
       request.responseData.updatingRepo = updatingRepo
       request.responseData.repoMsg = repoMsg
+      request.responseData.automationMsg = repoAutomationMsg
       for k,v in pairs(modList) do
         modList[k].pending = idInUpdateQueue(v.tagid)
         modList[k].unpacked = core_modmanager.modIsUnpacked(v.filename)
@@ -353,6 +355,7 @@ local function requestMyMods(query,order_by,order,page,categories)
     request.responseData.updatingRepo = updatingRepo
     request.responseData.metered = not Engine.Platform.isNetworkUnrestricted()
     request.responseData.repoMsg = repoMsg
+    request.responseData.automationMsg = repoAutomationMsg
     for k,v in pairs(modList) do
       modList[k].pending = idInUpdateQueue(v.id)
       modList[k].unpacked = core_modmanager.modIsUnpacked(v.filename)
@@ -527,6 +530,10 @@ local function setRepoCmd(cmddata)
   repoCmd = cmddata
 end
 
+local function setrepoAutomationMsg(data)
+  repoAutomationMsg = data
+end
+
 local function onModManagerReady()
   local mname = ""
   modMgrRdy = true
@@ -602,6 +609,7 @@ M.changeStateUpdateQueue = changeStateUpdateQueue
 M.onUpdate = onUpdate
 M.setRepoMsg = setRepoMsg
 M.setRepoCmd = setRepoCmd
+M.setrepoAutomationMsg = setrepoAutomationMsg
 M.onModManagerReady = onModManagerReady
 M.uiShowRepo = uiShowRepo
 M.uiShowMod = uiShowMod

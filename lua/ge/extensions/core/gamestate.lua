@@ -36,9 +36,9 @@ end
 -- This is a state for the ui, so it knows if it should show the main menu or the side menu
 -- important: this is not meant to change the router state, but only a variable change.
 local function sendShowMainMenu ()
-  -- TODO check if getter setter is needed or if this is enough and always correct -yh
+  -- TODO: check if getter setter is needed or if this is enough and always correct -yh
   local mainMenu = getMissionFilename() == ''
-  --log('D', logTag, 'show main menu')
+  log('D', logTag, 'show main menu (' .. tostring(mainMenu) .. ')')
   guihooks.trigger('ShowEntertainingBackground', mainMenu)
 
   return mainMenu
@@ -48,65 +48,85 @@ end
 -- the problem until now, was that lua could not distinguish between level unloads and level switches
 -- since we do not want to exit the loading screen when currently switching and unloading stage is finished this was a problem
 -- solution: we just wait until the last module finished requiring the loading screen and then and only then exit the loading screen
-local loadingScreenRequests = 0
+local loadingScreenRequests = {}
 local listeners = {}
 
 local function tellListeners ()
-  for k,v in pairs(listeners) do
+  for k,v in ipairs(listeners) do
     v()
     listeners[k] = nop
   end
 end
 
-local function showLoadingScreen (func, superSecretIncrementVal)
-  local first = loadingScreenRequests == 0
-  --log('D', logTag, 'ref counter at: ' .. loadingScreenRequests .. ' increasing by: ' .. (superSecretIncrementVal or 1))
-  loadingScreenRequests = loadingScreenRequests + (superSecretIncrementVal or 1)
+local function containsOnly (arr, val)
+  for _, l in pairs(arr) do
+    if l ~= val then
+      return false
+    end
+  end
+  return true
+end
+
+local function loading ()
+  return not (containsOnly(loadingScreenRequests, false) or tableIsEmpty(loadingScreenRequests))
+end
+
+local function getLoadingStatus(tagName)
+  return loadingScreenRequests[tagName]
+end
+
+local function showLoadingScreen (tagName, func)
+  if tagName == nil then return end
+
+  local first = containsOnly(loadingScreenRequests, false)
+  log('D', logTag, 'loading screen request from: ' .. tagName .. '; value before was: ' .. tostring(loadingScreenRequests[tagName]))
+  if loadingScreenRequests[tagName] then log('D', logTag, 'trying to enter state we are already in: ' .. tostring(tagName)) end
+  loadingScreenRequests[tagName] = true
   func = func or nop
 
   if first and not loadingActive then
-    --log('D', logTag, 'sending show loading screen')
+    log('D', logTag, 'sending show loading screen')
     guihooks.trigger('ChangeState', 'loading')
   end
 
   if loadingActive then
-    --log('D', logTag, 'exec fun dircect')
+    log('D', logTag, 'exec fun direct')
     func()
   else
-    listeners[loadingScreenRequests] = func
-    --log('D', logTag, 'ui initialised (' .. tostring(UIInitialised) .. ')')
-    --log('D', logTag, 'waiting for ui (' .. tostring(waitingForUI) .. ')')
+    table.insert(listeners, func)
+    log('D', logTag, 'ui initialised (' .. tostring(UIInitialised) .. ')')
+    log('D', logTag, 'waiting for ui (' .. tostring(waitingForUI) .. ')')
     if not UIInitialised then
       waitingForUI = true
     end
   end
 end
 
-local function exitLoadingScreen ()
-  --log('D', logTag, 'exit at current ref counter: ' .. loadingScreenRequests)
+local function exitLoadingScreen (tagName)
+  if tagName == nil then return end
 
-  if loadingScreenRequests == 1 then
+  log('D', logTag, 'exiting : ' .. tagName)
+  if not loadingScreenRequests[tagName] then log('W', logTag, 'trying to exit state we haven\'t been in before -please check your code') end
+  loadingScreenRequests[tagName] = false
+
+  if containsOnly(loadingScreenRequests, false) then
     if sendShowMainMenu() then
       guihooks.trigger('ChangeState', 'menu.mainmenu')
-      --log('D', logTag, 'change state to menu.mainmenu')
+      log('D', logTag, 'change state to menu.mainmenu')
       -- this is the only case we aren't in a gamestate everything else should be
       resetGameState()
     else
-      --log('D', logTag, 'exiting loading screen to menu')
+      log('D', logTag, 'exiting loading screen to menu')
       guihooks.trigger('ChangeState', 'menu', {'loading', 'menu.mainmenu'})
     end
 
     listeners = {}
     loadingActive = false
   end
-
-  if loadingScreenRequests > 0 then
-    loadingScreenRequests = loadingScreenRequests - 1
-  end
 end
 
 local function loadingScreenActive ()
-  --log('D', logTag, 'ui told us loading screen is now loaded')
+  log('D', logTag, 'ui told us loading screen is now loaded')
   loadingActive = true
   tellListeners()
 end
@@ -115,18 +135,21 @@ local function onDeserialized(data)
 end
 
 local function uiReady ()
-  --log('D', logTag, 'ui finished loading')
+  log('D', logTag, 'ui finished loading')
   UIInitialised = true;
 
   if waitingForUI then
-    --log('D', logTag, 'wait for ui is over')
+    log('D', logTag, 'wait for ui is over')
     guihooks.trigger('ChangeState', 'loading')
   end
 end
 
+-- in case lua is re-loaded but the ui is not
+-- this is called directly, TODO: think about making it a proper hook and not just having it look like one
 local function onExtensionLoaded ()
   -- it is important this does happen direclty, so potential others don't get confused
-  be:queueJS('core_gamestate.onUIInitialised')
+  guihooks.trigger('requestUIInitialised')
+  log('D', logTag, 'see if ui is loaded')
 end
 
 -- interface
@@ -139,9 +162,12 @@ M.requestMainMenuState = sendShowMainMenu
 
 M.requestEnterLoadingScreen = showLoadingScreen
 M.requestExitLoadingScreen = exitLoadingScreen
+M.loading = loading -- do not use this inside the loading process, unless you know what you are doing
+M.getLoadingStatus = getLoadingStatus -- use this instead
 
 M.loadingScreenActive = loadingScreenActive
 
 M.onUIInitialised = uiReady
+M.onExtensionLoaded = onExtensionLoaded
 
 return M

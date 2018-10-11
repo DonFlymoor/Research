@@ -13,6 +13,10 @@ local function logMessage(ctx, level, msg)
   table.insert(ctx.messages[origin], {level, msg})
 end
 
+function isint(n)
+  local m = tonumber(n)
+  return m == floor(m)
+end
 
 local valid_class_properties = {
   ScatterSky = {
@@ -2092,7 +2096,7 @@ local datatype_verifiers = {
 
 local function test()
   print('>>###################################################################')
-  local dir = 'game:levels/'
+  local dir = 'levels/'
 
   local ctx = {}
 

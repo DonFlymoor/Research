@@ -1,8 +1,9 @@
+// work in progress, commented stuff is not implemented yet
 {
   "camera": {
     "mode": "relative",
     "relative": {
-      "position": [-0.3, 0.6, 1], // X, Y, Z
+      "position": [0, 0.6, 1.5], // X, Y, Z
       "rotation": [0, -170, 0], // X, Y, Z
       "fov": 75
     }
@@ -17,12 +18,12 @@
   },
   //"scenario": "roadconfig1",
   "vehicle": {
-    "name": "etk800",
+    //"name": "pickup",
     "visible": true
   },
   "session": {
-    "name": "AnnotationRun1",
-    "description": "testing run 1",
+    "name": "AnnotationRun3",
+    "description": "testing feature 123",
     "dataLimit": 200, // data entries
     "format": "json",
     "distance": 30, // in meters

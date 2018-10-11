@@ -1,0 +1,115 @@
+<md-content layout="column" flex>
+  <div flex style="overflow:auto">
+    <div layout="row" layout-align="start start">
+      <img style="margin-right: 8px; max-width:20%; height:auto;" onError="src='/ui/images/modIcon.jpg'" ng-src="{{ repoDetailCtrl.modData.icon }}">
+      <div>
+        <div style="font-size:1.3em;margin:0;font-weight:bold;">
+          <span style="margin-right: 5px; padding:0px 4px;background:#F80" ng-if="automationDetailCtrl.modData.prefix_title!=''">{{ ::repoDetailCtrl.modData.prefix_title }}</span>
+          {{ ::automationDetailCtrl.modData.title }}
+        </div>
+        <div flex style="font-size:1em;margin:0;">{{ ::automationDetailCtrl.modData.tag_line }}</div>
+      </div>
+    </div>
+  </div>
+
+  <md-divider style="margin-top:10px;margin-bottom:10px;"></md-divider>
+
+  <style>
+    .repodetailtable td {
+      padding: 5px;
+    }
+  </style>
+  <div>
+    <table class="repodetailtable">
+      <!--<tr><td>{{ 'ui.repository.tagid' | translate }}: </td><td>{{ automationDetailCtrl.modData.tagid }}</td></tr>-->
+      <tr>
+        <td>{{ 'ui.repository.author' | translate }}: </td>
+        <td><a ng-click="openAuthor(automationDetailCtrl.modData.username)" href="">{{ automationDetailCtrl.modData.username }}</a></td>
+      </tr>
+      <tr>
+        <td>{{ 'ui.repository.filesize' | translate }}: </td>
+        <td>{{ automationDetailCtrl.modData.filesize | bytes }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'ui.repository.version_id' | translate }}: </td>
+        <td>{{ automationDetailCtrl.modData.version_string }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'ui.repository.download_count' | translate }}: </td>
+        <td>{{ automationDetailCtrl.modData.download_count }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'ui.repository.last_updated' | translate }}: </td>
+        <td>{{ automationDetailCtrl.modData.last_update | date:'yyyy-MM-dd HH:mm' }}</td>
+      </tr>
+      <tr>
+        <td>{{ 'ui.repository.rating' | translate }}: </td>
+        <td>
+          <jk-rating-stars max-rating="5" rating="automationDetailCtrl.modData.rating_avg" read-only="true"></jk-rating-stars>
+        </td>
+      </tr>
+      <!-- <tr>
+        <td>{{ 'ui.repository.category' | translate }}: </td>
+        <td><a ng-click="openCat(automationDetailCtrl.modData.category_title)" href="">{{ automationDetailCtrl.modData.category_title }}</a></td>
+      </tr> -->
+      <tr><td colspan="2"><a ng-click="openDiscussion()" href="" style="text-transform: none;">{{ :: 'ui.modmanager.openForumDiscussion' | translate}}</a></td></tr>
+    </table>
+  </div>
+
+  <md-divider style="margin-top:10px;margin-bottom:10px;"></md-divider>
+
+  <div ng-if="!automationDetailCtrl.modData.unpacked" ng-switch on="automationDetailCtrl.modData.subscribed" layout="row">
+    <div layout="column" flex ng-switch-when="true">
+      <div layout="row" flex class="md-padding" style="color:#008800;font-weight:bold;">
+        <md-icon class="material-icons" style="margin-right:15px;">check_circle</md-icon>
+        <div flex>{{ 'ui.repository.subscribed' | translate }}</div>
+      </div>
+      <md-button flex ng-disabled="automationDetailCtrl.modData.downState === 'working'" class="md-raised" ng-click="modUnsubscribe(automationDetailCtrl.modData)"
+        style="text-transform: none;">{{ 'ui.repository.unsubscribe' | translate }}</md-button>
+    </div>
+    <div layout="row" flex ng-switch-default>
+      <md-button flex ng-show="!automationDetailCtrl.localData" ng-disabled="automationDetailCtrl.modData.prefix_title === 'Outdated' || automationDetailCtrl.modData.prefix_title === 'Unsupported'"
+        class="md-raised md-accent" ng-click="modSubscribe(automationDetailCtrl.modData)" style="text-transform: none;">
+        <b>{{ 'ui.repository.subscribe' | translate }}</b>
+      </md-button>
+      <md-button flex ng-show="automationDetailCtrl.localData" ng-disabled="automationDetailCtrl.modData.downState === 'working'" class="md-raised" ng-click="modUnsubscribe(automationDetailCtrl.modData)"
+        style="text-transform: none;">{{ 'ui.repository.unsubscribe' | translate }}</md-button>
+    </div>
+  </div>
+
+  <div layout="row" ng-show="automationDetailCtrl.modData.unpacked">{{ 'ui.repository.modUnpacked' | translate }}</div>
+
+  <div layout="column" ng-show="automationDetailCtrl.localData">
+    <md-button flex ng-show="automationDetailCtrl.localData && !automationDetailCtrl.localData.packed" class="md-raised" ng-click="automationDetailCtrl.togglePacked()"
+      style="text-transform: none;">{{'ui.modmanager.pack' | translate}}</md-button>
+    <md-button flex ng-show="automationDetailCtrl.localData.packed" class="md-raised" ng-click="automationDetailCtrl.togglePacked()" style="text-transform: none;">{{'ui.modmanager.unpack' | translate}}</md-button>
+    <md-button flex ng-show="automationDetailCtrl.localData.active && !automationDetailCtrl.localData.packed" class="md-raised" ng-click="automationDetailCtrl.openInExplorer()"
+      style="text-transform: none;">{{ :: 'ui.modmanager.openInExplorer' | translate}}</b>
+    </md-button>
+    <!--<md-button flex ui-sref="menu.mods.local" ng-show="automationDetailCtrl.localData" ng-disabled="!automationDetailCtrl.localData.packed" class="md-raised md-warn" ng-click="automationDetailCtrl.deleteMod()" style="text-transform: none;"><b>Delete</b></md-button>-->
+    <md-button flex ng-show="automationDetailCtrl.localData.active !== undefined" class="md-raised" ng-click="toggleActivation()" style="text-transform: none;">{{'ui.modmanager.' + (automationDetailCtrl.localData.active ? 'deactivate' : 'activate') | translate}}</md-button>
+  </div>
+
+  <md-divider style="margin-top:10px;margin-bottom:10px;"></md-divider>
+
+  <div ng-switch="automationDetailCtrl.modData.downState">
+      <div ng-switch-when="updating" style="cursor: default;" ng-if="automationDetailCtrl.modData.pending">
+        <div style="margin-bottom: 5%">
+          <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+        <md-tooltip md-direction="left">{{ ::'ui.repository.modQueued' | translate }}</md-tooltip>
+        {{ ::'ui.repository.modQueued' | translate }}
+      </div>
+
+      <div ng-switch-when="working" layout-align="end end" ng-if="automationDetailCtrl.modData.dl.progress > 0">
+        <div flex>
+          <md-progress-linear md-mode="determinate" value="{{automationDetailCtrl.modData.dl.progress}}"></md-progress-linear>
+        </div>
+        <div style="margin-top: 5%">
+          {{automationDetailCtrl.modData.dl.progress}}% {{ automationDetailCtrl.modData.dl.dlnow | bytes}} / {{ automationDetailCtrl.modData.dl.dltotal
+          | bytes}} @ {{ automationDetailCtrl.modData.dl.dlspeed | bytes}}/s
+        </div>
+      </div>
+    </div>
+
+</md-content>

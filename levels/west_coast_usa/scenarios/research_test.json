@@ -1,0 +1,17 @@
+[
+    {
+        "authors": "BeamNGpy",
+        "description": "Random driving for research",
+        "difficulty": 0,
+        "name": "research_test",
+        "prefabs": [
+            "levels/west_coast_usa/scenarios/research_test.prefab"
+        ],
+        "vehicles": {
+            "ego_vehicle": {
+                "playerUsable": true,
+                "startFocus": true
+            }
+        }
+    }
+]

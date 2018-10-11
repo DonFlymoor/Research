@@ -902,3 +902,156 @@ function testRaycasting(dtReal)
   local b = vec3(4 + math.cos(castRayTest) * 3,-2+math.sin(castRayTest) * 3,-10)
   castRayDebug(a, b, false, false)
 end
+
+function convertVehicleIdKeysToVehicleNameKeys(data)
+  local result = {}
+  if data and type(data) == 'table' then
+    for vid,entry in pairs(data) do
+      local vehicle = be:getObjectByID(vid)
+      if vehicle then
+        local vehicleName = vehicle:getField('name', '')
+        result[vehicleName] = entry
+      end
+    end
+  end
+  return result
+end
+
+function convertVehicleNameKeysToVehicleIdKeys(data)
+  local result = {}
+  if data and type(data) == 'table' then
+    for vehicleName,entry in pairs(data) do
+      local vehicle = scenetree.findObject(vehicleName)
+      if vehicle then
+        local vehicleID = vehicle:getID()
+        result[vehicleID] = entry
+      end
+    end
+  end
+  return result
+end
+
+function isOfficialContent(path)
+  return string.startswith(path, FS:getGamePath())
+end
+
+function imageExistsDefault(path, fallbackPath)
+  if path ~= nil and FS:fileExists(path) then
+    return path
+  else
+    return fallbackPath or '/ui/images/appDefault.png'
+  end
+end
+
+function dirContent(path)
+  return FS:findFilesByPattern(path, '*', -1, true, false)
+end
+
+function fileExistsOrNil(path)
+  if type(path) == 'string' and FS:fileExists(path) then
+    return path
+  end
+  return nil
+end
+
+function getDirs(path, recursiveLevels)
+  local files = FS:findFilesByPattern(path, '*', recursiveLevels, false, true)
+  local res = {}
+  local residx = 1
+  for _, value in pairs(files) do
+    if not tableContains(res, value) then
+      res[residx] = value
+      residx = residx + 1
+    end
+  end
+
+  return res
+end
+
+function getFileSize(filename)
+  local res = -1
+  local f = io.open(filename, "r")
+  if f == nil then
+    return res
+  end
+  res = f:seek("end")
+  f:close()
+  return res
+end
+
+-- Return the string 'str', with all magic (pattern) characters escaped.
+function escape_magic(str)
+  assert(type(str) == "string", "utils.escape: Argument 'str' is not a string.")
+  local escaped = str:gsub('[%-%.%+%[%]%(%)%^%%%?%*%^%$]','%%%1')
+  return escaped
+end
+
+local __randomWasSeeded = false
+function tableChooseRandomKey(t)
+  if t == nil then return nil end
+  if not __randomWasSeeded then
+    math.randomseed(os.time())
+    __randomWasSeeded = true
+  end
+  local randval = math.random(1, tableSize(t))
+  local n = 0
+  for k, v in pairs(t) do
+    n = n + 1
+    if n == randval then
+      return k
+    end
+  end
+  return nil
+end
+
+function randomASCIIString(len)
+  if not __randomWasSeeded then
+    math.randomseed(os.time())
+    __randomWasSeeded = true
+  end
+  local res = ''
+  local ascii = '01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  local sl = string.len(ascii)
+  for i = 1, len do
+    local k = math.random(1, sl)
+    res = res .. string.sub(ascii, k, k + 1)
+  end
+  return res
+end
+
+-- converts string str separated with separator sep to table
+function stringToTable(str, sep)
+  if sep == nil then
+    sep = "%s"
+  end
+
+  local t = {}
+  local i = 1
+  for s in string.gmatch(str, "([^"..sep.."]+)") do
+    t[i] = s
+    i = i + 1
+  end
+  return t
+end
+
+function copyfile(src, dst)
+  local infile = io.open(src, "r")
+  if not infile then return nil end
+  local outfile = io.open(dst, "w")
+  if not outfile then return nil end
+  outfile:write(infile:read("*a"))
+  infile:close()
+  outfile:close()
+end
+
+-- returns a list of immidiate directories with full path in given path
+function getDirectories(path)
+  local files = FS:findFilesByPattern(path,"*", 0, true, true)
+  local dirs = {}
+  for _,v in pairs(files) do
+    if FS:directoryExists(v) and not FS:fileExists(v) then
+      table.insert(dirs, v)
+    end
+  end
+  return dirs
+end

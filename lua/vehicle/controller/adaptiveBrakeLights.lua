@@ -3,14 +3,13 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-M.type = "auxilliary"
+M.type = "auxiliary"
 M.relevantDevice = nil
 M.defaultOrder = 600
 
 local min = math.min
 local floor = math.floor
 
-local name = nil
 local electricsName = nil
 local absBlinkTimer = 0
 local absBlinkOffTimer = 0
@@ -30,7 +29,7 @@ local emergencyBrakingHazardsActive = false
 
 local function updateGFX(dt)
   local absActive = absActiveSmoother:getUncapped(electrics.values.absActive or 0, dt)
-  local escActive = escActiveSmoother:getUncapped(electrics.values.escActive and 1 or 0, dt)
+  local escActive = indicateESCUsageWithBrakelights and escActiveSmoother:getUncapped(electrics.values.escActive and 1 or 0, dt) or 0
 
   if blinkPulse > 0 then
     absBlinkTimer = absBlinkTimer + dt * absActive
@@ -85,7 +84,6 @@ local function reset()
 end
 
 local function init(jbeamData)
-  name = jbeamData.name
   electricsName = jbeamData.electricsName or "brakelights"
   indicateESCUsageWithBrakelights = jbeamData.indicateESCUsageWithBrakelights == nil and true or jbeamData.indicateESCUsageWithBrakelights
   activateHazardsAfterEmergencyBraking = jbeamData.activateHazardsAfterEmergencyBraking == nil and true or jbeamData.activateHazardsAfterEmergencyBraking
@@ -99,8 +97,8 @@ local function init(jbeamData)
   absBlinkTimer = 0
   absBlinkOffTimer = 0
   blinkPulse = 1
-  absActiveSmoother = newTemporalSmoothing(2,2)
-  escActiveSmoother = newTemporalSmoothing(2,2)
+  absActiveSmoother = newTemporalSmoothing(2, 2)
+  escActiveSmoother = newTemporalSmoothing(2, 2)
   emergencyBrakingHazardsArmed = false
   emergencyBrakingHazardsActive = false
 end

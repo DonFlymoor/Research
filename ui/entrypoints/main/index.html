@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <base href="/ui/">
+    <title>Main Game UI</title>
 
     <!-- checks if the ui is loaded in an external browser and sets up communication via websocket to the game if that's the case -->
     <script src="entrypoints/main/setupCommunication.js"></script>
@@ -64,7 +65,9 @@
     <script src="modules/vehicleconfig/vehicleconfig.new.js"></script>
     <script src="modules/loading/loading.js"></script>
     <script src="modules/repository/repository.js"></script>
+    <script src="modules/automation/automation.js"></script>
     <script src="modules/quickrace/quickrace.js"></script>
+    <script src="modules/dragrace/dragrace.js"></script>
     <script src="modules/mapview/mapview.js"></script>
     <script src="modules/mission-popups/mission-popups.js"></script>
 
@@ -101,11 +104,7 @@
     <script src="modules/garageNew/garageSave/save.js"></script>
 
     <script src="modules/busRoute/busRoute.js"></script>
-
-    <!-- Ingame garage prototype -->
-    <script src="modules/garagePrototype/garage.js"></script>
-    <script src="modules/garagePrototype/garageSelect/select.js"></script>
-
+    <script src="modules/iconView/icons.js"></script>
 
     <!-- Mod Wizard -->
     <!-- <script src="modules/modwizard/modwizard.js"></script>
@@ -122,6 +121,7 @@
     <link type="text/css" rel="stylesheet" href="entrypoints/main/main.css">
     <link type="text/css" rel="stylesheet" href="lib/ext/keys.css">
     <link type="text/css" rel="stylesheet" href="modules/mainmenu/mainmenu.css">
+
   </head>
 
   <body ng-controller="AppCtrl as app" ng-show="app.aux.uiVisible" use-lang-font="1" class="container">
@@ -129,6 +129,15 @@
   <div ng-if="app.shipping">
 
   </div>
+
+  <!-- <div ng-if="!app.shipping">
+    <!-- Ingame garage prototype -->
+    <!-- <script src="modules/garagePrototype/garage.js"></script>
+    <script src="modules/garagePrototype/garageSelect/select.js"></script>
+
+    <script src="modules/dialogsystem/dialogsystem.js"></script>
+    <script src="modules/imageviewer/imageviewer.js"></script>
+  </div> -->
 
     <!--  .............. waiting screen overlay ..............  -->
     <div ng-if="app.isWaiting" style="width:100%; height:100%; background: rgba(0, 0, 0, 0.6); position: absolute; z-index: 999;" layout="row" layout-align="center center">

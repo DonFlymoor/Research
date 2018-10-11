@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.79.0 commit date:2017-09-11, commit time:10:43, hash:5bd8ac9</authoring_tool>
+    </contributor>
+    <created>2018-02-28T11:51:47</created>
+    <modified>2018-02-28T11:51:47</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_images/>
+  <library_effects>
+    <effect id="position_marker-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <color sid="diffuse">0.64 0.64 0.64 1</color>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_materials>
+    <material id="position_marker-material" name="position_marker">
+      <instance_effect url="#position_marker-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="position_marker-mesh" name="position_marker">
+      <mesh>
+        <source id="position_marker-mesh-positions">
+          <float_array id="position_marker-mesh-positions-array" count="576">-1 0 0 -0.9807853 -0.1950902 0 -0.9238796 -0.3826833 0 -0.8314697 -0.5555702 0 -0.7071068 -0.7071068 0 -0.5555702 -0.8314697 0 -0.3826833 -0.9238796 0 -0.1950901 -0.9807853 0 3.25841e-7 -1 0 3.25841e-7 -1 0.3996714 -0.1950901 -0.9807853 0.3996714 -0.3826833 -0.9238796 0.3996714 -0.5555702 -0.8314697 0.3996714 -0.7071068 -0.7071068 0.3996714 -0.8314697 -0.5555702 0.3996714 -0.9238796 -0.3826833 0.3996714 -0.9807853 -0.1950902 0.3996714 -1 0 0.3996714 -1.3 1.21253e-7 0 -1.275021 -0.2536173 0 -1.201043 -0.4974883 0 -1.080911 -0.7222413 0 -0.9192388 -0.9192388 0 -0.7222413 -1.080911 0 -0.4974883 -1.201043 0 -0.2536171 -1.275021 0 4.17351e-7 -1.3 0 4.17351e-7 -1.3 0.3996714 -0.2536171 -1.275021 0.3996714 -0.4974883 -1.201043 0.3996714 -0.7222413 -1.080911 0.3996714 -0.9192388 -0.9192388 0.3996714 -1.080911 -0.7222413 0.3996714 -1.201043 -0.4974883 0.3996714 -1.275021 -0.2536173 0.3996714 -1.3 1.21253e-7 0.3996714 -0.9807853 -0.1950902 0.7993429 -0.9238796 -0.3826833 0.7993429 -0.8314697 -0.5555702 0.7993429 -0.7071068 -0.7071068 0.7993429 -0.5555702 -0.8314697 0.7993429 -0.3826833 -0.9238796 0.7993429 -0.1950901 -0.9807853 0.7993429 -0.3826833 -0.9238796 1.598686 -0.1950901 -0.9807853 1.079113 -0.3826833 -0.9238796 1.079113 -0.5555702 -0.8314697 1.079113 -0.7071068 -0.7071068 1.079113 -0.8314697 -0.5555702 1.079113 -0.9238796 -0.3826833 1.079113 -0.9807853 -0.1950902 1.079113 -0.5555702 -0.8314697 1.598686 -0.7071068 -0.7071068 1.598686 -1.275021 -0.2536173 0.7993429 -1.201043 -0.4974883 0.7993429 -1.080911 -0.7222413 0.7993429 -0.9192388 -0.9192388 0.7993429 -0.7222413 -1.080911 0.7993429 -0.4974883 -1.201043 0.7993429 -0.2536171 -1.275021 0.7993429 -0.8314697 -0.5555702 1.598686 -0.9238796 -0.3826833 1.598686 -0.2536171 -1.275021 1.079113 -0.4974883 -1.201043 1.079113 -0.7222413 -1.080911 1.079113 -0.9192388 -0.9192388 1.079113 -1.080911 -0.7222413 1.079113 -1.201043 -0.4974883 1.079113 -1.275021 -0.2536173 1.079113 -0.3826833 -0.9238796 1.758554 -0.5555702 -0.8314697 1.758554 -0.7071068 -0.7071068 1.758554 -0.8314697 -0.5555702 1.758554 -0.9238796 -0.3826833 1.758554 -1.201043 -0.4974883 1.598686 -1.080911 -0.7222413 1.598686 -0.9192388 -0.9192388 1.598686 -0.7222413 -1.080911 1.598686 -0.4974883 -1.201043 1.598686 -0.4974883 -1.201043 1.758554 -0.7222413 -1.080911 1.758554 -0.9192388 -0.9192388 1.758554 -1.080911 -0.7222413 1.758554 -1.201043 -0.4974883 1.758554 3.25841e-7 -1 0.3996714 3.25841e-7 -1 0.3996714 3.25841e-7 -1 0 3.25841e-7 -1 0 -0.9807853 -0.1950902 0 -1 0 0 -1 0 0 -0.9238796 -0.3826833 0 -0.8314697 -0.5555702 0 -0.7071068 -0.7071068 0 -0.5555702 -0.8314697 0 -0.3826833 -0.9238796 0 -0.1950901 -0.9807853 0 -1 0 0.3996714 -1 0 0.3996714 -0.1950901 -0.9807853 0.3996714 -0.3826833 -0.9238796 0.3996714 -0.5555702 -0.8314697 0.3996714 -0.7071068 -0.7071068 0.3996714 -0.8314697 -0.5555702 0.3996714 -0.9238796 -0.3826833 0.3996714 -0.9807853 -0.1950902 0.3996714 4.17351e-7 -1.3 0.3996714 4.17351e-7 -1.3 0.3996714 4.17351e-7 -1.3 0 4.17351e-7 -1.3 0 -1.275021 -0.2536173 0 -1.3 1.21253e-7 0 -1.3 1.21253e-7 0 -1.201043 -0.4974883 0 -1.080911 -0.7222413 0 -0.9192388 -0.9192388 0 -0.7222413 -1.080911 0 -0.4974883 -1.201043 0 -0.2536171 -1.275021 0 -1.3 1.21253e-7 0.3996714 -1.3 1.21253e-7 0.3996714 -0.2536171 -1.275021 0.3996714 -0.4974883 -1.201043 0.3996714 -0.7222413 -1.080911 0.3996714 -0.9192388 -0.9192388 0.3996714 -1.080911 -0.7222413 0.3996714 -1.201043 -0.4974883 0.3996714 -1.275021 -0.2536173 0.3996714 -0.1950901 -0.9807853 0.7993429 -0.1950901 -0.9807853 0.7993429 -0.1950901 -0.9807853 1.079113 -0.1950901 -0.9807853 1.079113 -0.5555702 -0.8314697 1.758554 -0.7071068 -0.7071068 1.758554 -0.9238796 -0.3826833 0.7993429 -0.9807853 -0.1950902 0.7993429 -0.9807853 -0.1950902 0.7993429 -0.8314697 -0.5555702 0.7993429 -0.7071068 -0.7071068 0.7993429 -0.5555702 -0.8314697 0.7993429 -0.3826833 -0.9238796 0.7993429 -0.9807853 -0.1950902 1.079113 -0.9807853 -0.1950902 1.079113 -0.3826833 -0.9238796 1.758554 -0.3826833 -0.9238796 1.758554 -0.3826833 -0.9238796 1.079113 -0.5555702 -0.8314697 1.079113 -0.7071068 -0.7071068 1.079113 -0.8314697 -0.5555702 1.079113 -0.9238796 -0.3826833 1.079113 -0.5555702 -0.8314697 1.598686 -0.7071068 -0.7071068 1.598686 -0.2536171 -1.275021 0.7993429 -0.2536171 -1.275021 0.7993429 -0.2536171 -1.275021 1.079113 -0.2536171 -1.275021 1.079113 -0.8314697 -0.5555702 1.598686 -0.9238796 -0.3826833 1.598686 -0.9238796 -0.3826833 1.598686 -1.201043 -0.4974883 0.7993429 -1.275021 -0.2536173 0.7993429 -1.275021 -0.2536173 0.7993429 -1.080911 -0.7222413 0.7993429 -0.9192388 -0.9192388 0.7993429 -0.7222413 -1.080911 0.7993429 -0.4974883 -1.201043 0.7993429 -1.275021 -0.2536173 1.079113 -1.275021 -0.2536173 1.079113 -0.9238796 -0.3826833 1.758554 -0.9238796 -0.3826833 1.758554 -0.4974883 -1.201043 1.079113 -0.7222413 -1.080911 1.079113 -0.9192388 -0.9192388 1.079113 -1.080911 -0.7222413 1.079113 -1.201043 -0.4974883 1.079113 -0.3826833 -0.9238796 1.598686 -0.3826833 -0.9238796 1.598686 -0.8314697 -0.5555702 1.758554 -0.4974883 -1.201043 1.758554 -0.4974883 -1.201043 1.758554 -0.4974883 -1.201043 1.598686 -0.4974883 -1.201043 1.598686 -1.201043 -0.4974883 1.758554 -1.201043 -0.4974883 1.758554 -1.201043 -0.4974883 1.598686 -1.201043 -0.4974883 1.598686 -1.080911 -0.7222413 1.598686 -0.9192388 -0.9192388 1.598686 -0.7222413 -1.080911 1.598686 -0.7222413 -1.080911 1.758554 -0.9192388 -0.9192388 1.758554 -1.080911 -0.7222413 1.758554</float_array>
+          <technique_common>
+            <accessor source="#position_marker-mesh-positions-array" count="192" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="position_marker-mesh-normals">
+          <float_array id="position_marker-mesh-normals-array" count="102">0.8314677 0.5555732 0 0.7071068 0.7071068 0 0.9951869 0.09799575 0 0.9807879 0.1950772 0 0.1950772 0.9807879 0 0.09799575 0.9951869 0 0.5555732 0.8314677 0 0.9238803 0.3826816 0 0.3826816 0.9238803 0 -0.7071068 -0.7071068 0 -0.8314677 -0.5555732 0 -0.9807879 -0.1950772 0 -0.9951869 -0.09799575 0 -0.09799575 -0.9951869 0 -0.1950772 -0.9807879 0 -0.5555732 -0.8314677 0 -0.9238803 -0.3826816 0 1 0 0 -0.3826816 -0.9238803 0 0 1 0 0 0 -1 0 0 1 0.4714023 0.8819184 0 0.9569466 0.290264 0 0.290264 0.9569466 0 -0.1950772 0.9807879 0 0.9807879 -0.1950772 0 -0.9569466 -0.290264 0 0.8819184 0.4714023 0 -0.290264 -0.9569466 0 0.9238803 -0.3826816 0 -0.4714023 -0.8819184 0 -0.8819184 -0.4714023 0 -0.3826816 0.9238803 0</float_array>
+          <technique_common>
+            <accessor source="#position_marker-mesh-normals-array" count="34" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="position_marker-mesh-map-0">
+          <float_array id="position_marker-mesh-map-0-array" count="936">1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1</float_array>
+          <technique_common>
+            <accessor source="#position_marker-mesh-map-0-array" count="468" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="position_marker-mesh-vertices">
+          <input semantic="POSITION" source="#position_marker-mesh-positions"/>
+        </vertices>
+        <triangles material="position_marker-material" count="156">
+          <input semantic="VERTEX" source="#position_marker-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#position_marker-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#position_marker-mesh-map-0" offset="2" set="0"/>
+          <p>92 0 0 102 1 1 93 1 2 89 2 3 105 3 4 88 3 5 96 4 6 84 5 7 86 5 8 93 1 9 101 6 10 94 6 11 88 3 12 104 7 13 91 7 14 94 6 15 100 8 16 95 8 17 91 7 18 103 0 19 92 0 20 95 8 21 99 4 22 96 4 23 124 9 24 114 10 25 115 9 26 127 11 27 111 12 28 110 11 29 106 13 30 118 14 31 108 13 32 123 15 33 115 9 34 116 15 35 126 16 36 110 11 37 113 16 38 85 17 39 109 17 40 87 17 41 122 18 42 116 15 43 117 18 44 125 10 45 113 16 46 114 10 47 90 19 48 120 19 49 98 19 50 121 14 51 117 18 52 118 14 53 5 20 54 22 20 55 4 20 56 33 21 57 14 21 58 15 21 59 24 20 60 5 20 61 6 20 62 16 21 63 33 21 64 15 21 65 25 20 66 6 20 67 7 20 68 35 21 69 16 21 70 17 21 71 10 21 72 27 21 73 9 21 74 26 20 75 7 20 76 8 20 77 1 20 78 18 20 79 0 20 80 29 21 81 10 21 82 11 21 83 20 20 84 1 20 85 2 20 86 12 21 87 29 21 88 11 21 89 3 20 90 20 20 91 2 20 92 31 21 93 12 21 94 13 21 95 22 20 96 3 20 97 4 20 98 14 21 99 31 21 100 13 21 101 137 0 102 147 1 103 138 1 104 190 9 105 186 10 106 187 9 107 150 6 108 143 22 109 175 22 110 138 1 111 146 6 112 139 6 113 135 23 114 149 7 115 134 7 116 139 6 117 145 8 118 140 8 119 134 7 120 148 0 121 137 0 122 140 8 123 130 24 124 128 24 125 172 9 126 162 10 127 163 9 128 161 25 129 142 25 130 136 25 131 154 26 132 129 26 133 131 26 134 171 15 135 163 9 136 164 15 137 174 16 138 160 27 139 159 16 140 157 28 141 177 0 142 156 0 143 170 18 144 164 15 145 165 18 146 173 10 147 159 16 148 162 10 149 155 29 150 165 18 151 153 29 152 40 20 153 56 20 154 39 20 155 67 21 156 48 21 157 49 21 158 58 20 159 40 20 160 41 20 161 50 21 162 67 21 163 49 21 164 59 20 165 41 20 166 42 20 167 156 0 168 133 1 169 151 1 170 151 1 171 132 6 172 150 6 173 63 21 174 44 21 175 45 21 176 54 20 177 36 20 178 37 20 179 46 21 180 63 21 181 45 21 182 38 20 183 54 20 184 37 20 185 65 21 186 46 21 187 47 21 188 56 20 189 38 20 190 39 20 191 48 21 192 65 21 193 47 21 194 189 15 195 187 9 196 188 15 197 144 30 198 180 30 199 176 30 200 179 31 201 188 15 202 181 31 203 191 10 204 184 32 205 186 10 206 185 33 207 169 33 208 158 33 209 51 20 210 76 20 211 52 20 212 83 21 213 72 21 214 73 21 215 78 20 216 51 20 217 43 20 218 70 21 219 79 21 220 69 21 221 60 20 222 74 20 223 61 20 224 81 21 225 70 21 226 71 21 227 76 20 228 60 20 229 52 20 230 72 21 231 81 21 232 71 21 233 92 0 234 103 0 235 102 1 236 89 2 237 97 2 238 105 3 239 96 4 240 99 4 241 84 5 242 93 1 243 102 1 244 101 6 245 88 3 246 105 3 247 104 7 248 94 6 249 101 6 250 100 8 251 91 7 252 104 7 253 103 0 254 95 8 255 100 8 256 99 4 257 124 9 258 125 10 259 114 10 260 127 11 261 119 12 262 111 12 263 106 13 264 121 14 265 118 14 266 123 15 267 124 9 268 115 9 269 126 16 270 127 11 271 110 11 272 85 17 273 107 17 274 109 17 275 122 18 276 123 15 277 116 15 278 125 10 279 126 16 280 113 16 281 90 19 282 112 19 283 120 19 284 121 14 285 122 18 286 117 18 287 5 20 288 23 20 289 22 20 290 33 21 291 32 21 292 14 21 293 24 20 294 23 20 295 5 20 296 16 21 297 34 21 298 33 21 299 25 20 300 24 20 301 6 20 302 35 21 303 34 21 304 16 21 305 10 21 306 28 21 307 27 21 308 26 20 309 25 20 310 7 20 311 1 20 312 19 20 313 18 20 314 29 21 315 28 21 316 10 21 317 20 20 318 19 20 319 1 20 320 12 21 321 30 21 322 29 21 323 3 20 324 21 20 325 20 20 326 31 21 327 30 21 328 12 21 329 22 20 330 21 20 331 3 20 332 14 21 333 32 21 334 31 21 335 137 0 336 148 0 337 147 1 338 190 9 339 191 10 340 186 10 341 150 6 342 132 6 343 143 22 344 138 1 345 147 1 346 146 6 347 135 23 348 141 23 349 149 7 350 139 6 351 146 6 352 145 8 353 134 7 354 149 7 355 148 0 356 140 8 357 145 8 358 130 24 359 172 9 360 173 10 361 162 10 362 161 25 363 166 25 364 142 25 365 154 26 366 152 26 367 129 26 368 171 15 369 172 9 370 163 9 371 174 16 372 167 27 373 160 27 374 157 28 375 168 28 376 177 0 377 170 18 378 171 15 379 164 15 380 173 10 381 174 16 382 159 16 383 155 29 384 170 18 385 165 18 386 40 20 387 57 20 388 56 20 389 67 21 390 66 21 391 48 21 392 58 20 393 57 20 394 40 20 395 50 21 396 68 21 397 67 21 398 59 20 399 58 20 400 41 20 401 156 0 402 177 0 403 133 1 404 151 1 405 133 1 406 132 6 407 63 21 408 62 21 409 44 21 410 54 20 411 53 20 412 36 20 413 46 21 414 64 21 415 63 21 416 38 20 417 55 20 418 54 20 419 65 21 420 64 21 421 46 21 422 56 20 423 55 20 424 38 20 425 48 21 426 66 21 427 65 21 428 189 15 429 190 9 430 187 9 431 144 30 432 178 30 433 180 30 434 179 31 435 189 15 436 188 15 437 191 10 438 182 32 439 184 32 440 185 33 441 183 33 442 169 33 443 51 20 444 77 20 445 76 20 446 83 21 447 82 21 448 72 21 449 78 20 450 77 20 451 51 20 452 70 21 453 80 21 454 79 21 455 60 20 456 75 20 457 74 20 458 81 21 459 80 21 460 70 21 461 76 20 462 75 20 463 60 20 464 72 21 465 82 21 466 81 21 467</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_animations>
+    <animation id="position_marker_location_X">
+      <source id="position_marker_location_X-input">
+        <float_array id="position_marker_location_X-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_X-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_X-output">
+        <float_array id="position_marker_location_X-output-array" count="2">0 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_X-output-array" count="2" stride="1">
+            <param name="X" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_X-interpolation">
+        <Name_array id="position_marker_location_X-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_location_X-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_X-intangent">
+        <float_array id="position_marker_location_X-intangent-array" count="4">-0.7576495 0 1.225684 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_X-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_X-outtangent">
+        <float_array id="position_marker_location_X-outtangent-array" count="4">0.7909829 0 2.774316 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_X-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_location_X-sampler">
+        <input semantic="INPUT" source="#position_marker_location_X-input"/>
+        <input semantic="OUTPUT" source="#position_marker_location_X-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_location_X-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_location_X-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_location_X-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_location_X-sampler" target="position_marker/location.X"/>
+    </animation>
+    <animation id="position_marker_location_Y">
+      <source id="position_marker_location_Y-input">
+        <float_array id="position_marker_location_Y-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Y-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Y-output">
+        <float_array id="position_marker_location_Y-output-array" count="2">0 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Y-output-array" count="2" stride="1">
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Y-interpolation">
+        <Name_array id="position_marker_location_Y-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Y-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Y-intangent">
+        <float_array id="position_marker_location_Y-intangent-array" count="4">-0.7576495 0 1.225684 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Y-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Y-outtangent">
+        <float_array id="position_marker_location_Y-outtangent-array" count="4">0.7909829 0 2.774316 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Y-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_location_Y-sampler">
+        <input semantic="INPUT" source="#position_marker_location_Y-input"/>
+        <input semantic="OUTPUT" source="#position_marker_location_Y-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_location_Y-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_location_Y-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_location_Y-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_location_Y-sampler" target="position_marker/location.Y"/>
+    </animation>
+    <animation id="position_marker_location_Z">
+      <source id="position_marker_location_Z-input">
+        <float_array id="position_marker_location_Z-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Z-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Z-output">
+        <float_array id="position_marker_location_Z-output-array" count="2">0 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Z-output-array" count="2" stride="1">
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Z-interpolation">
+        <Name_array id="position_marker_location_Z-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Z-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Z-intangent">
+        <float_array id="position_marker_location_Z-intangent-array" count="4">-0.7576495 0 1.225684 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Z-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_location_Z-outtangent">
+        <float_array id="position_marker_location_Z-outtangent-array" count="4">0.7909829 0 2.774316 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_location_Z-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_location_Z-sampler">
+        <input semantic="INPUT" source="#position_marker_location_Z-input"/>
+        <input semantic="OUTPUT" source="#position_marker_location_Z-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_location_Z-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_location_Z-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_location_Z-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_location_Z-sampler" target="position_marker/location.Z"/>
+    </animation>
+    <animation id="position_marker_rotation_euler_X">
+      <source id="position_marker_rotation_euler_X-input">
+        <float_array id="position_marker_rotation_euler_X-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_X-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_X-output">
+        <float_array id="position_marker_rotation_euler_X-output-array" count="2">0 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_X-output-array" count="2" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_X-interpolation">
+        <Name_array id="position_marker_rotation_euler_X-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_X-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_X-intangent">
+        <float_array id="position_marker_rotation_euler_X-intangent-array" count="4">-0.7576495 0 1.225684 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_X-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_X-outtangent">
+        <float_array id="position_marker_rotation_euler_X-outtangent-array" count="4">0.7909829 0 2.774316 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_X-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_rotation_euler_X-sampler">
+        <input semantic="INPUT" source="#position_marker_rotation_euler_X-input"/>
+        <input semantic="OUTPUT" source="#position_marker_rotation_euler_X-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_rotation_euler_X-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_rotation_euler_X-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_rotation_euler_X-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_rotation_euler_X-sampler" target="position_marker/rotationX.ANGLE"/>
+    </animation>
+    <animation id="position_marker_rotation_euler_Y">
+      <source id="position_marker_rotation_euler_Y-input">
+        <float_array id="position_marker_rotation_euler_Y-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Y-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Y-output">
+        <float_array id="position_marker_rotation_euler_Y-output-array" count="2">0 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Y-output-array" count="2" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Y-interpolation">
+        <Name_array id="position_marker_rotation_euler_Y-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Y-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Y-intangent">
+        <float_array id="position_marker_rotation_euler_Y-intangent-array" count="4">-0.7576495 0 1.225684 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Y-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Y-outtangent">
+        <float_array id="position_marker_rotation_euler_Y-outtangent-array" count="4">0.7909829 0 2.774316 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Y-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_rotation_euler_Y-sampler">
+        <input semantic="INPUT" source="#position_marker_rotation_euler_Y-input"/>
+        <input semantic="OUTPUT" source="#position_marker_rotation_euler_Y-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_rotation_euler_Y-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_rotation_euler_Y-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_rotation_euler_Y-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_rotation_euler_Y-sampler" target="position_marker/rotationY.ANGLE"/>
+    </animation>
+    <animation id="position_marker_rotation_euler_Z">
+      <source id="position_marker_rotation_euler_Z-input">
+        <float_array id="position_marker_rotation_euler_Z-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Z-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Z-output">
+        <float_array id="position_marker_rotation_euler_Z-output-array" count="2">0 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Z-output-array" count="2" stride="1">
+            <param name="ANGLE" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Z-interpolation">
+        <Name_array id="position_marker_rotation_euler_Z-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Z-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Z-intangent">
+        <float_array id="position_marker_rotation_euler_Z-intangent-array" count="4">-0.7576495 0 1.225684 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Z-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_rotation_euler_Z-outtangent">
+        <float_array id="position_marker_rotation_euler_Z-outtangent-array" count="4">0.7909829 0 2.774316 0</float_array>
+        <technique_common>
+          <accessor source="#position_marker_rotation_euler_Z-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_rotation_euler_Z-sampler">
+        <input semantic="INPUT" source="#position_marker_rotation_euler_Z-input"/>
+        <input semantic="OUTPUT" source="#position_marker_rotation_euler_Z-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_rotation_euler_Z-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_rotation_euler_Z-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_rotation_euler_Z-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_rotation_euler_Z-sampler" target="position_marker/rotationZ.ANGLE"/>
+    </animation>
+    <animation id="position_marker_scale_X">
+      <source id="position_marker_scale_X-input">
+        <float_array id="position_marker_scale_X-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_X-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_X-output">
+        <float_array id="position_marker_scale_X-output-array" count="2">1 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_X-output-array" count="2" stride="1">
+            <param name="X" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_X-interpolation">
+        <Name_array id="position_marker_scale_X-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_X-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_X-intangent">
+        <float_array id="position_marker_scale_X-intangent-array" count="4">-0.7576495 1 1.225684 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_X-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_X-outtangent">
+        <float_array id="position_marker_scale_X-outtangent-array" count="4">0.7909829 1 2.774316 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_X-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_scale_X-sampler">
+        <input semantic="INPUT" source="#position_marker_scale_X-input"/>
+        <input semantic="OUTPUT" source="#position_marker_scale_X-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_scale_X-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_scale_X-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_scale_X-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_scale_X-sampler" target="position_marker/scale.X"/>
+    </animation>
+    <animation id="position_marker_scale_Y">
+      <source id="position_marker_scale_Y-input">
+        <float_array id="position_marker_scale_Y-input-array" count="2">0.01666665 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Y-input-array" count="2" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Y-output">
+        <float_array id="position_marker_scale_Y-output-array" count="2">1 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Y-output-array" count="2" stride="1">
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Y-interpolation">
+        <Name_array id="position_marker_scale_Y-interpolation-array" count="2">BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Y-interpolation-array" count="2" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Y-intangent">
+        <float_array id="position_marker_scale_Y-intangent-array" count="4">-0.7576495 1 1.225684 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Y-intangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Y-outtangent">
+        <float_array id="position_marker_scale_Y-outtangent-array" count="4">0.7909829 1 2.774316 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Y-outtangent-array" count="2" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_scale_Y-sampler">
+        <input semantic="INPUT" source="#position_marker_scale_Y-input"/>
+        <input semantic="OUTPUT" source="#position_marker_scale_Y-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_scale_Y-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_scale_Y-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_scale_Y-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_scale_Y-sampler" target="position_marker/scale.Y"/>
+    </animation>
+    <animation id="position_marker_scale_Z">
+      <source id="position_marker_scale_Z-input">
+        <float_array id="position_marker_scale_Z-input-array" count="120">0.01666665 0.0333333 0.04999995 0.06666666 0.08333331 0.1 0.1166666 0.1333333 0.15 0.1666666 0.1833333 0.2 0.2166666 0.2333333 0.25 0.2666667 0.2833333 0.3 0.3166667 0.3333333 0.35 0.3666667 0.3833333 0.4 0.4166666 0.4333333 0.45 0.4666666 0.4833333 0.5 0.5166667 0.5333334 0.55 0.5666667 0.5833333 0.6 0.6166667 0.6333333 0.65 0.6666667 0.6833333 0.7 0.7166666 0.7333334 0.75 0.7666667 0.7833334 0.8 0.8166667 0.8333333 0.85 0.8666667 0.8833333 0.9 0.9166667 0.9333333 0.95 0.9666666 0.9833334 1 1.016667 1.033333 1.05 1.066667 1.083333 1.1 1.116667 1.133333 1.15 1.166667 1.183333 1.2 1.216667 1.233333 1.25 1.266667 1.283333 1.3 1.316667 1.333333 1.35 1.366667 1.383333 1.4 1.416667 1.433333 1.45 1.466667 1.483333 1.5 1.516667 1.533333 1.55 1.566667 1.583333 1.6 1.616667 1.633333 1.65 1.666667 1.683333 1.7 1.716667 1.733333 1.75 1.766667 1.783333 1.8 1.816667 1.833333 1.85 1.866667 1.883333 1.9 1.916667 1.933333 1.95 1.966667 1.983333 2</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Z-input-array" count="120" stride="1">
+            <param name="TIME" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Z-output">
+        <float_array id="position_marker_scale_Z-output-array" count="120">1 0.9998425 0.9993682 0.998575 0.9974611 0.9960254 0.9942674 0.9921874 0.9897863 0.9870659 0.984029 0.9806795 0.9770219 0.9730624 0.9688081 0.9642674 0.95945 0.9543668 0.9490305 0.9434546 0.9376544 0.9316464 0.9254485 0.9190797 0.91256 0.905911 0.8991546 0.8923141 0.8854129 0.878475 0.8715249 0.8645872 0.8576859 0.8508453 0.844089 0.83744 0.8309204 0.8245515 0.8183535 0.8123456 0.8065454 0.8009696 0.7956332 0.7905501 0.7857326 0.781192 0.7769376 0.7729781 0.7693206 0.765971 0.7629341 0.7602137 0.7578126 0.7557325 0.7539746 0.7525389 0.751425 0.7506318 0.7501576 0.75 0.7501523 0.7506108 0.7513778 0.7524546 0.7538427 0.7555422 0.7575534 0.7598751 0.7625058 0.765443 0.7686833 0.7722222 0.7760545 0.7801733 0.7845711 0.7892389 0.7941668 0.7993429 0.8047547 0.8103883 0.8162282 0.822258 0.82846 0.8348155 0.8413043 0.8479059 0.8545987 0.8613606 0.8681687 0.875 0.8818313 0.8886395 0.8954013 0.9020941 0.9086958 0.9151846 0.92154 0.927742 0.9337717 0.9396117 0.9452453 0.9506571 0.9558333 0.9607611 0.9654289 0.9698268 0.9739456 0.9777778 0.9813167 0.984557 0.9874942 0.990125 0.9924466 0.9944577 0.9961574 0.9975453 0.9986223 0.9993892 0.9998477 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Z-output-array" count="120" stride="1">
+            <param name="Z" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Z-interpolation">
+        <Name_array id="position_marker_scale_Z-interpolation-array" count="120">BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER BEZIER</Name_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Z-interpolation-array" count="120" stride="1">
+            <param name="INTERPOLATION" type="name"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Z-intangent">
+        <float_array id="position_marker_scale_Z-intangent-array" count="240">0.01015979 1 0.02682644 0.9999658 0.04349309 0.9996156 0.0601598 0.9989473 0.07682645 0.9979588 0.0934931 0.9966488 0.1101598 0.9950166 0.1268265 0.9930621 0.1434931 0.990786 0.1601598 0.9881897 0.1768264 0.9852757 0.1934931 0.9820473 0.2101598 0.9785088 0.2268264 0.9746658 0.2434931 0.970525 0.2601598 0.9660941 0.2768265 0.9613826 0.2934932 0.9564007 0.3101598 0.9511606 0.3268265 0.9456753 0.3434931 0.9399595 0.3601598 0.9340291 0.3768265 0.9279016 0.3934931 0.9215956 0.4101598 0.9151306 0.4268265 0.9085278 0.4434931 0.9018088 0.4601598 0.8949965 0.4768265 0.8881143 0.4934931 0.881186 0.5101598 0.8742359 0.5268265 0.8672887 0.5434932 0.8603684 0.5601598 0.8534995 0.5768265 0.8467059 0.5934932 0.8400105 0.6101598 0.8334363 0.6268265 0.8270046 0.6434931 0.8207362 0.6601598 0.8146507 0.6768265 0.8087661 0.6934931 0.8030998 0.7101598 0.7976672 0.7268265 0.7924827 0.7434931 0.7875594 0.7601598 0.7829088 0.7768265 0.778541 0.7934932 0.774465 0.8101598 0.7706884 0.8268265 0.7672176 0.8434932 0.7640579 0.8601598 0.7612135 0.8768265 0.7586874 0.8934931 0.7564817 0.9101598 0.754598 0.9268265 0.7530366 0.9434931 0.7517973 0.9601598 0.7508792 0.9768265 0.7502809 0.9934931 0.75 1.01016 0.7500331 1.026826 0.7503716 1.043493 0.7510179 1.06016 0.7519735 1.076826 0.7532399 1.093493 0.7548179 1.11016 0.7567076 1.126827 0.7589084 1.143493 0.7614189 1.16016 0.7642371 1.176826 0.7673599 1.193493 0.7707833 1.21016 0.7745023 1.226826 0.7785108 1.243493 0.7828015 1.26016 0.7873658 1.276826 0.7921944 1.293493 0.797276 1.31016 0.8025986 1.326826 0.8081486 1.343493 0.8139112 1.36016 0.8198703 1.376827 0.8260087 1.393493 0.8323082 1.41016 0.8387489 1.426826 0.8453108 1.443493 0.8519723 1.46016 0.8587116 1.476826 0.8655062 1.493493 0.872333 1.51016 0.8791688 1.526826 0.8859905 1.543493 0.8927749 1.56016 0.899499 1.576826 0.9061405 1.593493 0.9126774 1.61016 0.9190887 1.626827 0.9253543 1.643493 0.9314547 1.66016 0.937372 1.676826 0.9430891 1.693493 0.9485903 1.71016 0.9538609 1.726826 0.9588879 1.743493 0.9636592 1.76016 0.9681643 1.776826 0.9723935 1.793493 0.976339 1.81016 0.9799934 1.826826 0.9833511 1.843493 0.9864073 1.86016 0.9891582 1.876827 0.9916008 1.893493 0.9937334 1.91016 0.9955546 1.926826 0.9970641 1.943493 0.9982624 1.96016 0.99915 1.976826 0.9997285 1.993493 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Z-intangent-array" count="120" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <source id="position_marker_scale_Z-outtangent">
+        <float_array id="position_marker_scale_Z-outtangent-array" count="240">0.02317351 1 0.03984016 0.9997192 0.05650681 0.9991208 0.07317352 0.9982027 0.08984017 0.9969634 0.1065068 0.995402 0.1231735 0.9935182 0.1398401 0.9913126 0.1565068 0.9887865 0.1731735 0.985942 0.1898401 0.9827823 0.2065069 0.9793117 0.2231735 0.975535 0.2398402 0.971459 0.2565069 0.9670913 0.2731735 0.9624406 0.2898402 0.9575173 0.3065068 0.9523328 0.3231735 0.9469004 0.3398402 0.9412339 0.3565068 0.9353494 0.3731735 0.9292637 0.3898402 0.9229954 0.4065068 0.9165638 0.4231735 0.9099894 0.4398402 0.9032942 0.4565069 0.8965004 0.4731735 0.8896316 0.4898402 0.8827114 0.5065069 0.875764 0.5231735 0.8688139 0.5398402 0.8618857 0.5565069 0.8550034 0.5731735 0.8481912 0.5898402 0.8414722 0.6065069 0.8348694 0.6231735 0.8284045 0.6398402 0.8220983 0.6565068 0.8159709 0.6731736 0.8100406 0.6898402 0.8043248 0.7065069 0.7988395 0.7231735 0.7935993 0.7398402 0.7886175 0.7565069 0.7839059 0.7731735 0.7794751 0.7898402 0.7753342 0.8065069 0.7714912 0.8231735 0.7679528 0.8398402 0.7647243 0.8565069 0.7618103 0.8731735 0.759214 0.8898402 0.7569379 0.9065068 0.7549834 0.9231736 0.7533512 0.9398402 0.7520412 0.9565069 0.7510527 0.9731735 0.7503844 0.9898402 0.7500343 1.006507 0.75 1.023174 0.7502715 1.03984 0.75085 1.056507 0.7517377 1.073173 0.7529358 1.08984 0.7544454 1.106507 0.7562666 1.123173 0.7583992 1.13984 0.7608419 1.156507 0.7635927 1.173174 0.7666488 1.18984 0.7700066 1.206507 0.7736611 1.223173 0.7776066 1.23984 0.7818358 1.256507 0.7863408 1.273174 0.7911121 1.28984 0.7961391 1.306507 0.8014097 1.323173 0.8069109 1.33984 0.812628 1.356507 0.8185452 1.373173 0.8246457 1.38984 0.8309113 1.406507 0.8373227 1.423174 0.8438596 1.43984 0.8505011 1.456507 0.8572251 1.473173 0.8640095 1.48984 0.8708311 1.506507 0.877667 1.523174 0.8844938 1.53984 0.8912884 1.556507 0.8980277 1.573173 0.9046893 1.58984 0.9112511 1.606507 0.9176919 1.623173 0.9239913 1.63984 0.9301297 1.656507 0.9360888 1.673174 0.9418514 1.68984 0.9474014 1.706507 0.952724 1.723173 0.9578056 1.73984 0.9626342 1.756507 0.9671986 1.773174 0.9714893 1.78984 0.9754977 1.806507 0.9792167 1.823173 0.98264 1.83984 0.985763 1.856507 0.9885811 1.873173 0.9910917 1.88984 0.9932923 1.906507 0.9951821 1.923174 0.9967601 1.93984 0.9980264 1.956507 0.9989823 1.973173 0.9996284 1.98984 0.9999669 2.006507 1</float_array>
+        <technique_common>
+          <accessor source="#position_marker_scale_Z-outtangent-array" count="120" stride="2">
+            <param name="X" type="float"/>
+            <param name="Y" type="float"/>
+          </accessor>
+        </technique_common>
+      </source>
+      <sampler id="position_marker_scale_Z-sampler">
+        <input semantic="INPUT" source="#position_marker_scale_Z-input"/>
+        <input semantic="OUTPUT" source="#position_marker_scale_Z-output"/>
+        <input semantic="INTERPOLATION" source="#position_marker_scale_Z-interpolation"/>
+        <input semantic="IN_TANGENT" source="#position_marker_scale_Z-intangent"/>
+        <input semantic="OUT_TANGENT" source="#position_marker_scale_Z-outtangent"/>
+      </sampler>
+      <channel source="#position_marker_scale_Z-sampler" target="position_marker/scale.Z"/>
+    </animation>
+  </library_animations>
+  <library_controllers/>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="position_marker" name="position_marker" type="NODE">
+        <translate sid="location">0 0 0</translate>
+        <rotate sid="rotationZ">0 0 1 0</rotate>
+        <rotate sid="rotationY">0 1 0 0</rotate>
+        <rotate sid="rotationX">1 0 0 0</rotate>
+        <scale sid="scale">1 1 1</scale>
+        <instance_geometry url="#position_marker-mesh" name="position_marker">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="position_marker-material" target="#position_marker-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>

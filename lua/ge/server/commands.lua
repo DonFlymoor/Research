@@ -36,8 +36,19 @@ local function setFreeCamera()
   if not game then return end
   local camera = getCamera(game)
   if not camera then return end
-  camera:setTransform(be:getPlayerVehicle(0):getCameraTransform())
+  local veh = be:getPlayerVehicle(0)
+  if veh then camera:setTransform(veh:getCameraTransform()) end
   game:setCameraHandler(camera.obj)
+end
+
+local function isFreeCamera(player)
+  local veh = be:getPlayerVehicle(player)
+  if not veh then return false end
+  local game = getGame()
+  if not game then return false end
+  local cam = game:getCameraHandler()
+  if not cam then return false end
+  return cam:getType() ~= veh:getType()
 end
 
 local function changeCameraSpeed(val)
@@ -53,7 +64,7 @@ end
 local function onNodegrabStart()
   local game = getGame()
   if not game then return end
-  mustSwitchBack = (game:getCameraHandler():getID() == be:getPlayerVehicle(0):getID())
+  mustSwitchBack = not isFreeCamera(0)
   if mustSwitchBack then
     setFreeCamera()
   end
@@ -84,12 +95,6 @@ end
 
 local function toggleFirstPerson()
   --NOOP, do nothing for now, well reimplement properly one day
-end
-
-local function isFreeCamera(player)
-  local game = getGame()
-  if not game then return end
-  return game:getCameraHandler():getID() ~= be:getPlayerVehicle(player):getID()
 end
 
 local function toggleCamera(player)

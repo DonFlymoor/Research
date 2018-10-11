@@ -1,0 +1,92 @@
+{
+"bindings" :   [
+    {
+    "ffb" :       {"forceLimit"        : 4.5                   , "smoothing"         : 150                 , "forceCoef"         : 350                 , "forceCoefLowSpeed": 170, "smoothingHF"       : 50                  }, 
+    "isForceInverted"   : false                , 
+    "ffbUpdateType" : 0,
+    "isForceEnabled"    : true                , 
+    "control"           : "xaxis"             , 
+    "action"            : "steering"      
+    "isInverted"        : true                , 
+    "angle": 900, 
+    "frequency" : "100", 
+    }, 
+    {
+    "control"           : "yaxis"             , 
+    "action"            : "brake"      , 
+    "isInverted"        : true                , 
+    }, 
+    {
+    "control"           : "rzaxis"            , 
+    "action"            : "accelerate" , 
+    "isInverted"        : true                , 
+    }, 
+    {
+    "control"           : "button0"           , 
+    "action"            : "shiftDown"         
+    }, 
+    {
+    "control"           : "button1"           , 
+    "action"            : "shiftUp"           
+    }, 
+    {
+    "action"            : "rotate_camera_right", 
+    "control"           : "rpov"              , 
+    }, 
+    {
+    "action"            : "rotate_camera_left", 
+    "control"           : "lpov"              , 
+    }, 
+    {
+    "action"            : "rotate_camera_up"  , 
+    "control"           : "upov"              , 
+    }, 
+    {
+    "action"            : "rotate_camera_down", 
+    "control"           : "dpov"              , 
+    }, 
+    {
+    "action"            : "recover_vehicle"    , 
+    "control"           : "button7"           , 
+    }, 
+    {
+    "action"            : "reset_physics"     , 
+    "control"           : "button6"           , 
+    }, 
+    {
+    "action"            : "pause"    , 
+    "control"           : "button12"          , 
+    }, 
+    {
+    "action"            : "center_camera"     , 
+    "control"           : "button9"           , 
+    }, 
+    {
+    "action"            : "switch_camera_next"     , 
+    "control"           : "button8"           , 
+    }, 
+    {
+    "action"            : "toggle_left_signal", 
+    "control"           : "button4"           , 
+    }, 
+    {
+    "action"            : "toggle_right_signal", 
+    "control"           : "button3"           , 
+    }, 
+    {
+    "action"            : "toggle_headlights" , 
+    "control"           : "button2"           , 
+    }, 
+    {
+    "action"            : "parkingbrake", 
+    "control"           : "button5"           , 
+    }, 
+    { "action"            : "menu_item_select"    , "control"           : "button9"             }, 
+    { "action"            : "menu_item_right"     , "control"           : "rpov"              }, 
+    { "action"            : "menu_item_left"      , "control"           : "lpov"              }, 
+    { "action"            : "menu_item_up"        , "control"           : "upov"              }, 
+    { "action"            : "menu_item_down"      , "control"           : "dpov"              }, 
+  ], 
+"vidpid"            : "B669044F"          , 
+"name"              : "Thrustmaster TX Racing Wheel"
+}, 

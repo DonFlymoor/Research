@@ -35,10 +35,6 @@ local function initEngineSound(vehicleId, engineId, jsonPath, nodeId, noloadVol,
   end
 end
 
-local function delEngineSound(vehicleId)
-
-end
-
 local function updateEngineSound(vehicleId, engineId, rpm, onLoad, engineVolume)
   local vehicle = scenetree.findObjectById(vehicleId)
   if not vehicle then return end
@@ -60,7 +56,6 @@ end
 M.setGlobalParameter = setGlobalParameter
 M.onPreRender = onPreRender
 M.initEngineSound = initEngineSound
-M.delEngineSound = delEngineSound
 M.updateEngineSound = updateEngineSound
 M.setEngineSoundParameter = setEngineSoundParameter
 M.setEngineSoundParameterList = setEngineSoundParameterList

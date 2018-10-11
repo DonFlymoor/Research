@@ -1,14 +1,48 @@
 local M  = {}
 local logTag = 'spawn.lua'
 
+local function setVehicleObject(veh, jbeam, configuration, pos, rot, color, color2, color3)
+  if not veh then
+    log('E', logTag, 'setVehicleObject Failed, no vehilce provided.')
+    return
+  end
+
+  veh.JBeam = jbeam
+  veh.partConfig = configuration
+
+  if color then
+    veh.color = color:asLinear4F()
+  end
+
+  if color2 then
+    veh.colorPalette0 = color2:asLinear4F()
+  end
+
+  if color3 then
+    veh.colorPalette1 = color3:asLinear4F()
+  end
+
+  rot = rot * quat(0,0,1,0) -- rotate 180 degrees
+  veh:spawnObjectWithPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
+
+  local missionGroup = scenetree.MissionGroup
+  if not missionGroup then
+    log('E', logTag, 'MissionGroup does not exist')
+    return
+  end
+  missionGroup:addObject(veh.obj)
+  veh:autoplace()
+end
+
 local function spawnVehicle(jbeam, configuration, pos, rot, color, color2, color3)
   local veh = createObject("BeamNGVehicle")
-  local spawnDatablock = String("default_vehicle")
+  
   if not veh then
     log('E', logTag, 'Failed to create vehicle')
     return
   end
 
+  local spawnDatablock = String("default_vehicle")
   local dataBlock = scenetree.findObject(spawnDatablock:c_str())
 
   if not datablock then
@@ -27,33 +61,11 @@ local function spawnVehicle(jbeam, configuration, pos, rot, color, color2, color
 
   veh:registerObject(name)
 
-  veh.JBeam = jbeam
-  veh.partConfig = configuration
+  veh.licenseText = TorqueScript.setVar( "$beamngVehicleLicenseName","")
 
-  if color then
-    veh.color = color:asLinear4F()
-  end
-
-  if color2 then
-    veh.colorPalette0 = color2:asLinear4F()
-  end
-
-  if color3 then
-    veh.colorPalette1 = color3:asLinear4F()
-  end
-
-  veh.licenseText = TorqueScript.getVar("$beamngVehicleLicenseName")
-  rot = rot * quat(0,0,1,0) -- rotate 180 degrees
-  veh:spawnObjectWithPosRot(pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w)
-
-  local missionGroup = scenetree.MissionGroup
-  if not missionGroup then
-    log('E', logTag, 'MissionGroup does not exist')
-    return
-  end
-  missionGroup:addObject(veh.obj)
-  veh:autoplace()
+  setVehicleObject(veh, jbeam, configuration, pos, rot, color, color2, color3) 
 end
+
 --[[
 pickSpawnPoint s responsible for finding a valid spawn point for a player and camera
 @param spawnName string represent player or camera spawn point
@@ -199,7 +211,7 @@ local function spawnPlayer()
     player:registerObject("thePlayer")
     if player then
       if TorqueScript.getVar("$beamngVehicle") == "" then
-        TorqueScript.setVar("$beamngVehicle","etk800")
+        TorqueScript.setVar("$beamngVehicle", defaultVehicleModel)
       end
       player.JBeam = TorqueScript.getVar("$beamngVehicle")
       player.autoplaceOnSpawn = spawnPoint.autoplaceOnSpawn       -- place on the ground without dropping the vehicle - if requested by the spawn point
@@ -266,7 +278,53 @@ local function spawnPlayer()
   gameConn:setCameraHandler(player.obj)
 end
 
-M.spawnVehicle = spawnVehicle
-M.spawnCamera = spawnCamera
-M.spawnPlayer =spawnPlayer
+
+----------------
+local function calculateRelativeVehiclePlacement(transform0, coupler0_offset, transform1, coupler1_offset)
+  local coupler0_ws
+  do
+    local coupler0_os = MatrixF(true)
+    coupler0_os:setColumn(3, coupler0_offset)
+    coupler0_ws = transform0 * coupler0_os
+  end
+    
+  local res
+  do
+    local coupler1_os = MatrixF(true)
+    coupler1_os:setColumn(3, coupler1_offset)
+    local coupler1_ws = transform1 * coupler1_os
+    
+    res = coupler0_ws * (coupler1_ws:inverse() * transform1)
+  end
+  return res
+end
+
+local function placeTrailer(vehId,couplerOffsetVeh, trailerId,couplerOffsetTrailer)
+
+  local veh = be:getObjectByID(vehId)
+  if not veh then return end
+
+  local veh2 = be:getObjectByID(trailerId)
+  if not veh2 then return end
+
+  local transform0 = veh:getRefNodeMatrix()
+  local coupler0_offset = couplerOffsetVeh--Point3F(0, 3, 0.2)
+  local transform1 = veh2:getRefNodeMatrix()
+  local coupler1_offset = couplerOffsetTrailer--Point3F(0.3, -3.3, 0)
+
+  local mat = calculateRelativeVehiclePlacement(transform0, coupler0_offset, transform1, coupler1_offset)  
+  debugDrawer:drawSphere(mat:getColumn(3), 0.5, ColorF(0, 0, 1, 1))
+
+  veh2:setTransform(mat)
+  veh2:queueLuaCommand('obj:requestReset(RESET_PHYSICS)')
+  veh2:resetBrokenFlexMesh()
+  veh:queueLuaCommand('beamstate.activateAutoCoupling()')
+end
+
+M.spawnVehicle                      = spawnVehicle
+M.setVehicleObject                  = setVehicleObject
+M.spawnCamera                       = spawnCamera
+M.spawnPlayer                       = spawnPlayer
+M.calculateRelativeVehiclePlacement = calculateRelativeVehiclePlacement
+M.placeTrailer                      = placeTrailer
 return M

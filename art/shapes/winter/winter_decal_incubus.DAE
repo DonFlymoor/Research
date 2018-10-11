@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><contributor><author></author><authoring_tool>FBX COLLADA exporter</authoring_tool><comments></comments></contributor><created>2017-10-25T12:05:00Z</created><keywords></keywords><modified>2017-10-25T12:05:00Z</modified><revision></revision><subject></subject><title></title><unit meter="1.000000" name="centimeter"></unit><up_axis>Z_UP</up_axis></asset>
+  <library_images>
+    <image id="Map #1-image" name="Map #1"><init_from>file://D:\terrain_source\gameplay_artwork\3D\Levels\winter\maps\DDS\winter_decals.dds</init_from></image>
+  </library_images>
+  <library_materials>
+    <material id="winter_decals" name="winter_decals">
+      <instance_effect url="#winter_decals-fx"/>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="winter_decals-fx" name="winter_decals">
+      <profile_COMMON>
+        <technique sid="standard">
+          <phong>
+            <emission>
+              <color sid="emission">0.000000  0.000000 0.000000 1.000000</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0.588000  0.588000 0.588000 1.000000</color>
+            </ambient>
+            <diffuse>
+              <texture texture="Map #1-image" texcoord="CHANNEL0">
+                <extra>
+                  <technique profile="MAYA">
+                    <wrapU sid="wrapU0">TRUE</wrapU>
+                    <wrapV sid="wrapV0">TRUE</wrapV>
+                    <blend_mode>ADD</blend_mode>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.000000  0.000000 0.000000 1.000000</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">2.000000</float>
+            </shininess>
+            <reflective>
+              <color sid="reflective">0.000000  0.000000 0.000000 1.000000</color>
+            </reflective>
+            <reflectivity>
+              <float sid="reflectivity">1.000000</float>
+            </reflectivity>
+            <transparent opaque="RGB_ZERO">
+              <color sid="transparent">1.000000  1.000000 1.000000 1.000000</color>
+            </transparent>
+            <transparency>
+              <float sid="transparency">0.000000</float>
+            </transparency>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="incubus-lib" name="incubusMesh">
+      <mesh>
+        <source id="incubus-POSITION">
+          <float_array id="incubus-POSITION-array" count="12">
+-1.000000 -1.000000 -0.000050
+1.000000 -1.000000 -0.000050
+-1.000000 1.000000 -0.000050
+1.000000 1.000000 -0.000050
+</float_array>
+          <technique_common>
+            <accessor source="#incubus-POSITION-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="incubus-Normal0">
+          <float_array id="incubus-Normal0-array" count="18">
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+0.000000 0.000000 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#incubus-Normal0-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="incubus-UV0">
+          <float_array id="incubus-UV0-array" count="32">
+0.000000 0.000000
+0.500000 0.000000
+1.000000 0.000000
+0.000000 0.500000
+0.500000 0.500000
+1.000000 0.500000
+0.000000 1.000000
+0.500000 1.000000
+1.000000 1.000000
+0.500000 0.000000
+0.000000 0.500000
+0.500000 0.500000
+0.500000 0.500000
+1.000000 0.500000
+0.500000 0.500000
+0.500000 1.000000
+</float_array>
+          <technique_common>
+            <accessor source="#incubus-UV0-array" count="16" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="incubus-VERTEX">
+          <input semantic="POSITION" source="#incubus-POSITION"/>
+        </vertices>
+        <triangles count="2" material="winter_decals"><input semantic="VERTEX" offset="0" source="#incubus-VERTEX"/><input semantic="NORMAL" offset="1" source="#incubus-Normal0"/><input semantic="TEXCOORD" offset="2" set="0" source="#incubus-UV0"/><p> 3 0 7 2 1 6 0 2 3 3 3 7 0 4 3 1 5 4</p></triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="winter_decal_incubus" name="winter_decal_incubus">
+      <node name="incubus" id="incubus" sid="incubus"><matrix sid="matrix">1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000050 0.000000 0.000000 0.000000 1.000000</matrix><instance_geometry url="#incubus-lib"><bind_material><technique_common><instance_material symbol="winter_decals" target="#winter_decals"/></technique_common></bind_material></instance_geometry><extra><technique profile="FCOLLADA"><visibility>1.000000</visibility></technique></extra></node>
+      <extra><technique profile="MAX3D"><frame_rate>30.000000</frame_rate></technique><technique profile="FCOLLADA"><start_time>0.000000</start_time><end_time>3.333333</end_time></technique></extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#winter_decal_incubus"></instance_visual_scene>
+  </scene>
+</COLLADA>

@@ -19,10 +19,12 @@ local frames = 0
 local jobCreated = false
 
 local testData = {}
-local datafilename = 'modinfo.json' -- this must fit to the external (python) script that creates the file
 
 local levelLoaded = false
 local modDownloaded = false
+
+--launched using
+--BeamNG.drive.x64.exe -batch -console -level showroom_v2_white/main.level.json -onLevelLoad_ext 'test_testMods'
 
 local function refreshBuiltin()
   --log('I', logTag, 'refreshBuiltin')
@@ -38,6 +40,15 @@ local function onExtensionLoaded()
   --log('I', logTag, 'loaded')
   refreshBuiltin()
 
+  -- find the installed mod:
+  local files = FS:findFiles('/', "mod_info.json", -1, true, false)
+  if not files or #files == 0 then
+    log('E', 'testMods', 'unable to find file: mod_info.json')
+    shutdown(0)
+  end
+
+  local datafilename = files[1]
+
   -- start downloading the mod
   testData = readJsonFile(datafilename)
   if not testData then
@@ -46,13 +57,14 @@ local function onExtensionLoaded()
   end
   log('I', 'testMods', ' ### Test data: ' .. dumps(testData))
 
-  local uri = testData.tagid .. "/" .. testData.current_version_id .. "/" .. testData.attachment_filename
+  -- local uri = testData.tagid .. "/" .. testData.current_version_id .. "/" .. testData.attachment_filename
   --print(uri)
 
-  local filename = split(uri, '/')
-  filename = filename[#filename]
+  -- local filename = split(uri, '/')
+  -- filename = filename[#filename]
 
-  extensions.core_repository.installMod(uri, filename, 'mods/')
+  --extensions.core_repository.installMod(uri, filename, 'mods/')
+  -- extensions.core_repository.modSubscribe(testData.tagid, {})
 end
 
 local function onModDeactivated(mod)
@@ -125,11 +137,11 @@ local function _spawnVehicle(vehicle, job)
   else
     -- check the correct size of the preview image
     local bitmap = GBitmap()
-    if bitmap:loadFile('game:' .. vehicle.preview) then -- game: because of leading slash :/
+    if bitmap:loadFile(vehicle.preview) then
       local width = bitmap:getWidth()
       local height = bitmap:getHeight()
-      if width > 400 or height > 192 then
-        log('E', logTag, "Preview image ("..vehicle.preview..") size ".. width.."x"..height.." larger then 400x192.")
+      if width > 500 or height > 281 then
+        log('E', logTag, "Preview image ("..vehicle.preview..") size ".. width.."x"..height.." larger then 500x281.")
       end
     end
   end
@@ -312,6 +324,32 @@ local function _createScreenshots(currentPath, vehicle, job)
   ::continue::
 end
 
+local function writeErrorsToFile()
+	local outfilename = "errors.json"
+	log('I', logTag, "Writing errors to file")
+	io.input("beamng.log")
+
+	local errors = {}
+
+    while true do
+		local line = io.read()
+		if line == nil then break end
+
+		if (string.match(line, "|E|") or string.match(line, "|W|")) then
+
+			-- If there is an error, add it to the list of errors
+			if string.match(line, "|E|") then
+				table.insert(errors, line)
+			end
+		end
+    end
+
+	-- Write output file
+	writeJsonFile(outfilename, errors)
+
+	log('I', logTag, "Created output file " .. outfilename)
+end
+
 local function onModActivated(mod)
   log('D', logTag, ' onModActivated: ' .. dumps(mod))
 
@@ -375,6 +413,8 @@ local function onModActivated(mod)
     shutdown(0)
   end
 
+
+
   --log('I', logTag, 'starting testing ...')
   local function workItem(job)
     if mod.modType == 'vehicle' and #configsToTest == 0 then
@@ -413,7 +453,7 @@ local function onModActivated(mod)
       local currentPath = 'generated/vehicles/' .. vehicle.vehicleName..'/'..(vehicle.configName or 'default')
       logSink:open(currentPath .. '/log.json')
       _spawnVehicle(vehicle, job)
-      _createScreenshots(currentPath, vehicle, job)
+      -- _createScreenshots(currentPath, vehicle, job)
       _functionTest(vehicle, job)
       _resetVehicle(job)
       logSink:close()
@@ -450,6 +490,7 @@ local function onModActivated(mod)
       --_endLogging()
     end
     -- all done, quit
+	writeErrorsToFile()
     shutdown(0)
   end
 
@@ -493,6 +534,16 @@ local function onInit()
   registerCoreModule("test_testMods")
 end
 
+local function onModManagerReady()
+  log('D', logTag, "onModManagerReady")
+
+  extensions.core_modmanager.deactivateModId(testData.tagid)
+  extensions.core_modmanager.deactivateMod(tostring(testData.id))
+  refreshBuiltin()
+  extensions.core_modmanager.activateModId(testData.tagid)
+  extensions.core_modmanager.activateMod(tostring(testData.id))
+end
+
 M.onInit = onInit
 --M.onUpdate = onUpdate
 M.onDownloadError = onDownloadError
@@ -503,5 +554,6 @@ M.onModActivated = onModActivated
 M.onClientStartMission = onClientStartMission
 M.onScenarioLoaded = onScenarioLoaded
 M.onFreeroamLoaded = onFreeroamLoaded
+M.onModManagerReady = onModManagerReady
 
 return M

@@ -51,7 +51,7 @@ local function makeDiff(oldDiff, name, inputName, inputIndex, gearRatio, frictio
       diff.lockSpring = oldDiff.closedTorque
       diff.lockDeform = oldDiff.closedTorque * 2
     else
-      log("E", "powertrain.makeDiff", "Found unknown old differential type: '"..oldDiffType.."', defaulting to 'open'!")
+      log("E", "powertrain.makeDiff", "Found unknown old differential type: '" .. oldDiffType .. "', defaulting to 'open'!")
       diff.diffType = "open"
     end
   end
@@ -81,7 +81,7 @@ local function createCompatibilityDifferentials()
     return nil
   end
 
-  local compatDiffs = {}
+  local compatDiffs
   local oldData = deepcopy(v.data.differentials)
 
   local wheels = powertrain.wheels
@@ -102,7 +102,6 @@ local function createCompatibilityDifferentials()
     local wheelShaft2 = makeShaft("shaft", "axle2", "diff", 2, frictionPart, axleBeamsWheel2[1], oldDiff.wheelName2)
 
     compatDiffs = {driveshaft, diff, wheelShaft1, wheelShaft2}
-
   elseif numberOfOldDiffs == 2 then
     local oldDiff1 = oldData[0]
     local oldDiff2 = oldData[1]
@@ -125,19 +124,19 @@ local function createCompatibilityDifferentials()
     local diff1 = makeDiff(oldDiff1, "diff1", "driveshaft1", 1, diffRatio, frictionPart * 3, 0.5)
     local diff2 = makeDiff(oldDiff2, "diff2", "driveshaft2", 1, diffRatio, frictionPart * 3, 0.5)
 
-    local wheelShaft11 = makeShaft("shaft", "wheelaxle"..tostring(oldDiff1.wheelName1), "diff1", 1, frictionPart * 2, axleBeamsWheel11[1], oldDiff1.wheelName1)
-    local wheelShaft12 = makeShaft("shaft", "wheelaxle"..tostring(oldDiff1.wheelName2), "diff1", 2, frictionPart * 2, axleBeamsWheel12[1], oldDiff1.wheelName2)
-    local wheelShaft21 = makeShaft("shaft", "wheelaxle"..tostring(oldDiff2.wheelName1), "diff2", 1, frictionPart * 2, axleBeamsWheel21[1], oldDiff2.wheelName1)
-    local wheelShaft22 = makeShaft("shaft", "wheelaxle"..tostring(oldDiff2.wheelName2), "diff2", 2, frictionPart * 2, axleBeamsWheel22[1], oldDiff2.wheelName2)
+    local wheelShaft11 = makeShaft("shaft", "wheelaxle" .. tostring(oldDiff1.wheelName1), "diff1", 1, frictionPart * 2, axleBeamsWheel11[1], oldDiff1.wheelName1)
+    local wheelShaft12 = makeShaft("shaft", "wheelaxle" .. tostring(oldDiff1.wheelName2), "diff1", 2, frictionPart * 2, axleBeamsWheel12[1], oldDiff1.wheelName2)
+    local wheelShaft21 = makeShaft("shaft", "wheelaxle" .. tostring(oldDiff2.wheelName1), "diff2", 1, frictionPart * 2, axleBeamsWheel21[1], oldDiff2.wheelName1)
+    local wheelShaft22 = makeShaft("shaft", "wheelaxle" .. tostring(oldDiff2.wheelName2), "diff2", 2, frictionPart * 2, axleBeamsWheel22[1], oldDiff2.wheelName2)
 
     compatDiffs = {centerdiff, driveshaft1, driveshaft2, diff1, diff2, wheelShaft11, wheelShaft12, wheelShaft21, wheelShaft22}
-
   elseif numberOfOldDiffs > 2 then
     local diffRatio = v.data.engine.differential
     local frictionPart = 5
     local driveshaft = makeShaft("shaft", "driveshaft", "gearbox", 1, frictionPart, nil)
     local mvName = "multiShaft"
-    local multiShaft = {name = mvName,
+    local multiShaft = {
+      name = mvName,
       inputName = "driveshaft",
       inputIndex = 1,
       type = "multiShaft",
@@ -150,7 +149,7 @@ local function createCompatibilityDifferentials()
     }
 
     local uniqueWheels = {}
-    for i = 0, tableSize(oldData) -1, 1 do
+    for i = 0, tableSize(oldData) - 1, 1 do
       local oldDiff = oldData[i]
       uniqueWheels[oldDiff.wheelName1] = true
       uniqueWheels[oldDiff.wheelName2] = true
@@ -159,9 +158,9 @@ local function createCompatibilityDifferentials()
     compatDiffs = {driveshaft, multiShaft}
     local shaftCounter = 1
 
-    for k,_ in pairs(uniqueWheels) do
+    for k, _ in pairs(uniqueWheels) do
       local axleBeamsWheel = wheels[k] and (wheels[k].axleBeams or {}) or {}
-      local wheelShaft = makeShaft("shaft", "axle"..shaftCounter, mvName, shaftCounter, frictionPart, axleBeamsWheel[1], k)
+      local wheelShaft = makeShaft("shaft", "axle" .. shaftCounter, mvName, shaftCounter, frictionPart, axleBeamsWheel[1], k)
       shaftCounter = shaftCounter + 1
       table.insert(compatDiffs, wheelShaft)
     end
@@ -195,7 +194,7 @@ local function createCompatibilityEngine()
     engine.inertia = oldEngine.inertia or 0.2
     engine.burnEfficiency = oldEngine.burnEfficiency or 0.3
     engine.friction = oldEngine.friction or oldEngine.engineFriction or 20
-    engine.dynamicFriction = (oldEngine.brakingCoefRPS or 0.2) / ( 2 * math.pi )
+    engine.dynamicFriction = (oldEngine.brakingCoefRPS or 0.2) / (2 * math.pi)
     engine.particulates = oldEngine.particulates or 0
     engine.torqueReactionNodes = oldEngine.torqueReactionNodes
 
@@ -242,7 +241,7 @@ local function createCompatibilityEngine()
 
     if v.data.enginetorque then
       engine.torque = {{"rpm", "torque"}}
-      for _,v in pairs(v.data.enginetorque) do
+      for _, v in pairs(v.data.enginetorque) do
         table.insert(engine.torque, {v.rpm, v.torque})
       end
     end
@@ -281,7 +280,7 @@ local function createCompatibilityEngine()
     local gearbox = {type = newGearboxType, name = "gearbox", inputName = gearboxInput, inputIndex = 1}
     gearbox.gearRatios = {}
     if oldEngine.gears then
-      for _,v in ipairs(oldEngine.gears) do
+      for _, v in ipairs(oldEngine.gears) do
         if type(v) == "number" then
           table.insert(gearbox.gearRatios, v)
         end
@@ -311,13 +310,13 @@ local function createCompatibilityPowertrain()
   v.data.powertrain = v.data.powertrain or {}
   local engineData = createCompatibilityEngine()
   if engineData then
-    for _,e in pairs(engineData) do
+    for _, e in pairs(engineData) do
       table.insert(v.data.powertrain, e)
     end
   end
   local diffData = createCompatibilityDifferentials()
   if diffData then
-    for _,e in pairs(diffData) do
+    for _, e in pairs(diffData) do
       table.insert(v.data.powertrain, e)
     end
   end
@@ -334,7 +333,7 @@ local function init()
   if v.data.escConfig then
     local hasController = false
     --check if we already have an esc controller
-    for _,v in pairs(v.data.controller) do
+    for _, v in pairs(v.data.controller) do
       if v.filename == "esc" then
         hasController = true
       end

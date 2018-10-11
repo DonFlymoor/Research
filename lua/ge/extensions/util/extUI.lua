@@ -75,7 +75,7 @@ end
 
 
 local function creatorModeEnabledChanged()
-  if not settings then return end
+  if true then return end
 
   if settings.getValue('externalUi') == true and not uiWebServer then
     -- start

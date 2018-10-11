@@ -4,31 +4,18 @@
 
 local M = {}
 
-
-
-local simpleSplineTrack = require('util/simpleSplineTrack')
-
-
-
-
+local simpleSplineTrack
 
 local function onScenarioLoaded(sc) 
+	simpleSplineTrack = extensions.util_simpleSplineTrack
+
   simpleSplineTrack.unloadAll()
-  simpleSplineTrack.load(sc.track.customData.name)
+  simpleSplineTrack.load(sc.track.customData.name, true, true)
   
-  simpleSplineTrack.addCheckPointPositions()
-  simpleSplineTrack.positionVehicle()
-
-end
-
-
-local function onClientEndMission()
-    simpleSplineTrack.removeTrack()
-    simpleSplineTrack.unloadAll()
+  simpleSplineTrack.addCheckPointPositions(sc.track.reverse)
+  simpleSplineTrack.positionVehicle(sc.track.reverse)
 end
 
 M.onScenarioLoaded = onScenarioLoaded
-M.onClientEndMission = onClientEndMission
-
 return M
 

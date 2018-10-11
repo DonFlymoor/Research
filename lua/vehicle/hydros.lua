@@ -2,13 +2,13 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
-local min, max = math.min, math.max
+local min, max, abs = math.min, math.max, math.abs
 local M = {}
 
 M.enableFFB = true
 M.wheelFFBForceCoef = 400 -- regular force coef (at speed)
 M.wheelFFBForceCoefLowSpeed = 400 -- force coef used at parking speeds
-M.wheelFFBForceCoefCurrent = M.wheelFFBForceCoefLowSpeed -- updated over time depending on speed (start at parking speed)
+M.wheelFFBForceCoefCurrent = M.wheelFFBForceCoefLowSpeed -- updated over time depending on speed (start at parking speed) and AI driver
 M.wheelPowerSteeringCoef = 1
 M.wheelFFBForceLimit = 2 -- The FFB steady force limits (in Newton)
 M.wheelFFBSmoothing = 100 -- low freq
@@ -20,7 +20,7 @@ M.forceAtWheel = 0
 M.forceAtDriver = 0
 M.curForceLimit = 0
 
-local vehicleFFBForceCoef = 1
+local vehicleFFBForceCoef = 1.2
 local responseCurve = 0
 local responseCorrected = false
 local FFBsmooth = newExponentialSmoothing(M.wheelFFBSmoothing)
@@ -29,7 +29,6 @@ local FFBRest = {}
 local FFBRestCount = 0
 local FFBHydrosExist = false
 local FFBID    = -1 -- >=0 are valid IDs
-local wheelpos = 0
 local curForceLimitSmoother = newTemporalSmoothingNonLinear(10) -- prevent spikes when resetting vehicle (and ideally also when window focus is lost/gained)
 local FFBperiodms = 0 -- how small period the steering wheel drivers can cope with, before they crash and burn
 local lastDriverUpdate = 0 -- last time we sent an update to the drivers
@@ -38,6 +37,11 @@ local FFmax = 10
 local FFstep = FFmax / 256
 local action = "steering"
 local ffbSpeedFast = 10 / 3.6
+local dtInternal = 1
+local moveSteering = true
+local t0, t1, p0,p1
+local statewheelpos = 0
+local wheelvel = 0
 
 local steeringHydro = nil
 
@@ -132,7 +136,7 @@ local function FFBcalc(wheelDispl)
     -- TODO: instead, maybe we can re-set the smoother when we've gone over the limit and use getUncapped? (just like the fix for lag in skidding sound smoothers)
     -- reminder: FFBsmooth must run at a constant rate, such as 2KHz (replace with a temporal smoother otherwise)
     local limit = 10 * M.curForceLimit
-    M.forceAtWheel = FFBsmooth:getWindow(math.max(math.min(M.forceAtWheel, limit), -limit),
+    M.forceAtWheel = FFBsmooth:getWindow(max(min(M.forceAtWheel, limit), -limit),
       sign(M.forceAtWheel) ~= sign(lastForce) and M.wheelFFBSmoothingHF or M.wheelFFBSmoothing)
 
     -- drivers will struggle if sending too many updates per wall clock second, so we throttle them here (according to FFBperiodms)
@@ -142,7 +146,7 @@ local function FFBcalc(wheelDispl)
     if (now - lastDriverUpdate) > FFBperiodms then
 
       -- limit how much torque is output at the wheel (following the binding configuration of curForceLimit)
-      local forceAtWheel = sign(M.forceAtWheel) * math.min(math.abs(M.forceAtWheel), M.curForceLimit)
+      local forceAtWheel = sign(M.forceAtWheel) * min(abs(M.forceAtWheel), M.curForceLimit)
 
       -- figure out the fake number that the drivers want to hear, in order to really output the desired torque at the wheel
       local newForceAtDriver = getDriverForce(forceAtWheel)
@@ -165,6 +169,7 @@ local function updateGFX(dt) -- dt in seconds
   -- update the source command value
   for i = 1, hydroCount do
     local h = M.hydros[i]
+    h.prevstate = h.state
     h.cmd = min(max(electrics.values[h.inputSource] or 0, h.inputInLimit), h.inputOutLimit) * h.inputFactor
 
     if h.cmd ~= h.inputCenter or h.analogue == true then
@@ -186,16 +191,30 @@ local function updateGFX(dt) -- dt in seconds
   end
 
   if FFBHydrosExist then
-    wheelpos = electrics.values.steering_input or 0
+    dtInternal = 0
+    moveSteering = true
+    p0 = statewheelpos
+    local wheelpos = electrics.values.steering_input or 0
+    local prevvel = wheelvel
+    wheelvel = (wheelpos - p0) / (dt + 1e-30)
+    p1 = wheelpos
+    local nextvel = 2 * wheelvel - prevvel
+    t0 = sign(wheelvel) * max(abs(prevvel), abs(wheelvel), abs(nextvel)) * dt;
+    t1 = 2 * wheelvel * dt - t0
+
     M.curForceLimit = curForceLimitSmoother:getWithRate(M.wheelFFBForceLimit, dt, 10)
+
     local speed = electrics.values.airspeed
     speed = speed < 0.25 and 0 or speed
 
-    if speed < ffbSpeedFast and math.abs(electrics.values.wheelspeed) < ffbSpeedFast then
+    if speed < ffbSpeedFast and abs(electrics.values.wheelspeed) < ffbSpeedFast then
       local minForce = M.wheelFFBForceCoefLowSpeed
       M.wheelFFBForceCoefCurrent = minForce + speed * (M.wheelFFBForceCoef-minForce) / ffbSpeedFast -- approach maxForce as we get closer to the fast speed threshold
     else
       M.wheelFFBForceCoefCurrent = M.wheelFFBForceCoef
+    end
+    if ai.mode ~= 'disabled' then
+      M.wheelFFBForceCoefCurrent = 0 -- free up the wheel while AI is driving
     end
   end
 
@@ -213,42 +232,56 @@ local function update(dtSim)
   local hcount = hydroCount
 
   if FFBHydrosExist then
-    local FFBhpos = 0
+    local statewp = 0
     local FFBhcount = 0
+    local hwp = 0
 
     if FFBID >= 0 and playerInfo.anyPlayerSeated then
       hydros = FFBRest
       hcount = FFBRestCount
+      local tmpMoveSteering = false
+      dtInternal = dtInternal + dtSim
+      local t = min(1, dtInternal / max(1e-30, lastDt))
+      local interpwp = p0 + t*((t*(t-2) + 1)*t0 + t*((2*t-3)*(p0-p1) + (t-1)*t1))
 
       for i = 1, #FFBHydros do
         local h = FFBHydros[i]
 
-        if h.cmd ~= h.state then -- elide expensive core call
-          if h.cmd < h.state then
-            h.state = max(h.state - dtSim * h._inrate, h.cmd)
-          else
-            h.state = min(h.state + dtSim * h._outrate, h.cmd)
-          end
-          obj:setBeamLengthRefRatio(h.bcid, h.state)
-        end
-
         local hbcid = h.bcid
         if not obj:beamIsBroken(hbcid) then
           FFBhcount = FFBhcount + 1
-          FFBhpos = FFBhpos + toInputSpace(h, obj:getBeamLength(hbcid) * h.invFFBHydroRefL)
+          hwp = hwp + toInputSpace(h, obj:getBeamLength(hbcid) * h.invFFBHydroRefL)
+          statewp = statewp + toInputSpace(h, h.state)
+        end
+
+        if h.cmd ~= h.state then -- elide expensive core call
+          local statef = interpwp * h.inputFactor
+          if statef >= h.inputCenter then
+            statef = h.cOut + statef * h.multOut
+          else
+            statef = h.cIn + statef * h.multIn
+          end
+
+          if (statef - h.state) * (h.cmd - h.state) >= 0 then
+            tmpMoveSteering = true
+            if moveSteering then
+              if h.cmd < h.state then
+                h.state = max(h.state - dtSim * h._inrate, h.cmd)
+              else
+                h.state = min(h.state + dtSim * h._outrate, h.cmd)
+              end
+              obj:setBeamLengthRefRatio(h.bcid, h.state)
+            end
+          end
         end
       end
+
+      moveSteering = tmpMoveSteering
     end
 
-    local wheeldispl
-    if FFBhcount == 0 then
-      wheeldispl = 0
-    else
-      wheeldispl = wheelpos - FFBhpos / FFBhcount -- note: atm, wheelpos is updated as often as vlua queue is run, not at 2KHz
-    end
-
-    -- TODO: move 2 line above? (see TODO near the first 'if' inside FFBcalc)
-    FFBcalc(wheeldispl)
+    local invFFBhcount = 1 / max(1, FFBhcount )
+    statewheelpos = statewp * invFFBhcount
+    FFBcalc((statewp - hwp) * invFFBhcount)
   end
 
   for i = 1, hcount do
@@ -351,7 +384,7 @@ local function init()
   end
 
   if v.data.input and v.data.input.FFBcoef ~= nil then
-    vehicleFFBForceCoef = v.data.input.FFBcoef
+    vehicleFFBForceCoef = v.data.input.FFBcoef * 1.2
   end
 
   M.hydros = {}
@@ -365,7 +398,7 @@ local function init()
     h.inputCenter = h.inputCenter * h.inputFactor
     h.inputInLimit = h.inputInLimit * h.inputFactor
     h.inputOutLimit = h.inputOutLimit * h.inputFactor
-    local inputFactorSign = sign(h.inputFactor)
+    local inputFactorSign = sign2(h.inputFactor)
 
     if h.inputFactor < 0 then
       h.inputInLimit, h.inputOutLimit = h.inputOutLimit, h.inputInLimit

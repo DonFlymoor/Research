@@ -14,9 +14,9 @@ struct ConnectData
    float2 layerCoord : TEXCOORD0;
    float2 texCoord : TEXCOORD1;
 };
+uniform float2 texScale;
 
-ConnectData main( VertData IN,
-                  uniform float2 texScale : register(C0) )
+ConnectData main( VertData IN )
 {
    ConnectData OUT;
 
