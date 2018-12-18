@@ -6,19 +6,24 @@ local json = require('json')
 
 M.receive = function(skt)
   local length, err = skt:receive(16)
+
+  if err then
+    log('E', 'ResearchCom', 'Error reading from socket: '..tostring(err))
+    return nil, err
+  end
+
   local data, err = skt:receive(tonumber(length))
 
   if err then
-    log('E', 'ResearchCom', 'Error reading from socket: '..tostring(error))
-    return nil
+    log('E', 'ResearchCom', 'Error reading from socket: '..tostring(err))
+    return nil, err
   end
-
-  return data
+  return data, nil
 end
 
 M.readMessage = function(clients)
   local read, write, _ = socket.select(clients, clients, 0)
-  local message
+  local message, err
 
   for _, skt in ipairs(read) do
     if write[skt] == nil then
@@ -27,16 +32,20 @@ M.readMessage = function(clients)
 
     skt:settimeout(0.1, 't')
 
-    message = M.receive(skt)
+    message, err = M.receive(skt)
 
     ::continue::
+  end
+
+  if err ~= nil then
+    return nil, err
   end
 
   if message ~= nil then
     message = mp.unpack(message)
   end
 
-  return message
+  return message, nil
 end
 
 M.sendMessage = function(skt, message)
