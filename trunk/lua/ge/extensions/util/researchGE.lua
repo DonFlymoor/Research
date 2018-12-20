@@ -436,6 +436,7 @@ local function getVehicleState(vid)
     state['vel'].y,
     state['vel'].z
   }
+  return state
 end
 
 M.handleUpdateScenario = function(msg)
