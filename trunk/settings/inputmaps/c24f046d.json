@@ -48,7 +48,7 @@
     { "control" : "button3", "action" : "toggleRangeStatus" },
     { "control" : "button7", "action" : "look_back" }, 
     { "control" : "button1", "action" : "decline" }, 
-    { "isForceInverted" : true, "icon" : "radio_button_on", "isForceEnabled" : true, "ffb" :       {"responseCorrected" : false, "forceCoefLowSpeed" : 500, "forceCoef" : 500, "smoothingHF" : 200, "frequency" : 0, "smoothing" : 350, "responseCurve" : [[0, 0], [1, 1]], "forceLimit" : 3.5}, "desc" : "Steers the vehicle with an axis (steering wheels, joysticks, etc)", "title" : "Steering Axis", "control" : "xaxis", "action" : "steering", "filterType" : "-1", "angle" : 900 },
+    { "isForceInverted" : true, "icon" : "radio_button_on", "isForceEnabled" : true, "ffb" :       {"responseCorrected" : false, "forceCoefLowSpeed" : 250, "forceCoef" : 500, "smoothingHF" : 200, "frequency" : 0, "smoothing" : 200, "responseCurve" : [[0, 0], [1, 1]], "forceLimit" : 3.5}, "desc" : "Steers the vehicle with an axis (steering wheels, joysticks, etc)", "title" : "Steering Axis", "control" : "xaxis", "action" : "steering", "filterType" : "-1", "angle" : 900 },
     { "control" : "button15", "action" : "gear4" },
     { "control" : "button13", "action" : "gear2" },
     { "control" : "lpov", "action" : "recover_vehicle" },

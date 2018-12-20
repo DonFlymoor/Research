@@ -15,7 +15,7 @@ function scheduleAutoSave()
     {
         if ($autoSaveTimerId != 0)
             cancel($autoSaveTimerId);
-        
+
         echo("Schedule next autosaving mission in " SPC EWorldEditor.autoSaveInterval SPC " seconds");
         $autoSaveTimerId = schedule(EWorldEditor.autoSaveInterval * 1000, 0, "doAutoSave");
     }
@@ -25,7 +25,7 @@ function doAutoSave()
 {
     if ($firstManualSave == false)
         return;
-    
+
     echo("Autosaving mission...");
     EditorSaveMission(false);
     scheduleAutoSave();
@@ -130,10 +130,6 @@ function initializeWorldEditor()
     EVisibility.addOption( "Advanced text drawing", "$pref::DebugDraw::drawAdvancedText", "" );
     EVisibility.addOption( "Wireframe Mode", "$gfx::wireframe", "" );
 
-    EVisibility.addOption( "Collision Debug Mode (old)", "$Phys_debug_mode_var", "physicsDebugDraw" );
-    EVisibility.addOption( "Shape Collision Debug Mode", "$Phys_static_debug_mode_var", "physicsDebugStaticCollision" );
-    EVisibility.addOption( "Terrain Collision Debug Mode", "$Phys_terrain_debug_mode_var", "physicsDebugTerrainCollision" );
-    
     EVisibility.addOption( "Bounding Boxes", "$Scene::renderBoundingBoxes", "" );
 
 

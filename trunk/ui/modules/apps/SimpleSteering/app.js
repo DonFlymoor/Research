@@ -1,8 +1,8 @@
 angular.module('beamng.apps')
 .directive('simpleSteering', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
-      '<object style="width:100%; height:100%; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleSteering/simple-steering.svg?t=' + Date.now() + '"/>',
+    template:
+      '<object style="width:100%; height:100%; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleSteering/simple-steering.svg?t=' + Date.now() + '"></object>',
     replace: true,
     link: function (scope, element, attrs) {
       var streamsList = ['sensors'];
@@ -26,7 +26,7 @@ angular.module('beamng.apps')
           if (!streams.electrics) return;
           wheel.setAttribute('transform', 'rotate(' + (-streams.electrics.steering) + rotateOriginStr + ')');
           var steeringRaw = streams.electrics.steering_input;
-          
+
           if (steeringRaw > 0) {
             barRight.setAttribute('width', steeringRaw * hFactor);
             barLeft.setAttribute('width', 0)

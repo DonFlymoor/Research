@@ -36,7 +36,7 @@ local function callListeners(type, data)
 end
 
 local function hook(...)
-  local msg = encodeJson({...})
+  local msg = jsonEncode({...})
   local cmd = "if(HookManager){HookManager.trigger.apply(undefined," .. msg .. ");}"
   cppIntermediate:queueJS(cmd)
 
@@ -46,11 +46,11 @@ end
 local test = true
 local function hookStream(name, ...)
     local params = unpack({...})
-    local cmd = "if(HookManager){HookManager.trigger('"..name.."',"..encodeJson(params)..");}"
+    local cmd = "if(HookManager){HookManager.trigger('"..name.."',"..jsonEncode(params)..");}"
     cppIntermediate:queueStreamJS(name, cmd)
 
     local sending = arrayConcat({name}, {params})
-    informListeners("hook", encodeJson(sending))
+    informListeners("hook", jsonEncode(sending))
 end
 
 local function checkStreamsAndVehicle()
@@ -79,8 +79,10 @@ local function frameUpdated(dt)
   if M.updateStreams then
     timer = timer % updateLimit
     vehicleLuaSpecific()
-    cppIntermediate:queueStreamJS("vStream."..objectId, "if (typeof oUpdate == 'function') oUpdate(".. encodeJson(cache)..");")
-    informListeners("stream", encodeJson({cache}))
+    cppIntermediate:queueStreamJS("vStream."..objectId, string.format("if (typeof oUpdate=='function') oUpdate(%s);", jsonEncode(cache)))
+    if informListeners ~= nop then
+      informListeners("stream", jsonEncode({cache}))
+    end
     table.clear(cache)
   end
 end
@@ -95,10 +97,10 @@ end
 function sendUITextureData(textureName, key, value, objID)
   if not objID or objID == objectId then
     -- message to self
-    obj:queueWebViewJS(textureName, string.format('HookManager.trigger(%q,%q);', key, encodeJson(value)))
+    obj:queueWebViewJS(textureName, string.format('HookManager.trigger(%q,%q);', key, jsonEncode(value)))
   else
     -- message to someone else
-    local js = encodeJson(value):gsub('%"', '%\\\'') -- replace " with \'
+    local js = jsonEncode(value):gsub('%"', '%\\\'') -- replace " with \'
     local l = "be:getObjectByID("..objID.."):queueJSUITexture('"..textureName.."', 'HookManager.trigger(\"" .. key .. "\", " .. js .. ");')"
     obj:queueGameEngineLua(l)
   end

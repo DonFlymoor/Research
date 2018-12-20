@@ -9,7 +9,7 @@ angular.module('beamng.apps')
             <span style="font-family: monospace; color: #38659D">Steering:</span> {{ steerVal.toFixed(2) }} rad/s
           </div>
           <canvas style="position:absolute; top: 0; left: 0" width="150" height="150"></canvas>
-        <div>`,
+        </div>`,
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -25,7 +25,7 @@ angular.module('beamng.apps')
       ;
 
       scope.accVal = 0.0;
-      scope.steerVal = 0.0; 
+      scope.steerVal = 0.0;
 
       var canvas = element[0].getElementsByTagName('canvas')[0]
         , ctx = canvas.getContext('2d')
@@ -40,12 +40,12 @@ angular.module('beamng.apps')
         CanvasShortcuts.plotAxis(ctx, 'left',  [0, 4], [0, 1, 2, 3, 4], plotMargins, {values: [1, 2, 3], color: 'grey'}, 'black');
         CanvasShortcuts.plotAxis(ctx, 'right', [], [], plotMargins, null)
         CanvasShortcuts.plotAxis(ctx, 'top', [], [], plotMargins, null);
-        CanvasShortcuts.plotAxis(ctx, 'bottom', [0, 50], [0, 10, 20, 30, 40, 50], plotMargins, {values: [10, 20, 30, 40], color: 'grey'}, 'black');  
+        CanvasShortcuts.plotAxis(ctx, 'bottom', [0, 50], [0, 10, 20, 30, 40, 50], plotMargins, {values: [10, 20, 30, 40], color: 'grey'}, 'black');
       };
-      
+
       scope.$on('streamsUpdate', function (event, streams) {
         dctx.clearRect(0, 0, dCanvas.width, dCanvas.height);
-        
+
         if (!streams.escData || !streams.escData.accelerationCurve || !streams.escData.steeringCurve)
           return;
 
@@ -54,13 +54,13 @@ angular.module('beamng.apps')
           , i = 0;
         // console.log(steeringCurve);
 
-        
+
         // 4 is the max y value: don't plot values above it (clipping looks awful)
         while (accelerationCurve[i] > 4) i++;
 
         var speed = Math.min(streams.escData.speed, 50);
         scope.$evalAsync(function () {
-          
+
           var smallIndex = Math.floor(speed)
             , bigIndex   = Math.ceil(speed);
 
@@ -69,7 +69,7 @@ angular.module('beamng.apps')
 
           if (scope.accVal > 10000) scope.accVal = '---';
         });
-        
+
         var x = plotMargins.left + speed * (dCanvas.width - plotMargins.left - plotMargins.right) / 50;
         dctx.strokeStyle = 'red';
         dctx.lineWidth = 1;
@@ -92,7 +92,7 @@ angular.module('beamng.apps')
       });
 
 
-      
+
     }
   }
 }]);
@@ -122,7 +122,7 @@ angular.module('beamng.apps')
 //         {label:"Acceleration",data:accelerationData,color:"#E08E1B"}]);
 //     this.plot.setupGrid();
 //     this.plot.draw();
-    
+
 //     $(".flot-y1-axis").css('text-shadow', '0 0 0.5px #38659D');
 
 //     // change legend
@@ -133,8 +133,8 @@ angular.module('beamng.apps')
 //             'text-align': 'right',
 //             width: 200
 //         });
-//     });        
-    
+//     });
+
 //     if(this.steeringCurve !== undefined){
 //         this.plot.setCrosshair({x:streams.escData.speed});
 //         var legends = this.rootElement.find('.legendLabel');
@@ -144,8 +144,8 @@ angular.module('beamng.apps')
 //         if(currentAcc >=10) // the first point of our acc curve is x/0, something we can't really display here, so instead of using a huge value (and therefore displaying somewhat crappy stuff), we are simply displaying 0
 //             currentAcc = 0;
 //         if(currentSpeed !== undefined)
-//             legends.eq(0).text("Steering: " + currentSpeed.toFixed(3) + " rad/s");  
-//         if(currentAcc !== undefined)    
+//             legends.eq(0).text("Steering: " + currentSpeed.toFixed(3) + " rad/s");
+//         if(currentAcc !== undefined)
 //             legends.eq(1).text("Acceleration: " + currentAcc.toFixed(3) + " rad/s");
 //     }
 // };

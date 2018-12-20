@@ -7,5 +7,5 @@ package.cpath = ''
 
 log = function(...) print(...) end
 
-require('compatibility')
+require('luaCore')
 require('utils')

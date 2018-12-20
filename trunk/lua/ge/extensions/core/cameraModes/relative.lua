@@ -15,10 +15,6 @@ end
 
 function C:init()
   self.disabledByDefault = true
-  if not self.refNodes or not self.refNodes.ref or not self.refNodes.left or not self.refNodes.back then
-    log('D', 'core_camera.relative', 'No refNodes found, using default fallback')
-    self.refNodes = { ref=0, left=1, back=2 }
-  end
 
   self.lightBrightness = 0 -- disable light by default
   self.nearclip = 0.01
@@ -26,6 +22,17 @@ function C:init()
 
   self.slots = {} -- stored position/rotations
   self.slotNameIndexMap = {}
+
+  self.cameraResetted = 2
+  self:onVehicleCameraConfigChanged()
+  self:reset()
+end
+
+function C:onVehicleCameraConfigChanged()
+  if not self.refNodes or not self.refNodes.ref or not self.refNodes.left or not self.refNodes.back then
+    log('D', 'core_camera.relative', 'No refNodes found, using default fallback')
+    self.refNodes = { ref=0, left=1, back=2 }
+  end
 
   -- how to init this
   if #self > 0 then
@@ -47,7 +54,7 @@ function C:init()
     --dump(self.slots)
   else
     self.pos = vec3(0,-3,2)
-    self.rot = vec3(0,-150,0)
+    self.rot = vec3(0,-120,0)
     self.fov = 70
   end
 
@@ -55,11 +62,6 @@ function C:init()
   self.resetRot = vec3(self.rot) -- copy
   self.resetFOV = self.fov
 
-  self.cameraResetted = 2
-  self:reloaded()
-end
-
-function C:reloaded()
   -- if a reset countdown is NOT already happening
   if self.cameraResetted <= 0 then
     -- signal to reset that a reload has happened
@@ -212,24 +214,7 @@ function C:reStoreSlot(slot, skipTransition)
   self.pos = slot.pos
   self.rot = slot.rot
   self.fov = slot.fov
-
-  -- overlay user settings
-  if slot.fovoffset then
-    self.fov = self.fov + settings.getValue('cameraFOVTune') or 0
-    self.fov = math.min(150, math.max(1, self.fov))
-  end
-
-  if slot.posoffset then
-    local globalOffset = vec3(
-      settings.getValue('cameraPosTuneX') or 0,
-      settings.getValue('cameraPosTuneY') or 0,
-      settings.getValue('cameraPosTuneZ') or 0
-    )
-    if self.rightHandCamera then
-      globalOffset.x = - globalOffset.x
-    end
-    self.pos = self.pos + globalOffset
-  end
+  self.fov = math.min(120, math.max(1, self.fov))
 
   if not skipTransition then
     core_camera.startTransition()
@@ -299,28 +284,19 @@ end
 
 function C:update(data)
   -- update input
-  local dtRotFactor = data.dt * 1000
+  local dx = dxSmoother:get(MoveManager.right   - MoveManager.left,     data.dt)
+  local dy = dySmoother:get(MoveManager.forward - MoveManager.backward, data.dt)
+  local dz = dzSmoother:get(MoveManager.up      - MoveManager.down,     data.dt)
+  local dtPosFactor = factorSmoother:get(data.speed / 50, data.dt)
+  local pd = dtPosFactor * data.dt * vec3(dx, dy, dz)
 
-  local rdx = -BeamEngine.camX * dtRotFactor  - (MoveManager.yawLeftSpeed - MoveManager.yawRightSpeed) * dtRotFactor
-  local rdy =  BeamEngine.camY * dtRotFactor + (MoveManager.pitchUpSpeed - MoveManager.pitchDownSpeed) * dtRotFactor
-  local rdz = (BeamEngine.zoomInSpeed - BeamEngine.zoomOutSpeed) * dtRotFactor * 4
-  BeamEngine.camX = 0
-  BeamEngine.camY = 0
-
+  local rdx = 10*MoveManager.yawRelative   + 100*data.dt*(MoveManager.yawRight - MoveManager.yawLeft  )
+  local rdy = 10*MoveManager.pitchRelative + 100*data.dt*(MoveManager.pitchUp  - MoveManager.pitchDown)
+  local rdz = 4.5*data.dt*(MoveManager.zoomIn - MoveManager.zoomOut) * self.fov
   self.rot = self.rot + vec3(rdx, rdy, 0)
 
   self.fov = math.max(self.fov + rdz, 10)
-  self.fov = math.min(self.fov, 150)
-
-  local dx = dxSmoother:get(MoveManager.right - MoveManager.left, data.dt)
-  local dy = dySmoother:get(MoveManager.forward - MoveManager.backward, data.dt)
-  local dz = dzSmoother:get(MoveManager.up - MoveManager.down, data.dt)
-
-  local dtPosFactor = factorSmoother:get(data.speed / 50, data.dt)
-  local pdx = dx * dtPosFactor * data.dt
-  local pdy = dy * dtPosFactor * data.dt
-  local pdz = dz * dtPosFactor * data.dt
-
+  self.fov = math.min(self.fov, 120)
   --
   local ref  = vec3(data.veh:getNodePosition(self.refNodes.ref))
   local left = vec3(data.veh:getNodePosition(self.refNodes.left))
@@ -340,14 +316,14 @@ function C:update(data)
 
   local camOffset = qdir * self.pos
 
-  local qdirLook = rotateEuler(math.rad(self.rot.x), math.rad(self.rot.y), 0) --math.rad(self.rot.z))
+  local qdirLook = rotateEuler(-math.rad(self.rot.x), -math.rad(self.rot.y), 0) --math.rad(self.rot.z))
   local qdirLook2 = rotateEuler(0, 0, math.rad(self.rot.z), qdirLook)
   qdir = qdirLook2 * qdir
 
-  local newPos = self.pos + qdirLook * vec3(pdx, pdy, pdz)
+  local newPos = self.pos + qdirLook * pd
   local deltaPos = newPos - ref
   if self.camMaxDist and deltaPos:length() < self.camMaxDist then
-    self.pos = self.pos + qdirLook * vec3(pdx, pdy, pdz)
+    self.pos = self.pos + qdirLook * pd
   end
 
   local pos = data.pos + camOffset

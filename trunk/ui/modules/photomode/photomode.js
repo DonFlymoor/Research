@@ -10,7 +10,7 @@ angular.module('beamng.stuff')
   //bngApi.engineScript('EditorGuiStatusBar.setCamera("Smooth Rot Camera");');
   bngApi.engineLua("commands.setEditorCameraNewtonDamped()");
   bngApi.engineLua("commands.setFreeCamera()");
-  bngApi.engineScript('$_pm_fov=$cameraFov;$mvRoll = 0;');
+  bngApi.engineLua("MoveManager.rollRelative = 0; core_camera.savedFreeCameraFov = getFreeCameraFov()");
   bngApi.engineLua('bullettime.pause(true)');
  // bngApi.engineLua('campaign_exploration.activemode()');
 
@@ -34,7 +34,7 @@ angular.module('beamng.stuff')
       vm.campaingexp = isCampaign;
     });
    });
-  bngApi.engineLua('scenario_scenarios.getScenario()', function(data) {
+  bngApi.engineLua('scenario_scenarios and scenario_scenarios.getScenario()', function(data) {
     $scope.$evalAsync(function () {
       vm.currentScenario = data;
     });
@@ -51,8 +51,8 @@ angular.module('beamng.stuff')
 
 
   // quick fix for reseting the values on enter, but actually that should be doable just by setting the default values after the watchers, so setting them would trigger the watchers...
-  bngApi.engineScript( 'setFov(80);' );
-  bngApi.engineScript( 'rollAbs(0);' );
+  bngApi.engineLua( 'setFreeCameraFov(80);' );
+  bngApi.engineLua( 'core_camera.rollAbs(0)' );
   bngApi.engineScript( '$Camera::movementSpeed = 10;' );
 
   bngApi.engineScript('$Camera::movementSpeed', function (speed) {
@@ -158,7 +158,7 @@ angular.module('beamng.stuff')
 
 
   $scope.$watch('photo.settings.fov', function(value) {
-      bngApi.engineScript( 'setFov(' + value + ');' );
+      bngApi.engineLua('setFreeCameraFov(' + value + ')');
   });
 
   $scope.$watch('photo.settings.cameraSpeed', function(value) {
@@ -167,7 +167,7 @@ angular.module('beamng.stuff')
   });
 
   $scope.$watch('photo.settings.roll', function (value) {
-    bngApi.engineScript( 'rollAbs(' + (value * 100) + ');' ); // in rads
+    bngApi.engineLua('core_camera.rollAbs(' + (value * 100) + ')' ); // in rads
   });
 
   vm.openPostFXManager = function() {
@@ -181,7 +181,7 @@ angular.module('beamng.stuff')
     logger.debug('exiting photomode.');
     bngApi.engineLua("commands.setEditorCameraStandard()"); // camera change if the editor was not loaded before
     bngApi.engineLua("commands.setGameCamera()"); // camera change if the editor was not loaded before
-    bngApi.engineScript('$mvRoll = 0;setFov($_pm_fov);');
+    bngApi.engineLua("MoveManager.rollRelative = 0; setFreeCameraFov(core_camera.savedFreeCameraFov)");
     showPhotomodeGrid.show = vm.settings.showGrid;
   });
 

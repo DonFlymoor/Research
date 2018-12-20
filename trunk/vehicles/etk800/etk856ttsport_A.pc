@@ -1,9 +1,9 @@
 {
 "vars":{
-  "$toe_RR":0.9962,
-  "$camber_RL":0.989,
-  "$toe_RL":0.9962,
-  "$camber_RR":0.989
+  "$camber_FR":0.994,
+  "$camber_RR":0.9844,
+  "$toe_RR":0.9964,
+  "$toe_FR":0.999
 },
 "parts":{
   "etk800_door_RL_wagon":"etk800_door_RL_wagon",

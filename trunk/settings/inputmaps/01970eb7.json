@@ -22,7 +22,7 @@
         {"control": "yaxis", "action": "accelerate" ,   "isInverted": true  ,   "deadzone": {"end": 0.02 }},
         {"control": "slider", "action": "clutch"    ,   "isInverted": true  ,   "deadzone": {"end": 0.02 }},
     {
-    "ffb" :       {"forceLimit"        : 4.5                   , "smoothing"         : 150                 , "forceCoef"         : 450                 , "forceCoefLowSpeed": 220, "smoothingHF"       : 50                  }, 
+    "ffb" :       {"forceLimit"        : 4.5                   , "smoothing"         : 150                 , "forceCoef"         : 450                 , "forceCoefLowSpeed": 220, "smoothingHF"       : 150                  }, 
     "isForceInverted"   : true                , 
     "ffbUpdateType" : 0,
     "isForceEnabled"    : true                , 

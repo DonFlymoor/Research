@@ -2,7 +2,7 @@ angular.module('beamng.apps')
 .directive('cruiseControl', ['$log', 'bngApi', function ($log, bngApi) {
   return {
     template:
-      '<object style="width:100%; height:100%;" type="image/svg+xml" data="modules/apps/CruiseControl/cruise_control_t01.svg"/>',
+      '<object style="width:100%; height:100%;" type="image/svg+xml" data="modules/apps/CruiseControl/cruise_control_t01.svg"></object>',
     replace: true,
     restrict: 'EA',
     scope: true,
@@ -61,22 +61,24 @@ angular.module('beamng.apps')
           });
 
           scope.$on('CruiseControlState', function (event, data) {
-            $log.debug(TAG, 'state:', data);
-            state = data;
-            speedTxt.innerHTML = Math.round(state.targetSpeed / speedStep);
-            if (state.isEnabled) {
-              speedTxt.style.fill = onColor;
-              ccIcon.style.fill = onColor;
-            } else {
-              speedTxt.style.fill = offColor;
-              ccIcon.style.fill = offColor
-            }
+            scope.$evalAsync(function() {
+              $log.debug(TAG, 'state:', data);
+              state = data;
+              speedTxt.innerHTML = Math.round(state.targetSpeed / speedStep);
+              if (state.isEnabled) {
+                speedTxt.style.fill = onColor;
+                ccIcon.style.fill = onColor;
+              } else {
+                speedTxt.style.fill = offColor;
+                ccIcon.style.fill = offColor
+              }
+            })
           });
-          
+
           scope.$on('VehicleFocusChanged', function () {
             bngApi.activeObjectLua('extensions.cruiseControl.requestState()');
           });
-          
+
           scope.$on('AIStateChange', function (event, data) {
             bngApi.activeObjectLua('extensions.cruiseControl.setEnabled(false)');
             bngApi.activeObjectLua('extensions.cruiseControl.requestState()');

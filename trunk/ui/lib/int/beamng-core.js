@@ -114,7 +114,7 @@ angular.module('beamng.core', [])
       }
 
       apiCallbacks[++callbackId] = callback;
-      var cmdStr = 'obj:executeJS("bngApiCallback(' + callbackId + ',".. encodeJson(' + cmd + ') ..")");';
+      var cmdStr = 'obj:executeJS("bngApiCallback(' + callbackId + ',".. jsonEncode(' + cmd + ') ..")");';
       beamng.sendActiveObjectLua(cmdStr);
     },
 
@@ -141,7 +141,7 @@ angular.module('beamng.core', [])
 
 
       apiCallbacks[++callbackId] = callback;
-      var cmdStr = 'be:executeJS("bngApiCallback(' + callbackId + ',".. encodeJson(' + cmd + ') ..")");';
+      var cmdStr = 'be:executeJS("bngApiCallback(' + callbackId + ',".. jsonEncode(' + cmd + ') ..")");';
       beamng.sendEngineLua(cmdStr);
     },
 

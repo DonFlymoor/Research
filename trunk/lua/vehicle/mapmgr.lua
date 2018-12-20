@@ -99,13 +99,21 @@ local function sendTracking()
   local objCols = M.objectCollisionIds
   table.clear(objCols)
   obj:getObjectCollisionIds(objCols)
-  table.clear(serTmp)
-  for i = 1, #objCols do
-    serTmp[i] = strformat('[%s]=1', objCols[i])
+
+  local colsStr
+  local objColsCount = #objCols
+  if objColsCount > 0 then
+    table.clear(serTmp)
+    for i = 1, objColsCount do
+      serTmp[i] = strformat('[%s]=1', objCols[i])
+    end
+    colsStr = strformat('{%s}', table.concat(serTmp, ','))
+  else
+    colsStr = "{}"
   end
 
   obj:queueGameEngineLua(strformat('map.objectData(%s,%s,%s,%s,%s)', objectId, tostring(playerInfo.anyPlayerSeated),
-      vec3toString(obj:getVelocity()), math.floor(beamstate.damage), strformat('{%s}', table.concat(serTmp, ','))))
+      vec3toString(obj:getVelocity()), math.floor(beamstate.damage), colsStr))
 end
 
 local function enableTracking(name)

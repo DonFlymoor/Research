@@ -696,6 +696,7 @@ md-list-item.md-2-line.squeezed .md-list-item-text {
   width: 50px;
   text-align: right;
   margin-left: 15px;
+  padding-bottom: 0;
 }
 
 /* Simple table CSS (just to avoid having a completely ugly table) */

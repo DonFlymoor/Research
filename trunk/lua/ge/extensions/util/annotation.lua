@@ -5,7 +5,7 @@
 local M = {}
 M.dependencies = {'core_weather'}
 
-local svg = require('svgwriter')
+local svg = require('libs/EzSVG/EzSVG')
 
 local configfn = 'annotation_config.json'
 
@@ -13,7 +13,7 @@ local config = {}
 
 local recordMode = 0 -- 0 = init, 1 = loading, 2 = ready and recording
 local lastPos = nil
-local heatmap = require('heatmap')
+local heatmap = require('utils/heatmap')
 local colorRed = ColorI(255,0,0,255)
 local generatedSets = 0
 
@@ -166,7 +166,7 @@ local function reloadConfig()
     end
   end
 
-  config = readJsonFile(configfn)
+  config = jsonReadFile(configfn)
   log('I', 'annotation', "Config loaded: " .. tostring(configfn)) --.. ": "..dumps(config))
   if tableSize(config) == 0 then
     log('E', 'annotation', 'configuration invalid, exiting')
@@ -181,7 +181,7 @@ local function reloadConfig()
   config.session = config.session or {}
   config.session.format = config.session.format or 'json'
 
-  writeJsonFile(formatString(config.session.sessionPrefix) .. '/session.json', config, true)
+  jsonWriteFile(formatString(config.session.sessionPrefix) .. '/session.json', config, true)
 
   -- command line overrites config setting
   if not config.scenario then
@@ -221,9 +221,9 @@ local function start(automatic)
       -- set the spawnpoint to be used
       setSpawnpoint.setDefaultSP(config.map.spawnpoint, levelName)
       -- load the level
-      
+
       loadGameModeModules()
-      beamng_cef.startLevel(levelFullPath)
+      core_levels.startLevel(levelFullPath)
     else
       local scenarioPath = 'levels/'..tostring(config.map.name)..'/'..config.scenario
       if not FS:fileExists(scenarioPath) then
@@ -412,7 +412,7 @@ local function buffersWrittenCallback(future)
 
   if config.session.format == 'json' then
     -- json output: do not touch the images
-    writeJsonFile(filenameBase .. '.json', data, true)
+    jsonWriteFile(filenameBase .. '.json', data, true)
   end
 
   writeBuffers[future] = nil
@@ -441,7 +441,7 @@ end
 local function onScenarioUIReady(state)
   if not config.automatic then return end
   print('onScenarioUIReady', state)
-  if state == 'start' then    
+  if state == 'start' then
     scenario_scenarios.onScenarioUIReady('play')
   elseif state == 'play' then
     print(nil)

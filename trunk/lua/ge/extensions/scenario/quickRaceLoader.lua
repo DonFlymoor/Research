@@ -24,8 +24,8 @@ end
 
 local function mimicProcTracks ()
   local res = {}
-  local supportedList = readJsonFile('/levels/driver_training/scenarios/quickRaceProcedural/tracks.json')
-  local scenData = readJsonFile('/levels/driver_training/scenarios/career_prototype_gymkhana.json')[1]
+  local supportedList = jsonReadFile('/levels/driver_training/scenarios/quickRaceProcedural/tracks.json')
+  local scenData = jsonReadFile('/levels/driver_training/scenarios/career_prototype_gymkhana.json')[1]
 
   for i=1, 10, 1 do
     local help = deepcopy(scenData)
@@ -48,12 +48,14 @@ local function getQuickraceList()
   local proceduralLevel = {}
   local levels = {}
   local addingProcedural = true
+
+  local trackBuilderTracks =  M.getTrackEditorTracks()
   for _, levelName in ipairs(files) do
 
     local path = '/levels/' .. levelName .. '/quickrace/'
     local quickraceFiles =  FS:findFilesByPattern(path, '*.json', -1, true, false)
-    if #quickraceFiles > 0 then -- only add the level if it has quickraces inside!
       local newLevel = {}
+    if #quickraceFiles > 0 or trackBuilderTracks[levelName] ~= nil  then -- only add the level if it has quickraces inside!
 
       newLevel.radiusMultiplierAI = 2
       newLevel.levelObjects = {
@@ -65,7 +67,8 @@ local function getQuickraceList()
       newLevel.playersCountRange = { min = 1, max = 1 }
       newLevel.uilayout = 'quickraceScenario'
       newLevel.levelName = levelName
-      newLevel.levelInfo =  readJsonFile('/levels/'..levelName..'/info.json') -- this contains the level info for the UI!
+      newLevel.levelInfo =  jsonReadFile('/levels/'..levelName..'/info.json') -- this contains the level info for the UI!
+
       newLevel.official = isOfficialContent(FS:getFileRealPath('levels/'..levelName..'/info.json'))
       if not newLevel.levelInfo then
         log('W', 'quickrace', 'could not load info-file for level ' .. levelName)
@@ -87,15 +90,23 @@ local function getQuickraceList()
       newLevel.scenarioName = newLevel.name
 
       newLevel.previews = M.customPreviewLoader(newLevel, levelName)
+      if levelName == "smallgrid" then
+        newLevel.previews = {"/ui/modules/trackBuilder/trackEdit.jpg"}
+      end
       newLevel.mission = 'levels/'..levelName..'/main.level.json'
 
-      if newLevel.levelName == "smallgrid" then
-        newLevel.tracks = M.getTrackEditorTracks(quickraceFiles, levelName)
-        if newLevel.tracks and #(newLevel.tracks) > 0 then
-          newLevel.previews = newLevel.tracks[1].previews
-        end
-      else
+      --if newLevel.levelName == "smallgrid" then
+      --  newLevel.tracks = M.getTrackEditorTracks(quickraceFiles, levelName)
+      --  if newLevel.tracks and #(newLevel.tracks) > 0 then
+      --    newLevel.previews = newLevel.tracks[1].previews
+      --  end
+      --else
         newLevel.tracks = M.getTracks(quickraceFiles, levelName, newLevel.levelName)
+      --end
+      if trackBuilderTracks[levelName] ~= nil then
+        for _,t in ipairs(trackBuilderTracks[levelName]) do
+          newLevel.tracks[#newLevel.tracks+1] = t
+        end
       end
 
       newLevel.trackCount = #newLevel.tracks
@@ -130,6 +141,7 @@ local function getQuickraceList()
         else
           newLevel.minPlayers = newLevel.maxPlayers;
         end
+
         table.insert(levels, newLevel)
       end
     --  if addingProcedural then
@@ -137,6 +149,8 @@ local function getQuickraceList()
     --  end
      end
     end
+
+
 
   return levels
 end
@@ -190,6 +204,22 @@ local function  customPreviewLoader( scenarioData, levelName)
   return scenarioData.previews
 end
 
+
+--reloads the list of all available tracks, sends those to the app
+local function getCustomTracks()
+  local tracks = {}
+  local previews = {}
+  for i, file in ipairs(FS:findFilesByPattern('trackEditor/','*.json',-1,true,false)) do
+      local _, fn, e = string.match(file, "(.-)([^/]-([^%.]-))$")
+      local name = fn:sub(1,#fn - #e - 1)
+      local read = readJsonFile(name)
+
+  end
+
+  return tracks
+end
+
+
 -- this function gets all the track builder tracks, and creates a quickrace track for each of them, returning them as a list.
 local function getTrackEditorTracks()
   local tracks = {}
@@ -200,60 +230,74 @@ local function getTrackEditorTracks()
       local _, fn, e = string.match(file, "(.-)([^/]-([^%.]-))$")
       editorTracks[i] = fn:sub(1,#fn - #e - 1)
   end
-
   for _, name in ipairs(editorTracks) do
     local trackData = M.loadTrackBuilderJSON(name)
+
     if trackData then
-      local file = {
-        name = name,
-        description =" ",
-        authors = trackData.author or "",
-        difficulty = 0,
-        date = trackData.date or 1521828000,
-        lapCount = 1,
-        reversible = trackData.reversible or false,
-        closed = trackData.connected or false,
-        allowRollingStart= false,
-        length = trackData.length or nil,
-        lapConfig = {},
-        customData = {
-          name = name
+      if trackData.version == nil then
+        log('I',logTag,"The file 'trackEditor/"..name..".json' uses an old format that is no longer supported.")
+      else
+
+        local file = {
+          name = name,
+          authors = trackData.author or "",
+          difficulty = trackData.difficulty or 37, -- 37 = medium
+          date = trackData.date or 1521828000,
+          lapCount = 1,
+          reversible = trackData.reversible or false,
+          closed = trackData.connected or false,
+          allowRollingStart= false,
+          length = trackData.length or nil,
+          lapConfig = {},
+          description = trackData.description or nil,
+          customData = {
+            name = name
+          }
         }
-      }
 
-      if trackData.connected then
-        file.lapCount = trackData.defaultLaps or 2
+        if trackData.connected then
+          file.lapCount = trackData.defaultLaps or 2
+        end
+        file.sourceFile = "quickraceLoader.getTrackEditorTracks()"
+        file.trackName = "TrackEditorTrack_"..name
+        file.directory = "generatedFile"
+
+        file.official = false
+        file.prefabs = {}
+        file.reversePrefabs = {}
+        file.forwardPrefabs = {}
+
+        file.luaFile = "/lua/ge/extensions/util/trackBuilder/quickraceSetup"
+
+        if FS:fileExists('trackEditor/'..name..'.jpg') then
+          file.previews = {'/trackEditor/'..name..'.jpg'}
+        elseif FS:fileExists('trackEditor/'..name..'.png') then
+          file.previews = {'/trackEditor/'..name..'.png'}
+        elseif trackData.level == 'glow_city' then
+          file.previews = {"/ui/modules/trackBuilder/trackEditGlow.jpg"}
+        else
+          file.previews = {"/ui/modules/trackBuilder/trackEdit.jpg"}
+        end
+        file.preview = file.previews[1]
+
+        file.spawnSpheres = {}
+
+
+        file.spawnSpheres.standing = "_standing_spawn"
+        file.spawnSpheres.standingReverse = "_standingReverse_spawn"
+        file.spawnSpheres.rolling = "_rolling_spawn"
+        file.spawnSpheres.rollingReverse = "_rollingReverse_spawn"
+
+        file.tod = file.tod or 3
+
+
+        file.introType = 'none'
+
+        file.isTrackEditorTrack = true
+        local level = trackData.level or 'smallgrid'
+        if tracks[level] == nil then tracks[level] = {} end
+        tracks[level][#tracks[level]+1] = file
       end
-      file.sourceFile = "quickraceLoader.getTrackEditorTracks()"
-      file.trackName = "TrackEditorTrack_"..name
-      file.directory = "generatedFile"
-
-      file.official = false
-      file.prefabs = {}
-      file.reversePrefabs = {}
-      file.forwardPrefabs = {}
-
-      file.luaFile = "/lua/ge/extensions/util/trackEditorSetup"
-
-      file.previews = {"/ui/modules/trackBuilder/trackEdit.jpg"}
-      file.preview = "/ui/modules/trackBuilder/trackEdit.jpg"
-
-      file.spawnSpheres = {}
-       
-
-      file.spawnSpheres.standing = "_standing_spawn"
-      file.spawnSpheres.standingReverse = "_standingReverse_spawn"
-      file.spawnSpheres.rolling = "_rolling_spawn"
-      file.spawnSpheres.rollingReverse = "_rollingReverse_spawn"
-
-      file.tod = file.tod or 3
-
-
-      file.introType = 'none'
-
-      file.isTrackEditorTrack = true
-
-      table.insert(tracks, file)
     end
   end
 
@@ -264,9 +308,9 @@ end
 -- This function loads the JSON of a track builder track.
 local function loadTrackBuilderJSON(originalFilename)
   local filename = 'trackEditor/'..originalFilename..'.json'
- 
+
   if FS:fileExists(filename) then
-    local read = readJsonFile(filename)
+    local read = jsonReadFile(filename)
     if not read then
         log('I',logTag,'No track found in file Documents/BeamNG.drive/'..filename)
         return nil
@@ -285,7 +329,7 @@ local function getTracks(quickraceFiles, levelName, lvlName)
   local tracks = {}
   local procedurals = lvlName == "driver_training"
   for _, trackFile in ipairs(quickraceFiles) do
-    local file = readJsonFile(trackFile)
+    local file = jsonReadFile(trackFile)
     if not file then
       log('E', 'failed to load this track ' , tostring(trackFile).. ' Check Json file')
     elseif procedurals ~= not file.procedural then -- no this cannot be changed to procedurals == file.procedural, becaus then false == nil -> false
@@ -368,7 +412,7 @@ local function getTracks(quickraceFiles, levelName, lvlName)
 end
 
 
-local function loadQuickrace(scenarioKey, scenarioFile, trackFile, vehicleFile)
+local function loadQuickrace(scenarioKey, scenarioFile, trackFile, vehicleFile, raceType)
 
   -- dump(vehicleFile.color)
   if not vehicleFile.color then
@@ -443,33 +487,41 @@ local function loadQuickrace(scenarioKey, scenarioFile, trackFile, vehicleFile)
   --dump(scenarioFile.lapConfig)
 
   --  dump("End = " .. trackFile.startLineCheckpoint)
+  local disableToD = false
+  if scenarioFile.levelInfo.disableQuickraceTimeOfDay then disableToD = true end
+  dump(scenarioFile.levelInfo)
+  if not disableToD then
+    local tod = {0.5, 0.775, 0.85, 0.9, 0, 0.1, 0.175, 0.23, 0.245, 0.5}
 
-  local tod = {0.5, 0.775, 0.85, 0.9, 0, 0.1, 0.175, 0.23, 0.245, 0.5}
+    scenarioFile.levelObjects= {
+          tod = {
+              axisTilt=10,
+              time = tod[trackFile.tod+1],
+              dayLength = 120,
+              play = false,
+              azimuthOverride = 0
+          }
+      }
+   --dump(trackFile.tod)
+  else
+   --scenarioFile.levelObjects = nil
+  end
 
-  scenarioFile.levelObjects= {
-        tod = {
-            axisTilt=10,
-            time = tod[trackFile.tod+1],
-            dayLength = 120,
-            play = false,
-            azimuthOverride = 0
-        }
-    }
- --dump(trackFile.tod)
 
   scenarioFile.isQuickRace = true
+  scenarioFile.quickraceType = raceType
   local processedScenario = scenario_scenariosLoader.processScenarioData(scenarioKey, scenarioFile)
   return processedScenario
 end
 
-local function starQuickRaceFromUI(scenarioFile, trackFile, vehicleFile)
+local function starQuickRaceFromUI(scenarioFile, trackFile, vehicleFile, raceType)
   if scenetree.MissionGroup then
     log('D', logTag, 'Delaying start of quickrace until current level is unloaded...')
 
     M.triggerDelayedStart = function()
       log('D', logTag, 'Triggering a delayed start of quickrace...')
       M.triggerDelayedStart = nil
-      M.startQuickrace(scenarioFile, trackFile, vehicleFile)
+      M.startQuickrace(scenarioFile, trackFile, vehicleFile,raceType)
     end
 
     endActiveGameMode(M.triggerDelayedStart)
@@ -481,12 +533,12 @@ local function starQuickRaceFromUI(scenarioFile, trackFile, vehicleFile)
     end
     modules[#modules+1] = trackFile.luaFile
     if trackFile.isTrackEditorTrack then
-      modules[#modules+1] = 'util_simpleSplineTrack'
+      modules[#modules+1] = 'util/trackBuilder/splineTrack'
     end
     log("I",logTag,"Make Modules.." .. dumps(modules))
     loadGameModeModules(modules)
 
-    local quickraceScenario = loadQuickrace(nil, scenarioFile, trackFile, vehicleFile)
+    local quickraceScenario = loadQuickrace(nil, scenarioFile, trackFile, vehicleFile, raceType)
 
     -- dump(quickraceScenario)
     scenario_scenarios.executeScenario(quickraceScenario)
@@ -494,8 +546,13 @@ local function starQuickRaceFromUI(scenarioFile, trackFile, vehicleFile)
 end
 
 -- This function will merge the track and vehicle data into the scenario and start the scenario.
-local function startQuickrace(scenarioFile, trackFile, vehicleFile)
-  starQuickRaceFromUI(scenarioFile, trackFile, vehicleFile)
+local function startQuickrace(scenarioFile, trackFile, vehicleFile, type)
+
+  if campaign_exploration and campaign_exploration.getExplorationActive() then
+    campaign_exploration.startTimeTrail(scenarioFile, trackFile, vehicleFile)
+  else
+    starQuickRaceFromUI(scenarioFile, trackFile, vehicleFile, type)
+  end
 end
 
 -- These two functions manage the loading and unloading of the hotlapping module when used in freeroam,
@@ -505,7 +562,7 @@ local function uiEventStartHotlapping()
   if not scenario_scenarios or not (scenario_scenarios and scenario_scenarios.getScenario()) then
     if not core_hotlapping then
       extensions.load({'core_hotlapping'});
-    end  
+    end
   end
   if core_hotlapping then
     core_hotlapping.startHotlapping()

@@ -76,6 +76,10 @@
 "overrideNitrousOxide"    :{"cat":"vehicle",       "order": 33, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('nitrousOxideInjection')) do v.setOverride(true) end", "onUp"  :"for _,v in pairs(controller.getControllersByType('nitrousOxideInjection')) do v.setOverride(false) end", "title": "Activate Nitrous Oxide Injection", "desc": "Hold to use the Nitrous Oxide Injection system at any time" },
 "toggleNitrousOxide"      :{"cat":"vehicle",       "order": 34, "ctx": "vlua", "onDown"  :"for _,v in pairs(controller.getControllersByType('nitrousOxideInjection')) do v.toggleActive() end", "title": "Toggle Nitrous Oxide Injection", "desc": "Toggle the Nitrous Oxide Injection system and automatically use it under the matching circumstances" },
 
+"toggleTwoStep"           :{"cat":"vehicle",       "order": 35, "ctx": "vlua", "onDown"  :"controller.getControllerSafe('twoStepLaunch').toggleTwoStep()", "title": "Toggle Two-Step launch logic", "desc": "" },
+"increaseTwoStepRPM"      :{"cat":"vehicle",       "order": 36, "ctx": "vlua", "onDown"  :"controller.getControllerSafe('twoStepLaunch').changeTwoStepRPM(100)", "title": "Increase Two-Step launch RPM", "desc": "" },
+"decreaseTwoStepRPM"      :{"cat":"vehicle",       "order": 36, "ctx": "vlua", "onDown"  :"controller.getControllerSafe('twoStepLaunch').changeTwoStepRPM(-100)", "title": "Decrease Two-Step launch RPM", "desc": "" },
+
 
 
 //vehicle extensions
@@ -113,46 +117,46 @@
 
 
 // vehicle camera related things
-"switch_camera_next"      :{"cat":"camera",  "order":  1, "ctx": "tlua", "onDown"  :"core_camera.switchCamera(PLAYER, 1)", "isBasic":true, "title": "Next camera", "desc": "Switches the next camera" },
-"switch_camera_prev"      :{"cat":"camera",  "order":  1, "ctx": "tlua", "onDown"  :"core_camera.switchCamera(PLAYER, -1)", "isBasic":true, "title": "Previous camera", "desc": "Switches the previous camera" },
-"center_camera"           :{"cat":"camera",  "order":  2, "ctx": "tlua", "onDown"  :"core_camera.resetCamera(PLAYER)", "title": "Center Camera", "desc": "Centers the camera" },
-"look_back"               :{"cat":"camera",  "order":  3, "ctx": "tlua", "onDown"  :"core_camera.lookBack(PLAYER)", "isBasic":true, "title": "Look Back", "desc": "Point the camera backwards" },
+"switch_camera_next"      :{"cat":"camera",  "order":  1, "ctx": "tlua", "onDown"  :"if core_camera then core_camera.switchCamera(PLAYER, 1) end", "isBasic":true, "title": "Next camera", "desc": "Switches the next camera" },
+"switch_camera_prev"      :{"cat":"camera",  "order":  1, "ctx": "tlua", "onDown"  :"if core_camera then core_camera.switchCamera(PLAYER, -1) end", "isBasic":true, "title": "Previous camera", "desc": "Switches the previous camera" },
+"center_camera"           :{"cat":"camera",  "order":  2, "ctx": "tlua", "onDown"  :"if core_camera then core_camera.resetCamera(PLAYER) end", "title": "Center Camera", "desc": "Centers the camera" },
+"look_back"               :{"cat":"camera",  "order":  3, "ctx": "tlua", "onDown"  :"if core_camera then core_camera.lookBack(PLAYER) end", "isBasic":true, "title": "Look Back", "desc": "Point the camera backwards" },
 "movefast"                :{"cat":"camera",  "order":  4, "ctx": "ts",   "onDown"  :"$Camera::movementSpeed *= 3", "onUp":"$Camera::movementSpeed /= 3", "title": "Move Faster", "desc": "Moves the camera faster (if camera supports it)" },
 "changeCameraSpeed"       :{"cat":"camera",  "order":  5, "ctx": "tlua", "onChange":"commands.changeCameraSpeed(VALUE)", "isCentered": true, "title": "Change speed", "desc": "Increases/decreases the camera speed" },
 
 // camera rotation
-"rotate_camera_left"      :{"cat":"camera",  "order": 10, "ctx": "ts",   "onChange":"rotate_camera_horizontal(-1 * VALUE)", "title": "Rotate Camera Left",  "desc": "Rotates the camera left" },
-"rotate_camera_right"     :{"cat":"camera",  "order": 11, "ctx": "ts",   "onChange":"rotate_camera_horizontal(     VALUE)", "title": "Rotate Camera Right", "desc": "Rotates the camera right" },
-"rotate_camera_horizontal":{"cat":"camera",  "order": 12, "ctx": "ts",   "onChange":"rotate_camera_horizontal(     VALUE)", "isCentered": true, "title": "Rotate Camera Horizontally", "desc": "Rotate camera left/right" },
-"rotate_camera_hz_mouse"  :{"cat":"camera",  "order": 13, "ctx": "ts",   "onRelative":"camXChange(VALUE)", "isCentered": true, "title": "Rotate Camera Horizontally (RMB)", "desc": "Rotate camera left/right (holding right mouse button)" },
-"rotate_camera_down"      :{"cat":"camera",  "order": 14, "ctx": "ts",   "onChange":"rotate_camera_vertical(-1 * VALUE)", "title": "Rotate Camera Down",  "desc": "Rotates the camera down" },
-"rotate_camera_up"        :{"cat":"camera",  "order": 15, "ctx": "ts",   "onChange":"rotate_camera_vertical(     VALUE)", "title": "Rotate Camera Up",    "desc": "Rotates the camera up" },
-"rotate_camera_vertical"  :{"cat":"camera",  "order": 16, "ctx": "ts",   "onChange":"rotate_camera_vertical(     VALUE)", "isCentered": true, "title": "Rotate Camera Vertically", "desc": "Rotate camera up/down" },
-"rotate_camera_vt_mouse"  :{"cat":"camera",  "order": 17, "ctx": "ts",   "onRelative":"camYChange(VALUE)", "isCentered": true, "title": "Rotate Camera Vertically (RMB)", "desc": "Rotate camera up/down (holding right mouse button)" },
+"rotate_camera_left"      :{"cat":"camera",  "order": 10, "ctx": "tlua", "onChange":"if core_camera then core_camera.rotate_yaw_left (VALUE, FILTERTYPE) end", "title": "Rotate Camera Left",  "desc": "Rotates the camera left" },
+"rotate_camera_right"     :{"cat":"camera",  "order": 11, "ctx": "tlua", "onChange":"if core_camera then core_camera.rotate_yaw_right(VALUE, FILTERTYPE) end", "title": "Rotate Camera Right", "desc": "Rotates the camera right" },
+"rotate_camera_horizontal":{"cat":"camera",  "order": 12, "ctx": "tlua", "onChange":"if core_camera then core_camera.rotate_yaw      (VALUE, FILTERTYPE) end", "isCentered": true, "title": "Rotate Camera Horizontally", "desc": "Rotate camera left/right" },
+"rotate_camera_hz_mouse"  :{"cat":"camera",  "order": 13, "ctx": "tlua", "onRelative":"if core_camera then core_camera.rotate_yaw_relative(VALUE) end", "isCentered": true, "title": "Rotate Camera Horizontally (RMB)", "desc": "Rotate camera left/right (holding right mouse button)" },
+"rotate_camera_down"      :{"cat":"camera",  "order": 14, "ctx": "tlua", "onChange":"if core_camera then core_camera.rotate_pitch_down(VALUE, FILTERTYPE) end", "title": "Rotate Camera Down",  "desc": "Rotates the camera down" },
+"rotate_camera_up"        :{"cat":"camera",  "order": 15, "ctx": "tlua", "onChange":"if core_camera then core_camera.rotate_pitch_up  (VALUE, FILTERTYPE) end", "title": "Rotate Camera Up",    "desc": "Rotates the camera up" },
+"rotate_camera_vertical"  :{"cat":"camera",  "order": 16, "ctx": "tlua", "onChange":"if core_camera then core_camera.rotate_pitch     (VALUE, FILTERTYPE) end", "isCentered": true, "title": "Rotate Camera Vertically", "desc": "Rotate camera up/down" },
+"rotate_camera_vt_mouse"  :{"cat":"camera",  "order": 17, "ctx": "tlua", "onRelative":"if core_camera then core_camera.rotate_pitch_relative(-1*VALUE) end", "isCentered": true, "title": "Rotate Camera Vertically (RMB)", "desc": "Rotate camera up/down (holding right mouse button)" },
 
 // camera zoom
-"increase_zoom"   :{"cat":"camera",  "order": 20, "ctx": "ts",   "onChange":"cameraZoom(-0.1 * VALUE)", "title": "Zoom In",  "desc": "Zooms camera in" },
-"decrease_zoom"   :{"cat":"camera",  "order": 21, "ctx": "ts",   "onChange":"cameraZoom( 0.1 * VALUE)", "title": "Zoom Out", "desc": "Zooms camera out" },
+"increase_zoom"   :{"cat":"camera",  "order": 20, "ctx": "tlua", "onChange":"if core_camera then core_camera.cameraZoom(-0.1 * VALUE) end", "title": "Zoom In",  "desc": "Zooms camera in" },
+"decrease_zoom"   :{"cat":"camera",  "order": 21, "ctx": "tlua", "onChange":"if core_camera then core_camera.cameraZoom( 0.1 * VALUE) end", "title": "Zoom Out", "desc": "Zooms camera out" },
 
 // flying camera movement
 "toggleCamera"            :{"cat":"camera",  "order": 30, "ctx": "tlua", "onDown"  :"commands.toggleCamera(PLAYER)", "title": "Toggle Flying Camera", "desc": "Toggles from regular cameras to flying camera" },
-"moveforward"             :{"cat":"camera",  "order": 31, "ctx": "ts",   "onChange":"moveforward(VALUE)", "title": "Move Forward", "desc": "Moves the flying camera forwards" },
-"movebackward"            :{"cat":"camera",  "order": 32, "ctx": "ts",   "onChange":"movebackward(VALUE)", "title": "Move Backward", "desc": "Moves the flying camera backwards" },
-"moveleft"                :{"cat":"camera",  "order": 33, "ctx": "ts",   "onChange":"moveleft(VALUE)", "title": "Move Left", "desc": "Moves the flying camera to the left" },
-"moveright"               :{"cat":"camera",  "order": 34, "ctx": "ts",   "onChange":"moveright(VALUE)", "title": "Move Right", "desc": "Moves the flying camera to the right" },
-"moveup"                  :{"cat":"camera",  "order": 35, "ctx": "ts",   "onChange":"moveup(VALUE)", "title": "Move Up", "desc": "Moves the flying camera up" },
-"movedown"                :{"cat":"camera",  "order": 36, "ctx": "ts",   "onChange":"movedown(VALUE)", "title": "Move Down", "desc": "Moves the flying camera down" },
+"moveforward"             :{"cat":"camera",  "order": 31, "ctx": "tlua", "onChange":"if core_camera then core_camera.moveforward(VALUE) end", "title": "Move Forward", "desc": "Moves the flying camera forwards" },
+"movebackward"            :{"cat":"camera",  "order": 32, "ctx": "tlua", "onChange":"if core_camera then core_camera.movebackward(VALUE) end", "title": "Move Backward", "desc": "Moves the flying camera backwards" },
+"moveleft"                :{"cat":"camera",  "order": 33, "ctx": "tlua", "onChange":"if core_camera then core_camera.moveleft(VALUE) end", "title": "Move Left", "desc": "Moves the flying camera to the left" },
+"moveright"               :{"cat":"camera",  "order": 34, "ctx": "tlua", "onChange":"if core_camera then core_camera.moveright(VALUE) end", "title": "Move Right", "desc": "Moves the flying camera to the right" },
+"moveup"                  :{"cat":"camera",  "order": 35, "ctx": "tlua", "onChange":"if core_camera then core_camera.moveup(VALUE) end", "title": "Move Up", "desc": "Moves the flying camera up" },
+"movedown"                :{"cat":"camera",  "order": 36, "ctx": "tlua", "onChange":"if core_camera then core_camera.movedown(VALUE) end", "title": "Move Down", "desc": "Moves the flying camera down" },
 
 // other modes
 "toggleFirstPerson"       :{"cat":"camera",  "order": 40, "ctx": "tlua",   "onDown"  :"commands.toggleFirstPerson()", "title": "Toggle First Person", "desc": "Toggles first person" },
 
 // space mouse
-"xAxisAbs"                :{"cat":"camera",  "order": 50, "ctx": "ts",   "onChange":"xAxisAbs(VALUE)", "isCentered": true, "title": "xAxisAbs" ,"desc": "3d Space Mouse lateral position" },
-"yAxisAbs"                :{"cat":"camera",  "order": 51, "ctx": "ts",   "onChange":"yAxisAbs(VALUE)", "isCentered": true, "title": "yAxisAbs", "desc": "3d Space Mouse forward/backward position" },
-"zAxisAbs"                :{"cat":"camera",  "order": 52, "ctx": "ts",   "onChange":"zAxisAbs(VALUE)", "isCentered": true, "title": "zAxisAbs", "desc": "3d Space Mouse vertical position" },
-"pitchAbs"                :{"cat":"camera",  "order": 53, "ctx": "ts",   "onChange":"pitchAbs(VALUE)", "isCentered": true, "title": "pitchAbs", "desc": "3d Space Mouse pitch rotation" },
-"rollAbs"                 :{"cat":"camera",  "order": 54, "ctx": "ts",   "onChange":"rollAbs (VALUE)", "isCentered": true, "title": "rollAb",   "desc": "3d Space Mouse roll rotation" },
-"yawAbs"                  :{"cat":"camera",  "order": 55, "ctx": "ts",   "onChange":"yawAbs  (VALUE)", "isCentered": true, "title": "yawAbs",   "desc": "3d Space Mouse yaw rotation" },
+"xAxisAbs"                :{"cat":"camera",  "order": 50, "ctx": "tlua", "onChange":"if core_camera then core_camera.xAxisAbs(VALUE) end", "isCentered": true, "title": "xAxisAbs" ,"desc": "3d Space Mouse lateral position" },
+"yAxisAbs"                :{"cat":"camera",  "order": 51, "ctx": "tlua", "onChange":"if core_camera then core_camera.yAxisAbs(VALUE) end", "isCentered": true, "title": "yAxisAbs", "desc": "3d Space Mouse forward/backward position" },
+"zAxisAbs"                :{"cat":"camera",  "order": 52, "ctx": "tlua", "onChange":"if core_camera then core_camera.zAxisAbs(VALUE) end", "isCentered": true, "title": "zAxisAbs", "desc": "3d Space Mouse vertical position" },
+"pitchAbs"                :{"cat":"camera",  "order": 53, "ctx": "tlua", "onChange":"if core_camera then core_camera.pitchAbs(VALUE) end", "isCentered": true, "title": "pitchAbs", "desc": "3d Space Mouse pitch rotation" },
+"rollAbs"                 :{"cat":"camera",  "order": 54, "ctx": "tlua", "onChange":"if core_camera then core_camera.rollAbs (VALUE) end", "isCentered": true, "title": "rollAbs",  "desc": "3d Space Mouse roll rotation" },
+"yawAbs"                  :{"cat":"camera",  "order": 55, "ctx": "tlua", "onChange":"if core_camera then core_camera.yawAbs  (VALUE) end", "isCentered": true, "title": "yawAbs",   "desc": "3d Space Mouse yaw rotation" },
 
 // camera hotkeys
 "camera_1"         :{"cat":"camera",  "order":101, "ctx": "tlua", "onDown"  :"core_camera.setBySlotId(PLAYER, 1)", "title": "Camera 1", "desc": "Switch to camera 1" },
@@ -192,8 +196,8 @@
 // other functions
 "saveHome"                :{"cat":"gameplay", "order": 40, "ctx": "vlua", "onDown"  :"recovery.saveHome()", "title": "Set home position", "desc": "Stores current vehicle position for quick access" },
 "loadHome"                :{"cat":"gameplay", "order": 41, "ctx": "vlua", "onDown"  :"recovery.loadHome()", "title": "Load home position", "desc": "Moves the vehicle to its home position" },
-"dropCameraAtPlayer"      :{"cat":"gameplay", "order": 42, "ctx": "tlua",   "onDown"  :"commands.dropCameraAtPlayer()", "title": "Drop Camera at Player", "desc": "Puts the camera at the player" },
-"dropPlayerAtCamera"      :{"cat":"gameplay", "order": 43, "ctx": "tlua",   "onDown"  :"commands.dropPlayerAtCamera()", "title": "Drop Player at Camera", "desc": "Puts the player at the camera" },
+"dropCameraAtPlayer"      :{"cat":"gameplay", "order": 42, "ctx": "tlua", "onDown"  :"commands.dropCameraAtPlayer()", "title": "Drop Camera at Player", "desc": "Puts the camera at the player" },
+"dropPlayerAtCamera"      :{"cat":"gameplay", "order": 43, "ctx": "tlua", "onDown"  :"commands.dropPlayerAtCamera()", "title": "Drop Player at Camera", "desc": "Puts the player at the camera" },
 "toggleReplayRecording"   :{"cat":"gameplay", "order": 44, "ctx": "tlua", "onDown"  :"core_replay.toggleRecording()", "isBasic":true, "title": "Record replay", "desc": "Start or stop recording a replay" },
 "cancelReplayRecording"   :{"cat":"gameplay", "order": 44, "ctx": "tlua", "onDown"  :"core_replay.cancelRecording()", "isBasic":true, "title": "Cancel replay recording", "desc": "Stops and discards current replay recording" },
 
@@ -202,9 +206,10 @@
 "cycle_metrics_back"      :{"cat":"debug", "order":  2, "ctx": "ts",   "onDown"  :"cycleMetrics(false)", "title": "Show FPS metrics", "desc": "Cycle through various debug metrics"},
 "toggleEditor"            :{"cat":"debug", "order": 10, "ctx": "ts",   "onDown"  :"toggleEditorDynamic()", "actionMap": "Global", "title": "Editor", "desc": "Opens the terrain editor" },
 "toggleConsole"           :{"cat":"debug", "order": 11, "ctx": "ts",   "onDown"  :"ToggleConsole()", "actionMap": "Global", "title": "Toggle System Console", "desc": "Toggles the console" },
-"toggleRawDt"             :{"cat":"debug", "order": 11, "ctx": "tlua", "onDown"  :"be:setClockType( (1+be:getClockType()) % 3 )", "title": "Toggle Raw DT", "desc": "Toggles Raw DT physics" },
 "clear_console"           :{"cat":"debug", "order": 12, "ctx": "ts",   "onDown"  :"cls()", "actionMap": "Global", "title": "Clear System Console", "desc": "Clears the system console" },
-"toggleNewEditor"            :{"cat":"debug", "order": 9, "ctx": "tlua",   "onDown"  :"editor.toggleActive()", "actionMap": "Global", "title": "NewEditor", "desc": "Opens the new editor" },
+"toggleNewEditor"         :{"cat":"debug", "order": 13, "ctx": "tlua", "onDown"  :"if not shipping_build then editor.toggleActive() end", "actionMap": "Global", "title": "NewEditor", "desc": "Opens the new editor" },
+"toggleVehicleEditor"     :{"cat":"debug", "order": 14, "ctx": "vlua", "onDown"  :"bdebug.toggleVehicleEditor()", "actionMap": "Global", "title": "Vehicle Editor", "desc": "Opens the vehicle editor" },
+"toggleTrackBuilder"      :{"cat":"debug", "order": 15, "ctx": "tlua", "onDown"  :"editor.toggleTrackBuilder()", "actionMap": "Global", "title": "TrackBuilder", "desc": "Opens the tracl builder" },
 
 "lua_reload"              :{"cat":"debug", "order": 20, "ctx": "tlua", "onDown"  :"Lua:requestReload(); ui_message('engine.lua.reloaded', 2, 'lua', 'refresh')", "actionMap": "Global", "title": "Reload Lua", "desc": "Reloads vehicle lua" },
 "cefdev_console_toggle"   :{"cat":"debug", "order": 22, "ctx": "ts",   "onDown"  :"toggleCEFDevConsole()", "actionMap": "Global", "title": "Toggle UI Console", "desc": "Toggles the Chromium Embedded (CEF) Console" },
@@ -229,12 +234,22 @@
 "debugmode_cog_decr"      :{"cat":"vehicle_debug", "order": 20, "ctx": "vlua", "onDown"  :"bdebug.cogChange(-1)","title": "Toggle Center of Gravity Debug (Reverse)", "desc": "Shows center of gravity debug" },
 
 // game engine general
-"pause"          :{"cat":"general", "order":  1, "ctx": "tlua", "onDown"  :"bullettime.togglePause()", "isBasic":true, "title": "Pause", "desc": "Pauses the game or replay" },
+"pause"                   :{"cat":"general", "order":  1, "ctx": "tlua", "onDown"  :"bullettime.togglePause()", "isBasic":true, "title": "Pause", "desc": "Pauses the game or replay" },
 "quit"                    :{"cat":"general", "order":  2, "ctx": "ts",   "onDown"  :"quit()", "actionMap": "Global", "title": "Quit", "desc": "Quits the game" },
 "toggle_fullscreen"       :{"cat":"general", "order":  3, "ctx": "ts",   "onDown"  :"Canvas.attemptFullscreenToggle()", "actionMap": "Global", "title": "Toggle Fullscreen", "desc": "Toggles fullscreen" },
 "photomode"               :{"cat":"general", "order": 10, "ctx": "ui",   "onDown"  :"HookManager.trigger('MenuOpenModule', 'photomode')", "title": "Enter Photo Mode", "desc": "Pauses Physics and enters a mode to take pictures" },
 "hide_ui"                 :{"cat":"general", "order": 11, "ctx": "ui",   "onDown"  :"HookManager.trigger('hide_ui')", "actionMap": "Global", "title": "Hide UI", "desc": "Shows or hides the complete User Interface" },
 "doScreenShot"            :{"cat":"general", "order": 12, "ctx": "ts",   "onDown"  :"doScreenShot()", "actionMap": "Global", "title": "Take Screenshot", "desc": "Takes and saves a screenshot" },
 "doBigScreenShot"         :{"cat":"general", "order": 13, "ctx": "ts",   "onDown"  :"doBigScreenShot()", "actionMap": "Global", "title": "Take Big Screenshot", "desc": "Takes and saves a large screenshot" },
-"publishScreenShot"       :{"cat":"general", "order": 14, "ctx": "elua", "onDown"  :"screenshot.publish()", "actionMap": "Global", "isBasic":true, "title": "Publish Screenshot", "desc": "Publishes screenshot" },
+"doHugeScreenShot"        :{"cat":"general", "order": 14, "ctx": "ts",   "onDown"  :"doHugeScreenShot()", "actionMap": "Global", "title": "Take really big Screenshot", "desc": "Takes and saves a large screenshot" },
+"publishScreenShot"       :{"cat":"general", "order": 15, "ctx": "elua", "onDown"  :"screenshot.publish()", "actionMap": "Global", "isBasic":true, "title": "Publish Screenshot", "desc": "Publishes screenshot" },
+
+// Editor actions
+"copy_road_properties"    :{"cat":"general", "order": 1, "ctx": "tlua",   "onDown"   :"editor_roadEditor.copySettingsAM()", "actionMap": "RoadEditor", "title": "Copy road properties", "desc": "Copies the properties of a selected road" },
+"paste_road_properties"   :{"cat":"general", "order": 1, "ctx": "tlua",   "onDown"   :"editor_roadEditor.pasteSettingsAM()", "actionMap": "RoadEditor", "title": "Paste road properties", "desc": "Pastes the properties of a road to another road" },
+"delete_road_node"        :{"cat":"general", "order": 1, "ctx": "tlua",   "onDown"   :"editor_roadEditor.deleteRoadNodeAM()", "actionMap": "RoadEditor", "title": "Delete road or node", "desc": "Deletes the selected road or just the node" },
+"cycle_hovered_roads"     :{"cat":"general", "order": 1, "ctx": "tlua",   "onChange" :"editor_roadEditor.cycleHoveredRoadsAM(VALUE)", "actionMap": "RoadEditor", "title": "Cycle hovered roads", "desc": "Cycle through the hovered roads" },
+"toggle_creation_mode"    :{"cat":"general", "order": 1, "ctx": "tlua",   "onChange" :"editor_roadEditor.toggleState()", "actionMap": "RoadEditor", "title": "Cycle creation mode", "desc": "Cycle between select and create mode"},
+"reload_road_templates"   :{"cat":"general", "order": 1, "ctx": "tlua",   "onDown"   :"editor_roadEditor.reloadTemplates()", "actionMap": "RoadEditor", "title": "Reload road templates", "desc": "Reloads the road templates from the json files"}
 }
+

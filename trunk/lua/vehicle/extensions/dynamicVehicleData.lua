@@ -58,6 +58,9 @@ local function compareData(oldData, newData, model_key, config_key)
 end
 
 local function clearData(data, whiteList)
+  if data == nil then
+    return {}
+  end
   --print("data pre clearing:")
   --dump(data)
   for k, v in pairs(whiteList) do
@@ -71,16 +74,15 @@ end
 
 -- saves changes to the info json file
 local function saveInfo(newData, whiteList)
-  print(string.format("Got data (%s/%s):", model_key, config_key))
-  print(dumps(newData))
+  log("I", logTag, (string.format("Got data (%s/%s):", model_key, config_key)) .. " = " .. dumps(newData))
   local filepath = "vehicles/" .. model_key .. "/info_" .. config_key .. ".json"
-  local data = readJsonFile(filepath)
+  local data = jsonReadFile(filepath)
   data = clearData(data, whiteList)
   compareData(data, newData, model_key, config_key)
   if data and newData then
-    print("Saving...")
+    log("D", logTag, "Saving...")
     tableMerge(data, newData)
-    writeJsonFile(filepath, data, true)
+    jsonWriteFile(filepath, data, true)
   end
 end
 
@@ -112,6 +114,7 @@ local function getVehiclePerformanceData()
 
   local engine = powertrain.getDevice("mainEngine")
   if not engine then
+    -- TODO: this having the wrong return value, breaking everything else hard
     return {Weight = weight}
   end
   local torqueData = engine:getTorqueData()
@@ -217,6 +220,7 @@ end
 
 local function writeBasicPerformanceData()
   local perfData = getVehiclePerformanceData()
+  --log('E', logTag, dumps(perfData))
   saveInfo(perfData.data, perfData.whiteList)
 end
 
@@ -516,7 +520,7 @@ local function updateGFX(dt)
     end
     watchdogHeartbeat()
     if coroutine.status(workerCoroutine) == "dead" then
-      print("coroutine dead, hitting killswitch")
+      log("I", logTag, "coroutine dead, hitting killswitch")
       killswitch()
       workerCoroutine = nil
       return
@@ -546,7 +550,7 @@ local function performTests(_model_key, _config_key)
       brakingTests()
 
       local touchedFilePath = "vehicles/" .. model_key .. "/info_" .. config_key .. ".touched"
-      --writeJsonFile(touchedFilePath, {}, true)
+      --jsonWriteFile(touchedFilePath, {}, true)
 
       log("I", logTag, " *** finished ***")
     end

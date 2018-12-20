@@ -1,7 +1,7 @@
 angular.module('beamng.stuff')
 
-.controller('HelpController', ['$log', '$scope', '$stateParams', '$state', '$timeout', '$filter', '$http', '$sce', 'bngApi', 'Utils',
-  function($log, $scope, $stateParams, $state, $timeout, $filter, $http, $sce, bngApi, Utils) {
+.controller('HelpController', ['$log', '$scope', '$stateParams', '$state', '$timeout', '$filter', '$http', '$sce', '$sanitize', 'bngApi', 'Utils',
+  function($log, $scope, $stateParams, $state, $timeout, $filter, $http, $sce, $sanitize, bngApi, Utils) {
   // set up the display
   $scope.useThemeBackground = true;
   $scope.tabs = [
@@ -85,6 +85,7 @@ angular.module('beamng.stuff')
     //console.log('onHardwareInfo', data)
     $scope.$apply(function() {
       $scope.hwinfo = data;
+      $scope.hstxt = $sce.trustAsHtml(Utils.parseBBCode($sanitize($filter('translate')('ui.performance.highsea.txt'))));
     });
   });
 
@@ -124,6 +125,20 @@ angular.module('beamng.stuff')
   $scope.acknowledgeWarning = function(msg) {
     bngApi.engineLua(`core_hardwareinfo.acknowledgeWarning(${bngApi.serializeToLua(msg)})`);
   }
+
+  $scope.runDiskUsage = function() {
+    bngApi.engineLua('core_hardwareinfo.runDiskUsage()');
+  };
+  $scope.$on('diskInfoCallback', function (event, data) {
+    $scope.$evalAsync(() => {
+      if($scope.disk == undefined)
+        $scope.disk= {};
+      if($scope.disk.usage == undefined)
+        $scope.disk.usage= {};
+      $scope.disk.usage[data.name] = {running: data.running, size: data.size};
+      // console.log($scope.disk);
+    });
+  });
 
   $scope.bytes = function(bytes, precision) {
     precision = precision || 1;

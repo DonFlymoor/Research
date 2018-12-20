@@ -11,6 +11,7 @@
             ["postCrashBrake",{"brakeThreshold": 60}],
             ["esc"],
             ["adaptiveBrakeLights"]
+            ["twoStepLaunch", {"rpmLimit":1700}]
         ],
         "esc": {
             "actionedWheels": ["FL", "FR", "RR", "RL"],
@@ -31,8 +32,8 @@
                     "proportionalFactor": 0.85,
                     "integralFactor": 1.5,
                     "maxIntegralPart": 2.0,
-                    "skewStiffnessFront":148500,
-                    "skewStiffnessRear":161000,
+                    "skewStiffnessFront":125000,
+                    "skewStiffnessRear":152500,
                     "desiredYawRateSmoothing":570,
                     //TCS
                     "slipThreshold": 0.15,
@@ -58,8 +59,8 @@
                     "proportionalFactor": 0.25,
                     "integralFactor": 0.7,
                     "maxIntegralPart": 1.0,
-                    "skewStiffnessFront":148500,
-                    "skewStiffnessRear":161000,
+                    "skewStiffnessFront":125000,
+                    "skewStiffnessRear":152500,
                     "desiredYawRateSmoothing":570,
                     //TCS
                     "slipThreshold": 0.35,

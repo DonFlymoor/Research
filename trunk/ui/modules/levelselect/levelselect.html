@@ -29,7 +29,7 @@
         <imageslider ng-style="(level.disableReason) ? {'-webkit-filter': 'grayscale(100%)'} : {} " style="width: 100%; height: 100%;" imageurls="level.previews" ></imageslider>
         <md-grid-tile-footer class="md-padding">
             <h3>
-              <bng-icon ng-if=":: level.official && level.authors !== 'BeamNG & Camshaft Software'" src="'general_beamng_logo_bw'" style="margin-right: 4px; left: 2%; bottom: 25%; width: 22px; height: 22px; color: white; position: absolute;" type="sprite"></bng-icon>
+              <bng-icon ng-if=":: level.official && level.authors !== 'BeamNG & Camshaft Software'" src="'general_beamng_logo_w'" style="margin-right: 4px; left: 2%; bottom: 25%; width: 22px; height: 22px; color: white; position: absolute;" type="sprite"></bng-icon>
               <bng-icon ng-if=":: level.authors === 'BeamNG & Camshaft Software'"  src="'Assets/camshaft_automation_logo.svg'" type="img"  style="margin-right: 4px; left: 2%; bottom: 25%; width: 22px; height: 22px; color: white; position: absolute;"></bng-icon>
               {{ ::level.title | translate }}
             </h3>

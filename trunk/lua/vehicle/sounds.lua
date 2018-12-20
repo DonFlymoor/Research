@@ -4,10 +4,7 @@
 
 local M = {}
 
-local max = math.max
-local min = math.min
-local abs = math.abs
-local random = math.random
+local max, min, abs, random = math.max, math.min, math.abs, math.random
 
 M.engineNode = nil
 M.usesOldCustomSounds = false
@@ -21,9 +18,12 @@ local soundBank = {sounds = {}}
 local sfxprofilecounter = 0 -- local counter to enumerate the profiles without collisions, do not reset ever
 
 local beamSounds = {}
+local beamResetTimer = 0
 local usingNewEngineSounds = false
 
 local boolToNum = {[true] = 1, [false] = 0}
+
+local scrapeSounds = {}
 
 M.uiDebugging = false
 
@@ -117,7 +117,7 @@ local function getSoundModifier(modName)
     return 1
   end
 
-  return math.min(math.max(modifier.min, modifier.factor * (mVal + modifier.offset)), modifier.max)
+  return min(max(modifier.min, modifier.factor * (mVal + modifier.offset)), modifier.max)
 end
 
 local function createSFXSource(filename, description, SFXProfileName, nodeID)
@@ -198,35 +198,39 @@ local function updateGFX(dt)
     end
   end
 
-  -- beam sounds
-  for _, snd in ipairs(beamSounds) do
+  beamResetTimer = beamResetTimer + dt
+
+    -- beam sounds, suspension
+  for bi, snd in ipairs(beamSounds) do
     local currentStress = snd.smoothing:get(obj:getBeamStress(snd.beam), dt) -- find the stress on the current sound beam
     local impulse = (snd.lastStress - currentStress) / (dt * 30) -- take the difference in beam stress between this frame and the last frame, and save it as impulse
-    snd.resonance = math.max(math.min(snd.resonance or 0, snd.maxStress), 0) --limit sound factor to maxStress to prevent overly loud/long sounds
+    snd.resonance = max(min(snd.resonance, snd.maxStress), 0) --limit sound factor to maxStress to prevent overly loud/long sounds
     local linDecay = (1 - snd.decayMode) * snd.resonance * snd.decayFactor * dt
     local expDecay = snd.decayMode * snd.resonance * snd.decayFactor * dt
-    local factor = math.max(impulse, math.max(snd.resonance - linDecay - expDecay, 0)) --sound decays to create a smooth fade out. Rate is dependent on simulation speed.
+    local factor = max(impulse, max(snd.resonance - linDecay - expDecay, 0)) --sound decays to create a smooth fade out. Rate is dependent on simulation speed.
+
+    local normFactor = factor / snd.maxStress
+    local volume = snd.volumeFactor * 1.3 * normFactor -- normalize volume (cancel out maxStress factor)
+    local pitch = 1 + snd.pitchFactor * normFactor -- loud suspension sounds also gain a higher pitch
+    local color = min(1, snd.colorFactor * normFactor) -- the impulse - used for strength - controls volume curve and EQ in FMOD
+
+    snd.clip:setVolumePitch(volume * min(beamResetTimer, 1), pitch, color)
 
     snd.lastStress = currentStress --reset for next frame comparison
-
-    local volume = (factor * snd.volumeFactor * 1.3) / snd.maxStress -- normalize volume (cancel out maxStress factor)
-    local pitch = 1 + (snd.pitchFactor * (factor / snd.maxStress)) -- loud suspension sounds also gain a higher pitch
-
-    if snd.resetTimer > 1 then --prevent loud sounds from playing on spawn
-      snd.clip:setVolumePitch(volume, pitch)
-    else
-      snd.resetTimer = snd.resetTimer + dt
-      snd.clip:setVolumePitch(0, 0)
-    end
-
     snd.resonance = factor --reset for next frame comparison
+
+    -- streams.drawGraph('w'..bi, {value = volume, max = 1})
+    --if bi == 1 and volume >= 0.01 then volumeprint = math.floor(volume*-100)/-100 end
+    --if bi == 1 and color >= 0.01 then colorprint = math.floor(color*-100)/-100 end
+    --print (volumeprint)
+    --print(colorprint)
   end
 
   -- wind
   if windSound then
     local speed = obj:getAirflowSpeed() -- speed against wind
-    local vol = min(speed * speed * 0.001, 10)
-    local pitch = speed / 60
+    local vol = min(speed * speed * 0.00015, 1)
+    local pitch = speed * 0.01
     windSound:setVolumePitch(vol, pitch)
   end
 
@@ -259,8 +263,9 @@ local function updateGFX(dt)
     local wheelPeripherySpeed = max(slip * 5, absWheelSpeed)
     local rollVol = tirePatchPressure * min(1, wheelPeripherySpeed * 0.5)
     local surfaceLooseness = 0
+    local mat = wd.contactMaterialID1
 
-    local gravelContactSmooth = wheelSound.gravelContactSmoother:getUncapped(boolToNum[wd.contactMaterialID1 == 19 and isRubberTire], dt)
+    local gravelContactSmooth = wheelSound.gravelContactSmoother:getUncapped(boolToNum[mat == 19 and isRubberTire], dt)
     if gravelContactSmooth > 0 then
       --we need two different periphery speeds, one for general "pitch" of the roll noise and the other for kickup timing, they differ in how slip velocity affects them
       surfaceLooseness = 0.2 * gravelContactSmooth + surfaceLooseness * (1 - gravelContactSmooth)
@@ -280,7 +285,7 @@ local function updateGFX(dt)
       end
     end
 
-    local dirtContactSmooth = wheelSound.dirtContactSmoother:getUncapped(boolToNum[(wd.contactMaterialID1 == 15 or wd.contactMaterialID1 == 14) and isRubberTire], dt)
+    local dirtContactSmooth = wheelSound.dirtContactSmoother:getUncapped(boolToNum[(mat == 15 or mat == 14) and isRubberTire], dt)
     if dirtContactSmooth > 0 then
       surfaceLooseness = 0.4 * dirtContactSmooth + surfaceLooseness * (1 - dirtContactSmooth)
       maxLooseRollPitch = max(maxLooseRollPitch, min(1, wheelPeripherySpeed * 0.01))
@@ -298,7 +303,7 @@ local function updateGFX(dt)
       end
     end
 
-    local grassContactSmooth = wheelSound.grassContactSmoother:getUncapped(boolToNum[wd.contactMaterialID1 == 20 and isRubberTire], dt)
+    local grassContactSmooth = wheelSound.grassContactSmoother:getUncapped(boolToNum[mat == 20 and isRubberTire], dt)
     if grassContactSmooth > 0 then
       surfaceLooseness = 0.6 * grassContactSmooth + surfaceLooseness * (1 - grassContactSmooth)
       maxLooseRollPitch = max(maxLooseRollPitch, min(1, wheelPeripherySpeed * 0.01))
@@ -316,7 +321,7 @@ local function updateGFX(dt)
       end
     end
 
-    local sandContactSmooth = wheelSound.sandContactSmoother:getUncapped(boolToNum[wd.contactMaterialID1 == 16 and isRubberTire], dt)
+    local sandContactSmooth = wheelSound.sandContactSmoother:getUncapped(boolToNum[mat == 16 and isRubberTire], dt)
     if sandContactSmooth > 0 then
       surfaceLooseness = 0.8 * sandContactSmooth + surfaceLooseness * (1 - sandContactSmooth)
       maxLooseRollPitch = max(maxLooseRollPitch, min(1, wheelPeripherySpeed * 0.01))
@@ -334,6 +339,38 @@ local function updateGFX(dt)
       end
     end
 
+    local rockSkidVolume = 0
+    local rockSkidPitch = 0
+    local rockSkidColor = 0
+    local rockSkidTexture = 0
+
+    local rockContactSmooth = wheelSound.rockContactSmoother:getUncapped(boolToNum[mat == 13 and isRubberTire], dt)
+    if rockContactSmooth > 0 then
+      surfaceLooseness = surfaceLooseness * (1 - rockContactSmooth)
+      maxLooseRollPitch = max(maxLooseRollPitch, min(1, wheelPeripherySpeed * 0.01))
+      maxLooseRollVolume = max(maxLooseRollVolume, rollVol * rockContactSmooth)
+      maxLooseRollSlip = max(maxLooseRollSlip, slip * 0.01)
+
+      rockSkidVolume = tirePatchPressure * slip * 0.1 * rockContactSmooth
+      rockSkidPitch = 0.005 * slip * wheelSound.tireVolumePitchCoef
+
+      local pressureSmooth = wheelSound.pressureSmoother:get(tirePatchPressure, dt)
+      rockSkidColor = ((tirePatchPressure - pressureSmooth) * 4.0) + 0.5
+      rockSkidTexture = absWheelSpeed * 0.1 - 2
+
+      wheelSound.looseSurfaceKickupTimer = wheelSound.looseSurfaceKickupTimer - dt
+      if wheelSound.looseSurfaceKickupTimer <= 0 then
+        local wheelPeripherySpeedKickup = max(slip * 20, absWheelSpeed)
+        if wheelPeripherySpeedKickup > 2 then
+          local kickupVolume = min(1, wheelPeripherySpeedKickup * 0.005)
+          playSoundOnceAtNode("event:>Surfaces>kickup_rock", wd.node1, kickupVolume, 1)
+          wheelSound.looseSurfaceKickupTimer = randomGauss() * 16 / wheelPeripherySpeedKickup
+        end
+      end
+    end
+
+    wheelSound.rockSkid:setVolumePitch(rockSkidVolume, rockSkidPitch, rockSkidColor, rockSkidTexture)
+
     surfaceLooseness = wheelSound.loosenessSmoother:getUncapped(surfaceLooseness, dt)
     wheelSound.looseSurfaceRoll:setVolumePitch(maxLooseRollVolume, maxLooseRollPitch, maxLooseRollSlip, surfaceLooseness)
 
@@ -345,24 +382,26 @@ local function updateGFX(dt)
     local asphaltSkidColor = 0
     local asphaltSkidTexture = 0
 
-    local asphaltContactSmooth = wheelSound.asphaltContactSmoother:getUncapped(boolToNum[(wd.contactMaterialID1 == 10 or wd.contactMaterialID1 == 29) and isRubberTire and wd.contactDepth == 0], dt)
+    local asphaltContactSmooth = wheelSound.asphaltContactSmoother:getUncapped(boolToNum[(mat == 10 or mat == 29 or mat == 11) and isRubberTire and wd.contactDepth == 0], dt)
     if asphaltContactSmooth > 0 then
       asphaltRollPitch = min(1, absWheelSpeed * 0.0125)
       asphaltRollVolume = rollVol * asphaltContactSmooth * 3
 
-      asphaltSkidVolume = tirePatchPressure * slip * 0.1 * asphaltContactSmooth
-      asphaltSkidPitch = 0.005 * slip * wheelSound.tireVolumePitchCoef
+      if wd.contactMaterialID1 ~= 11 then -- exclude wet asphalt from skids
+        asphaltSkidVolume = tirePatchPressure * slip * 0.1 * asphaltContactSmooth
+        asphaltSkidPitch = 0.005 * slip * wheelSound.tireVolumePitchCoef
 
-      local pressureSmooth = wheelSound.asphaltPressureSmoother:get(tirePatchPressure, dt)
-      asphaltSkidColor = ((tirePatchPressure - pressureSmooth) * 4.0) + 0.5
-      asphaltSkidTexture = absWheelSpeed * 0.1 - 2
+        local pressureSmooth = wheelSound.pressureSmoother:get(tirePatchPressure, dt)
+        asphaltSkidColor = ((tirePatchPressure - pressureSmooth) * 4.0) + 0.5
+        asphaltSkidTexture = absWheelSpeed * 0.1 - 2
+      end
     end
 
     wheelSound.asphaltRoll:setVolumePitch(asphaltRollVolume, asphaltRollPitch)
     wheelSound.asphaltSkid:setVolumePitch(asphaltSkidVolume, asphaltSkidPitch, asphaltSkidColor, asphaltSkidTexture)
 
     --rumblestrip
-    local rumbleStripContactSmooth = wheelSound.rumbleStripContactSmoother:getUncapped(boolToNum[wd.contactMaterialID1 == 29 and isRubberTire], dt)
+    local rumbleStripContactSmooth = wheelSound.rumbleStripContactSmoother:getUncapped(boolToNum[mat == 29 and isRubberTire], dt)
     if rumbleStripContactSmooth > 0 then
       local vehicleSpeed = obj:getGroundSpeed()
       local peakForce = wd.peakForce
@@ -388,7 +427,8 @@ local function addWheelSound(wheelID, wd, filename, description, profile)
       asphaltContactSmoother = newTemporalSmoothing(4, 4),
       loosenessSmoother = newTemporalSmoothing(5, 5),
       rumbleStripContactSmoother = newTemporalSmoothing(3, 10000),
-      asphaltPressureSmoother = newTemporalSmoothingNonLinear(1, 1),
+      pressureSmoother = newTemporalSmoothingNonLinear(1, 1),
+      rockContactSmoother = newTemporalSmoothing(2, 4),
       looseSurfaceKickupTimer = 0,
       tireVolumePitchCoef = (0.5 - 2) * (wd.tireVolume - 0.010) / (0.2 - 0.01) + 2
     }
@@ -466,6 +506,9 @@ local function getNextProfile()
   return "LuaSoundProfile" .. sfxprofilecounter .. "_" .. os.time()
 end
 
+local function bodyCollision(p)
+end
+
 local function init()
   obj:deleteSFXSources()
   local cameraNode = 0
@@ -489,7 +532,7 @@ local function init()
   end
   if #powertrain.engineData > 0 then
     for _, v in pairs(powertrain.engineData) do
-      maxrpm = math.max(maxrpm, v.maxSoundRPM or 1)
+      maxrpm = max(maxrpm, v.maxSoundRPM or 1)
     end
 
     -- Try to get a node on the engine. There is currently a libbeamng bug that
@@ -587,30 +630,7 @@ local function init()
       vl.active = (vl.group == "default" or vl.group == soundGroup)
     end
 
-    --    local rollingSoundLookup = {}
-    --    --surface sounds
-    --    for k,v in pairs(soundBank.groundmodelSounds or {}) do
-    --      if not rollingSoundLookup[v.rubberRollingSound] then
-    --        rollingSoundLookup[v.rubberRollingSound] = {}
-    --      end
-    --      table.insert(rollingSoundLookup[v.rubberRollingSound], v.groundmodel)
-    --    end
-    --    dump(rollingSoundLookup)
-
-    --    wheelGroundmodelSounds = {}
-    --    local groundModelIDLookupTmp = {ASPHALT = 10, DIRT_DUSTY = 14, DIRT = 15, GRAVEL = 19}
-    --    for wi,wd in pairs(wheels.wheels) do
-    --      wheelGroundmodelSounds[wi] = {}
-    --      for k,v in pairs(rollingSoundLookup) do
-    ----        local sound = obj:createSFXSource("art/sound/groundmodels/"..k, "AudioDefaultLoop3D", k, wd.node1)
-    ----        for _,gm in pairs(v) do
-    ----          local gmId = groundModelIDLookupTmp[gm]-- obj:getGroundModelId(gm)
-    ----          print(gmId)
-    ----          wheelGroundmodelSounds[wi][gmId] = sound
-    ----        end
-    --      end
-    --    end
-    --    dump(wheelGroundmodelSounds)
+    beamResetTimer = 0
 
     --initialize per beam sounds
     if v.data.beams then
@@ -633,6 +653,7 @@ local function init()
             soundTable.decayMode = bm.decayMode or 0 --linear or exponential sound decay?
             soundTable.minStress = bm.minStress or 25000
             soundTable.maxStress = bm.maxStress or 35000
+            soundTable.colorFactor = bm.colorFactor or 0
 
             soundTable.beam = bm.cid
             soundTable.lastStress = 0
@@ -640,8 +661,6 @@ local function init()
             soundTable.smoothing = newTemporalSmoothingNonLinear(10)
 
             soundTable.resonance = 0
-            soundTable.resetTimer = 0
-
             soundTable.clip:setVolumePitch(0, 0)
 
             --finally, insert it
@@ -657,9 +676,7 @@ local function init()
   end
 
   -- TODO: Find a better place to emit wind sounds. Maybe at the windows?
-  if windSound == nil then
-    windSound = createSoundObj("event:>Wind", "AudioDefaultLoop3D", "WindTestSound", M.engineNode)
-  end
+  windSound = windSound or createSoundObj("event:>Vehicle>Aero>windbuffet", "AudioDefaultLoop3D", "WindTestSound", M.engineNode)
 
   if wheelsSounds == nil then
     wheelsSounds = {}
@@ -668,7 +685,7 @@ local function init()
       addWheelSound(wi, wd, "event:>Surfaces>roll_loose", "AudioDefaultLoop3D", "looseSurfaceRoll")
       addWheelSound(wi, wd, "event:>Surfaces>roll_asphalt", "AudioDefaultLoop3D", "asphaltRoll")
       addWheelSound(wi, wd, "event:>Surfaces>skid_asphalt", "AudioDefaultLoop3D", "asphaltSkid")
-      -- addWheelSound(wi, wd, "event:>Surfaces>rumblestrip_loop_mark", "AudioDefaultLoop3D", "rumbleStripRoll")
+      addWheelSound(wi, wd, "event:>Surfaces>skid_rock", "AudioDefaultLoop3D", "rockSkid")
     end
   end
 end
@@ -700,12 +717,29 @@ local function hzToFMODHz(hzValue)
   return 100 * ((range - 1) + ((hzValue - fmodtable[range]) / (fmodtable[range + 1] - fmodtable[range])))
 end
 
+local function reset()
+  beamResetTimer = 0
+
+  for _, snd in ipairs(beamSounds) do
+    snd.lastStress = 0
+    snd.resonance = 0
+    snd.smoothing:reset()
+    snd.clip:setVolumePitch(0, 0)
+  end
+end
+
+-- Debug
+local function getBeamSounds()
+  return beamSounds
+end
+
 -- public interface
 M.updateGFX = updateGFX
 M.playSoundOnceAtNode = playSoundOnceAtNode
 M.playSoundOnceFollowNode = playSoundOnceFollowNode
 M.destroy = destroy
 M.init = init
+M.reset = reset
 M.setUIDebug = setUIDebug
 M.createSFXSource = createSFXSource
 M.onDeserialized = onDeserialized --this enables serialization of all M. values for the module so they survive reloads
@@ -713,5 +747,9 @@ M.disableOldEngineSounds = disableOldEngineSounds
 M.hzToFMODHz = hzToFMODHz
 M.createSoundscapeSound = createSoundscapeSound
 M.playSound = playSound
+M.bodyCollision = bodyCollision
+
+-- Debug
+M.getBeamSounds = getBeamSounds
 
 return M

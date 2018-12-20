@@ -6,10 +6,10 @@
 --jit.off()
 vmType = 'game'
 
-package.path = 'lua/ge/?.lua;lua/gui/?.lua;lua/common/?.lua;lua/common/socket/?.lua;lua/?.lua;?.lua'
+package.path = 'lua/ge/?.lua;lua/gui/?.lua;lua/common/?.lua;lua/common/libs/?/init.lua;lua/common/libs/luasocket/?.lua;lua/?.lua;?.lua'
 package.cpath = ''
+require('luaCore')
 
-require('compatibility')
 if FS:fileExists('lua/ge/replayInterpolation.lua') then require('replayInterpolation') end
 
 log = function(...) Lua:log(...) end
@@ -24,9 +24,19 @@ print = function(...)
   -- Lua:log('A', "print", debug.traceback())
 end
 
-require("utils")
+function getGame()
+  local game = scenetree.findObject("Game")
+  if not game then
+    log('E', "", 'Game object does not exist')
+    return nil
+  end
+  return game
+end
 
+require("utils")
 require("ge_utils")
+require('ge_deprecated')
+
 json = require("json")
 map = require("map")
 actions = require("input_actions")
@@ -41,7 +51,7 @@ extensions.setDeprecatedExtensions(deprecatedExtensions)
 extensions.addModulePath("lua/ge/extensions/")
 extensions.addModulePath("lua/common/extensions/")
 settings = require("settings")
-perf = require("perf")
+perf = require("utils/perf")
 spawn = require("spawn")
 setSpawnpoint= require ("setSpawnpoint")
 serverConnection = require("serverConnection")
@@ -49,13 +59,14 @@ server = require("server/server")
 commands = require("server/commands")
 missionLoad = require("server/missionLoad")
 gameManager = require("server/game")
-beamng_cef = require("beamng_cef")
 audio_client = require("client/audio")
 
 worldReadyState = -1 -- tracks if the level loading is done yet: 0 = no, 1 = yes, load play ui, 2 = all done
 
 gdcdemo = nil -- demo mode disabled
+sailingTheHighSeas = the_high_sea_crap_detector()
 
+-- defaultVehicleModel = 'pickup'
 defaultVehicleModel = 'etk800'
 
 --[[
@@ -81,7 +92,6 @@ gdcdemo = {
 ]]
 
 math.randomseed(os.time())
-local SteamLicensePlateVehicleId
 local cmdArgs = Engine.getStartingArgs()
 
 --Lua:enableStackTraceFile("lua.ge.stack.txt", true)
@@ -89,7 +99,7 @@ local cmdArgs = Engine.getStartingArgs()
 logAlways=print
 
 -- improve stacktraces
-local STP = require "StackTracePlus"
+local STP = require "libs/StackTracePlus/StackTracePlus"
 debug.traceback = STP.stacktrace
 debug.tracesimple = STP.stacktraceSimple
 
@@ -168,64 +178,85 @@ local function handleCommandLineFirstFrame()
   end
 end
 
+local function loadDefaultPickup()
+  local modelName = defaultVehicleModel
+  log('I', 'main', "Loading the default vehicle " .. modelName)
+
+  local vehicleInfo = jsonReadFile('vehicles/' .. modelName .. '/info.json')
+  if not vehicleInfo then
+    log('E', 'main', "No info.json for default pickup found.")
+    return
+  end
+
+  local defaultPC = vehicleInfo['default_pc']
+
+  TorqueScript.setVar( '$beamngVehicle', modelName)
+  TorqueScript.setVar( '$beamngVehicleColor', vehicleInfo.colors[vehicleInfo["default_color"]])
+  TorqueScript.setVar( '$beamngVehicleConfig', 'vehicles/' .. modelName .. '/' .. defaultPC .. '.pc' )
+end
+
 --[[
 check if there is default vehicle or not
 if not then use the deafult defaultVehicleModel
 ]]
 function loadDefaultVehicle()
+  log('I', 'main', 'Loading default vehicle')
   local myveh = TorqueScript.getVar('$beamngVehicleArgs')
   if myveh ~=""  then
     TorqueScript.setVar( '$beamngVehicle', myveh )
 
-    local mycolor = beamng_cef.getVehicleColor()
+    local mycolor = getVehicleColor()
     TorqueScript.setVar( '$beamngVehicleColor', mycolor )
     return
   end
 
-  local invalidDefaultVehicle = false
-  local data = readJsonFile('settings/default.pc')
+  -- Load the vehicle in the default.pc
+  local data = jsonReadFile('settings/default.pc')
 
   if data then
-    if data.model and data.licenseName and data.colors then
+    if data.model then
       local dir = FS:directoryExists('vehicles')
       if dir then
         if #FS:findFilesByPattern('/vehicles/'..data.model..'/', '*.jbeam', 0, false, false) > 0 then
+          -- Set the model
           TorqueScript.setVar( '$beamngVehicle', data.model )
+          -- Set the parts and color
           TorqueScript.setVar( '$beamngVehicleConfig', 'settings/default.pc' )
-          TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
-        else
-          data.model = defaultVehicleModel
-          TorqueScript.setVar( '$beamngVehicle', data.model )
 
-          data.color = beamng_cef.getVehicleColor()
-          os.remove('settings/default.pc')
+          if data.licenseName then
+            -- Set the license plate
+            TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
+          end
+          return
+        else
+          log('E', 'main', "Model of default vehicle doesnt exist. Loading default pickup")
+          loadDefaultPickup()
+          return
         end
       end
-      TorqueScript.setVar( '$beamngVehicleLicenseName', data.licenseName )
-      TorqueScript.setVar( '$beamngVehicleColor', data.color )
     else
-      log('E', 'main', "The default vehicle in 'settings/default.pc' is broken. You can either delete 'settings/default.pc' or set a new default vehile.")
-      invalidDefaultVehicle = true
+      log('E', 'main', "The chosen default vehicle in 'settings/default.pc' is broken. You can either delete 'settings/default.pc' or set a new default vehicle.")
     end
   end
 
-  if invalidDefaultVehicle then
-    TorqueScript.setVar( '$beamngVehicle', defaultVehicleModel)
-    TorqueScript.setVar( '$beamngVehicleColor', "White")
-  end
+  --If there is no settings/default.pc load the default pickup
+  loadDefaultPickup()
 end
 
-local coreModules =  {'core_apps', 'scenario_scenariosLoader', 'campaign_campaignsLoader', 'core_levels',
-                      'scenario_quickRaceLoader', 'core_highscores', 'core_replay','core_vehicles', 
+local coreModules =  {'ui_apps', 'scenario_scenariosLoader', 'campaign_campaignsLoader', 'freeroam_freeroam','core_levels',
+                      'scenario_quickRaceLoader', 'core_highscores', 'core_replay','core_vehicles',
                       'core_jobsystem', 'core_modmanager','core_hardwareinfo',
                       'core_commandhandler', 'core_remoteController', 'core_gamestate', 'core_online',
-                      'core_paths', 'util_creatorMode', 'core_sounds','core_audio', 'core_imgui'
-                      }
-                      --,'util_extUI'
+                      'core_paths', 'util_creatorMode', 'core_sounds','core_audio', 'ui_imgui', 'core_environment',
+                      'core_inventory', 'core_terrain', 'telemetry_gameTelemetry', 'editor_main'
+                      , 'ui_states' --needed for ui2
+                    }
+                      -- , 'ui_external' --needed for ui2
                       --'core_schemeCommandServer' -- unused for now - replaced by startCommandListener()
 
-local sharedModules = { 'core_quickAccess', 'core_camera', 'core_groundMarkers', 'core_environment',
-                        'core_weather', 'core_trailerRespawn'}
+local sharedModules = { 'core_quickAccess', 'core_camera', 'core_groundMarkers',
+                        'core_weather', 'core_trailerRespawn', 'util_richPresence',
+                        'core_prefabLogic', 'core_checkpoints', 'core_collectables'}
 
 -- careerModules = {'scenario_levelConnector'} -- TODO(AK): unused for now. move this to the correct file later
 
@@ -275,7 +306,7 @@ end
 function clientPreStartMission(mission)
   worldReadyState = 0
   extensions.hook('onClientPreStartMission', mission)
-  guihooks.trigger('PreStartMission')  
+  guihooks.trigger('PreStartMission')
   loadDefaultVehicle()
 end
 
@@ -289,7 +320,7 @@ end
 -- called when the level items are already loaded (after clientPostStartMission)
 function clientStartMission(mission)
   log("D", "clientStartMission", "starting mission: " .. tostring(mission))
-  extensions.hook('onClientStartMission', mission)
+  extensions.hookNotify('onClientStartMission', mission)
   be:physicsStartSimulation()
   map.assureLoad() --> needs to be after extensions.hook('onClientStartMission', mission)
   guihooks.trigger('MenuHide')
@@ -312,11 +343,17 @@ function onEditorEnabled(enabled)
   --print('onEditorEnabled', enabled)
   extensions.hook('onEditorEnabled', enabled)
   map.setEditorState(enabled)
-
 end
 
 local luaPreRenderMaterialCheckDuration = 0
 
+local spawnTrailerBehindVehicle = false
+local switchedToTrailer = false
+local carID = 0
+local trailerID = 0
+local counter = 0
+
+-- this function is called right before the rendering, and after running the physics
 function luaPreRender(dtReal, dtSim, dtRaw)
   map.updateGFX(dtReal)
   map.drawDebug(dtReal, Lua.lastDebugFocusPos)
@@ -332,7 +369,7 @@ function luaPreRender(dtReal, dtSim, dtRaw)
     luaPreRenderMaterialCheckDuration = luaPreRenderMaterialCheckDuration + dtRaw
     local pv = be:getPlayerVehicle(0)
     local allReady = (not pv) or (pv and pv:isRenderMaterialsReady())
-    if allReady or luaPreRenderMaterialCheckDuration > 30 then
+    if allReady or luaPreRenderMaterialCheckDuration > 5 then
       log('D', 'gamestate', 'Checking material finished loading')
       core_gamestate.requestExitLoadingScreen('worldReadyState')
       -- switch the UI to play mode
@@ -340,6 +377,40 @@ function luaPreRender(dtReal, dtSim, dtRaw)
       worldReadyState = 2
       luaPreRenderMaterialCheckDuration = 0
       extensions.hook('onWorldReadyState', worldReadyState)
+    end
+  end
+
+  if spawnTrailerBehindVehicle then
+    if switchedToTrailer then
+      counter = counter + 1
+    end
+
+    -- Spawn the trailer behind the vehicle
+    if counter > 1 then
+      local car = scenetree.findObjectById(carID)
+      local carBB = car:getSpawnWorldOOBB()
+      local halfCarLength = vec3(carBB:getHalfExtents()).y
+
+      local trailer = scenetree.findObjectById(trailerID)
+      local trailerBB = trailer:getSpawnWorldOOBB()
+      local halfTrailerLength = vec3(trailerBB:getHalfExtents()).y
+
+      -- Position on the bottom of the cars BB under the center
+      local position = vec3(carBB:getCenter())
+      position = position - vec3(car:getDirectionVectorUp()) * vec3(carBB:getHalfExtents()).z
+
+      -- Difference of the bottom center of the trailer to trailer position
+      local diffCenterPos = vec3(trailer:getPosition()) - (vec3(trailerBB:getCenter()) - vec3(trailer:getDirectionVectorUp()) * vec3(trailerBB:getHalfExtents()).z)
+
+      -- Translate the trailer back so that the trailers BB touches the cars BB
+      local direction = vec3(car:getDirectionVector())
+      direction:normalize()
+      position = position - (direction * (halfCarLength + halfTrailerLength))
+      position = position + diffCenterPos
+      trailer:setPosition(Point3F(position.x, position.y, position.z))
+
+      switchedToTrailer = false
+      counter = 0
     end
   end
 end
@@ -363,8 +434,13 @@ function updateFirstFrame()
     gdcdemo.start()
   end
   handleCommandLineFirstFrame()
+
+  if be.editorIsActive and editor then
+    editor.toggleActive()
+  end
 end
 
+-- this function is called after input and before physics
 function update(dtReal, dtSim, dtRaw)
   --local used_memory_bytes, _ = gcinfo()
   --log('D', "update", "Lua memory usage: " .. tostring(used_memory_bytes/1024) .. "kB")
@@ -436,6 +512,8 @@ function init()
 
   -- put the mods folder in clear view, so users don't put stuff in the wrong place
   if not FS:directoryExists("mods") then FS:directoryCreate("mods") end
+
+  if not FS:directoryExists("trackEditor") or not string.startswith(FS:getFileRealPath("trackEditor"), getUserPath())  then FS:directoryCreate("trackEditor") end
 end
 
 function onBeamNGWaypoint(args)
@@ -461,6 +539,7 @@ function onFileChanged(t)
       guihooks.trigger('FileChanged', {filename = v.filename, type = v.type})
     end
   end
+  extensions.hook('onFileChangedEnd')
 end
 
 function getLevelList()
@@ -490,108 +569,6 @@ function physicsEngineEvent(...)
   extensions.hook('onPhysicsEngineEvent', args)
 end
 
--- nil values are equal last values
-function setPlateText(txt, vehId, designPath)
-  local veh = nil
-  if vehId then
-    veh = be:getObjectByID(vehId)
-  else
-    veh = be:getPlayerVehicle(0)
-  end
-  if not veh then return end
-  if txt then
-    veh:setDynDataFieldbyName("licenseText", 0, txt)
-  else
-    txt = getVehicleLicenseName(vehId)
-  end
-
-  if not designPath then
-    designPath = veh:getDynDataFieldbyName("licenseDesign", 0) or ''
-  else
-    veh:setDynDataFieldbyName("licenseDesign", 0, designPath)
-  end
-
-  local design = readJsonFile(designPath)
- -- dump(design)
-  if not design or not design.data then
-    if designPath:len() > 0 then
-      log('E', 'main', "License plate "..designPath.." not existing")
-    end
-    local levelPath, levelName, _ = path.split( getMissionFilename() )
-    if levelPath then
-      local levelName = string.match(levelPath,'levels/(%a+)')
-      --log('E', 'main.setPlateText', "levelPath= "..tostring(levelPath).." levelName="..tostring(levelName))
-      designPath =  'vehicles/common/licenseplates/'..levelPath:gsub('levels/', '')..'/licensePlate-default.json'
-      design = readJsonFile(designPath)
-    end
-  end
-
-  if not design or not design.data then
-    designPath = 'vehicles/common/licenseplates/default/licensePlate-default.json'
-    design = readJsonFile(designPath)
-  end
-
-----adding licenseplate html generator and characterlayout to Json file
-
-  if design then
-    if design.data.characterLayout then
-      if FS:fileExists(design.data.characterLayout) then
-        design.data.characterLayout = readJsonFile(design.data.characterLayout)
-      else
-        log('E',tostring(design.data.characterLayout) , ' File not existing')
-      end
-    else
-      design.data.characterLayout= "vehicles/common/licenseplates/default/platefont.json"
-      design.data.characterLayout= readJsonFile(design.data.characterLayout)
-    end
-
-    if design.data.generator then
-      if FS:fileExists(design.data.generator) then
-        design.data.generator = "local://local/" .. design.data.generator
-      else
-        log('E',tostring(design.data.generator) , ' File not existing')
-      end
-    else
-      design.data.generator = "local://local/vehicles/common/licenseplates/default/licenseplate-default.html"
-    end
-    veh:createUITexture("@licenseplate-default", design.data.generator, 1024, 512, UI_TEXTURE_USAGE_MANUAL, 1)
-    veh:queueJSUITexture("@licenseplate-default", 'init("diffuse","' .. txt .. '", '.. encodeJson(design) .. ');')
-    veh:createUITexture("@licenseplate-default-normal", design.data.generator, 1024, 512, UI_TEXTURE_USAGE_MANUAL, 1)
-    veh:queueJSUITexture("@licenseplate-default-normal", 'init("bump","' .. txt .. '", '.. encodeJson(design) .. ');')
-    veh:createUITexture("@licenseplate-default-specular", design.data.generator, 1024, 512, UI_TEXTURE_USAGE_MANUAL, 1)
-    veh:queueJSUITexture("@licenseplate-default-specular", 'init("specular","' .. txt .. '", '.. encodeJson(design) .. ');')
-  end
-end
-
-function getVehicleLicenseName(veh)
-  if gdcdemo then
-    return 'GDC2017'
-  end
-
-  if not veh then veh = be:getPlayerVehicle(0) end
-  if not veh then return '' end
-  if type(veh) == 'number' then
-    veh = be:getObjectByID(veh)
-  end
-  if not veh then return '' end
-
-  local txt = veh:getDynDataFieldbyName("licenseText", 0)
-  if txt and txt:len() > 0 then return txt end
-
-  if Steam and Steam.isWorking and Steam.accountLoggedIn and not SteamLicensePlateVehicleId and veh:getID() == be:getPlayerVehicle(0):getID() then
-    SteamLicensePlateVehicleId = veh:getID()
-    txt = Steam.playerName
-    --print("steam username: " .. Steam.playerName)
-    txt = txt:gsub('%"', '%\'') -- replace " with '
-    -- more cleaning up required?
-  else
-    local T = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
-    txt = T[math.random(1, #T)] .. T[math.random(1, #T)] .. T[math.random(1, #T)] ..'-'..math.random(0, 9)..math.random(0, 9)..math.random(0, 9)..math.random(0, 9)
-  end
-
-  veh:setDynDataFieldbyName("licenseText", 0, txt)
-  return txt
-end
 
 function getVehicleName(veh)
   if veh and veh.configs then
@@ -614,13 +591,8 @@ save default vehicle configurations
 @param objTable table contains vehicle config
 ]]
 function saveDefaultVehicle(objTable)
-  objTable.licenseName = getVehicleLicenseName()
+  objTable.licenseName = core_vehicles.getVehicleLicenseName()
   core_vehicles.saveVehicleConfig(0, 'settings/default.pc', objTable)
-
-  TorqueScript.setVar( '$beamngVehicle', objTable.model )
-  TorqueScript.setVar( '$beamngVehicleConfig', 'settings/default.pc' )
-  TorqueScript.setVar( '$beamngVehicleLicenseName', objTable.licenseName )
-  TorqueScript.setVar( '$beamngVehicleColor', objTable.color )
 end
 
 function vehicleSpawned(vid)
@@ -638,6 +610,15 @@ function vehicleSpawned(vid)
   end
 
   extensions.hook('onVehicleSpawned', vid)
+  virtualinput.onVehicleSpawned(vid)
+
+  -- Check if vehicle is a trailer
+  local newVehicleDetails = core_vehicles.getCurrentVehicleDetails()
+  if newVehicleDetails.model then
+    if newVehicleDetails.model.aggregates.Type.Trailer then
+      switchedToTrailer = true
+    end
+  end
 end
 
 function vehicleSwitched(oldVehicle, newVehicle, player)
@@ -648,6 +629,7 @@ function vehicleSwitched(oldVehicle, newVehicle, player)
   log('I', 'main', "Player #"..dumps(player).." vehicle switched from: "..oldinfo.." to: "..newinfo)
 
   bindings.onVehicleChanged(oldVehicle, newVehicle, player)
+  virtualinput.onVehicleChanged(oldVehicle, newVehicle, player)
   extensions.hook('onVehicleSwitched', oid, nid, player)
 
   if player == 0 then -- update main camera
@@ -659,30 +641,33 @@ function vehicleSwitched(oldVehicle, newVehicle, player)
     end
   end
 
+  -- This is set in case the new vehicle is a trailer
+  carID = oid
+  trailerID = nid
+
   --Steam.setStat('meters_driven', 1)
 end
 
+function onMouseLocked(locked)
+  extensions.hook('onMouseLocked', locked)
+end
 function onVehicleDestroyed(vid)
-  if SteamLicensePlateVehicleId == vid then
-    SteamLicensePlateVehicleId = nil
-  end
   extensions.hook('onVehicleDestroyed', vid)
 end
 
 function onCouplerAttached(objId1, objId2, nodeId, obj2nodeId)
-  extensions.load('core_trailerCamera')
-  if core_trailerCamera.checkForTrailer(objId1, objId2) == false then
-    extensions.unload('core_trailerCamera')
+  local isEnabled = core_couplerCameraModifier ~= nil
+  extensions.load('core_couplerCameraModifier')
+  if core_couplerCameraModifier.checkForTrailer(objId1, objId2) == false and isEnabled == false then
+    extensions.unload('core_couplerCameraModifier')
   end
   extensions.hook('onCouplerAttached', objId1, objId2, nodeId, obj2nodeId)
 end
 
 function onCouplerDetached(objId1, objId2)
   extensions.hook('onCouplerDetached', objId1, objId2)
-  if core_trailerCamera ~= nil then
-    if core_trailerCamera.checkForTrailer(objId1, objId2) == true then
-      extensions.unload('core_trailerCamera')
-    end
+  if core_couplerCameraModifier ~= nil then
+      extensions.unload('core_couplerCameraModifier')
   end
 end
 
@@ -693,6 +678,20 @@ end
 
 function onAiModeChange(vehicleID, newAiMode)
   extensions.hook('onAiModeChange', vehicleID, newAiMode)
+end
+
+function prefabLoaded(id, prefabName, prefabPath)
+  log('D', 'main', 'prefabLoaded: ' .. dumps(id)..',' ..dumps(prefabName))
+  if prefabLogic then
+    prefabLogic.prefabLoaded(id, prefabName, prefabPath)
+  end
+end
+
+function prefabUnloaded(id, prefabName, prefabPath)
+  log('D', 'main', 'prefabUnloaded: ' .. dumps(id)..',' ..dumps(prefabName))
+  if prefabLogic then
+    prefabLogic.prefabUnloaded(id, prefabName, prefabPath)
+  end
 end
 
 function replayStateChanged(...)

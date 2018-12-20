@@ -1,0 +1,263 @@
+{
+"etk800_research_electricMotor": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Research: Electric Motor",
+        "value":350,
+    }
+    "slotType" : "etk_engine",
+    "slots": [
+        ["type", "default", "description"]
+        ["etk800_research_transfercase_electric","etk800_research_transfercase_electric", "Transfer Case"],
+    ],
+    "flexbodies": [],
+    
+    "powertrain": [
+        ["type", "name", "inputName", "inputIndex"],
+        ["electricMotorPMDC", "mainEngine", "dummy", 0],
+        ["frictionClutch", "clutch", "mainEngine", 1],
+    ],
+    "controller": [
+        ["fileName"],
+        ["research_electric_vehicle"],
+        ],
+    "mainEngine": {
+        "torque":[
+            ["rpm", "torque"]
+            [0, 300],
+            [500, 300],
+            [1000, 300],
+            [1500, 300],
+            [2000, 300],
+            [3000, 300],
+            [4000, 300],
+            [5000, 253],
+            [6000, 213],
+            [7000, 185],
+            [8000, 164],
+            [9000, 148],
+            [10000, 135],
+            [11000, 122],
+            [12000, 60],
+            [13000, 0],
+        ],
+        "maxRPM":12000,
+        "inertia":0.10,
+        "friction":5
+        "dynamicFriction":0.01,
+        //"electricalEfficiency":0.9
+        "energyStorage":"mainBattery"
+
+        //node beam interface
+        //this simply chooses an engineGroup name to use. The engineGroup name must be present in the nodes themselves
+        //choose a group near the engine's intake for appropriate engine drowning
+        "waterDamage": {"[engineGroup]:":["engine_intake"]},        
+        //choose beam name. When any beam containing that name breaks it will disable the device. The beam name must be present in the beams themselves
+        "breakTriggerBeam":"engine",
+        //this is just a nicer string to pass to the UI
+        "uiName":"Engine",
+    "soundConfig": "soundConfig",
+    },
+    "soundConfig": {
+        
+    },
+    "vehicleController": {
+        "shiftLogicName":"electricMotor"
+    },
+    "clutch": {
+        "uiName":"Clutch",
+        "clutchFreePlay":0,
+    }
+},
+"etk800_research_transfercase_electric": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Research: Electric Motor AWD Transfer Case",
+        "value":600,
+    },
+    "slotType" : "etk800_research_transfercase_electric",
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"],
+        ["differential", "transfercase", "clutch", 1, {"diffType":"open", "diffTorqueSplit":0.5, "friction":5, "uiName":"Center Differential","defaultVirtualInertia":0.1}],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk800_transfercase", ["etk_transmission","etk_engine"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--tcase weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"etk_transmission"},
+         {"nodeWeight":23.75},
+         ["tcase", 0.13, -0.43, 0.33],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":1500600,"beamDamp":60},
+          {"beamDeform":30000,"beamStrength":"FLT_MAX"},
+          ["tcase","e1r"],
+          ["tcase","e3r"],
+          ["tcase","e1l"],
+          ["tcase","e3l"],
+          ["tcase","tra1"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+},
+
+"etk800_research_differential_F_electric": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Research: Electric Motor Front Differential",
+        "value":800,
+    },
+    "slotType" : "etk800_differential_F",
+    "slots": [
+        ["type", "default", "description"]
+        //["etk800_driveshaft_F","etk800_driveshaft_F", "Front Driveshaft"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        ["differential", "differential_F", "transfercase", 2, {"diffType":"open", "gearRatio": 8, "friction":6, "uiName":"Front Differential","defaultVirtualInertia":0.25}]
+    ],
+    "torsionReactorF": {
+        "torqueReactionNodes:":["e1l","e1r","e2r"]
+    },
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["etk800_halfshaft_F", ["etk800_lowerarm_F_b","etk800_subframe_F","etk800_diff_F"]],
+        ["etk800_diff_F", ["etk800_subframe_F","etk800_diff_F"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false},
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"etk800_diff_F"},
+         {"nodeWeight":23.75},
+         ["fdiff", 0.0, -1.40, 0.36],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":1500600,"beamDamp":60},
+          {"beamDeform":30000,"beamStrength":"FLT_MAX"},
+          ["fdiff","fx2r"],
+          ["fdiff","fx2l"],
+          ["fdiff","fx5r"],
+          ["fdiff","fx5l"],
+          ["fdiff","f10ll"],
+          ["fdiff","f12ll"],
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.04, "beamShortBound":0.04},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":6000,"beamStrength":16000},
+          {"beamLimitSpring":2501000,"beamLimitDamp":100},
+          {"optional":true},
+          {"breakGroupType":1},
+          {"breakGroup":"wheel_FR"},
+          ["fw1r","fdiff", {"name":"axle_FR"}],
+          {"breakGroup":"wheel_FL"},
+          ["fw1l","fdiff", {"name":"axle_FL"}],
+          {"breakGroup":""},
+          {"breakGroupType":0},
+          {"optional":false},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+},
+"etk800_research_differential_R_electric": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Research: Electric Motor Rear Differential",
+        "value":1900,
+    }
+    "slotType" : "etk800_differential_R",
+    "slots": [
+        ["type", "default", "description"]
+        //["etk800_driveshaft_R","etk800_driveshaft_R", "Rear Driveshaft"],
+    ],
+    "powertrain" : [
+        ["type", "name", "inputName", "inputIndex"]
+        ["differential", "differential_R", "transfercase", 1, {"diffType":"open", "gearRatio": 8, "friction":8, "uiName":"Rear Differential","defaultVirtualInertia":0.25}]
+    ],
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         ["etk800_diff", ["etk800_subframe_R","etk800_body"]],
+         ["etk800_halfshaft_R", ["etk800_hub_R","etk800_lowerarm_R","etk800_diff_R"]],
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         //--diff weight--
+         {"selfCollision":false},
+         {"collision":false}
+         {"nodeMaterial":"|NM_METAL"},
+         {"frictionCoef":0.5},
+         {"group":"etk800_diff_R"},
+         {"nodeWeight":50},
+         ["rdiff", 0, 1.41, 0.26],
+         {"group":""},
+    ],
+    "beams": [
+          ["id1:", "id2:"],
+          //differential node
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"beamSpring":4800600,"beamDamp":138},
+          {"beamDeform":27000,"beamStrength":"FLT_MAX"},
+          //["rdiff","r2"],
+          ["rdiff","rx1"],
+          ["rdiff","r1"],
+          ["rdiff","rx2r"],
+          ["rdiff","rx2l"],
+          ["rdiff","rx1r"],
+          ["rdiff","rx1l"],
+          ["rdiff","rx4r"],
+          ["rdiff","rx4l"],
+          ["rdiff","rx5r"],
+          ["rdiff","rx5l"],
+          //halfshafts
+          {"beamPrecompression":1, "beamType":"|BOUNDED", "beamLongBound":0.02, "beamShortBound":0.02},
+          {"beamSpring":0,"beamDamp":0,"beamDeform":3600,"beamStrength":9500},
+          {"beamLimitSpring":7501000,"beamLimitDamp":230},
+          {"breakGroupType":1},
+          {"optional":true},
+          {"breakGroup":"wheel_RR"},
+          ["rw1r","rdiff", {"name":"axle_RR"}],
+          {"breakGroup":"wheel_RL"},
+          ["rw1l","rdiff", {"name":"axle_RL"}],
+          {"breakGroup":""},
+          {"optional":false},
+          {"breakGroupType":0},
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+    ],
+},
+
+"etk800_research_battery": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Research: Electric Battery",
+        "value":450,
+    }
+    "slotType" : "etk800_fueltank",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+    ],
+
+    "energyStorage": [
+        ["type", "name"],
+        ["electricBattery", "mainBattery"],
+    ],
+    "mainBattery": {
+        "batteryCapacity": 50,
+    }
+
+  
+}
+
+}

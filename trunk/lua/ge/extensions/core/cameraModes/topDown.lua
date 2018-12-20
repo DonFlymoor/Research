@@ -11,6 +11,11 @@ function C:init()
   self.disabledByDefault = true
   self.veloSmoother = newExponentialSmoothing(50, 1)
   self.lastDataPos = vec3()
+  self.vel = 0
+  C:onVehicleCameraConfigChanged()
+end
+
+function C:onVehicleCameraConfigChanged()
   self.fov = self.fov or 20
 end
 
@@ -20,15 +25,18 @@ function C:update(data)
   local back = vec3(data.veh:getNodePosition(self.refNodes.back))
 
   -- we need to manually smooth the velocity as its too spiky otherwise which results in bad camera movement
-  local vel = self.veloSmoother:get((self.lastDataPos - data.pos):z0():length()/data.dtSim)
+  if data.dtSim > 0 then
+    self.vel = self.veloSmoother:get((self.lastDataPos - data.pos):z0():length()/data.dtSim)
+  end
   self.lastDataPos = data.pos
 
   -- figure out the way the vehicle is oriented
   local dir = ref - back
   -- find out the target that we should look on
-  local targetPos = data.pos + dir:z0():normalized() * math.min(10, 0.5 * vel)
+  local targetPos = data.pos + dir:z0():normalized() * math.min(10, 0.5 * self.vel)
   -- and place the camera above it
-  local camPos = targetPos + vec3(0, 0, (vel * 0.9)  + 50)
+  local camPos = targetPos + vec3(0, 0, (self.vel * 0.9)  + 50)
+
   -- then look from camera position to target :)
   local qdir = quatFromDir((targetPos - camPos):normalized())
 

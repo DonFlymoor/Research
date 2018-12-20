@@ -179,13 +179,13 @@ function ($filter, logger, $scope, $window, bngApi, RateLimiter, VehicleConfig, 
 
   // LICENSE PLATE STUFF
   vm.licensePlate = '';
-  
-  bngApi.engineLua('getVehicleLicenseName()', function (str) {
+
+  bngApi.engineLua('core_vehicles.getVehicleLicenseName()', function (str) {
     $scope.$evalAsync(() => { vm.licensePlate = str; });
   });
 
   vm.updateLicensePlate = function () {
-    bngApi.engineLua(`setPlateText("${vm.licensePlate}")`);
+    bngApi.engineLua(`core_vehicles.setPlateText("${vm.licensePlate}")`);
   };
   // --------------
 
@@ -489,7 +489,7 @@ function ($filter, logger, $scope, $window, bngApi, RateLimiter, VehicleConfig, 
   $scope.$on('VehicleChangeColor', (event, data) => {
     vm.color = ['White', 'White', 'White'];
 
-    bngApi.engineLua('beamng_cef.getVehicleColor()', (res) => {
+    bngApi.engineLua('getVehicleColor()', (res) => {
       vm.color[0] = res || vm.color[0];
     });
 
@@ -512,7 +512,7 @@ function ($filter, logger, $scope, $window, bngApi, RateLimiter, VehicleConfig, 
           vm.carColorPresets = data.model.colors;
         });
       }
-    }); 
+    });
   }
 
   getVehicleColors();

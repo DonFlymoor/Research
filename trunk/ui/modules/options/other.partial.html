@@ -8,7 +8,7 @@
   </md-list-item>
 
   <md-list-item md-no-ink>
-    <md-tooltip md-direction="right">This option is useful for steering wheel users to avoid having a duplicate wheel</md-tooltip>
+    <md-tooltip md-direction="right">{{:: 'ui.options.gameplay.noSteer.tooltip' | translate }}</md-tooltip>
     <p>{{:: 'ui.options.gameplay.noSteer' | translate }}</p>
     <md-checkbox ng-model="options.data.values.disableSteeringwheel" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
@@ -21,26 +21,26 @@
     <md-checkbox ng-model="options.data.values.interpolatePosition" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
 
-  <md-list-item ng-if="options.data.values.devMode" md-no-ink>
+  <md-list-item ng-hide="options.shipping" md-no-ink>
     <p>^ use alt</p>
     <md-checkbox ng-model="options.data.values.interpolateAlternative" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
 
-  <md-list-item ng-if="options.data.values.devMode" md-no-ink>
+  <md-list-item ng-hide="options.shipping" md-no-ink>
     <p>Interpolate all alt</p>
     <md-checkbox ng-model="options.data.values.interpolateFull" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
 
-  <md-list-item ng-if="options.data.values.devMode" md-no-ink>
+  <md-list-item ng-hide="options.shipping" md-no-ink>
     <p>Misc lua</p>
     <md-checkbox ng-model="options.data.values.interpolateLua" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
 
-  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0">
+  <md-list-item ng-hide="options.shipping" layout class="md-padding" style="padding-top:0; padding-bottom:0">
     <p flex="30">Compression level</p>
     <md-slider flex
       ng-model="options.data.values.replayLevel" min="-1" max="22" step="1" aria-label="_"
-      ng-mouseup="options.applyState()">
+      ng-change="options.applyState()">
     </md-slider>
     <span style="margin-left:15px">{{ options.data.values.replayLevel }}</span>
   </md-list-item>
@@ -84,7 +84,7 @@
       <strong style="color:#dd3333">WARNING:</strong>
       <span>Steering angle and force feedback may behave unpredictably in conjunction with LEDs. Use at your own risk.</span>
   </div>
-  
+
   <md-divider></md-divider>
   <md-subheader class="md-no-sticky">{{:: 'ui.options.motionSim' | translate }}</md-subheader>
 
@@ -103,7 +103,7 @@
       <input flex type="text" ng-model="options.data.values.motionSimPort" ng-change="options.applyState()">
     </md-input-container>
   </md-list-item>
-  
+
   <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
     <p flex="30">{{:: 'ui.options.motionSim.updateRate' | translate }}</p>
     <md-slider flex
@@ -118,6 +118,36 @@
  
   </md-list-item>
   
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingX' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimAccelerationSmoothingX" min="0" max="200" step="5" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimAccelerationSmoothingX }}</span>
+  </md-list-item>
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingY' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimAccelerationSmoothingY" min="0" max="200" step="5" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimAccelerationSmoothingY }}</span>
+  </md-list-item>
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingZ' | translate }}</p>
+    <md-slider flex
+      ng-model="options.data.values.motionSimAccelerationSmoothingZ" min="0" max="200" step="5" aria-label="_"
+      ng-change="options.applyState()">
+    </md-slider>
+    <span style="margin-left:15px">{{ options.data.values.motionSimAccelerationSmoothingZ }}</span>
+  </md-list-item>
+
+  <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
+    <p flex="300">{{:: 'ui.options.motionSim.accelerationSmoothing' | translate }}</p>
+
+  </md-list-item>
+
   <md-list-item layout class="md-padding" style="padding-top:0; padding-bottom:0" ng-show="options.data.values.motionSimEnabled">
     <p flex="30">{{:: 'ui.options.motionSim.accelerationSmoothingX' | translate }}</p>
     <md-slider flex

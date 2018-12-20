@@ -6,7 +6,7 @@ local M = {}
 
 local copas = require("copas")
 local json = require("json")
-local encodeJsonFull = require('jsonEncoderFull')() -- slow but conform encoder
+local jsonEncodeFull = require('libs/lunajson/lunajson').encode() -- slow but conform encoder
 
 local cachedLogs = {}
 
@@ -25,7 +25,7 @@ local function sendLogEntries(logs)
       id = -1,
       data = logs
     }
-    wsClient:send(encodeJsonFull(d))
+    wsClient:send(jsonEncodeFull(d))
   end)
   coroutine.resume(co)
 end
@@ -49,7 +49,7 @@ local function bngApi_websocket_handler(ws)
     print('>> bngApi_handler got: ' .. dumps(req))
     req = json.decode(req)
     if not req or not req.api then
-      ws:send(encodeJson({ok=false}))
+      ws:send(jsonEncode({ok=false}))
       goto retry
     end
 
@@ -59,12 +59,12 @@ local function bngApi_websocket_handler(ws)
       if req.id ~= -1 then
         -- -1 == global request, no return requested
         --print('result = ' .. dumps(res))
-        local res = encodeJsonFull({ok = true, id=req.id, api=req.api, result=res, stdOut=stdOut, cmd=req.cmd})
+        local res = jsonEncodeFull({ok = true, id=req.id, api=req.api, result=res, stdOut=stdOut, cmd=req.cmd})
         ws:send(res)
       end
     else
       print("unknown API: "..tostring(req.api))
-      ws:send(encodeJson({ok=false, error='unknown_api'}))
+      ws:send(jsonEncode({ok=false, error='unknown_api'}))
     end
   end
   wsClient = nil
@@ -81,7 +81,7 @@ local function setup(_host, _port)
   end
   if not wsServer then
       log('D', 'creatormode', 'object ' .. tostring(obj:getID()) .. ' starting WS server: ' .. tostring(host) .. ":" .. tostring(port))
-      wsServer = require('websocket').server.copas.listen({
+      wsServer = require('libs/lua-websockets/websocket').server.copas.listen({
         interface = host,
         port = port,
         protocols = {

@@ -6,7 +6,6 @@ local M = {}
 M.type = "auxiliary"
 M.relevantDevice = nil
 
-local name = nil
 local electricsName = nil
 local isWarning = false
 local beepLoopName = nil
@@ -14,7 +13,6 @@ local beepLoop = nil
 local beepVolume = 1
 local tick = 0
 local soundNode = 0
-
 
 local function updateGFX(dt)
   tick = tick + dt
@@ -39,7 +37,6 @@ local function reset()
 end
 
 local function init(jbeamData)
-  name = jbeamData.name
   electricsName = jbeamData.electricsName or "reverse"
   beepLoopName = jbeamData.beepLoopName or "event:>Vehicle>Electrics>Reverse>Beep_01"
   beepVolume = jbeamData.beepVolume or 1

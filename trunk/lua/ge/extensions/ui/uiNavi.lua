@@ -19,7 +19,7 @@ local function getSpawnpoints ()
   local res = {}
 
   if FS:fileExists(getMissionFilename()) then
-    info = readJsonFile(getMissionFilename())
+    info = jsonReadFile(getMissionFilename())
     if info.spawnPoints then
       for _, point in pairs(info.spawnPoints) do
         spawnPointAdditionalInfo[point.objectname] = point
@@ -121,13 +121,13 @@ local function getMissions ()
   return missions
 end
 
-local function requestMissions ()
+local function sendMissions ()
   guihooks.trigger('MapMissions', getMissions())
 end
 
 local function setMissions (m)
   missions = m
-  requestMissions()
+  sendMissions()
 end
 
 local lastPlayerPosition
@@ -147,12 +147,14 @@ local function route_end ()
   destination = nil
   destinationPos = nil
   core_groundMarkers.setFocus(nil)
+  guihooks.trigger('RouteUpdate', {})
   guihooks.trigger('RouteEnded')
 end
 
 -- // TODO: figure out good distance
 local function route_update ()
   local route = map.getPath(findClosestRoad(lastPlayerPosition), destination)
+  core_groundMarkers.setFocus(destination)
   guihooks.trigger('RouteUpdate', route)
   if lastPlayerPosition:distance(destinationPos) < 50 then
     guihooks.trigger('RouteReachedDestination')
@@ -299,7 +301,7 @@ local function requestVehicleDashboardMap(dashboard)
   end
   local veh = be:getPlayerVehicle(0)
   if veh then
-    veh:queueJSUITexture(dashboard, 'map.setData('..encodeJson(tmpmap.nodes)..')')
+    veh:queueJSUITexture(dashboard, 'map.setData('..jsonEncode(tmpmap.nodes)..')')
   end
 end
 
@@ -317,6 +319,10 @@ local function onVehicleSwitched(oid, nid)
       --veh:queueLuaCommand("mapmgr.enableTracking()")
    -- end
   --end
+end
+
+local function onExtensionLoaded ()
+  guihooks.trigger('RouteUpdate', {})
 end
 
 -- public interface
@@ -338,10 +344,12 @@ M.getBusStops = getBusStops
 
 M.getSpawnpoints = getSpawnpoints
 M.getPointsOfInterest = getPointsOfInterest
-M.requestMissions = requestMissions
+M.requestMissions = sendMissions
 M.getMissions = getMissions
 M.setMissions = setMissions
 M.requestPoi = requestPoi
+
+M.onExtensionLoaded = onExtensionLoaded
 
 return M
 

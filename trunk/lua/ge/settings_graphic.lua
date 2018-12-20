@@ -261,7 +261,7 @@ local function buildOptionHelpers()
             end
         end,
         getModes = function()
-            return {keys={'1080', '720', '0'}, values={'1920 x 1080', '1280 x 720', 'Disabled'}}
+            return {keys={'1440', '1080', '720', '0'}, values={'2560 x 1440', '1920 x 1080', '1280 x 720', 'Disabled'}}
         end
     }
 
@@ -317,14 +317,15 @@ local function buildOptionHelpers()
     o.vsync = {
         get = function ()
             local v = tonumber( TorqueScript.getVar('$video::vsync') )
-            return v
+            return v == true or (type(v)=="number" and v > 0)
         end,
         set = function ( value )
-            TorqueScript.setVar( '$video::vsync', value )
+            local boolValue = value == true or (type(value)=="number" and value > 0)
+            TorqueScript.setVar( '$video::vsync', boolValue )
             applyOptions_Graphic()
         end,
         getModes = function()
-            return {keys={0, 1, 2}, values={'Off', 'On', 'Smart'}}
+            return {keys={false, true}, values={'Off', 'On'}}
         end
     }
 

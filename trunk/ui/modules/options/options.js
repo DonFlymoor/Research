@@ -41,9 +41,10 @@ angular.module('beamng.stuff')
       ],
 
       volumeSliders: [
-        { name: 'ui.options.audio.masterVol',  key: 'AudioMasterVol' },
-        { name: 'ui.options.audio.effectsVol', key: 'AudioEffectsVol'},
-        { name: 'ui.options.audio.ambienceVol',   key: 'AudioAmbienceVol'}
+        { name: 'ui.options.audio.masterVol',     key: 'AudioMasterVol'   },
+        { name: 'ui.options.audio.effectsVol',    key: 'AudioEffectsVol'  },
+        { name: 'ui.options.audio.ambienceVol',   key: 'AudioAmbienceVol' },
+        { name: 'ui.options.audio.musicVol',      key: 'AudioMusicVol'    }
       ]
     }
   }
@@ -76,10 +77,11 @@ angular.module('beamng.stuff')
  * @name beamng.stuff.controllers:OptionsController
  * @description Controller for the abstract Settings view.
  */
-.controller('OptionsController', ['$scope', 'bngApi', 'SettingsAuxData', 'UiUnitsOptions', '$state', '$timeout',
-function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
+.controller('OptionsController', ['$scope', 'bngApi', 'SettingsAuxData', 'UiUnitsOptions', '$state', '$timeout', 'RateLimiter',
+function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout, RateLimiter) {
 
   var vm = this;
+  vm.shipping = beamng.shipping;
   vm.stateName = $state.current.name;
   var uiUnitsOptions = UiUnitsOptions;
 
@@ -114,6 +116,10 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
     );
   };
 
+  function applyState (stateObj) {
+    bngApi.engineLua(`settings.setState(${bngApi.serializeToLua(stateObj || vm.data.values)})`);
+  }
+
   /**
    * @ngdoc method
    * @name applyState
@@ -121,9 +127,7 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
    * @param {object} [stateObj] The settings to be changed. If not provided, all the current settings will be applied.
    * @description Applies the current settings to the game
    */
-  vm.applyState = function (stateObj) {
-    bngApi.engineLua(`settings.setState(${bngApi.serializeToLua(stateObj || vm.data.values)})`);
-  };
+  vm.applyState = RateLimiter.debounce(applyState, 100);
 
   /**
    * @ngdoc method
@@ -229,39 +233,16 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
     );
   });
 
-  vm.applyOrder = function () {
-    bngApi.engineLua(`core_camera.setConfiguration(${bngApi.serializeToLua(vm.cameraConfig)}, ${vm.focusedCamId+1})`);
-  }
+  vm.changeOrder     = function(camId, offset) { bngApi.engineLua(`core_camera.changeOrder      (${camId+1}, ${offset})`); }
+  vm.setCameraById           = function(camId) { bngApi.engineLua(`core_camera.setById          (${camId+1})`           ); }
+  vm.toggleEnabledCameraById = function(camId) {console.log(camId); bngApi.engineLua(`core_camera.toggleEnabledById(${camId+1})`           ); }
+  vm.resetConfiguration      = function     () { bngApi.engineLua(`core_camera.resetConfiguration()`                    ); }
 
-  vm.changeOrder = function (oldIdx, offset) {
-    // iterate through cameras, skipping hidden cams
-    var newIdx = oldIdx;
-    for (i in vm.cameraConfig) {
-        var newIdx = Math.max(0, Math.min(vm.cameraConfig.length-1 ,newIdx + offset));
-        if (vm.cameraConfig[newIdx].hidden !== true) break;
-    }
-
-    // move camera to the calculated new index
-    var oldCam = vm.cameraConfig.splice(oldIdx, 1)[0];
-    vm.cameraConfig.splice(newIdx, 0, oldCam)[0];
-    // update the focused camera too
-    if (vm.focusedCamId == newIdx) vm.focusedCamId = oldIdx;
-    else if (vm.focusedCamId == oldIdx) vm.focusedCamId = newIdx;
-
-    vm.applyOrder();
-  }
-  vm.resetConfiguration = function () {
-    bngApi.engineLua(`core_camera.resetConfiguration()`);
-  }
-
-  /**
-   * @ngdoc method
-   * @name resetCameraPosition
-   * @methodOf beamng.stuff.controllers:SettingsGameplayCtrl
-   * @description Resets camera position to (0, 0, 0)
-   */
-  vm.resetCameraPosition = function () {
-    settings.applyState({cameraPosTuneX: 0, cameraPosTuneY: 0, cameraPosTuneZ: 0});
+  vm.resetSeat = function () {
+    bngApi.engineLua(`if core_camera then core_camera.proxy_Player('resetSeat') end`);
+  };
+  vm.resetSeatAll = function () {
+    bngApi.engineLua(`if core_camera then core_camera.proxy_Player('resetSeatAll') end`);
   };
 
   vm.updateTranslations = function () {
@@ -270,17 +251,6 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
 
   vm.enableCommunityTranslations = function() {
     bngApi.engineLua('enableCommunityTranslations()');
-  };
-
-  /**
-   * @ngdoc method
-   * @name resetFOV
-   * @methodOf beamng.stuff.controllers:SettingsGameplayCtrl
-   * @description Resets camera's Field Of View to 0.
-   */
-  vm.resetFOV = function () {
-    settings.data.values.cameraFOVTune = 0;
-    settings.applyState();
   };
 
   vm.intelCard = function () {
@@ -618,6 +588,48 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
         </md-list-item>
 
         <md-list-item layout>
+          <span flex="35">Strength</span>
+          <md-tooltip md-direction="top">Tweak to increase or decrease the overall strength of the Force Feedback</md-tooltip>
+          <md-slider ng-model="data.ffb.forceCoef" flex min="0" max="1000" step="10" aria-label="_"></md-slider>
+          <md-input-container class="bng-controls-aux-input">
+            <input aria-label="_" type="number" min="0" max="1000" step="10" ng-model="data.ffb.forceCoef">
+          </md-input-container>
+        </md-list-item>
+
+        <md-list-item layout>
+          <span flex="35">Smoothing</span>
+          <md-tooltip md-direction="">Reduces vibrations (but also increases response times and removes detail)</md-tooltip>
+          <md-slider ng-model="data.ffb.smoothing" flex min="0" max="500" step="10" aria-label="_"></md-slider>
+          <md-input-container class="bng-controls-aux-input">
+            <input aria-label="_" type="number" min="0" max="500" step="10" ng-model="data.ffb.smoothing">
+          </md-input-container>
+        </md-list-item>
+
+        <md-divider></md-divider>
+        <md-list-item md-no-ink>
+          <p>Reduce strength at low speeds</p>
+          <md-checkbox ng-model="data.ffb.lowspeedCoef"></md-checkbox>
+          <md-tooltip md-direction="top">Can help with vibrations</md-tooltip>
+        </md-list-item>
+
+        <md-list-item layout>
+          <span flex="35">Side Accel Feedback</span>
+          <md-tooltip md-direction="">Adds steering forces to emulate the sideways force on the driver</md-tooltip>
+          <md-slider ng-model="uidata.ffb.gforceCoef" flex min="0" max="20" step="1" aria-label="_"></md-slider>
+          {{ uidata.ffb.gforceCoef }} %
+        </md-list-item>
+
+        <md-list-item layout layout="row">
+          <span flex="35">Max strength</span>
+          <md-tooltip md-direction="">Safety guard against too strong forces (they will be capped at the specified limit)</md-tooltip>
+          <md-slider ng-model="uidata.ffb.forceLimit" flex min="0" max="100" step="1" aria-label="_"></md-slider>
+          <md-input-container class="bng-controls-aux-input">
+            <input aria-label="_" type="number" min="0" max="100" step="1" ng-model="uidata.ffb.forceLimit">
+          </md-input-container>
+          %
+        </md-list-item>
+
+        <md-list-item layout>
           <p>Update rate limit</p>
           <md-tooltip md-direction="">How often force feedback updates are allowed to reach the device drivers. Greater rates are better, assuming hardware and firmware support them.</md-tooltip>
           <md-select flex ng-model="data.ffb.frequency" aria-label="_" class="bng-select-fullwidth">
@@ -635,94 +647,48 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
           </md-select>
         </md-list-item>
 
-        <md-list-item layout>
-          <span flex="35">Strength</span>
-          <md-tooltip md-direction="top">Tweak to increase or decrease the overall strength of the Force Feedback</md-tooltip>
-          <md-slider ng-model="data.ffb.forceCoef" flex min="0" max="1000" step="10" aria-label="_"></md-slider>
-          <md-input-container class="bng-controls-aux-input">
-            <input aria-label="_" type="number" min="0" max="1000" step="10" ng-model="data.ffb.forceCoef">
-          </md-input-container>
-        </md-list-item>
-
-        <md-list-item layout>
-          <span flex="35">Strength (low speed)</span>
-          <md-tooltip md-direction="">Fades the strength when vehicle speed approaches zero. Can help with vibrations</md-tooltip>
-          <md-slider ng-model="data.ffb.forceCoefLowSpeed" flex min="0" max="1000" step="10" aria-label="_"></md-slider>
-          <md-input-container class="bng-controls-aux-input">
-            <input aria-label="_" type="number" min="0" max="1000" step="10" ng-model="data.ffb.forceCoefLowSpeed">
-          </md-input-container>
-        </md-list-item>
-
-        <md-list-item layout>
-          <span flex="35">Max strength</span>
-          <md-tooltip md-direction="">Safety guard against too strong forces (they will be capped at the specified limit)</md-tooltip>
-          <md-slider ng-model="data.ffb.forceLimit" flex min="0" max="10" step="0.1" aria-label="_"></md-slider>
-          <md-input-container class="bng-controls-aux-input">
-            <input aria-label="_" type="number" min="0" max="10" step="0.1" ng-model="data.ffb.forceLimit">
-          </md-input-container>
-        </md-list-item>
-
-        <md-list-item layout>
-          <span flex="35">Slow Smoothing</span>
-          <md-tooltip md-direction="">Amount of filtering during <strong>slow</strong> steering wheel movements</md-tooltip>
-          <md-slider ng-model="data.ffb.smoothing" flex min="0" max="500" step="10" aria-label="_"></md-slider>
-          <md-input-container class="bng-controls-aux-input">
-            <input aria-label="_" type="number" min="0" max="500" step="10" ng-model="data.ffb.smoothing">
-          </md-input-container>
-        </md-list-item>
-
-        <md-list-item layout>
-          <span flex="35">Fast Smoothing</span>
-          <md-tooltip md-direction="">Amount of filtering during <strong>sudden</strong> steering wheel movements</md-tooltip>
-          <md-slider ng-model="data.ffb.smoothingHF" flex min="0" max="500" step="10" aria-label="_"></md-slider>
-          <md-input-container class="bng-controls-aux-input">
-            <input aria-label="_" type="number" min="0" max="500" step="10" ng-model="data.ffb.smoothingHF">
-          </md-input-container>
-        </md-list-item>
-
         <md-list-item md-no-ink>
           <p>Use Response Correction Curve</p>
           <md-checkbox ng-model="data.ffb.responseCorrected"></md-checkbox>
           <md-tooltip md-direction="top">Allows to BeamNG.drive to compensate for the non-linear nature of most force feedback hardware, increasing the response fidelity</md-tooltip>
         </md-list-item>
         <div ng-show="data.ffb.responseCorrected">
-        <div style="width:310px; height: 150px; position:relative; border: solid grey 2px; margin-left: 20px;">
-          <canvas id="ffbResponseCurve" style="position:absolute; top:0px; left:0px; width:100%; height: 100%"></canvas>
-          <div class="curveHelp"        style="position:absolute; top:0px; left:0px; width:100%; height: 100%">
-            <div class="curveHelpText" style="height: 100%">
-              <small><strong>Hint:</strong> place a curve file in your <code>settings/inputmaps</code> directory, press <code>ctrl+L</code>, click Apply and reopen this menu. The inputmap <code>.diff</code> file will be automatically updated with the new curve data.</small>
-              <br/>
-              <br/>
-              <small><strong>Accepted filenames:</strong>
-              <span style="cursor:pointer">
-                <md-tooltip md-direction="top">Compatible with Assetto Corsa&trade; ff_post_process curves</md-tooltip>
-                <code>wheel.lut</code>
-                <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
-              </span>
-              <span style="border: none">,</span>
-              <span style="cursor:pointer">
-                <md-tooltip md-direction="top">Compatible with iRacing&trade; WheelCheck csv files (log-2 option)</md-tooltip>
-                <code>wheel.log</code>
-                <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
-              </span>
-              <span style="border: none">,</span>
-              <span style="cursor:pointer">
-                <md-tooltip md-direction="top">Compatible with Project Cars&trade; Force Curve Modifier exported files (linear force response option)</md-tooltip>
-                <code>wheel.fcm</code>
-                <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
-              </span>
-              <span style="border-left: 0px">and<span>
-              <span style="cursor:pointer">
-                <md-tooltip md-direction="top">Manually created file, each line having a <code>force</code>,<code>response</code> pair of values. Header lines are accepted. Any number scale may be used</md-tooltip>
-                <code>wheel.csv</code>
-                <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
-              </span>
-              <span style="border-left: 0px">.<span>
-              <br/>
+          <div style="width:310px; height: 150px; position:relative; border: solid grey 2px; margin-left: 20px;">
+            <canvas id="ffbResponseCurve" style="position:absolute; top:0px; left:0px; width:100%; height: 100%"></canvas>
+            <div class="curveHelp"        style="position:absolute; top:0px; left:0px; width:100%; height: 100%">
+              <div class="curveHelpText" style="height: 100%">
+                <small><strong>Hint:</strong> place a curve file in your <code>settings/inputmaps</code> directory, press <code>ctrl+L</code>, click Apply and reopen this menu. The inputmap <code>.diff</code> file will be automatically updated with the new curve data.</small>
+                <br/>
+                <br/>
+                <small><strong>Accepted filenames:</strong>
+                <span style="cursor:pointer">
+                  <md-tooltip md-direction="top">Compatible with Assetto Corsa&trade; ff_post_process curves</md-tooltip>
+                  <code>wheel.lut</code>
+                  <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
+                </span>
+                <span style="border: none">,</span>
+                <span style="cursor:pointer">
+                  <md-tooltip md-direction="top">Compatible with iRacing&trade; WheelCheck csv files (log-2 option)</md-tooltip>
+                  <code>wheel.log</code>
+                  <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
+                </span>
+                <span style="border: none">,</span>
+                <span style="cursor:pointer">
+                  <md-tooltip md-direction="top">Compatible with Project Cars&trade; Force Curve Modifier exported files (linear force response option)</md-tooltip>
+                  <code>wheel.fcm</code>
+                  <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
+                </span>
+                <span style="border-left: 0px">and<span>
+                <span style="cursor:pointer">
+                  <md-tooltip md-direction="top">Manually created file, each line having a <code>force</code>,<code>response</code> pair of values. Header lines are accepted. Any number scale may be used</md-tooltip>
+                  <code>wheel.csv</code>
+                  <md-icon class="material-icons" style="font-size: 1em">help</md-icon>
+                </span>
+                <span style="border-left: 0px">.<span>
+                <br/>
+              </div>
             </div>
           </div>
-        </div>
-
         </div>
       </md-list>`,
     link: function (scope, element, attrs) {
@@ -836,6 +802,43 @@ function($scope, bngApi, SettingsAuxData, UiUnitsOptions, $state, $timeout) {
         ctx.stroke();
       };
       scope.ffbResponseCurveRender();
+
+      var mapUI = function(sourceModel, mappedModel, path, getter, setter) {
+          // Allows to point ng-model at the mappedModel, rather than sourceModel
+          //   getter defines the source-to-mapped conversion
+          //   setter defines the mapped-to-source conversion
+          // Can be used to display custom units *only* in the UI
+          //
+          // Example: mapUI(dict1, dict2, "foo.bar.z", v=>v+1, v=>v-1)
+          // Will expose the 0-based index <dict1.foo.bar.z> as a 1-based index at <dict2.foo.bar.z>
+          //
+          function ref(obj,is,value) {
+            // if <is> has a value of "foo.bar.z", this function will return obj.foo.bar.z
+            // if <value> is defined, obj.foo.bar.z will be assigned <value> before returning
+            if (typeof is == 'string') return ref(obj,is.split('.'), value);
+            else if (is.length==1 && value!==undefined) return obj[is[0]] = value;
+            else if (is.length==0) return obj;
+            else return ref(obj[is[0]],is.slice(1), value);
+          }
+          // build the necessary empty dict structure in 'mappedModel', that allows access to the 'path' object
+          var subpaths = path.split('.');
+          var subpath;
+          for(i in subpaths) {
+            subpath = subpaths[i];
+            if (i == subpaths.length-1) break;
+            if (mappedModel[subpath] === undefined) mappedModel[subpath] = {};
+            mappedModel = mappedModel[subpath];
+          }
+          // define the actual conversion setter & getter
+          Object.defineProperty(mappedModel, subpath, {
+            get:function(){return getter(ref(sourceModel, path));},
+            set:function(v){ref(sourceModel, path, setter(v));}
+          });
+      };
+
+      scope.uidata = {};
+      mapUI(scope.data, scope.uidata, "ffb.forceLimit", v=>Math.round(v*10), v=>v/10); //0-10 => 0-100
+      mapUI(scope.data, scope.uidata, "ffb.gforceCoef", v=>Math.round(v*100), v=>v/100); //0-0.2 => 0-20
     }
   };
 }])
@@ -1721,12 +1724,12 @@ function ($scope, bngApi, controlsContents, ControlsUtils) {
         }
         for(j in settingTypes) {
           var settingType = settingTypes[j];
-          vm.filters[filterId][settingType] = v["filter"+filterId+"_"+settingType];
+          vm.filters[filterId][settingType] = v["inputFilter"+filterId+"_"+settingType];
         }
         // sanitize speeds
         if (vm.filters[filterId].limitStartSpeed > vm.filters[filterId].limitEndSpeed) {
           vm.filters[filterId].limitStartSpeed = vm.filters[filterId].limitEndSpeed;
-          vm.filters[filterId].limitEndSpeed = v["filter"+filterId+"_limitStartSpeed"];
+          vm.filters[filterId].limitEndSpeed = v["inputFilter"+filterId+"_limitStartSpeed"];
         }
         vm.limitCurveRender(filterId);
       }
@@ -1738,13 +1741,13 @@ function ($scope, bngApi, controlsContents, ControlsUtils) {
     if (sanitizeStart == false) vm.filters[filterId].limitEndSpeed   = Math.max(vm.filters[filterId].limitStartSpeed, vm.filters[filterId].limitEndSpeed);
     for(j in settingTypes) {
       var settingType = settingTypes[j];
-      v["filter"+filterId+"_"+settingType] = vm.filters[filterId][settingType];
+      v["inputFilter"+filterId+"_"+settingType] = vm.filters[filterId][settingType];
     }
     vm.limitCurveRender(filterId);
     settings.applyState(); // save values to settings
   };
   vm.limitCurveRender = function(filterId) {
-    var canvas = document.querySelector("[id=filter"+filterId+"_graph]");
+    var canvas = document.querySelector("[id=inputFilter"+filterId+"_graph]");
     var width = canvas.width;
     var height = canvas.height;
     var ctx = canvas.getContext("2d");

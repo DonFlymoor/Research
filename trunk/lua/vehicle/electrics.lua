@@ -28,6 +28,7 @@ local smoothers = {
   watertemp = newExponentialSmoothing(100),
   turnsignal = newExponentialSmoothing(10),
   airspeed = newExponentialSmoothing(10),
+  airflowspeed = newExponentialSmoothing(10),
   altitude = newExponentialSmoothing(10)
 }
 
@@ -182,7 +183,8 @@ local function update(dt)
     vals.turnsignal = 0
   end
 
-  vals.airspeed = obj:getAirflowSpeed()
+  vals.airspeed = obj:getGroundSpeed()
+  vals.airflowspeed = obj:getAirflowSpeed()
   vals.altitude = obj:getAltitude()
   vals.parking = 0 -- TODO: input.parkinglights
   vals.reverse = (vals.gearIndex or 0) < 0
@@ -242,6 +244,7 @@ local function reset()
   M.values.wheelspeed = 0
   M.values.avgWheelAV = 0
   M.values.airspeed = 0
+  M.values.airflowspeed = 0
   M.values.horn = false
   lightbarState = 0
   lightsState = 0

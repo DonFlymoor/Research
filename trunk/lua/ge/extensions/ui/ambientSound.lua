@@ -5,16 +5,16 @@ local streamID = 0
 --[[get random soundfile and random delay and add it to currentSoundData table
 @@param stream table that contain one soundstream data
 ]]
-local function getRandomSound(stream) 
+local function getRandomSound(stream)
   local temp =nil
-  repeat 
+  repeat
     temp= math.random(#stream.sounds)
   until stream.previousSound~=temp
   stream.previousSound=temp
   stream.currentSoundData={}                  --which sound file in soundstream is currently playing
   stream.currentSoundData.currentSound = stream.sounds[temp]
   if stream.delay and tableSize(stream.delay) ==2 then
-    stream.currentSoundData.delay = math.random(stream.delay[1],stream.delay[2]) 
+    stream.currentSoundData.delay = math.random(stream.delay[1],stream.delay[2])
   elseif tableSize(stream.delay)==1 then
     temptable.delay = math.random(stream.delay[1])   --  generates integer numbers between 1 and stream.delay[1]
   else
@@ -35,7 +35,7 @@ local function setStreamState(streamID,volume,pitch,fadeInTime)
   end
 end
 --[[
-this function update the sounds in currentSoundData 
+this function update the sounds in currentSoundData
 ]]
 local function update(dt)
   for i=1,#soundStreams do
@@ -46,13 +46,13 @@ local function update(dt)
           soundStreams[i].volume =1
         end
         local res = Engine.Audio.playOnce('AudioGui', curSound.currentSound,{ volume = 0.29,pitch=soundStreams[i].pitch,fadeInTime=soundStreams[i].fadeInTime} )
-        curSound.length= res.len 
+        curSound.length= res.len
         curSound.playing =true
       else
         curSound.currentTime = curSound.currentTime + dt
         if curSound.currentTime > curSound.delay + curSound.length then
           getRandomSound(soundStreams[i])
-        end 
+        end
       end
     end
   end
@@ -60,20 +60,20 @@ end
 --[[
 set soundStreams table that contains number of streams to be played
 call getrandomSound to set currentSoundData and returns stream ID
-@param json string 
+@param json string
 ]]
 local function init(json)
   if not FS:fileExists(json) then
     log('E',json .. "not Exist")
     return
   end
-  local soundFile = readJsonFile(json)
+  local soundFile = jsonReadFile(json)
   local soundTable={}
   for k,v in pairs(soundFile) do
     soundTable[k]=v
   end
   table.insert(soundStreams,soundTable.data)
-  streamID = streamID + 1  
+  streamID = streamID + 1
   soundStreams[streamID].streamID = streamID
   getRandomSound(soundStreams[streamID])
   return streamID
@@ -88,7 +88,7 @@ local function deleteSoundSFX(ID)
   for i=1,soundtablesize do
     if soundStreams[i].streamID == ID then
       table.remove(soundStreams,i)
-      return    
+      return
     end
   end
 end

@@ -2,6 +2,7 @@ angular.module('beamng.data', ['beamng.core'])
 
 .factory('InstalledContent', ['$rootScope', 'AppSelectFilters', 'bngApi', function ($rootScope, AppSelectFilters, bngApi) {
   var _levels = []
+    , _allLevels = []
     , _scenarios = []
     , _vehicles = { list: [], models: [], configs: [], filters: {}}
     , _campaigns = []
@@ -27,6 +28,10 @@ angular.module('beamng.data', ['beamng.core'])
       case 'levels':
         _levels = data.list.map((x, i) => angular.extend(x, { __index__: i }));
         break;
+      
+      case 'allLevels':
+        _allLevels = data.list.map((x, i) => angular.extend(x, { __index__: i }));
+        break;
 
       default:
         break;
@@ -35,11 +40,12 @@ angular.module('beamng.data', ['beamng.core'])
 
   // -- on init --
   bngApi.engineLua('core_levels.requestData()');
-  bngApi.engineLua('core_apps.requestData()');
+  bngApi.engineLua('ui_apps.requestData()');
 
   return {
     // levels: _levels,
     get levels() { return _levels; },
+    get allLevels() { return _allLevels; },
     scenarios: _scenarios,
     campaigns: _campaigns,
     get apps() { return _apps; }
@@ -192,15 +198,8 @@ angular.module('beamng.data', ['beamng.core'])
   };
 
   var _state = {};
-  var _groundModelInfo = null;
-
-  var _updateGroundModelInfo = RateLimiter.throttle((data) => {
-    _groundModelInfo = data;
-    _updateRegisteredScopes();
-  }, 500);
 
   var _update = () => {
-    groundModelInfo = null;
     bngApi.engineScript('$Camera::movementSpeed', (speed) => {
       service.cameraSpeed = Number(speed);
       bngApi.activeObjectLua('bdebug.requestState()');
@@ -215,10 +214,6 @@ angular.module('beamng.data', ['beamng.core'])
     _state = debugState;
     _lastVisualizationMode = debugState.renderer.visualization;
     _updateRegisteredScopes();
-  });
-
-  $rootScope.$on('GroundModelDebugInfo', (_, data) => {
-    _updateGroundModelInfo(data);
   });
 
   $rootScope.$on('updatePhysicsState',  (_, state) => {
@@ -244,7 +239,6 @@ angular.module('beamng.data', ['beamng.core'])
     },
 
     get state() { return _state; },
-    get groundModelInfo() { return _groundModelInfo; },
     get jsLogging() { return window.jsLogging; },
 
     toggleJSLogging: (state) => {
@@ -305,19 +299,7 @@ angular.module('beamng.data', ['beamng.core'])
       _applyState();
     },
 
-    toggleStaticCollision: (status) => {
-      status = (status === undefined) ? !_state.terrain.staticCollision : !!status;
-      _state.terrain.staticCollision = status;
-      bngApi.engineScript(`physicsDebugStaticCollision(${status});`);
-      _applyState();
-    },
-
-    toggleTerrainCollision: (status) => {
-      status = (status === undefined) ? !_state.terrain.groundmodel : !!status;
-      _state.terrain.groundmodel = status;
-      bngApi.engineScript(`physicsDebugTerrainCollision(${status});`);
-      _applyState();
-    },
+    showGroundModelDebug: () => {bngApi.engineLua('extensions.load("test_groundModelDebug") test_groundModelDebug.openWindow()');},
 
     setVisualizationMode: (mode) => {
       mode = (mode === undefined) ? _state.renderer.visualization : mode;

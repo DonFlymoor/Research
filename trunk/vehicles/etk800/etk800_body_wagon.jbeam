@@ -110,7 +110,7 @@
     ],
     "controller": [
         ["fileName"],
-        ["etkGauges", {"materialName": "@etk800_gauges_screen", "htmlPath": "local://local/vehicles/etk800/gauges_screen.html"}],
+        ["etkGauges", {"materialName": "@etk800_gauges_screen", "htmlPath": "local://local/vehicles/etk800/gauges_screen/gauges_screen.html"}],
     ],
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
@@ -1320,6 +1320,7 @@
           ["fx2l","fx1r"],
 
           //steering box
+          {"beamSpring":15001000,"beamDamp":50},
           {"beamDeform":50000,"beamStrength":"FLT_MAX"},
           ["fx5r","fx5l"],
 
@@ -1397,7 +1398,7 @@
           ["fx5l","fx1r"],
 
           //front shock tower attach
-          {"beamSpring":4800600,"beamDamp":120},
+          {"beamSpring":4501000,"beamDamp":150},
           {"beamDeform":12000,"beamStrength":"FLT_MAX"},
           ["fs1r","f5r"],
           ["fs1l","f5l"],
@@ -2755,7 +2756,7 @@
          //body
          ["etk800_roof_sunroof", ["etk800_body"]],
          {"deformGroup":"sunroof_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_sunroof", ["etk800_body"],[]{"deformSound":"GlassBreakSound8", "deformVolume":0.6}],
+         ["etk800_sunroof", ["etk800_body"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound8", "deformVolume":0.6}],
          {"deformGroup":"sunroof_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
          ["etk800_sunroof_int", ["etk800_body"]],
          {"deformGroup":""},

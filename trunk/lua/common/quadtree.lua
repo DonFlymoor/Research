@@ -13,6 +13,8 @@
 
 -- Additions with this version (20/04/2016) - A compress function has been added. See below for usage. This function affects none of the previous functionality.
 
+-- created by BeamNG
+
 --[[ Usage
   q = newQuadtree() -- initialize a new empty quadtree
 

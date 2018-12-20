@@ -64,7 +64,6 @@ function parseArgs()
 }
 
 
-
 //--------------------------------------------------------------------------
 
 // custom beamng function, required for loading vehicles

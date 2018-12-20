@@ -50,6 +50,16 @@ local nodeForceAvg = 1
 local nodeDisplayDistance = 0 -- broken atm since it uses the center point of the camera :\
 
 local wheelContacts = {}
+local active = false
+
+function M.toggleVehicleEditor()
+  active = not active
+  if active then
+    extensions.load('vehicleeditor_vemain')
+  else
+    extensions.unload('vehicleeditor_vemain')
+  end
+end
 
 local function nodeCollision(p)
   if not M.state.vehicle.tireContactPoint then
@@ -362,7 +372,7 @@ end
 
 local function sendState()
   updateDebugDraw()
-  obj:executeJS("HookManager.trigger('BdebugUpdate', "..encodeJson(M.state)..");")
+  obj:executeJS("HookManager.trigger('BdebugUpdate', "..jsonEncode(M.state)..");")
 end
 
 local function activated(m)

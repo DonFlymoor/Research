@@ -65,26 +65,46 @@ void encodeGBuffer(float3 normalWS, float specPower, float depthLinear, out floa
     bufferA = float4(encodeNormal(normalize(half3(normalWS.xyz))), 0);
 }
 
-void encodeGBuffer(float4 baseColorOpacity, float3 normalWS, float metal, float roughness, out float4 buffer0, out float4 buffer1, out float4 buffer2)
-{
-    buffer0 = float4(encodeNormal(normalize(half3(normalWS.xyz))), 0);
-    buffer1 = baseColorOpacity;
-    buffer2 = float4(roughness, metal, 0, 0);
-}
-
 #ifdef BGE_USE_DEFERRED_SHADING
     struct GBuffer
     {
         float4 target0; // normals.xyz / 2bits ?
         float4 target1; // base color, opacity
-        float4 target2; // roughness, metalic, ??, ??
+        float4 target2; // roughness, metalic, AO, ??
+        float4 target3; // clear coat roughness, factor, ZW?
+        float4 target4; // 2nd Normal
+        float4 target5; // emmissive
         float depth;
+    };
+
+    struct GBufferData
+    {
+        float4 baseColor;
+        float3 normal;
+        float metalic;
+
+        float roughness;
+        float ao;
+        float realDepth;
+        float clearCoatFactor;
+
+        float3 clearCoat2ndNormal;
+        float clearCoatRoughnessFactor;
+
+        float3 emissive;
+        float padding;
     };
 #else
     struct GBuffer
     {
         float4 target0; // normals.xyz / 2bits ?
         float depth;
+    };
+
+    struct GBufferData
+    {
+        float3 normal;
+        float realDepth;
     };
 #endif
 
@@ -107,13 +127,30 @@ float4 decodeGBuffer(sampler2D prepassDepthSamplerVar, sampler2D prepassSamplerV
 }
 
 #ifdef BGE_USE_DEFERRED_SHADING
-void decodeGBuffer(in GBuffer gbuffer, in float4 projParams, out float4 baseColor, out float3 normalWS, out float metal, out float specPower, out float realdepth)
+
+void encodeGBuffer(in GBufferData data, out float4 target0, out float4 target1, out float4 target2, out float4 target3, out float4 target4, out float4 target5 )
 {
-    normalWS.xyz = decodeNormal(gbuffer.target0.xyz);
-    realdepth = ndcToRealDepth(gbuffer.depth, projParams.zw);
-    baseColor = gbuffer.target1;
-    specPower = gbuffer.target2.r;
-    metal = gbuffer.target2.g;
+    target0 = float4(encodeNormal(normalize(half3(data.normal.xyz))), data.baseColor.a);
+    target1 = data.baseColor;
+    target2 = float4(data.roughness, data.metalic, data.ao, data.baseColor.a);
+    target3 = float4(data.clearCoatRoughnessFactor, data.clearCoatFactor, 0, data.baseColor.a);
+    target4 = float4(encodeNormal(normalize(half3(data.clearCoat2ndNormal.xyz + 1e-16))), data.baseColor.a);
+    target5 = float4(data.emissive, data.baseColor.a);
+}
+
+void decodeGBuffer(in GBuffer gbuffer, in float4 projParams, out GBufferData data)
+{
+    data.normal.xyz = decodeNormal(gbuffer.target0.xyz);
+    data.realDepth = ndcToRealDepth(gbuffer.depth, projParams.zw);
+    data.baseColor = gbuffer.target1;
+    data.roughness = max(0.02, gbuffer.target2.r);
+    data.metalic = gbuffer.target2.g;
+    data.ao = gbuffer.target2.b;
+    data.clearCoatFactor = gbuffer.target3.g;
+    data.clearCoatRoughnessFactor = max(0.02, gbuffer.target3.r);
+    data.clearCoat2ndNormal = decodeNormal(gbuffer.target4.xyz);
+    data.emissive = gbuffer.target5.rgb;
+    data.padding = 0;
 }
 #endif
 

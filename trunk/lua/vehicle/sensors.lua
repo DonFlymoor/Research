@@ -4,7 +4,7 @@
 
 local M = {}
 
-local max = math.max
+local min, max = math.min, math.max
 local abs = math.abs
 
 M.gx = 0
@@ -25,11 +25,10 @@ M.gzMin = 0
 
 M.gxSmoothMax = 0
 
-local gx_smooth2 = nil
-local gy_smooth2 = nil
-local gz_smooth2 = nil
-local gx_Smoother = nil
-local gx_smooth3 = nil
+local gx_smooth2 = newTemporalSmoothingNonLinear(7)
+local gy_smooth2 = newTemporalSmoothingNonLinear(7)
+local gz_smooth2 = newTemporalSmoothingNonLinear(7)
+local gx_Smoother = newTemporalSmoothing(4) -- it acts like a timer
 
 local resetTimer = 0
 local resetTime  = 10 -- time when the min/max values are getting reset
@@ -44,16 +43,15 @@ local function resetMinMax()
 end
 
 local function reset()
-  gx_smooth2 = newTemporalSmoothingNonLinear(7)
-  gy_smooth2 = newTemporalSmoothingNonLinear(7)
-  gz_smooth2 = newTemporalSmoothingNonLinear(7)
-  gx_Smoother = newTemporalSmoothing(4) -- it acts like a timer
+  gx_smooth2:reset()
+  gy_smooth2:reset()
+  gz_smooth2:reset()
+  gx_Smoother:reset()
 
   resetMinMax()
 end
 
 local function updateGFX(dt)
-  if not gx_smooth2 then return end
   resetTimer = resetTimer + dt
   if resetTimer > resetTime then
     resetMinMax()
@@ -74,12 +72,12 @@ local function updateGFX(dt)
     M.gxSmoothMax = absgx
   end
 
-  M.gxMax = math.max(M.gxMax, M.gx2)
-  M.gxMin = math.min(M.gxMin, M.gx2)
-  M.gyMax = math.max(M.gyMax, M.gy2)
-  M.gyMin = math.min(M.gyMin, M.gy2)
-  M.gzMax = math.max(M.gzMax, M.gz2)
-  M.gzMin = math.min(M.gzMin, M.gz2)
+  M.gxMax = max(M.gxMax, M.gx2)
+  M.gxMin = min(M.gxMin, M.gx2)
+  M.gyMax = max(M.gyMax, M.gy2)
+  M.gyMin = min(M.gyMin, M.gy2)
+  M.gzMax = max(M.gzMax, M.gz2)
+  M.gzMin = min(M.gzMin, M.gz2)
 end
 
 local function init()

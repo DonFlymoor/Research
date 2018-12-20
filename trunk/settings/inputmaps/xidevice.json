@@ -12,7 +12,7 @@
         "forceLimit": 2
       },
       "isForceEnabled": false,
-      "linearity": 1.3
+      "linearity": 2.5
     }, {
       "action": "center_camera",
       "control": "btn_rt"

@@ -1236,7 +1236,72 @@
             {"hubcapFrictionCoef":1.0},
     ],
 }
-
+"hubcap_02a_13_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Small Smoothie Front Hubcaps",
+        "value":100,
+    }
+    "slotType" : "hubcap_F_13",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["hubcap_02a_10", ["hubcap_FR"], [], {"pos":{"x":-0.488, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_02a_10", ["hubcap_FL"], [], {"pos":{"x": 0.488, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.015},
+            {"hubcapWidth":-0.045},
+            {"hubcapRadius":0.12},
+            {"hubcapBeamSpring":115460, "hubcapBeamDamp":6.96}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":16},
+            {"hubcapAttachBeamDeform":1170, "hubcapAttachBeamStrength":1734},
+            {"hubcapNodeWeight":0.07},
+            {"hubcapCenterNodeWeight":0.07},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"hubcap_02a_13_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Small Smoothie Rear Hubcaps",
+        "value":100,
+    }
+    "slotType" : "hubcap_R_13",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["hubcap_02a_10", ["hubcap_RR"], [], {"pos":{"x":-0.488, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_02a_10", ["hubcap_RL"], [], {"pos":{"x": 0.488, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.015},
+            {"hubcapWidth":-0.045},
+            {"hubcapRadius":0.12},
+            {"hubcapBeamSpring":115460, "hubcapBeamDamp":6.96}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":16},
+            {"hubcapAttachBeamDeform":1170, "hubcapAttachBeamStrength":1734},
+            {"hubcapNodeWeight":0.07},
+            {"hubcapCenterNodeWeight":0.07},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
 "hubcap_05a_13_F": {
     "information":{
         "authors":"BeamNG",
@@ -1247,8 +1312,8 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          //hubcaps
-         ["hubcap_05a_10", ["hubcap_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-         ["hubcap_05a_10", ["hubcap_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_05a_10", ["hubcap_FR"], [], {"pos":{"x":-0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_05a_10", ["hubcap_FL"], [], {"pos":{"x": 0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "pressureWheels": [
             ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -1280,8 +1345,8 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          //hubcaps
-         ["hubcap_05a_10", ["hubcap_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-         ["hubcap_05a_10", ["hubcap_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_05a_10", ["hubcap_RR"], [], {"pos":{"x":-0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_05a_10", ["hubcap_RL"], [], {"pos":{"x": 0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "pressureWheels": [
             ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -1314,8 +1379,8 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          //hubcaps
-         ["hubcap_04a_13", ["hubcap_FR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-         ["hubcap_04a_13", ["hubcap_FL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_04a_13", ["hubcap_FR"], [], {"pos":{"x":-0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_04a_13", ["hubcap_FL"], [], {"pos":{"x": 0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "pressureWheels": [
             ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -1347,8 +1412,8 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          //hubcaps
-         ["hubcap_04a_13", ["hubcap_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
-         ["hubcap_04a_13", ["hubcap_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_04a_13", ["hubcap_RR"], [], {"pos":{"x":-0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["hubcap_04a_13", ["hubcap_RL"], [], {"pos":{"x": 0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "pressureWheels": [
             ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],

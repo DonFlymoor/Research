@@ -24,11 +24,7 @@ angular.module('beamng.stuff')
   };
 }])
 
-// (function () {
-//   'use strict';
-
-//   angular.module('beamng.ui2Ports')
-
+// === ui2 port =====================================================================================================================================================
 // this is how we will handle icons that should be the same, but appear in different ui contexts witout breaking naming or copying them over and over again
 .constant('spriteDuplicates', {})
 
@@ -42,128 +38,129 @@ angular.module('beamng.stuff')
 
 // use this directive for icons
 // icons should always be squares otherwise they are images and should not be handled here.
-// .directive('bngIcon', function () {
-//   return {
-//     template: `
-//       <bng-box1x1 class="filler" ng-switch="type" ng-style="{transform: getTransform()}">
-//         <bng-flag ng-switch-when="flag" src="val" deg="getDeg()"></bng-flag>
-//         <bng-icon-img ng-switch-when="img" src="val" deg="getDeg()"></bng-icon-img>
-//         <bng-icon-material ng-switch-when="material" src="val" deg="getDeg()" color="color"></bng-icon-material>
-//         <bng-icon-svg ng-switch-when="svg" src="val" deg="getDeg()" color="color"></bng-icon-svg>
-//         <bng-icon-svg-sprite ng-switch-when="sprite" src="val" deg="getDeg()" color="color"></bng-icon-svg-sprite>
-//         <bng-icon-svg-sprite ng-switch-default src="'general_beamng_logo_bw'" color="color"></bng-icon-svg-sprite>
-//       </bng-box1x1>
-//     `,
-//     scope: {
-//       type: '@',
-//       val: '=src',
-//       color: '=',
-//       direction: '=?',
-//       degree: '=?'
-//     },
-//     link: function (scope) {
-//       scope.degree = scope.degree || 0;
+.directive('bngIcon', function () {
+  return {
+    template: `
+      <bng-box1x1 class="filler" ng-switch="type" ng-style="{transform: getTransform()}">
+        <bng-flag ng-switch-when="flag" src="val" deg="getDeg()"></bng-flag>
+        <bng-icon-img ng-switch-when="img" src="val" deg="getDeg()"></bng-icon-img>
+        <bng-icon-svg ng-switch-when="svg" src="val" deg="getDeg()" color="color"></bng-icon-svg>
+        <bng-icon-svg-sprite ng-switch-when="sprite" src="val" deg="getDeg()" color="color"></bng-icon-svg-sprite>
+        <bng-icon-svg-sprite ng-switch-default src="'general_beamng_logo_bw'" color="color"></bng-icon-svg-sprite>
+      </bng-box1x1>
+    `,
+    scope: {
+      type: '@',
+      val: '=src',
+      color: '=',
+      direction: '=?',
+      degree: '=?'
+    },
+    link: function (scope) {
+      scope.degree = scope.degree || 0;
 
-//       scope.getDeg = function () {
-//         switch (scope.direction) {
-//         case 'top': scope.degree = 0; break;
-//         case 'right': scope.degree = 90; break;
-//         case 'bottom': scope.degree = 180; break;
-//         case 'left': scope.degree = 270; break;
-//         }
-//         return scope.degree;
-//       }
-//     }
-//   };
-// })
-
+      scope.getDeg = function () {
+        switch (scope.direction) {
+        case 'top': scope.degree = 0; break;
+        case 'right': scope.degree = 90; break;
+        case 'bottom': scope.degree = 180; break;
+        case 'left': scope.degree = 270; break;
+        }
+        return scope.degree;
+      }
+    }
+  };
+})
 
 
-// // === important: do not use any of these directly! use the above (bngIcon) instead =================================
-// .directive('bngIconSvg', function () {
-//   return {
-//     restrict: 'E',
-//     template: `<div ng-include="src" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);" class="{{color ? 'fill-' + color : ''}}"></div>`,
-//     scope: {
-//       src: '=',
-//       color: '=',
-//       deg: '='
-//     }
-//   };
-// })
 
-// // === important: do not use any of these directly! use the above (bngIcon) instead =================================
-// .directive('bngIconSvgSprite', function (spriteDuplicates) {
-//   return {
-//     restrict: 'E',
-//     template: `<svg class="{{color ? 'fill-' + color : ''}} filler" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);"><use xlink:href="{{getPath(src)}}"/></svg>`,
-//     scope: {
-//       src: '=',
-//       color: '=',
-//       deg: '='
-//     },
-//     link: function (scope) {
-//       scope.getPath = (src) => `#${spriteDuplicates[src] || src}`;
-//     }
-//   };
-// })
+// === important: do not use any of these directly! use the above (bngIcon) instead =================================
+.directive('bngIconSvg', function () {
+  return {
+    restrict: 'E',
+    // template: `<img ng-src="{{src}}" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);" class="{{color ? 'fill-' + color : ''}}"></img>`,
+    // template: `<object data="{{src}}" type="image/svg+xml">`,
+    // template: `<div class="filler" style="background: url('{{src}}')"></div>`,
+    template: `<div ng-include="src" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);" class="filler {{color ? 'fill-' + color : ''}}"></div>`,
+    scope: {
+      src: '=',
+      color: '=',
+      deg: '='
+    }
+  };
+})
 
-// // === important: do not use any of these directly! use the above (bngIcon) instead =================================
-// .directive('bngIconMaterial', function () {
-//   return {
-//     restrict: 'E',
-//     template: `<bng-icon-svg-sprite src="getPath(src)" color="color" deg="deg"></bng-icon-svg-sprite>`,
-//     scope: {
-//       src: '=',
-//       color: '=',
-//       deg: '='
-//     },
-//     link: function (scope) {
-//       scope.getPath = (src) => `material_${src}`;
-//     }
-//   };
-// })
+// === important: do not use any of these directly! use the above (bngIcon) instead =================================
+.directive('bngIconSvgSprite', function (spriteDuplicates) {
+  return {
+    restrict: 'E',
+    template: `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="{{color ? 'fill-' + color : ''}} filler" style="{{!color ? 'fill: currentColor;' : ''}} pointer-events: none; transform: rotate({{deg}}deg);"><use xlink:href="{{getPath(src)}}"/></svg>`,
+    scope: {
+      src: '=',
+      color: '=',
+      deg: '='
+    },
+    link: function (scope) {
+      scope.getPath = (src) => `#${spriteDuplicates[src] || src}`;
+    }
+  };
+})
 
-// // === important: do not use any of these directly! use the above (bngIcon) instead =================================
-// .directive('bngIconImg', function () {
-//   return {
-//     restrict: 'E',
-//     template: `<img class="filler" ng-src="{{src}}" style="transform: rotate({{deg}}deg);"/>`,
-//     scope: {
-//       src: '=',
-//       deg: '='
-//     },
-//   };
-// })
+// === important: do not use any of these directly! use the above (bngIcon) instead =================================
+.directive('bngIconImg', function () {
+  return {
+    restrict: 'E',
+    template: `<img class="filler" ng-src="{{src}}" style="transform: rotate({{deg}}deg);"/>`,
+    scope: {
+      src: '=',
+      deg: '='
+    },
+  };
+})
 
-// // === important: do not use any of these directly! use the above (bngIcon) instead =================================
-// .directive('bngFlag', function () {
-//   return {
-//     restrict: 'E',
-//     template: `<img class="filler" ng-src="{{imgSrc}}"  style="transform: rotate({{deg}}deg);"/>`,
-//     scope: {
-//       src: '=',
-//       deg: '='
-//     },
-//     link: function (scope) {
-//       var shortHand =
-//         { 'United States': 'USA'
-//         , 'Japan': 'JP'
-//         , 'Germany': 'GER'
-//         , 'Italy': 'IT'
-//         }
-//       ;
-//       function setSrc () {
-//         scope.imgSrc = `Assets/Icons/CountryFlags/${shortHand[scope.src] || scope.src || 'missing'}.png`;
-//       }
+// === important: do not use any of these directly! use the above (bngIcon) instead =================================
+.directive('bngFlag', function () {
+  return {
+    restrict: 'E',
+    template: `<img class="filler" ng-src="{{imgSrc}}"  style="transform: rotate({{deg}}deg);"/>`,
+    scope: {
+      src: '=',
+      deg: '='
+    },
+    link: function (scope) {
+      var shortHand =
+        { 'United States': 'USA'
+        , 'Japan': 'JP'
+        , 'Germany': 'GER'
+        , 'Italy': 'IT'
+        }
+      ;
+      function setSrc () {
+        scope.imgSrc = `Assets/Icons/CountryFlags/${shortHand[scope.src] || scope.src || 'missing'}.png`;
+      }
 
-//       scope.$watch('src', setSrc);
+      scope.$watch('src', setSrc);
 
-//       setSrc();
-//     }
-//   };s
-// })
+      setSrc();
+    }
+  };
+})
 
+// === end ui2 port =====================================================================================================================================================
+
+
+
+.directive('bngBox1x1', function () {
+  return {
+    restrict: 'E',
+    template: `
+      <div class='box1_1'>
+        <div class='container' ng-transclude></div>
+      </div>
+    `,
+    transclude: true
+  };
+})
 
 .directive('bngGrid', function () {
   return {

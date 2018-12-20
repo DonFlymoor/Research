@@ -31,17 +31,17 @@
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"nodeWeight":12.0},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.27, 0.0, 0.0],
+        ["rw1r", -0.27, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.27, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.27, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         //wheel nodes
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.80, 0.0, 0.0],
+        ["rw1rr", -0.80, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.80, 0.0, 0.0],
+        ["rw1ll", 0.80, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false},
         {"group":""},
     ],
@@ -49,7 +49,7 @@
         ["id1:", "id2:"],
         //--REAR WHEELS--
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":110000,"beamStrength":1400000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -102,17 +102,17 @@
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"nodeWeight":5.0},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.36, 0.0, 0.0],
+        ["rw1r", -0.36, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.36, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.36, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         //wheel nodes
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.65, 0.0, 0.0],
+        ["rw1rr", -0.65, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.65, 0.0, 0.0],
+        ["rw1ll", 0.65, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false},
         {"group":""},
     ],
@@ -120,7 +120,7 @@
         ["id1:", "id2:"],
         //--REAR WHEELS--
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":110000,"beamStrength":1400000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -175,17 +175,17 @@
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"nodeWeight":5.0},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.36, 0.0, 0.0],
+        ["rw1r", -0.32, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.36, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.32, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         //wheel nodes
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.65, 0.0, 0.0],
+        ["rw1rr", -0.65, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.65, 0.0, 0.0],
+        ["rw1ll", 0.65, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false},
         {"group":""},
     ],
@@ -193,7 +193,7 @@
         ["id1:", "id2:"],
         //--REAR WHEELS--
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":110000,"beamStrength":1100000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -205,7 +205,7 @@
 
         //general settings
         {"hubRadius":0.225},
-        {"wheelOffset":-0.055},
+        {"wheelOffset":-0.075},
         {"hubWidth":0.285},
         {"numRays":20},
 
@@ -248,17 +248,17 @@
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"nodeWeight":5.0},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.36, 0.0, 0.0],
+        ["rw1r", -0.32, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.36, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.32, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         //wheel nodes
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.65, 0.0, 0.0],
+        ["rw1rr", -0.65, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.65, 0.0, 0.0],
+        ["rw1ll", 0.65, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false},
         {"group":""},
     ],
@@ -266,7 +266,7 @@
         ["id1:", "id2:"],
         //--REAR WHEELS--
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":110000,"beamStrength":1100000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -278,7 +278,7 @@
 
         //general settings
         {"hubRadius":0.225},
-        {"wheelOffset":-0.055},
+        {"wheelOffset":-0.075},
         {"hubWidth":0.285},
         {"numRays":20},
 
@@ -319,15 +319,15 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true},
-        {"collision":false},
+        {"collision":true},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -335,7 +335,7 @@
         ["id1:", "id2:"],
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"beamDeform":110000,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //Rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -388,15 +388,15 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true},
-        {"collision":false},
+        {"collision":true},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -404,7 +404,7 @@
         ["id1:", "id2:"],
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"beamDeform":110000,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //Rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -458,15 +458,15 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true},
-        {"collision":false},
+        {"collision":true},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -474,7 +474,7 @@
         ["id1:", "id2:"],
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"beamDeform":110000,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //Rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -526,17 +526,17 @@
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"nodeWeight":5.0},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.36, 0.0, 0.0],
+        ["rw1r", -0.36, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.36, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.36, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         //wheel nodes
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.65, 0.0, 0.0],
+        ["rw1rr", -0.65, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.65, 0.0, 0.0],
+        ["rw1ll", 0.65, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false},
         {"group":""},
     ],
@@ -544,7 +544,7 @@
         ["id1:", "id2:"],
         //--REAR WHEELS--
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":110000,"beamStrength":1100000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -596,17 +596,17 @@
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"nodeWeight":5.0},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.36, 0.0, 0.0],
+        ["rw1r", -0.36, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.36, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.36, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         //wheel nodes
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.65, 0.0, 0.0],
+        ["rw1rr", -0.65, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.65, 0.0, 0.0],
+        ["rw1ll", 0.65, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false},
         {"group":""},
     ],
@@ -614,7 +614,7 @@
         ["id1:", "id2:"],
         //--REAR WHEELS--
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":110000,"beamStrength":1100000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -664,17 +664,17 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"nodeWeight":5.0},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -683,7 +683,7 @@
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           //rear wheels
           {"breakGroupType":0},
-          {"beamSpring":801000,"beamDamp":6},
+          {"beamSpring":1501000,"beamDamp":25},
           {"beamDeform":78500,"beamStrength":434000},
           ["rw1r","rw1rr"],
           ["rw1l","rw1ll"],
@@ -734,17 +734,17 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"nodeWeight":5.0},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
-        {"collision":false}
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -753,7 +753,7 @@
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
           //rear wheels
           {"breakGroupType":0},
-          {"beamSpring":801000,"beamDamp":6},
+          {"beamSpring":1501000,"beamDamp":25},
           {"beamDeform":78500,"beamStrength":434000},
           ["rw1r","rw1rr"],
           ["rw1l","rw1ll"],
@@ -804,18 +804,18 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"nodeWeight":5.0},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -823,7 +823,7 @@
         ["id1:", "id2:"],
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         //rear wheels
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":78500,"beamStrength":434000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -874,18 +874,18 @@
         {"nodeMaterial":"|NM_METAL"},
         {"chemEnergy":200,"burnRate":0.5,"flashPoint":300,"smokePoint":200,"selfIgnition":0,"specHeat":1},
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"nodeWeight":5.0},
         {"group":"wheelhub_RR"},
-        ["rw1r", -0.33, 0.0, 0.0],
+        ["rw1r", -0.33, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1l", 0.33, 0.0, 0.0],
+        ["rw1l", 0.33, 0.0, 0.0{"staticCollision":false}],
         {"selfCollision":true}
-        {"collision":false}
+        {"collision":true}
         {"group":"wheelhub_RR"},
-        ["rw1rr", -0.60, 0.0, 0.0],
+        ["rw1rr", -0.60, 0.0, 0.0{"staticCollision":false}],
         {"group":"wheelhub_RL"},
-        ["rw1ll", 0.60, 0.0, 0.0],
+        ["rw1ll", 0.60, 0.0, 0.0{"staticCollision":false}],
         {"chemEnergy":false,"burnRate":false,"flashPoint":false,"smokePoint":false,"selfIgnition":false,"specHeat":false},
         {"group":""},
     ],
@@ -893,7 +893,7 @@
         ["id1:", "id2:"],
         {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         //rear wheels
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         {"beamDeform":78500,"beamStrength":434000},
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],

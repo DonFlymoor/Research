@@ -21,9 +21,8 @@ function myBenchStep(testVehicle, n)
 
     local dt = (physicsSteps + 0.1)/ physicsFPS
     hp = HighPerfTimer()
-    for i=1,gfxSteps
-    do
-        BeamEngine:update(dt, dt)
+    for i=1,gfxSteps do
+        BeamEngine:update(dt, dt, 0)
     end
     local t = hp:stop()
     if BeamEngine:instabilityDetected() then

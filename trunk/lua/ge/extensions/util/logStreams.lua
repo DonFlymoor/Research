@@ -6,11 +6,11 @@ local logfileRst = 'loggedStreams.rst'
 
 
 local function saveJson(data)
-  serializeJsonToFile(logfileJson, data, true)
+  jsonWriteFile(logfileJson, data, true)
 end
 
 local function readJson()
-  return readJsonFile(logfileJson)
+  return jsonReadFile(logfileJson)
 end
 
 local function saveWikitable(data)

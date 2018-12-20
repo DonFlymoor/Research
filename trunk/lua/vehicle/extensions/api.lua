@@ -6,7 +6,7 @@ local M = {}
 
 
 local httpClient = require("socket.http")
-local httpJsonServer = require('httpJsonServer')
+local httpJsonServer = require('utils/httpJsonServer')
 
 
 local function jsonRequest(uri, data)
@@ -21,7 +21,7 @@ local function jsonRequest(uri, data)
 
     --]]
     local respbody = {}
-    local reqbody = "data=" .. encodeJson(data)
+    local reqbody = "data=" .. jsonEncode(data)
     local body, code, headers, status = httpClient.request {
         method = 'POST',
         url = uri,
@@ -43,7 +43,7 @@ local function jsonRequest(uri, data)
     --print('code:' .. tostring(code))
     --print('headers:' .. dumps(headers))
     --print('status:' .. tostring(status))
-    return readJsonData(table.concat(respbody), 'json request response')
+    return jsonDecode(table.concat(respbody), 'json request response')
 end
 
 local function prepareEditorData()

@@ -2,8 +2,16 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
-local push = function(self, data)
-  table.insert(self.data, {payload = data, time = self.currentTime + self.delay})
+--A delayLine can be used to delay given data over time.
+--It was created with the intention of simulating how it takes time for left-over fuel from the engine to travel down
+--the exhaust pipes and reach the end where it can combust. However, the implementation is generic enough to be useful
+--in other scenarios where data needs to be delayed over time.
+--Each "data packet" that is pushed down the line is delayed the same amount of time (set at init). The line needs to polled for data
+--at regular intervals to fetch whatever reached the end.
+
+local push = function(self, payload)
+  table.insert(self.data, payload)
+  table.insert(self.times, self.currentTime + self.delay)
   self.length = self.length + 1
 end
 
@@ -14,14 +22,15 @@ local pop = function(self, dt)
   local delayedData = {}
   local finishedKeysCount = 0
   for i = 1, self.length, 1 do
-    if self.data[i].time <= self.currentTime then
-      table.insert(delayedData, self.data[i].payload)
+    if self.times[i] <= self.currentTime then
+      table.insert(delayedData, self.data[i])
       finishedKeysCount = finishedKeysCount + 1
     end
   end
 
-  for i = 1, finishedKeysCount, 1 do
+  for _ = 1, finishedKeysCount, 1 do
     table.remove(self.data, 1)
+    table.remove(self.times, 1)
     self.length = self.length - 1
   end
 
@@ -35,16 +44,17 @@ local popSum = function(self, dt)
   local dataSum = 0
   local finishedKeysCount = 0
   for i = 1, self.length, 1 do
-    if self.data[i].time <= self.currentTime then
-      dataSum = dataSum + self.data[i].payload
+    if self.times[i] <= self.currentTime then
+      dataSum = dataSum + self.data[i]
       finishedKeysCount = finishedKeysCount + 1
     else
       break
     end
   end
 
-  for i = 1, finishedKeysCount, 1 do
+  for _ = 1, finishedKeysCount, 1 do
     table.remove(self.data, 1)
+    table.remove(self.times, 1)
     self.length = self.length - 1
   end
 
@@ -56,8 +66,8 @@ local peek = function(self, dt)
 
   local delayedData = {}
   for i = 1, self.length, 1 do
-    if self.data[i].time <= self.currentTime + dt then
-      table.insert(delayedData, self.data[i].payload)
+    if self.times[i] <= self.currentTime + dt then
+      table.insert(delayedData, self.data[i])
     end
   end
 
@@ -68,6 +78,7 @@ local function reset(self)
   self.length = 0
   self.currentTime = 0
   self.data = {}
+  self.times = {}
 end
 
 local methods = {
@@ -79,7 +90,7 @@ local methods = {
 }
 
 local new = function(delay)
-  local r = {delay = delay, length = 0, currentTime = 0, data = {}}
+  local r = {delay = delay, length = 0, currentTime = 0, data = {}, times = {}}
 
   return setmetatable(r, {__index = methods})
 end

@@ -36,8 +36,27 @@ M.clutchRatio = 0
 M.isArcadeSwitched = false
 M.isSportModeActive = false
 
+M.smoothedAvgAVInput = 0
+M.rpm = 0
+M.idleRPM = 0
+M.maxRPM = 0
+
+M.engineThrottle = 0
+M.engineLoad = 0
+M.engineTorque = 0
+M.gearboxTorque = 0
+
+M.ignition = true
+M.isEngineRunning = 0
+
+M.oilTemp = 0
+M.waterTemp = 0
+M.checkEngine = false
+
+M.energyStorages = {}
+
 local automaticHandling = {
-  availableModes = {"P","R", "N", "D", "S", "1", "2", "M"},
+  availableModes = {"P", "R", "N", "D", "S", "1", "2", "M"},
   hShifterModeLookup = {[-1] = "R", [0] = "N", "P", "D", "S", "2", "1", "M1"},
   availableModeLookup = {},
   existingModeLookup = {},
@@ -47,7 +66,7 @@ local automaticHandling = {
   modeIndex = 0,
   maxAllowedGearIndex = 0,
   minAllowedGearIndex = 0,
-  autoDownShiftInM = true,
+  autoDownShiftInM = true
 }
 
 local clutchHandling = {
@@ -60,11 +79,11 @@ local clutchHandling = {
 }
 
 local dct = {
-  access1 = {clutchRatioName= "clutchRatio1", gearIndexName = "gearIndex1", setGearIndexName = "setGearIndex1"},
-  access2 = {clutchRatioName= "clutchRatio2", gearIndexName = "gearIndex2", setGearIndexName = "setGearIndex2"},
+  access1 = {clutchRatioName = "clutchRatio1", gearIndexName = "gearIndex1", setGearIndexName = "setGearIndex1"},
+  access2 = {clutchRatioName = "clutchRatio2", gearIndexName = "gearIndex2", setGearIndexName = "setGearIndex2"},
   primaryAccess = nil,
   secondaryAccess = nil,
-  clutchTime = 0,
+  clutchTime = 0
 }
 
 local function getGearName()
@@ -74,7 +93,7 @@ local function getGearName()
   elseif type(automaticHandling.mode) == "number" then
     modePrefix = "M"
   end
-  return modePrefix ~= "" and modePrefix..tostring(gearbox[dct.primaryAccess.gearIndexName]) or automaticHandling.mode
+  return modePrefix ~= "" and modePrefix .. tostring(gearbox[dct.primaryAccess.gearIndexName]) or automaticHandling.mode
 end
 
 local function getGearPosition()
@@ -83,7 +102,7 @@ end
 
 local function applyGearboxModeRestrictions()
   local manualModeIndex
-  if string.sub(automaticHandling.mode, 1,1) == "M" then
+  if string.sub(automaticHandling.mode, 1, 1) == "M" then
     manualModeIndex = string.sub(automaticHandling.mode, 2)
   end
   local maxGearIndex = gearbox.maxGearIndex
@@ -165,7 +184,7 @@ local function shiftUp()
 
   if automaticHandling.mode == "M1" then --we just shifted into M1
     --instead of actually using M1, we want to KEEP the current gear, so M<current gear>
-    automaticHandling.mode = "M"..tostring(max(gearbox.gearIndex, 1))
+    automaticHandling.mode = "M" .. tostring(max(gearbox.gearIndex, 1))
   end
 
   if M.gearboxHandling.gearboxSafety then
@@ -248,6 +267,21 @@ local function dctPredictNextGear()
   end
 end
 
+local function updateExposedData()
+  M.rpm = engine and (engine.outputAV1 * constants.avToRPM) or 0
+  M.smoothedAvgAVInput = sharedFunctions.updateAvgAVSingleDevice("gearbox")
+  M.waterTemp = (engine and engine.thermals) and (engine.thermals.coolantTemperature and engine.thermals.coolantTemperature or engine.thermals.oilTemperature) or 0
+  M.oilTemp = (engine and engine.thermals) and engine.thermals.oilTemperature or 0
+  M.checkEngine = engine and engine.isDisabled or false
+  M.ignition = engine and not engine.isDisabled or false
+  M.engineThrottle = (engine and engine.isDisabled) and 0 or M.throttle
+  M.engineLoad = engine and (engine.isDisabled and 0 or engine.instantEngineLoad) or 0
+  M.running = engine and not engine.isDisabled or false
+  M.engineTorque = engine and engine.combustionTorque or 0
+  M.gearboxTorque = gearbox and gearbox.outputTorque or 0
+  M.isEngineRunning = engine and ((engine.isStalled or engine.ignitionCoef <= 0) and 0 or 1) or 1
+end
+
 local function updateInGearArcade(dt)
   M.throttle = M.inputValues.throttle
   M.brake = M.inputValues.brake
@@ -269,7 +303,6 @@ local function updateInGearArcade(dt)
   end
 
   if M.timer.gearChangeDelayTimer <= 0 and automaticHandling.mode ~= "N" then
-
     local tmpEngineAV = engineAV
     local relEngineAV = engineAV / gearbox.gearRatios[gearIndex]
 
@@ -348,7 +381,7 @@ local function updateInGearArcade(dt)
       dctClutchRatio = 1
     elseif abs(gearIndex) > 1 then
       M.brake = M.throttle
-      M.throttle  = 0
+      M.throttle = 0
     end
     clutchHandling.clutchLaunchIFactor = 0
   end
@@ -365,6 +398,7 @@ local function updateInGearArcade(dt)
   M.currentGearIndex = (automaticHandling.mode == "N" or automaticHandling.mode == "P") and 0 or gearIndex
   gearbox.gearIndex = gearIndex --just so that the DCT can always present the "active" gear/ratio to the outside world
   gearbox.gearRatio = gearbox.gearRatios[gearIndex]
+  updateExposedData()
 
   dctPredictNextGear()
 end
@@ -436,6 +470,7 @@ local function updateWhileShiftingArcade(dt)
   end
 
   gearbox.gearIndex = primaryGearIndex --just so that the DCT can always present the "active" gear to the outside world
+  updateExposedData()
 end
 
 local function updateInGear(dt)
@@ -448,7 +483,6 @@ local function updateInGear(dt)
   local engineAV = engine.outputAV1
 
   if M.timer.gearChangeDelayTimer <= 0 and automaticHandling.mode ~= "N" then
-
     local tmpEngineAV = engineAV
     local relEngineAV = engineAV / gearbox.gearRatios[gearIndex]
 
@@ -476,7 +510,7 @@ local function updateInGear(dt)
     end
   end
 
-  local isManualMode = string.sub(automaticHandling.mode, 1,1) == "M"
+  local isManualMode = string.sub(automaticHandling.mode, 1, 1) == "M"
   --enforce things like L and M modes
   gearIndex = min(max(gearIndex, automaticHandling.minGearIndex), automaticHandling.maxGearIndex)
   if isManualMode and gearIndex > 1 and engineAV < engine.idleAV * 1.2 and M.shiftPreventionData.wheelSlipShiftDown and automaticHandling.autoDownShiftInM then
@@ -522,11 +556,12 @@ local function updateInGear(dt)
   gearbox.gearRatio = gearbox.gearRatios[gearIndex]
 
   if isManualMode then
-    automaticHandling.mode = "M"..gearIndex
+    automaticHandling.mode = "M" .. gearIndex
     automaticHandling.modeIndex = automaticHandling.modeIndexLookup[automaticHandling.mode]
     applyGearboxModeRestrictions()
   end
 
+  updateExposedData()
   dctPredictNextGear()
 end
 
@@ -597,12 +632,19 @@ local function updateWhileShifting(dt)
   end
 
   gearbox.gearIndex = primaryGearIndex --just so that the DCT can always present the "active" gear to the outside world
+  updateExposedData()
 end
 
-local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPoints, engineDevice, gearboxDevice)
+local function sendTorqueData()
+  if engine then
+    engine:sendTorqueData()
+  end
+end
+
+local function init(jbeamData, sharedFunctionTable)
   sharedFunctions = sharedFunctionTable
-  engine = engineDevice
-  gearbox = gearboxDevice
+  engine = powertrain.getDevice("mainEngine")
+  gearbox = powertrain.getDevice("gearbox")
   newDesiredGearIndex = 0
   previousGearIndex = 0
 
@@ -612,21 +654,19 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   M.clutchRatio = 0
 
   gearboxAvailableLogic = {
-    arcade =
-    {
+    arcade = {
       inGear = updateInGearArcade,
       whileShifting = updateWhileShiftingArcade,
       shiftUp = sharedFunctions.warnCannotShiftSequential,
       shiftDown = sharedFunctions.warnCannotShiftSequential,
-      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior,
+      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior
     },
-    realistic =
-    {
+    realistic = {
       inGear = updateInGear,
       whileShifting = updateWhileShifting,
       shiftUp = shiftUp,
       shiftDown = shiftDown,
-      shiftToGearIndex = shiftToGearIndex,
+      shiftToGearIndex = shiftToGearIndex
     }
   }
 
@@ -638,7 +678,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   clutchHandling.revMatchThrottle = jbeamData.revMatchThrottle or 0.5
 
   automaticHandling.availableModeLookup = {}
-  for _,v in pairs(automaticHandling.availableModes) do
+  for _, v in pairs(automaticHandling.availableModes) do
     automaticHandling.availableModeLookup[v] = true
   end
 
@@ -648,7 +688,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   local modeCount = #modes
   local modeOffset = 0
   for i = 1, modeCount do
-    local mode = modes:sub(i,i)
+    local mode = modes:sub(i, i)
     if automaticHandling.availableModeLookup[mode] then
       if mode ~= "M" then
         automaticHandling.modes[i + modeOffset] = mode
@@ -656,7 +696,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
         automaticHandling.existingModeLookup[mode] = true
       else
         for j = 1, gearbox.maxGearIndex, 1 do
-          local manualMode = "M"..tostring(j)
+          local manualMode = "M" .. tostring(j)
           local manualModeIndex = i + j - 1
           automaticHandling.modes[manualModeIndex] = manualMode
           automaticHandling.modeIndexLookup[manualMode] = manualModeIndex
@@ -665,7 +705,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
         end
       end
     else
-      print("unknown auto mode: "..mode)
+      print("unknown auto mode: " .. mode)
     end
   end
 
@@ -677,6 +717,12 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   automaticHandling.autoDownShiftInM = jbeamData.autoDownShiftInM == nil and true or jbeamData.autoDownShiftInM
 
   dct.clutchTime = jbeamData.dctClutchTime or 0.05
+
+  M.maxRPM = engine.maxRPM
+  M.idleRPM = engine.idleRPM
+  M.maxGearIndex = automaticHandling.maxGearIndex
+  M.minGearIndex = abs(automaticHandling.minGearIndex)
+  M.energyStorages = sharedFunctions.getEnergyStorages({engine})
 
   dct.primaryAccess = dct.access1
   dct.secondaryAccess = dct.access2
@@ -692,5 +738,6 @@ M.shiftToGearIndex = shiftToGearIndex
 M.updateGearboxGFX = nop
 M.getGearName = getGearName
 M.getGearPosition = getGearPosition
+M.sendTorqueData = sendTorqueData
 
 return M

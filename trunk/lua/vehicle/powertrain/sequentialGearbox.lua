@@ -15,19 +15,24 @@ local abs = math.abs
 local function updateSounds(device, dt)
   local straightCutGearCoef = device.straightCutGearIndexes[device.gearIndex] and 1 or 0
   local absOutputAV = abs(device.outputAV1)
-  local fadeInStartAV = 20
-  local fadeInEndAV = 60
-  local volumeFadeIn = min(max((absOutputAV - fadeInStartAV) / (fadeInEndAV - fadeInStartAV), 0), 1)
-  local volumePerAV = 0.0009
-  local maxVolume = 3
-  local volume = min(max(abs(device.outputTorque1) * volumePerAV, 0), maxVolume) * volumeFadeIn * straightCutGearCoef
-  volume = device.gearWhineVolumeSmoother:getUncapped(volume, dt)
-  local pitchPerAV = 0.01
-  local minPitch = 0.5
-  local maxPitch = 15
-  local pitch = min(max(absOutputAV * pitchPerAV, minPitch), maxPitch)
-  pitch = device.gearWhinePitchSmoother:getUncapped(pitch, dt)
-  obj:setVolumePitch(device.gearWhineLoop, volume, pitch)
+  local absInputAV = abs(device.inputAV)
+
+  local volumeOutputAVOffset = clamp(absOutputAV * 0.0007, 0, 0.3)
+  local volumeOutput = clamp(device.gearWhineOutputVolumeCoef * device.whineVolumePerNmOut + volumeOutputAVOffset, 0, 10) * straightCutGearCoef
+  volumeOutput = device.gearWhineOutputVolumeSmoother:getUncapped(volumeOutput, dt)
+
+  local volumeInputAVOffset = clamp(absInputAV * 0.0007, 0, 0.3)
+  local volumeInput = clamp(device.gearWhineInputVolumeCoef * device.whineVolumePerNmIn + volumeInputAVOffset, 0, 10) * straightCutGearCoef
+  volumeInput = device.gearWhineInputVolumeSmoother:getUncapped(volumeInput, dt)
+
+  local pitchInput = min(max(abs(device.gearWhineInputPitchCoef) * device.whinePitchPerAVIn, 0), 10)
+  pitchInput = device.gearWhineInputPitchSmoother:getUncapped(pitchInput, dt)
+
+  local pitchOutput = min(max(abs(device.gearWhineOutputPitchCoef) * device.whinePitchPerAVOut, 0), 10)
+  pitchOutput = device.gearWhineOutputPitchSmoother:getUncapped(pitchOutput, dt)
+
+  obj:setVolumePitch(device.gearWhineOutputLoop, volumeOutput, pitchOutput)
+  obj:setVolumePitch(device.gearWhineInputLoop, volumeInput, pitchInput)
 end
 
 local function updateVelocity(device, dt)
@@ -36,7 +41,14 @@ local function updateVelocity(device, dt)
 end
 
 local function updateTorque(device)
-  device.outputTorque1 = (device.parent[device.parentOutputTorqueName] - device.friction * min(max(device.inputAV, -1), 1)) * device.gearRatio * device.lockCoef
+  local inputTorque = device.parent[device.parentOutputTorqueName]
+  local inputAV = device.inputAV
+  device.outputTorque1 = (inputTorque - device.friction * min(max(inputAV, -1), 1)) * device.gearRatio * device.lockCoef
+
+  device.gearWhineOutputVolumeCoef = device.gearWhineOutputVolumeCoefSmoother:get(abs(device.outputTorque1))
+  device.gearWhineOutputPitchCoef = device.gearWhineOutputPitchCoefSmoother:get(device.outputAV1)
+  device.gearWhineInputVolumeCoef = device.gearWhineInputVolumeCoefSmoother:get(abs(inputTorque))
+  device.gearWhineInputPitchCoef = device.gearWhineInputPitchCoefSmoother:get(inputAV)
 end
 
 local function neutralUpdateVelocity(device, dt)
@@ -62,21 +74,39 @@ local function selectUpdates(device)
   end
 end
 
+local function updateGFX(device, dt)
+  if device.targetGearIndex then
+    device.gearIndex = device.targetGearIndex
+    device.gearRatio = device.gearRatios[device.gearIndex]
+
+    device.targetGearIndex = nil
+
+    if device.gearRatio ~= 0 then
+      powertrain.calculateTreeInertia()
+    end
+
+    selectUpdates(device)
+  end
+end
+
 local function setGearIndex(device, index)
   local oldIndex = device.gearIndex
   local maxIndex = min(oldIndex + 1, device.maxGearIndex)
   local minIndex = max(oldIndex - 1, device.minGearIndex)
 
-  device.gearIndex = min(max(index, minIndex), maxIndex)
-  device.gearRatio = device.gearRatios[device.gearIndex]
+  local target = min(max(index, minIndex), maxIndex)
+  if oldIndex ~= 0 then
+    device.targetGearIndex = target
+  else
+    device.gearIndex = target
+    device.gearRatio = device.gearRatios[device.gearIndex]
 
-  --obj:playSFXOnce(device.gearShiftSample, device.transmissionNodeID or sounds.engineNode, 1, 1)
+    if device.gearRatio ~= 0 then
+      powertrain.calculateTreeInertia()
+    end
 
-  if device.gearRatio ~= 0 then
-    powertrain.calculateTreeInertia()
+    selectUpdates(device)
   end
-
-  selectUpdates(device)
 end
 
 local function onBreak(device)
@@ -128,19 +158,77 @@ local function calculateInertia(device)
 end
 
 local function resetSounds(device)
-  device.gearWhinePitchSmoother:reset()
-  device.gearWhineVolumeSmoother:reset()
+  device.gearWhineInputPitchSmoother:reset()
+  device.gearWhineInputVolumeSmoother:reset()
+  device.gearWhineOutputPitchSmoother:reset()
+  device.gearWhineOutputVolumeSmoother:reset()
+
+  device.gearWhineOutputPitchCoefSmoother:reset()
+  device.gearWhineOutputVolumeCoefSmoother:reset()
+  device.gearWhineInputPitchCoefSmoother:reset()
+  device.gearWhineInputVolumeCoefSmoother:reset()
+
+  device.gearWhineOutputVolumeCoef = 0
+  device.gearWhineOutputPitchCoef = 0
+  device.gearWhineInputVolumeCoef = 0
+  device.gearWhineInputPitchCoef = 0
 end
 
 local function initSounds(device)
- -- local gearWhineSample = "event:>Vehicle>Transmission>Straight_Cut_Gear_02"
-  --device.gearWhineLoop = obj:createSFXSource(gearWhineSample, "AudioDefaultLoop3D", "GearWhine", device.transmissionNodeID or sounds.engineNode)
-  device.gearWhinePitchSmoother = newTemporalSmoothing(1.5, 1.5)
-  device.gearWhineVolumeSmoother = newTemporalSmoothing(20, 10)
+  --local gearWhineOutputSample = "event:>Vehicle>Transmission>fabian_test_out"
+  --local gearWhineOutputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>gt_twine_out"
+  --local gearWhineOutputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>rally_twine_out"
+  --local gearWhineOutputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>standard_twine_out"
+  --local gearWhineOutputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>stockcar_twine_out"
+  --local gearWhineOutputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>vintage_twine_out"
+  local gearWhineOutputSample = device.jbeamData.gearWhineSampleOutput or "event:>Vehicle>Transmission>Straight_02>twine_out"
+  device.gearWhineOutputLoop = obj:createSFXSource(gearWhineOutputSample, "AudioDefaultLoop3D", "GearWhineOut", device.transmissionNodeID or sounds.engineNode)
 
-  --device.gearShiftSample = "event:>Vehicle>gearShift"
-  if device.gearWhineLoop then
-    device.updateSounds = updateSounds
+  --local gearWhineInputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>gt_twine_in"
+  --local gearWhineInputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>rally_twine_in"
+  --local gearWhineInputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>standard_twine_in"
+  --local gearWhineInputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>stockcar_twine_in"
+  --local gearWhineInputSample = "event:>Vehicle>Transmission>Greg_Hill_Tests>vintage_twine_in"
+  local gearWhineInputSample = device.jbeamData.gearWhineSampleInput or "event:>Vehicle>Transmission>Straight_02>twine_in"
+  device.gearWhineInputLoop = obj:createSFXSource(gearWhineInputSample, "AudioDefaultLoop3D", "GearWhineIn", device.transmissionNodeID or sounds.engineNode)
+
+  local inputPitchCoefSmoothing = device.jbeamData.gearWhineInputPitchCoefSmoothing or 50
+  local outputPitchCoefSmoothing = device.jbeamData.gearWhineOutputPitchCoefSmoothing or 50
+  local inputVolumeCoefSmoothing = device.jbeamData.gearWhineInputVolumeCoefSmoothing or 10
+  local outputVolumeCoefSmoothing = device.jbeamData.gearWhineOutputVolumeCoefSmoothing or 10
+
+  device.gearWhineOutputPitchCoefSmoother = newExponentialSmoothing(outputPitchCoefSmoothing)
+  device.gearWhineOutputVolumeCoefSmoother = newExponentialSmoothing(outputVolumeCoefSmoothing)
+  device.gearWhineInputPitchCoefSmoother = newExponentialSmoothing(inputPitchCoefSmoothing)
+  device.gearWhineInputVolumeCoefSmoother = newExponentialSmoothing(inputVolumeCoefSmoothing)
+
+  local inputPitchSmoothingIn = device.jbeamData.gearWhineInputPitchSmoothingIn or 10000
+  local inputPitchSmoothingOut = device.jbeamData.gearWhineInputPitchSmoothingOut or 10000
+  local outputPitchSmoothingIn = device.jbeamData.gearWhineOutputPitchSmoothingIn or 10000
+  local outputPitchSmoothingOut = device.jbeamData.gearWhineOutputPitchSmoothingOut or 10000
+  local inputVolumeSmoothingIn = device.jbeamData.gearWhineInputVolumeSmoothingIn or 10000
+  local inputVolumeSmoothingOut = device.jbeamData.gearWhineInputVolumeSmoothingOut or 10000
+  local outputVolumeSmoothingIn = device.jbeamData.gearWhineOutputVolumeSmoothingIn or 10000
+  local outputVolumeSmoothingOut = device.jbeamData.gearWhineOutputVolumeSmoothingOut or 10000
+
+  device.gearWhineOutputPitchSmoother = newTemporalSmoothing(outputPitchSmoothingIn, inputPitchSmoothingOut)
+  device.gearWhineOutputVolumeSmoother = newTemporalSmoothing(outputVolumeSmoothingIn, outputVolumeSmoothingOut)
+  device.gearWhineInputPitchSmoother = newTemporalSmoothing(inputPitchSmoothingIn, outputPitchSmoothingOut)
+  device.gearWhineInputVolumeSmoother = newTemporalSmoothing(inputVolumeSmoothingIn, inputVolumeSmoothingOut)
+
+  device.whinePitchPerAVIn = device.jbeamData.gearWhineInputPitchCoef or 0.0008
+  device.whinePitchPerAVOut = device.jbeamData.gearWhineOuputPitchCoef or 0.00112
+
+  device.whineVolumePerNmIn = device.jbeamData.gearWhineInputVolumeCoef or 0.01
+  device.whineVolumePerNmOut = device.jbeamData.gearWhineOutputVolumeCoef or 0.01
+
+  device.gearWhineOutputVolumeCoef = 0
+  device.gearWhineOutputPitchCoef = 0
+  device.gearWhineInputVolumeCoef = 0
+  device.gearWhineInputPitchCoef = 0
+
+  if device.gearWhineOutputLoop and device.gearWhineInputLoop then
+  --device.updateSounds = updateSounds
   end
 end
 
@@ -148,6 +236,7 @@ local function reset(device)
   local jbeamData = device.jbeamData
 
   device.gearRatio = jbeamData.gearRatio or 1
+  device.targetGearIndex = nil
   device.friction = jbeamData.friction or 0
   device.cumulativeInertia = 1
   device.cumulativeGearRatio = 1
@@ -160,7 +249,7 @@ local function reset(device)
   device.isBroken = false
 
   device.lockCoef = 1
-  device.gearIndex = 1
+  device.gearIndex = 0
 
   device:setGearIndex(0)
 
@@ -172,7 +261,6 @@ local function new(jbeamData)
     deviceCategories = shallowcopy(M.deviceCategories),
     requiredExternalInertiaOutputs = shallowcopy(M.requiredExternalInertiaOutputs),
     outputPorts = shallowcopy(M.outputPorts),
-
     name = jbeamData.name,
     type = jbeamData.type,
     inputName = jbeamData.inputName,
@@ -183,18 +271,15 @@ local function new(jbeamData)
     cumulativeGearRatio = 1,
     maxCumulativeGearRatio = 1,
     isPhysicallyDisconnected = true,
-
     outputAV1 = 0,
     inputAV = 0,
     outputTorque1 = 0,
     virtualMassAV = 0,
     isBroken = false,
-
     lockCoef = 1,
-
-    gearIndex = 1,
+    gearIndex = 0,
+    targetGearIndex = nil,
     gearRatios = {},
-
     reset = reset,
     initSounds = initSounds,
     resetSounds = resetSounds,
@@ -204,11 +289,12 @@ local function new(jbeamData)
     setLock = setLock,
     calculateInertia = calculateInertia,
     setGearIndex = setGearIndex,
+    updateGFX = updateGFX
   }
 
   local forwardGears = {}
   local reverseGears = {}
-  for _,v in pairs(jbeamData.gearRatios) do
+  for _, v in pairs(jbeamData.gearRatios) do
     table.insert(v >= 0 and forwardGears or reverseGears, v)
   end
 
@@ -238,7 +324,7 @@ local function new(jbeamData)
 
   device.straightCutGearIndexes = {}
   if jbeamData.straightCutGearIndexes and type(jbeamData.straightCutGearIndexes) == "table" then
-    for _,v in pairs(jbeamData.straightCutGearIndexes) do
+    for _, v in pairs(jbeamData.straightCutGearIndexes) do
       device.straightCutGearIndexes[v] = true
     end
   else

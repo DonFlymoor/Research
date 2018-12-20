@@ -92,6 +92,20 @@ local function applyImpulse(n1, n2, force, dt)
   M.update = update
 end
 
+local function applyImpulseBody(force, dt)
+  local n1, n2 = v.data.refNodes[0].ref, v.data.refNodes[0].back
+  for _, thruster in ipairs(impulseState) do
+    if thruster[1] == n1 and thruster[2] == n2 then
+      thruster[3] = force
+      thruster[4] = dt
+      return
+    end
+  end
+
+  table.insert(impulseState, {n1, n2, force, dt})
+  M.update = update
+end
+
 local function init()
   -- update public interface
   if v.data.thrusters == nil or next(v.data.thrusters) == nil then
@@ -127,5 +141,6 @@ M.init = init
 M.update = nop
 M.updateGFX = nop
 M.applyImpulse = applyImpulse
+M.applyImpulseBody = applyImpulseBody
 
 return M

@@ -7,17 +7,6 @@ local M = {}
 local keywordWhiteList = {"not", "true", "false", "nil"}
 local keyworkdWhiteListLookup = nil
 
---returns a readonly table (only primary level unless all sub-tables are also created as readonly)
-local function readOnlyTable(table)
-  return setmetatable({}, {
-      __index = table,
-      __newindex = function(table, key, value)
-        error(string.format("Attempt to modify read-only table entry: %s = %s", key, value))
-      end,
-      __metatable = false
-    });
-end
-
 --function used as a case selector, input can be both int and bool as the first argument, any number of arguments after that
 --in case it's a bool, it works like a ternary if, returning the second param if true, the third if false
 --if the selector is an int n, it simply returns the nth+1 param it was given, if n > #params it returns the last given param
@@ -87,7 +76,7 @@ local function buildEnvJbeamVariables(variables, userVariables)
     end
   end
 
-  env = readOnlyTable(env)
+  env = tableReadOnly(env)
 
   return env
 end

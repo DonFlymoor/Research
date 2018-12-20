@@ -1,9 +1,9 @@
 angular.module('beamng.apps')
 .directive('tcsActivityGraph', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
+    template:
         '<div style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono;">' +
-          '<div layout="column" style="position: absolute; top: 0; left: 5px;">' + 
+          '<div layout="column" style="position: absolute; top: 0; left: 5px;">' +
             '<small style="color:#FFA200; padding:2px">Throttle</small>' +
             '<small style="color:#BF00FF; padding:2px">AllWheelSlip</small>' +
             '<small style="color:#FF6F00; padding:2px">FL</small>'+
@@ -12,7 +12,7 @@ angular.module('beamng.apps')
             '<small style="color:#ED003B; padding:2px">RR</small>'+
           '</div>' +
           '<canvas></canvas>' +
-        '<div>',
+        '</div>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -21,7 +21,7 @@ angular.module('beamng.apps')
       scope.$on('$destroy', function () {
         StreamsManager.remove(streamsList);
       });
-      
+
       var canvas = element[0].getElementsByTagName('canvas')[0];
 
       var chart = new SmoothieChart({
@@ -34,8 +34,8 @@ angular.module('beamng.apps')
         })
         , throttleGraph = new TimeSeries()
         , allWheelSlipGraph = new TimeSeries()
-        , wheelsGraphs = { 'RL': new TimeSeries(), 
-                           'RR': new TimeSeries(), 
+        , wheelsGraphs = { 'RL': new TimeSeries(),
+                           'RR': new TimeSeries(),
                            'FL': new TimeSeries(),
                            'FR': new TimeSeries() }
       ;
@@ -52,7 +52,7 @@ angular.module('beamng.apps')
       scope.$on('streamsUpdate', function (event, streams) {
         if (streams.tcsData) {
           var xPoint = new Date();
-          
+
           throttleGraph.append(xPoint, streams.tcsData.throttleFactor);
           allWheelSlipGraph.append(xPoint, streams.tcsData.allWheelSlip);
           for (var wheel in streams.tcsData.wheelBrakeFactors)

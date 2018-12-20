@@ -70,12 +70,14 @@ local function setSpeed(speed)
   isEnabled = true
   targetSpeed = max(speed, M.minimumSpeed)
   M.hasReachedTargetSpeed = false
+  M.requestState()
 end
 
 local function changeSpeed(offset)
   isEnabled = true
   targetSpeed = max(targetSpeed + offset, M.minimumSpeed)
   M.hasReachedTargetSpeed = false
+  M.requestState()
 end
 
 local function holdCurrentSpeed()

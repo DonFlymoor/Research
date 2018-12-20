@@ -20,7 +20,7 @@ local function onScenarioLoaded(sc)
   if not sc.track then return end
   --dump(sc.track.tod .. " = TOD")
   if sc.track.tod == 0 or sc.track.tod == 1 or sc.track.tod == 8 then
-    
+
     be:getPlayerVehicle(0):queueLuaCommand("electrics.set_fog_lights(1) ; electrics.setLightsState(2)")
   end
   if sc.track.reverse then
@@ -33,7 +33,7 @@ local function onScenarioLoaded(sc)
 end
 
 --loads the vehicle by creating a TS-snipped which has the position and vehicle information embedded.
-local function loadVehicle(scenario) 
+local function loadVehicle(scenario)
   local vehicle = scenario.vehicle
   if not vehicle then return end
 
@@ -85,7 +85,7 @@ local function loadVehicle(scenario)
       canSave = "1";
       canSaveDynamicFields = "1";
     };]]
-    
+
   TorqueScript.eval(createVehicle)
   local r = {x=0, y=0, z=1, w=0}
   if spawn ~= nil then
@@ -147,7 +147,7 @@ local function onRaceWaypointReached( wpInfo )
     local vehicle = be:getPlayerVehicle(0)
 
     local record = {
-      playerName = getVehicleLicenseName(vehicle),
+      playerName = core_vehicles.getVehicleLicenseName(vehicle),
       vehicleBrand = scenario.vehicle.file.Brand,
       vehicleName = scenario.vehicle.file.Name,
       vehicleConfig = string.gsub(scenario.vehicle.config,"(.*/)(.*)/(.*).pc", "%3"),
@@ -170,7 +170,7 @@ local function onRaceWaypointReached( wpInfo )
     --dump("place is "..place)
     local incIndexes = {}
     for k,v in ipairs(scenario.highscores.singleRound) do
-      if place <= v then 
+      if place <= v then
         incIndexes[#incIndexes+1] = k
       end
     end
@@ -184,7 +184,7 @@ local function onRaceWaypointReached( wpInfo )
   end
 end
 
-local function getVehicleBrand(scenario) 
+local function getVehicleBrand(scenario)
   return scenario.vehicle.file.Brand
 end
 
@@ -196,11 +196,11 @@ local function onRaceResult(final)
   if not scenario_scenarios.getScenario().isQuickRace then return end
   local scenario = scenario_scenarios.getScenario()
   local vehicle = be:getPlayerVehicle(0)
-   
+
   --highscores.setScenarioHighscores(,M.getVehicleName(),getVehicleLicenseName(),scenario.map,scenario.scenarioName,M.getConfigKey(),0)
 
   local record = {
-    playerName = getVehicleLicenseName(vehicle),
+    playerName = core_vehicles.getVehicleLicenseName(vehicle),
     vehicleBrand = scenario.vehicle.file.Brand,
     vehicleName = scenario.vehicle.file.Name,
     vehicleConfig = string.gsub(scenario.vehicle.config,"(.*/)(.*)/(.*).pc", "%3"),
@@ -226,7 +226,7 @@ local function onRaceResult(final)
   scenario.viewDetailed = 0
   if place == -1 then
     scenario.detailedRecord = {
-      playerName = getVehicleLicenseName(vehicle),
+      playerName = core_vehicles.getVehicleLicenseName(vehicle),
       vehicleBrand = scenario.vehicle.file.Brand,
       vehicleName = scenario.vehicle.file.Name,
       place = " / ",
@@ -260,7 +260,7 @@ local function onUiChangedState (curUIState, prevUIState)
     if M.timeTrialOpen then
       changeTimeTrialConfig()
     end
-  end  
+  end
 end
 
 M.changeTimeTrialConfig = changeTimeTrialConfig

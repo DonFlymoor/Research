@@ -1,7 +1,7 @@
 <div style="height:100%; width: 100%; color: rgba(255, 255, 255, 0.901961); background-color: rgba(0,0,0,0.43);" layout="column">
   <div style="height:20px; padding: 0 5px 0 5px" layout="row" layout-align="space-between center" >
 
-    <!-- --- --- Top left icon --- --- -->
+    <!-- Top left icon -->
     <!-- Open file -->
     <md-button ng-if="!renaming && state != 'recording'" class="md-icon-button bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="listRecordings()">
       <md-icon class="material-icons" style="cursor: pointer; color: rgba(255, 255, 255, 0.901961);">folder</md-icon>
@@ -19,13 +19,13 @@
       <md-tooltip>Cancel recording</md-tooltip>
     </md-button>
 
-    <!-- --- --- Filename text box --- --- -->
+    <!-- Filename text box -->
     <!-- File name -->
     <label style="padding-left: 8px; padding-right: 8px" flex>
       <input style="width:100%" placeholder="(no file)" class="bng-hidden-input" ng-disabled="state == 'recording' || !loadedFile" ng-focus="startRenaming()" ng-mouseup="hoverRenaming()" ng-mouseenter="hoverRenaming()" ng-model="loadedFile"></input>
     </label>
 
-    <!-- --- --- Top right icon --- --- -->
+    <!-- Top right icon -->
     <!-- Renaming -->
     <md-button ng-if="renaming" ng-disabled="!loadedFile" class="md-primary md-icon-button md-primary bng-no-focus" md-no-ink style="margin: 0; width: auto" ng-click="acceptRename()">
       <md-icon class="material-icons" style="cursor: pointer; color: #A8DD73;">done</md-icon>

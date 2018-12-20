@@ -62,7 +62,7 @@ angular.module('beamng.stuff')
   vm.launch = function(point) {
     point = point || vm.selected;
 
-    var luaCmd = `core_levels.startFreeroam(` + bngApi.serializeToLua(vm.level) + `, "${point.objectname}")`;
+    var luaCmd = `freeroam_freeroam.startFreeroam(` + bngApi.serializeToLua(vm.level) + `, "${point.objectname}")`;
     $scope.$emit('CloseMenu');
     bngApi.engineLua(luaCmd);
   };

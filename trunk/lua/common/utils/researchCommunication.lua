@@ -1,7 +1,7 @@
 local M = {}
 
-local mp = require('MessagePack')
-local socket = require('socket/socket')
+local mp = require('libs/lua-MessagePack/MessagePack')
+local socket = require('libs/luasocket/socket.socket')
 local json = require('json')
 
 M.receive = function(skt)
@@ -18,6 +18,7 @@ M.receive = function(skt)
     log('E', 'ResearchCom', 'Error reading from socket: '..tostring(err))
     return nil, err
   end
+
   return data, nil
 end
 

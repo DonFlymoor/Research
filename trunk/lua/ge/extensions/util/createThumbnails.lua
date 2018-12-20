@@ -7,9 +7,22 @@ local logTag = 'createThumbnails'
 
 local workerCoroutine = nil
 
-local config = readJsonFile('settings/createThumbnails_config.json')
+local config = jsonReadFile('settings/createThumbnails_config.json')
 local options = config.options
 local views = config.views
+
+local function isBatch()
+    local cmdArgs = Engine.getStartingArgs()
+    local probability = 0
+    for i = 1, #cmdArgs do
+        local arg = cmdArgs[i]
+        arg = arg:stripchars('"')
+        if arg == "-onLevelLoad_ext" or arg == "'util/createThumbnails'" then
+            probability = probability +1
+        end
+    end
+    return probability > 1
+end
 
 local function yieldSec(yieldfn,sec)
     local start  = os.clock()
@@ -25,18 +38,23 @@ local function onPreRender(dt)
             log('I', logTag, "workerCoroutine: "..value)
         end
         if coroutine.status(workerCoroutine) == "dead" then
-            shutdown(0)
+            workerCoroutine = nil
+            settings.setValue('GraphicBorderless', false)
+            guihooks.trigger('hide_ui', false)
+            if isBatch() then
+                shutdown(0)
+            end
         end
     end
 end
 
-local function findVal (model, config) 
-    return function (view) 
-        return function (val) 
+local function findVal (model, config)
+    return function (view)
+        return function (val)
             if view.models ~= nil and view.models[model] ~= nil then
                 local temp = view.models[model]
 
-                if temp.configs ~= nil and temp.configs[config] ~= nil and temp.configs[config][val] ~= nil then 
+                if temp.configs ~= nil and temp.configs[config] ~= nil and temp.configs[config][val] ~= nil then
                     return temp.configs[config][val]
                 end
 
@@ -89,23 +107,31 @@ local function onExtensionLoaded()
     settings.setValue('GraphicBorderless', true)
 
     -- set correct level
-    --beamng_cef.startLevel(levelFullPath)
-    
- 
+    --core_levels.startLevel(levelFullPath)
+
+
     -- main thing
- 
+
     -- todo: since we need to load the whole vehicle for each config anyway we should cycle each view for each vehicle so that we don't need to set the window dimensions that often
 
     workerCoroutine = coroutine.create(function()
+
+        if core_camera == nil then
+            extensions.load("core_camera")
+        end
+
         yieldSec(coroutine.yield, 0.1)
 
         log('I', logTag, 'Getting config list')
         local configs = core_vehicles.getConfigList(true).configs
+        local models = core_vehicles.getModelList().models --because
+
         local configCount = tableSize(configs)
         log('I', logTag, table.maxn(configs).." configs")
-        
+        local modelInfo = nil
+
         yieldSec(coroutine.yield, 0.1)
-        
+
         local counter = 0
         for _, v in pairs(configs) do
             counter = counter + 1
@@ -116,6 +142,12 @@ local function onExtensionLoaded()
             -- if v.aggregates.Type.Prop then goto skipConfig end
             if options.models ~= nil and not tableContains(options.models, v.model_key) then goto skipConfig end
 
+            if models == nil or models[v.model_key] == nil then
+                log("E", logTag, "Model Info  not found for model ='"..v.model_key .."'")
+                break
+            end
+            modelInfo = models[v.model_key]
+
             -- Replace the vehicle
             log('I', logTag, string.format("Spawning vehicle %05d / %05d", counter, configCount) .. ' : ' .. ' name: ' .. tostring(v.model_key) .. ', config: ' .. tostring(v.key))
             yieldSec(coroutine.yield, 0.1)
@@ -125,12 +157,15 @@ local function onExtensionLoaded()
 
             guihooks.trigger('hide_ui', true)
 
-            for viewName, useView in pairs(views) do 
+            for viewName, useView in pairs(views) do
                 if useView.allow == nil then
                     useView.allow = {}
                 end
-                if v.aggregates.Type.Prop and not tableContains(useView.allow, "Prop") then goto skipView end
-                if v.aggregates.Type.Trailer and not tableContains(useView.allow, "Trailer") then goto skipView end
+                -- dump(v.key)
+                -- dump(v.aggregates)
+                -- print("TYPE ======"..tostring(modelInfo.Type))
+                if modelInfo.Type == "Prop" and not tableContains(useView.allow, "Prop") then goto skipView end
+                if modelInfo.Type == "Trailer" and not tableContains(useView.allow, "Trailer") then goto skipView end
                 if not v.is_default_config and tableContains(useView.allow, "onlyDefault") then goto skipView end
                 if options.views ~= nil and not tableContains(options.views, viewName) then goto skipView end
                 local findValView = findValConf(useView)
@@ -160,7 +195,7 @@ local function onExtensionLoaded()
 
                 core_camera.resetCameraByID(vehicleId)
                 core_camera.setFOV(vehicleId, 20)
-                
+
                 yieldSec(coroutine.yield, 0.4)
 
 
@@ -170,7 +205,7 @@ local function onExtensionLoaded()
                 -- newVehicle:setCamModeByType("onboard.driver")
 
                 core_camera.setRotation(vehicleId, vec3(findValView('rotation'), 0, 0))
-				
+
 
                 if findValView('dist') == nil then
                     useView.dist = 1
@@ -184,7 +219,7 @@ local function onExtensionLoaded()
                 if findValView('offset') then
                     core_camera.setOffset(vehicleId, vec3(findValView('offset')[1] / idealDistance, findValView('offset')[2] / idealDistance, findValView('offset')[3] / idealDistance))
                 end
-                --BeamEngine.zoomInSpeed = idealDistance
+                --MoveManager.zoomInSpeed = idealDistance
                 --print("* new distance: " .. tostring(idealDistance))
 
                 yieldSec(coroutine.yield, 2)
@@ -218,7 +253,7 @@ local function onExtensionLoaded()
                 end
                 yieldSec(coroutine.yield, 0.2)
 
-                if findValView("annotation") == "true" then 
+                if findValView("annotation") == "true" then
                     yieldSec(coroutine.yield, 0.2)
                     TorqueScript.eval('toggleAnnotationVisualize(true);')
                     screenShotName = "vehicles/" .. v.model_key .. "/" .. (findValView('prefix') or '') .. v.key .. (findValView('suffix') or '')
@@ -229,7 +264,7 @@ local function onExtensionLoaded()
                     TorqueScript.eval('toggleAnnotationVisualize(false);')
                 end
 
-                if findValView("annotation") == "true" then 
+                if findValView("annotation") == "true" then
                     yieldSec(coroutine.yield, 0.2)
                     TorqueScript.eval('toggleLightColorViz(true);')
                     screenShotName = "vehicles/" .. v.model_key .. "/" .. (findValView('prefix') or '') .. v.key .. (findValView('suffix') or '')

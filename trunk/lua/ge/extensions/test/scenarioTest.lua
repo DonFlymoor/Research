@@ -17,11 +17,11 @@ local excludedScenarios = {
 
 }
 
-local function writeJsonFile(filename, data)
+local function jsonWriteFile1(filename, data)
 	local header = {version = 1}
 	data["header"] = header
 
-	if serializeJsonToFile(filename, data, true) then
+	if jsonWriteFile(filename, data, true) then
 		log('I', logTag, "Creation of file \"" .. filename .. "\" successful")
 	else
 		log('E', logTag, "Creation of file \"" .. filename .. "\" failed")
@@ -29,7 +29,7 @@ local function writeJsonFile(filename, data)
 end
 
 local function writeErrorsToFile()
-	local outfilename = "scenarioTest.json"
+    local filename = "scenarioTest.json"
 	log('I', logTag, "Writing errors to file")
 	io.input("beamng.log")
 
@@ -40,10 +40,10 @@ local function writeErrorsToFile()
 		local line = io.read()
 		if line == nil then break end
 
-		if (string.match(line, "|E|") or string.match(line, "|GELua." .. logTag .. "|")) and not string.match(line, "|GELua." .. logTag .. "|initialized") then
+		if (string.match(line, "|E|") or string.match(line, "GELua.test_scenarioTest.scenarioTest|Load scenario:")) and not string.match(line, "GELua.test_scenarioTest.scenarioTest|initialized") then
 
 			-- If a new scenario is loaded, set the currentScenario
-			if string.match(line, "|GELua." .. logTag .. "|Load scenario: ") then
+			if string.match(line, "GELua.test_scenarioTest.scenarioTest|Load scenario:") then
 				-- Get scenario name
 				local words = {}
 				for word in line:gmatch("%S+") do table.insert(words, word) end
@@ -60,11 +60,9 @@ local function writeErrorsToFile()
 			end
 		end
     end
-
 	-- Write output file
-	writeJsonFile(outfilename, scenarioErrors)
-
-	log('I', logTag, "Created output file " .. outfilename)
+	log('I', logTag, "writing errors to file \"" .. filename .. "\" now")
+	jsonWriteFile1(filename, scenarioErrors)
 end
 
 local function onPreRender(dt, simdt, rawdt)
@@ -72,7 +70,7 @@ local function onPreRender(dt, simdt, rawdt)
 	if frameCounter > 300 and scenariosLoaded then
 		scenarioCounter = scenarioCounter + 1
 		frameCounter = 1
-
+		
 		writeErrorsToFile()
 
 		if scenarioCounter > table.getn(scenarios) then

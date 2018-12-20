@@ -2,8 +2,8 @@
 angular.module('beamng.apps')
 .directive('simpleTacho', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
-        '<object style="width:100%; height:100%; box-sizing:border-box; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleTacho/simple-tacho.svg?t=' + Date.now() + '"/>',
+    template:
+        '<object style="width:100%; height:100%; box-sizing:border-box; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleTacho/simple-tacho.svg?t=' + Date.now() + '"></object>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -12,7 +12,7 @@ angular.module('beamng.apps')
         scope.$on('$destroy', function () {
             StreamsManager.remove(['electrics']);
         });
-      
+
         element.on('load', function () {
             var svg = element[0].contentDocument;
             var values = [];

@@ -10,7 +10,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["etk800_taillightframe_R", ["etk800_taillight_R"]],
          {"deformGroup":"taillightglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_taillightglass_R", ["etk800_taillight_R"],[]{"deformSound":"GlassBreakSound1", "deformVolume":0.3}],
+         ["etk800_taillightglass_R", ["etk800_taillight_R"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound1", "deformVolume":0.3}],
          {"deformGroup":""},
          {"deformGroup":"taillightglass_R_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_taillight_R", ["etk800_taillight_R"]],
@@ -143,7 +143,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["etk800_taillightframe_L", ["etk800_taillight_L"]],
          {"deformGroup":"taillightglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_taillightglass_L", ["etk800_taillight_L"],[]{"deformSound":"GlassBreakSound2", "deformVolume":0.3}],
+         ["etk800_taillightglass_L", ["etk800_taillight_L"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound2", "deformVolume":0.3}],
          {"deformGroup":""},
          {"deformGroup":"taillightglass_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_taillight_L", ["etk800_taillight_L"]],

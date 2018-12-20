@@ -40,7 +40,7 @@ function C:getFov(distance, dt)
     self.baseFov = step[2]
   end
   -- take user input into account, add/substract extra zoom
-  local desiredDelta = 2000 * dt * (BeamEngine.zoomInSpeed - BeamEngine.zoomOutSpeed)
+  local desiredDelta = 2.5 * dt * (MoveManager.zoomIn - MoveManager.zoomOut) * getCameraFov()
   -- user input is sanitized to not exceed our healthy limits either (plus some margin)
   local maxFov = 100
   local minFov = 2
@@ -60,9 +60,6 @@ function C:getFov(distance, dt)
   end
 end
 
-function C:onVehicleResetted(...)
-  return true
-end
 -- reset custom user FOV (numpad 9/3 keys)
 function C:reset()
   self.userFov = 0

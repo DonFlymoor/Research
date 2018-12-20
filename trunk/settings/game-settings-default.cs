@@ -8,7 +8,7 @@ $sceneLighting::purgeMethod = "lastCreated";
 $sceneLighting::cacheLighting = 1;
 
 $pref::Video::displayDevice = "D3D11";
-$pref::Video::vsync = 2; // smart vsync by default
+$pref::Video::vsync = false;
 $pref::Video::canvasSize = "1024 768";
 $pref::Video::borderless = 0;
 $pref::Video::defaultFenceCount = 0;
@@ -30,13 +30,13 @@ $pref::camera::distanceScale = 1.0; /// A scale to apply to the camera view dist
 $pref::SFX::providerName = "FMOD"; /// The sound provider to select at startup.  Typically this is DirectSound, OpenAL, or XACT.  There is also a special Null provider which acts normally, but plays no sound.
 $pref::SFX::useHardware = false; /// If true the device will try to use hardware buffers and sound mixing.  If not it will use software.
 $pref::SFX::maxSoftwareBuffers = 16; /// If you have a software device you have a choice of how many software buffers to allow at any one time.  More buffers cost more CPU time to process and mix.
-$pref::SFX::masterVolume = 0.8; /// The overall system volume at startup.  Note that you can only scale volume down, volume does not get louder than 1.
+$pref::SFX::masterVolume = 1.0; /// The overall system volume at startup.  Note that you can only scale volume down, volume does not get louder than 1.
 
 /// The startup sound channel volumes.  These are used to control the overall volume of different classes of sounds.
 $pref::SFX::channelVolume1 = 1;
 $pref::SFX::channelVolume2 = 1;
 $pref::SFX::channelVolume3 = 1;
-$pref::SFX::channelVolume4 = 1;
+$pref::SFX::channelVolume4 = 0.5;
 $pref::SFX::channelVolume5 = 1;
 $pref::SFX::channelVolume6 = 1;
 $pref::SFX::channelVolume7 = 1;
@@ -58,9 +58,18 @@ $pref::Shadows::disable = false;
 ///  SoftShadowHighQuality
 $pref::Shadows::filterMode = "SoftShadow";
 
-$pref::Video::defaultAnisotropy = 4;
+$pref::Video::defaultAnisotropy = 8;
 $pref::windEffectRadius = 25; /// Radius in meters around the camera that ForestItems are affected by wind. Note that a very large number with a large number of items is not cheap.
 $pref::Video::autoDetect = 1; /// AutoDetect graphics quality levels the next startup.
+
+/// Sets the default dynamic reflections settings. Disabled by default.
+/// Biased toward performance
+$pref::BeamNGVehicle::dynamicReflection::enabled = "0";
+$pref::BeamNGVehicle::dynamicReflection::textureSize = "256";
+$pref::BeamNGVehicle::dynamicReflection::facesPerUpdate = "1";
+$pref::BeamNGVehicle::dynamicReflection::detail = "0.5";
+$pref::BeamNGVehicle::dynamicReflection::distance = "256";
+
 
 //-----------------------------------------------------------------------------
 // Graphics Quality Groups

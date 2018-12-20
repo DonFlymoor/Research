@@ -158,12 +158,6 @@ function OptionsDlg::onWake(%this)
     %this-->OptGraphicsButton.performClick();
 }
 
-function OptionsDlg::onSleep(%this)
-{
-    // write out the control config into the rw/config.cs file
-    //moveMap.save( "scripts/client/config.cs" );
-}
-
 function OptGraphicsDriverMenu::onSelect( %this, %id, %text )
 {
     // Attempt to keep the same resolution settings:

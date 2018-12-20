@@ -1,9 +1,9 @@
 angular.module('beamng.apps')
 .directive('tcsDebugGraph', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
+    template:
         '<div style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono;">' +
-          '<div layout="column" style="position: absolute; top: 0; left: 5px;">' + 
+          '<div layout="column" style="position: absolute; top: 0; left: 5px;">' +
             '<small style="color:#FF6F00; padding:2px">Slip FL</small>'+
             '<small style="color:#00B1A4; padding:2px">Slip FR</small>'+
             '<small style="color:#5BE600; padding:2px">Slip RL</small>'+
@@ -11,7 +11,7 @@ angular.module('beamng.apps')
             '<small style="color:#353A39; padding:2px">Slip Threshold</small>'+
           '</div>' +
           '<canvas></canvas>' +
-        '<div>',
+        '</div>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -20,7 +20,7 @@ angular.module('beamng.apps')
       scope.$on('$destroy', function () {
         StreamsManager.remove(streamsList);
       });
-      
+
       var canvas = element[0].getElementsByTagName('canvas')[0];
 
       var chart = new SmoothieChart({
@@ -32,12 +32,12 @@ angular.module('beamng.apps')
           labels: {fillStyle: 'black'}
         })
         , thresholdGraph = new TimeSeries()
-        , wheelsGraphs = { 'RL': new TimeSeries(), 
-                           'RR': new TimeSeries(), 
+        , wheelsGraphs = { 'RL': new TimeSeries(),
+                           'RR': new TimeSeries(),
                            'FL': new TimeSeries(),
                            'FR': new TimeSeries() }
       ;
-      
+
       chart.addTimeSeries(thresholdGraph, {strokeStyle: '#353A39', lineWidth: 1.0});
       chart.addTimeSeries(wheelsGraphs['RL'], {strokeStyle: '#5BE600', lineWidth: 1.5});
       chart.addTimeSeries(wheelsGraphs['RR'], {strokeStyle: '#ED003B', lineWidth: 1.5});
@@ -49,7 +49,7 @@ angular.module('beamng.apps')
       scope.$on('streamsUpdate', function (event, streams) {
         if (streams.tcsData) {
           var xPoint = new Date();
-          
+
           thresholdGraph.append(xPoint, streams.tcsData.slipThreshold);
           for (var wheel in streams.tcsData.wheelSlips)
             wheelsGraphs[wheel].append(xPoint, streams.tcsData.wheelSlips[wheel]);

@@ -56,9 +56,9 @@ local function removeFileExtensions(fileList, sourceFile)
 end
 
 local function processForestFile(forestDataFilename, sourceFile, entity)
-  local rootNode = readJsonFile(forestDataFilename)
+  local rootNode = jsonReadFile(forestDataFilename)
   if not rootNode or not rootNode.instances then return end
-  
+
   for k, _ in pairs(rootNode.instances) do
     add(entity.deps, 'simobject', k)
   end
@@ -82,12 +82,12 @@ local function processSimObject(n, sourceFile)
 
   elseif n.class == "DecalRoad" then
     add(entity.deps, 'material', n.material)
-  
+
   elseif n.class == "MeshRoad" then
     add(entity.deps, 'material', n.topMaterial)
     add(entity.deps, 'material', n.bottomMaterial)
     add(entity.deps, 'material', n.sideMaterial)
-    
+
   elseif n.class == "River" then
     add(entity.deps, 'material', n.topMaterial)
     add(entity.deps, 'tex', n.rippleTex)
@@ -108,7 +108,7 @@ local function processSimObject(n, sourceFile)
     add(entity.deps, 'tex', n.fogScaleGradientFile)
     add(entity.deps, 'material', n.moonMat)
     add(entity.deps, 'simobject', n.nightCubemap)
-    
+
   elseif n.class == "SkyBox" then
     add(entity.deps, 'material', n.material)
 
@@ -148,7 +148,7 @@ local function processSimObject(n, sourceFile)
       add(entity.deps, 'tex', n.Stages[i].envTex)
     end
     add(entity.deps, 'simobject', n.cubemap)
-  
+
   -- TODO: SFX objects
   -- SFXEmitter
   elseif n.class == "SFXAmbience" then
@@ -170,7 +170,7 @@ local function processSimObject(n, sourceFile)
     add(entity.deps, 'tex', n.animTexFrames)
     add(entity.deps, 'tex', n.textureName)
     add(entity.deps, 'tex', n.animTexName)
-    
+
   elseif n.class == "ParticleEmitterData" then
     add(entity.deps, 'simobject', n.particles)
     add(entity.deps, 'tex', n.textureName)
@@ -223,13 +223,13 @@ local function test()
   -- first: find levels
   local filenames = findFiles('*.level.json\t*.material.json\t*.datablock.json')
   for _, filename in pairs(filenames) do
-    processSimObject(readJsonFile(filename), filename)
+    processSimObject(jsonReadFile(filename), filename)
   end
 
   local shapeInfoFiles = findFiles('*.meshes.json')
 
   for _, shapeInfoFn  in pairs(shapeInfoFiles) do
-    local rootNode = readJsonFile(shapeInfoFn)
+    local rootNode = jsonReadFile(shapeInfoFn)
     if rootNode and rootNode.materials and #rootNode.materials > 0 then
       local entity = { deps = { material = {}}, provides = { shape = shapeInfoFn:sub(1, -13) }}
       for _, m in pairs(rootNode.materials) do
@@ -238,9 +238,9 @@ local function test()
       table.insert(entities, entity)
     end
   end
-  
+
   --dump(entities)
-  writeJsonFile('dependencytree.json', entities, true)
+  jsonWriteFile('dependencytree.json', entities, true)
 
 end
 

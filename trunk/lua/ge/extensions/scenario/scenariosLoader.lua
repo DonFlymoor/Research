@@ -30,16 +30,16 @@ local function processScenarioData(scenarioKey, scenarioData, scenarioFilename)
         scenarioData.mission = 'levels/'..scenarioData.levelName..'/'
         if not FS:directoryExists(scenarioData.mission) then log('E', logTag, scenarioData.levelName.." scenario file not found") end
       end
-            
+
       scenarioData.scenarioName = string.gsub(scenarioFilename, "(.*/)(.*)%.json", "%2")
       scenarioData.directory = string.gsub(scenarioFilename, "(.*)/(.*)%.json", "%1")
     end
 
     local tmp = 'levels/' .. scenarioData.levelName .. '/info.json'
     if FS:fileExists(tmp) then
-      local infoJson = readJsonFile(tmp)
-      if infoJson and infoJson.title then 
-        scenarioData.map = infoJson.title 
+      local infoJson = jsonReadFile(tmp)
+      if infoJson and infoJson.title then
+        scenarioData.map = infoJson.title
       end
     end
 
@@ -67,7 +67,7 @@ local function processScenarioData(scenarioKey, scenarioData, scenarioFilename)
       scenarioData.startHTML = nil
     end
 
-      
+
     if not scenarioData.introType then
         scenarioData.introType = 'htmlOnly'
     end
@@ -116,7 +116,7 @@ local function processScenarioData(scenarioKey, scenarioData, scenarioFilename)
     scenarioData.prefabs = np
 
     -- figure out the previews automatically and check for errors
-    if not scenarioData.previews then      
+    if not scenarioData.previews then
       local tmp = FS:findFilesByRootPattern(scenarioData.directory.."/", scenarioData.scenarioName..'*.jpg', 0, true, false)
       local matchedScenarios = FS:findFilesByRootPattern(scenarioData.directory.."/", scenarioData.scenarioName..'*.json', 0, true, false)
       local otherScenarios = {}
@@ -192,6 +192,18 @@ local function processScenarioData(scenarioKey, scenarioData, scenarioFilename)
     end
     scenarioData.initialLapConfig = deepcopy(scenarioData.lapConfig)
 
+    if scenarioData.attemptsInfo then
+      scenarioData.attemptsInfo.allowedAttempts = scenarioData.attemptsInfo.allowedAttempts or 0
+      scenarioData.attemptsInfo.delayPerAttempt = scenarioData.attemptsInfo.delayPerAttempt or 1
+      scenarioData.attemptsInfo.allowVehicleSelectPerAttempt = scenarioData.attemptsInfo.allowVehicleSelectPerAttempt or false
+      scenarioData.attemptsInfo.failAttempts = scenarioData.attemptsInfo.failAttempts or {}
+      scenarioData.attemptsInfo.completeAttempt = scenarioData.attemptsInfo.completeAttempt or {}
+      scenarioData.attemptsInfo.attemptNumber = 0
+      scenarioData.attemptsInfo.waitTimerStart = false
+      scenarioData.attemptsInfo.waitTimer = 0
+      scenarioData.attemptsInfo.waitTimerActive = false
+      scenarioData.attemptsInfo.currentAttemptReported = false
+    end
     return scenarioData
 end
 
@@ -199,10 +211,10 @@ local function loadScenario(scenarioPath, key)
   -- log('D', logTag, 'Load scenario - '..scenarioPath)
   local processedScenario = nil
   if scenarioPath then
-    local scenarioData = readJsonFile(scenarioPath)
-    
+    local scenarioData = jsonReadFile(scenarioPath)
+
     if scenarioData then
-      -- readJsonFile for valid scenarios returns a table with 1 entry
+      -- jsonReadFile for valid scenarios returns a table with 1 entry
       if type(scenarioData) == 'table' and #scenarioData == 1 then
         processedScenario = processScenarioData(key, scenarioData[1], scenarioPath)
       end
@@ -210,7 +222,7 @@ local function loadScenario(scenarioPath, key)
       log('E', logTag, 'Could not find scenario '..scenarioPath)
     end
   end
-  
+
   return processedScenario
 end
 
@@ -223,7 +235,7 @@ local function getList(subdirectory)
     local path = ""
     if subdirectory ~= nil then
       path = '/levels/' .. levelName .. '/scenarios/' .. subdirectory .. '/'
-    else 
+    else
       path = '/levels/' .. levelName .. '/scenarios/'
     end
     local subfiles = FS:findFilesByPattern(path, '*.json', -1, true, false)
@@ -232,8 +244,8 @@ local function getList(subdirectory)
       if newScenario then
         if not shipping_build  or  (shipping_build and not newScenario.restrictToCampaign) then
           table.insert(scenarios, newScenario)
-        end        
-      end      
+        end
+      end
     end
   end
   return scenarios
@@ -243,7 +255,7 @@ end
 local function start(sc)
   if campaign_campaigns then
     campaign_campaigns.stop()
-  end    
+  end
 
   if scenetree.MissionGroup then
     log('D', logTag, 'Delaying start of scenario until current level is unloaded...')
@@ -253,7 +265,7 @@ local function start(sc)
       M.triggerDelayedStart = nil
       start(sc)
     end
-    
+
    endActiveGameMode(M.triggerDelayedStart)
   else
     loadGameModeModules(M.scenarioModules)
@@ -318,11 +330,11 @@ end
 
   local function  customPreviewLoader( levelName)
     -- figure out the previews automatically and check for errors
-  
-  
+
+
     local directory = '/levels/'..levelName
     local previews = {}
-  
+
     local tmp = FS:findFilesByRootPattern("/levels/"..levelName.."/",levelName..'_preview*.png', 0, true, false)
     for _, p in pairs(tmp) do
       table.insert(previews, p)
@@ -331,26 +343,26 @@ end
     for _, p in pairs(tmp) do
       table.insert(previews, p)
     end
-  
+
     -- if #previews == 0 then
     --   log('W', 'scenarios', 'scenario has no previews: ' .. tostring(scenarioData.scenarioName))
     -- end
     return previews
   end
-  
+
   local function getLevels(subdirectory)
     local levelList = getLevelList()
     local levels = {}
-    
+
     for _, levelName in ipairs(levelList) do
       local path = '/levels/' .. levelName .. '/scenarios/' .. subdirectory
       local busScenarios =  FS:findFilesByPattern(path, '*.json', -1, true, false)
-  
+
       -- TODO: make this more generic. Perhaps think about how it can be applied to different "Job" types
       if (#busScenarios > 0) then
         local newLevel = {}
         newLevel.levelName = levelName
-        newLevel.levelInfo = readJsonFile('/levels/'..levelName..'/info.json') -- this contains the level info for the UI!
+        newLevel.levelInfo = jsonReadFile('/levels/'..levelName..'/info.json') -- this contains the level info for the UI!
         newLevel.official = isOfficialContent(FS:getFileRealPath('levels/'..levelName..'/info.json'))
         newLevel.previews = customPreviewLoader(levelName)
 
@@ -360,7 +372,7 @@ end
         local busLineFiles = FS:findFilesByPattern('/levels/'.. levelName .. '/buslines/', '*.buslines.json', -1, true, false)
         local routes = {}
         for _, file in pairs(busLineFiles) do
-          local busLine = readJsonFile(file)
+          local busLine = jsonReadFile(file)
           for _, route in pairs(busLine.routes) do
             -- For now we assume there is only one bus scenario therefore
             -- we just use this as a 'template' for each route.
@@ -368,7 +380,7 @@ end
             -- assign scenario name to route direction
             scenario.name = route.routeID .. ' ' .. route.direction
             -- check if starting position for the line exists
-            if route.spawnLocation then 
+            if route.spawnLocation then
               scenario.spawnLocation = route.spawnLocation
             end
 
@@ -397,10 +409,10 @@ end
         table.insert(levels, newLevel)
       end
     end
-  
+
     return levels
   end
-  
+
 
 -- public interface
 M.getLevels                       = getLevels

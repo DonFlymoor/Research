@@ -4,10 +4,9 @@
 
 local M = {}
 M.state = {} -- unused ?
---M.freeCam = false
 
 local cameraFiles = {}
-local sharedCameras = { gameengine=false, transition=false, trackir=false, observer=false } -- same instances are used regardless of currently focused vehicle
+local sharedCameras = { --[[collision=false,--]] gameengine=false, transition=false, trackir=false, observer=false } -- same instances are used regardless of currently focused vehicle
 local lastVehicleId = nil -- used to detect vehicle switches.
 local pendingTrigger = nil
 local vehicleData    = {} -- {   vid1={jbeamConfig=foo, cameras={orbit=C, ...}},     vid2={jbeamConfig=foo, cameras={orbit=C, ...}}, ...   }
@@ -17,6 +16,7 @@ local configuration = {}  -- {   {name=foo, enabled=true},  {name=bar, enabled=f
 local pendingSerializationData = nil
 local currentVersion = 1
 local observerCamObject = false
+local ignoreVehicleReset = false
 
 -- store camera filenames, reload observer camera
 local function onExtensionLoaded()
@@ -40,7 +40,7 @@ local function getExtendedConfig(vdata)
   local config = deepcopy(configuration)
   local slotId = 1
   for _, v in ipairs(config) do
-    local visible = vdata.cameras[v.name] and vdata.cameras[v.name].hidden ~= true
+    local visible = vdata.cameras[v.name] and not vdata.cameras[v.name].hidden
     v.hidden = not visible
     -- set the binding camera number (keys 1 to 9, for example)
     if visible then
@@ -54,7 +54,7 @@ end
 -- send data to Options > Cameras menu
 local function updateOptionsUI(vdata)
   local config = getExtendedConfig(vdata)
-  be:executeJS('HookManager.trigger("CameraConfigChanged", ' .. encodeJson({cameraConfig=config, focusedCamId=vdata.focusedCamId}) .. ')')
+  be:executeJS('HookManager.trigger("CameraConfigChanged", ' .. jsonEncode({cameraConfig=config, focusedCamId=vdata.focusedCamId}) .. ')')
 end
 
 -- request/send data to Options > Cameras menu
@@ -71,7 +71,58 @@ local function updateAppsUI(vdata)
   local camConfig = configuration[vdata.focusedCamId]
   if not camConfig then return end
   -- tell JS for hiding the apps in cockpit for example
-  be:executeJS('HookManager.trigger("CameraMode", ' .. encodeJson({ mode = camConfig.name}) .. ')')
+  be:executeJS('HookManager.trigger("CameraMode", ' .. jsonEncode({ mode = camConfig.name}) .. ')')
+  updateOptionsUI(vdata)
+end
+
+local function clearInputs()
+  MoveManager.rollRight = 0;
+  MoveManager.rollLeft = 0;
+  MoveManager.pitchUp = 0;
+  MoveManager.pitchDown = 0;
+  MoveManager.yawRight = 0;
+  MoveManager.yawLeft = 0;
+  MoveManager.zoomIn = 0;
+  MoveManager.zoomOut = 0;
+end
+
+local function changeOrder (camId, offset)
+  local player = 0
+  local veh = be:getPlayerVehicle(player) --TODO refactor this vdata stuff, please.....
+  if not veh then return end
+  local vdata = vehicleData[veh:getID()]
+  if not vdata then return end
+  -- iterate through cameras, skipping hidden cams
+  local newIdx = camId
+  local n = #configuration
+  for i = 1, n do
+    newIdx = clamp(newIdx + offset, 1, n)
+    if not configuration[newIdx].hidden then break end
+  end
+  if newIdx == camId then return end
+
+  -- move camera to the calculated new index
+  configuration[camId], configuration[newIdx] = configuration[newIdx], configuration[camId]
+
+  -- update the focused camera too
+  if vdata.focusedCamId == newIdx then
+    vdata.focusedCamId = camId
+  elseif vdata.focusedCamId == camId then
+    vdata.focusedCamId = newIdx
+  end
+
+  updateOptionsUI(vdata)
+end
+
+local function toggleEnabledCameraById(camId)
+  if camId > #configuration then return end
+  if camId < 1 then return end
+  local player = 0
+  local veh = be:getPlayerVehicle(player) --TODO refactor this vdata stuff, please.....
+  if not veh then return end
+  local vdata = vehicleData[veh:getID()]
+  if not vdata then return end
+  configuration[camId].enabled = not configuration[camId].enabled
   updateOptionsUI(vdata)
 end
 
@@ -81,16 +132,7 @@ local function _setCamera(vdata, newCamId)
   if newCamId < 1 then newCamId = 1 end
 
   -- tell cameras about the focus change
-  local oldCamConfig = configuration[vdata.focusedCamId]
-  if oldCamConfig then
-    local oldCam = vdata.cameras[oldCamConfig.name]
-    if oldCam then
-      oldCam.focused = false
-      if type(oldCam.onCameraChanged) == 'function' then
-        oldCam:onCameraChanged(false)
-      end
-    end
-  end
+  local success = false
   local camConfig = configuration[newCamId]
   if camConfig then
     local newCam = vdata.cameras[camConfig.name]
@@ -99,32 +141,60 @@ local function _setCamera(vdata, newCamId)
       if type(newCam.onCameraChanged) == 'function' then
         newCam:onCameraChanged(true)
       end
+      success = true
     end
   end
+  if success then
+    log("D","", "Camera switched to "..dumps(camConfig.name))
+    local oldCamConfig = configuration[vdata.focusedCamId]
+    if oldCamConfig then
+      local oldCam = vdata.cameras[oldCamConfig.name]
+      if oldCam then
+        oldCam.focused = false
+        if type(oldCam.onCameraChanged) == 'function' then
+          oldCam:onCameraChanged(false)
+        end
+      end
+    end
 
-  -- set it actually. This is the only function that is allowed to change focusedCamId directly
-  vdata.focusedCamId = newCamId
-  TorqueScript.eval("clearCameraRotationalSpeeds();")
+    -- set it actually. This is the only function that is allowed to change focusedCamId directly
+    vdata.focusedCamId = newCamId
+    clearInputs()
 
-  local camName = configuration[vdata.focusedCamId].name
-  extensions.hook('onCameraModeChanged', camName)
+    local camName = configuration[vdata.focusedCamId].name
+    extensions.hook('onCameraModeChanged', camName)
 
-  updateAppsUI(vdata)
+    updateAppsUI(vdata)
+  else
+    log("D","", "Camera not switched to anything")
+  end
+  return success
 end
 
 local function _setCameraByName(vdata, name, withTransition)
   for idx, camConfig in ipairs(configuration) do
     local camName = camConfig.name
     if camName == name then
-      _setCamera(vdata, idx)
+      local success = _setCamera(vdata, idx)
       if withTransition then
         sharedCameras.transition:start()
       end
-      return true
+      return success
     end
   end
   log('E', 'core_camera.setCameraByName', 'camera not found: ' .. tostring(name))
   return false
+end
+
+local function setCameraById(camId)
+  if camId > #configuration then return end
+  if camId < 1 then return end
+  local player = 0
+  local veh = be:getPlayerVehicle(player) --TODO refactor this vdata stuff, please.....
+  if not veh then return end
+  local vdata = vehicleData[veh:getID()]
+  if not vdata then return end
+  _setCamera(vdata, camId)
 end
 
 local function setCameraByName(player, name, withTransition, customData)
@@ -154,6 +224,11 @@ local function isCameraInside(player)
   local vdata = vehicleData[veh:getID()]
   if not vdata then return false end
 
+  local camConfig = configuration[vdata.focusedCamId]
+  if not camConfig then return end
+  if camConfig.name == "driver" then return true end -- FIXME: quick fix for one-frame delay in camPosition vs vehicleposition, falling out of cockpit at speed
+  if camConfig.name == "onboard.hood" then return false end -- FIXME: quick fix for one-frame delay in camPosition vs vehicleposition, falling out of cockpit at speed
+
   local camPos = getCameraPosition()
   local oobb = veh:getSpawnWorldOOBB()
   if not oobb:isContained(camPos) then return false end
@@ -171,6 +246,23 @@ end
 local function getCameraDataById(vid)
   return (vehicleData[vid] or vehicleDataOld[vid]).cameras
   -- return vehicleDataOld[vid].cameras
+end
+
+local function getDriverData(player)
+  local camNodeID = 0
+  local rightHandDrive = false
+  local veh = be:getPlayerVehicle(player)
+  if not veh then return camNodeID, rightHandDrive end
+  local vdata = vehicleData[veh:getID()]
+  if not vdata then return camNodeID, rightHandDrive end
+  for k,v in pairs(vdata.cameras or {}) do
+    if k == "onboard.driver" then
+      camNodeID = v.camNodeID
+      rightHandDrive = v.rightHandCamera or false -- convert nil to false
+      break
+    end
+  end
+  return camNodeID, rightHandDrive
 end
 
 local function getActiveCamName(player)
@@ -217,7 +309,7 @@ local function setConfiguration(newConfig, newCamId)
   _setCamera(vdata, newCamId)
   updateUIMessage(player)
   updateOptionsUI(vdata)
-  settings.setValue('cameraConfig', encodeJson({ version=currentVersion, data=configuration }))
+  settings.setValue('cameraConfig', jsonEncode({ version=currentVersion, data=configuration }))
 end
 
 local function setBySlotId(player, slotId)
@@ -247,40 +339,59 @@ local function processVehicleCameraConfigChanged(vid)
   local vdata     = vehicleData[vid]
   local vdata_old = vehicleDataOld[vid]
 
-  local function initCam(vdata, camConfig, camFile, camName)
+  local function initCam(camerasOld, vdata, camConfig, camFile, camName)
+    if camName ~= "onboard.driver" and string.lower(camName) == "onboard.driver" then
+      log("W", "", "Possibly incorrect camera name '"..camName.."' (rename to 'onboard.driver'?)")
+    end
     local obj = tableMerge(deepcopy(vdata.jbeamConfig.common), deepcopy(camConfig))
-    -- if the jbeamConfig contains a numbered list (of cameras or whatever else), merge them too
-    if #camConfig > 0 then
+    if #camConfig > 0 then -- if the jbeamConfig contains a numbered list (of cameras or whatever else), merge them too
       for k,v in ipairs(camConfig) do obj[k] = v end
     end
-    obj.otherCameras = deepcopy(vdata.jbeamConfig)
-    local camera = require(cameraFiles[camFile])(obj)
+    local camera = camerasOld[camName]
+    if camera and type(camera.update) ~= "function" then --FIXME, this should never happen, but deserialization is removing the functions, making the deserialized cameras useless
+      log("D", "", "FIXME Unable to correctly reuse the '"..camName.."' camera. Losing state and reloading from scratch instead...")
+      camera = nil
+    end
+    if camera == nil then
+      camera = require(cameraFiles[camFile])(obj)
+    else
+      camera = tableMerge(camera, obj)
+      ignoreVehicleReset = true
+      if type(camera.onVehicleCameraConfigChanged) == 'function' then
+        camera:onVehicleCameraConfigChanged()
+      end
+    end
+    camera.hidden = camera.hidden == true -- convert to boolean
     camera.focused = false -- make sure its set to inactive on start
     vdata.cameras[camName] = camera
-    return camera.hidden ~= true
+    return not camera.hidden
   end
-  local function initCamSingle(vdata, camFile)
-    return initCam(vdata, vdata.jbeamConfig[camFile] or {}, camFile, camFile)
+  local function initCamSingle(camerasOld, vdata, camFile)
+    return initCam(camerasOld, vdata, vdata.jbeamConfig[camFile] or {}, camFile, camFile)
   end
-  local function initCamMultiple(vdata, camFile)
+  local function initCamMultiple(camerasOld, vdata, camFile)
     local ret = false
     for k,v in pairs(vdata.jbeamConfig[camFile] or {}) do
-      if initCam(vdata, v, camFile, camFile.."."..v.name) then ret = true end
+      if initCam(camerasOld, vdata, v, camFile, camFile.."."..v.name) then ret = true end
     end
     return ret
   end
 
-  --local tmp = settings.getValue('cameraLoadCustomModes')
   local usableCamFound = false
+  local camerasOld = vdata.cameras or {}
+  vdata.cameras = {}
   for camFile, r in pairs(cameraFiles) do
     local multicams = { "onboard" }
     if tableFindKey(multicams, camFile) then
-      if initCamMultiple(vdata, camFile) then usableCamFound = true end
+      if initCamMultiple(camerasOld, vdata, camFile) then usableCamFound = true end
     else
-      if initCamSingle  (vdata, camFile) then usableCamFound = true end
+      if initCamSingle  (camerasOld, vdata, camFile) then usableCamFound = true end
     end
   end
 
+  if not tableFindValue(tableKeys(vdata.cameras), "onboard.driver") then
+    vdata.cameras.driver = nil -- there's no driver data to feed the driver cam, so remove it
+  end
   -- no camera found? then add a default camera
   if not usableCamFound then
     log('E', 'camera', 'No usable camera found. Using a default camera placeholder')
@@ -291,7 +402,7 @@ local function processVehicleCameraConfigChanged(vid)
   -- initial camera config
   local initialConfiguration = {
      {name="orbit"}
-    ,{name="onboard.driver"}
+    ,{name="driver"}
     ,{name="onboard.hood"}
     ,{name="external"}
     ,{name="relative"}
@@ -302,7 +413,7 @@ local function processVehicleCameraConfigChanged(vid)
     -- fix INI values that passed through javascript (e.g. when opening Options menu)
     savedConfiguration = savedConfiguration:gsub("'",'"')
     -- and then deserialize, so we can follow the user settings
-    savedConfiguration = readJsonData(savedConfiguration)
+    savedConfiguration = jsonDecode(savedConfiguration)
     -- if user settings version is good, go ahead and use it
     if savedConfiguration and (savedConfiguration.version or 0) >= currentVersion then
       initialConfiguration = savedConfiguration.data
@@ -363,30 +474,12 @@ local function processVehicleCameraConfigChanged(vid)
     table.remove(renaminingCamNames, lowestOrderId)
   end
 
-  local function _reloadModule(module)
-    if module and type(module.reloaded) == 'function' then
-      module:reloaded()
-    end
-    return module
-  end
+  --if not sharedCameras.collision  then sharedCameras.collision  = require(cameraFiles[  'collision'])() end
+  if not sharedCameras.gameengine then sharedCameras.gameengine = require(cameraFiles[ 'gameengine'])() end
+  if not sharedCameras.transition then sharedCameras.transition = require(cameraFiles[ 'transition'])() end
+  if not sharedCameras.trackir    then sharedCameras.trackir    = require(cameraFiles[    'trackir'])() end
 
-  sharedCameras.gameengine = _reloadModule(sharedCameras.gameengine) or require(cameraFiles['gameengine'])()
-  sharedCameras.transition = _reloadModule(sharedCameras.transition) or require(cameraFiles['transition'])()
-  sharedCameras.trackir    = _reloadModule(sharedCameras.trackir)    or require(cameraFiles[   'trackir'])()
-
-  -- default focused camera
-  local newCamId = 1
-  for k,v in pairs(configuration) do
-    if v.enabled and vdata.cameras[v.name] then
-      newCamId = k
-      break
-    end
-  end
-  if vdata_old then
-    newCamId = vdata_old.focusedCamId
-  end
-
-  -- we got a saved request, serve this no matter what
+  -- 1st try: we got a saved request, honour it before anything else
   local cameraSet = false
   if requestedCam[vid] then
     cameraSet = _setCameraByName(vdata, requestedCam[vid].name)
@@ -396,13 +489,40 @@ local function processVehicleCameraConfigChanged(vid)
     requestedCam[vid] = nil
   end
 
+  -- 2nd try: let's continue using the previous cam (which may have disappeared if we replaced the vehicle)
+  if not cameraSet and vdata_old then
+    local camId = vdata_old.focusedCamId
+    cameraSet = _setCamera(vdata, camId)
+  end
+
+  -- 3rd try: let's find the first 'enabled' camera and use it (i.e. the default camera)
   if not cameraSet then
-    _setCamera(vdata, newCamId)
+    for k,v in pairs(configuration) do
+      if v.enabled and vdata.cameras[v.name] and not vdata.cameras[v.name].hidden then
+        cameraSet = _setCamera(vdata, k)
+        if cameraSet then break end
+      end
+    end
+  end
+
+  -- 4th try: let's find the first 'visible' camera and use it
+  if not cameraSet then
+    for k,v in pairs(configuration) do
+      if vdata.cameras[v.name] then
+        cameraSet = _setCamera(vdata, k)
+        if cameraSet then break end
+      end
+    end
+  end
+
+  -- 5th try: panic and don't keep calm
+  if not cameraSet then
+    log("E", "", "Unable to find a single usable camera, not even 'orbit' fallback. All bets are off from this point on")
   end
 
   vehicleDataOld[vid] = nil
   updateOptionsUI(vdata)
-  settings.setValue('cameraConfig', encodeJson({ version=currentVersion, data=configuration }))
+  settings.setValue('cameraConfig', jsonEncode({ version=currentVersion, data=configuration }))
 end
 
 local function onVehicleCameraConfigChanged(vid, jbeamConfig)
@@ -411,13 +531,14 @@ local function onVehicleCameraConfigChanged(vid, jbeamConfig)
 
   if vehicleData[vid] and tableSize(vehicleData[vid]) > 0 and not vehicleDataOld[vid] then
     vehicleDataOld[vid] = deepcopy(vehicleData[vid])
-    vehicleData[vid] = {}
+    --vehicleData[vid] = {}
   end
 
-  vehicleData[vid] = {
-    jbeamConfig = jbeamConfig,
-    cameras = {},
-  }
+  if not vehicleData[vid] then vehicleData[vid] = {} end
+  vehicleData[vid].jbeamConfig = jbeamConfig
+  --vehicleData[vid].cameras = {}
+  if not vehicleData[vid].jbeamConfig then vehicleData[vid].jbeamConfig = {} end
+  if not vehicleData[vid].cameras then vehicleData[vid].cameras = {} end
 
   processVehicleCameraConfigChanged(vid)
 end
@@ -456,12 +577,7 @@ local function vehicleChanged(oldVehId, newVehId)
   end
 end
 
-local function onUpdate(dtReal, dtSim, dtRaw)
-  -- the free camera mode is not handled by this class yet, so do not update anything in here
-  -- TODO: FIXME, requires rewrite of GE camera subsystem
-  --if M.freeCam then
-  --  return
-  --end
+local function onPreRender(dtReal, dtSim, dtRaw)
   local player = 0
   local veh = be:getPlayerVehicle(player)
   if not veh then return end
@@ -478,6 +594,7 @@ local function onUpdate(dtReal, dtSim, dtRaw)
     return
   end
 
+  if commands.isFreeCamera(player) then return end -- check for freecam *after* we make sure we got vehicle config data, which may be used on updatedSettings callbacks and other stuff
   if not configuration then return end
 
   if pendingSerializationData then
@@ -519,7 +636,14 @@ local function onUpdate(dtReal, dtSim, dtRaw)
   end
 
   sharedCameras.trackir:update(data)
+  if settings.getValue('cameraCollision', false) then
+    --sharedCameras.collision:update(data)
+  end
   sharedCameras.gameengine:update(data) -- send the final data to c++
+
+  MoveManager.yawRelative = 0
+  MoveManager.pitchRelative = 0
+  MoveManager.rollRelative = 0
 end
 
 local function switchCamera(player, offset)
@@ -541,7 +665,7 @@ local function switchCamera(player, offset)
     if newCamId < 1 then newCamId = #configuration end
     local m = configuration[newCamId]
     local enabled = m.enabled
-    local visible = vdata.cameras[m.name] and vdata.cameras[m.name].hidden ~= true
+    local visible = vdata.cameras[m.name] and not vdata.cameras[m.name].hidden
     if visible and enabled then break end
   end
 
@@ -573,10 +697,6 @@ local function proxy_PID(player, fct, ...)
 end
 
 --- VID
-
-local function onVehicleResettedByID(vid, ...)
-  return proxy_VID(vid, 'onVehicleResetted', ...)
-end
 
 local function resetCameraByID(vid, ...)
   return proxy_VID(vid, 'reset', ...)
@@ -683,7 +803,7 @@ local function onTrigger(trigger)
     if cam then
       observerCamObject = cam
       sharedCameras.observer:setCamera(cam, vehicle, triggerTargetOverride or cam.targetOverride)
-      be:executeJS('HookManager.trigger("CameraMode", ' .. encodeJson({ mode = 'observer'}) .. ')')
+      be:executeJS('HookManager.trigger("CameraMode", ' .. jsonEncode({ mode = 'observer'}) .. ')')
       extensions.hook('onCameraModeChanged', 'observer')
     else
       log('E', 'camera', 'camera not found for trigger: ' .. tostring(trigger.cameraOnEnter))
@@ -692,6 +812,7 @@ local function onTrigger(trigger)
 end
 
 local function resetCamera(player)
+  clearInputs()
   return proxy_PID(player, 'reset')
 end
 
@@ -703,15 +824,86 @@ local function hotkey(player, hotkeyid, modifier)
   return proxy_PID(player, 'hotkey', hotkeyid, modifier)
 end
 
--- PID end
-
-local function onVehicleResetted(...)
-  -- if camera doesnt the manage the event, reset camera
-  if not onVehicleResettedByID(...) then
-    resetCameraByID(...)
+local lastFilter = FILTER_KBD
+local function getLastFilter() return lastFilter end
+local function rotate_yaw_left (val, filter) MoveManager.yawLeft  = val; lastFilter = filter end
+local function rotate_yaw_right(val, filter) MoveManager.yawRight = val; lastFilter = filter end
+local function rotate_yaw(val, filter)
+  lastFilter = filter
+  if val > 0 then
+    MoveManager.yawRight = val;
+    MoveManager.yawLeft = 0;
+  else
+    MoveManager.yawLeft = -val;
+    MoveManager.yawRight = 0;
+  end
+end
+local function rotate_pitch_up  (val, filter) MoveManager.pitchUp   = val; lastFilter = filter end
+local function rotate_pitch_down(val, filter) MoveManager.pitchDown = val; lastFilter = filter end
+local function rotate_pitch(val, filter)
+  lastFilter = filter
+  if val > 0 then
+    MoveManager.pitchUp = val
+    MoveManager.pitchDown = 0
+  else
+    MoveManager.pitchDown = -val
+    MoveManager.pitchUp = 0
+  end
+end
+local function cameraZoom(val)
+  if val > 0 then
+    MoveManager.zoomIn = val
+    MoveManager.zoomOut = 0
+  else
+    MoveManager.zoomIn = 0
+    MoveManager.zoomOut = -val
   end
 end
 
+-- rmb mouse camera
+local function rotate_yaw_relative  (val) MoveManager.yawRelative   = MoveManager.yawRelative   + getCameraFov() * val / 4500 end
+local function rotate_pitch_relative(val) MoveManager.pitchRelative = MoveManager.pitchRelative + getCameraFov() * val / 4500 end
+-- Movement Keys
+local function moveleft    (val) MoveManager.left     = val end
+local function moveright   (val) MoveManager.right    = val end
+local function moveforward (val) MoveManager.forward  = val end
+local function movebackward(val) MoveManager.backward = val end
+local function moveup      (val) MoveManager.up       = val end
+local function movedown    (val) MoveManager.down     = val end
+
+-- 3d spacemouse support :)
+local absRotateAxisFactor= 0.0003
+local yawTemp   = 0
+local rollTemp  = 0
+local pitchTemp = 0
+local function   yawAbs(val) MoveManager.yawRelative   = (  yawTemp - val) * absRotateAxisFactor;   yawTemp = val end
+local function  rollAbs(val) MoveManager.rollRelative  = ( rollTemp - val) * absRotateAxisFactor;  rollTemp = val end
+local function pitchAbs(val) MoveManager.pitchRelative = (pitchTemp - val) * absRotateAxisFactor; pitchTemp = val end
+local absTranslateAxisFactor = 0.01
+local xAxisAbsTemp = 0
+local yAxisAbsTemp = 0
+local zAxisAbsTemp = 0
+local function xAxisAbs(val) local tmp = (xAxisAbsTemp - val) * absTranslateAxisFactor; MoveManager.absXAxis = tmp; xAxisAbsTemp = val end
+local function yAxisAbs(val) local tmp = (yAxisAbsTemp - val) * absTranslateAxisFactor; MoveManager.absYAxis = tmp; yAxisAbsTemp = val end
+local function zAxisAbs(val) local tmp = (zAxisAbsTemp - val) * absTranslateAxisFactor; MoveManager.absZAxis = tmp; zAxisAbsTemp = val end
+
+
+-- PID end
+
+local function onVehicleResetted(...)
+  if ignoreVehicleReset then
+    ignoreVehicleReset = false
+    return
+  end
+
+  resetCameraByID(...)
+end
+
+local function onMouseLocked(locked)
+  local player = 0
+  if commands.isFreeCamera(player) then return end
+  return proxy_PID(player, 'mouseLocked', locked)
+end
 
 local function onDespawnObject(id, isReloading)
   -- cleaning up some things
@@ -722,10 +914,13 @@ local function onDespawnObject(id, isReloading)
 end
 
 local function onSettingsChanged()
-  -- resets can happen even when the data is not ready again yet resulting in storing the empty 'old' jbeamConfig
-  if tableSize(vehicleData) > 0 then
-    vehicleDataOld = vehicleData
-    vehicleData = {}
+  for j,vdata in pairs(vehicleData) do
+    for k,m in pairs(vdata.cameras) do
+      local camera = vdata.cameras[k]
+      if type(camera.onSettingsChanged) == 'function' then
+        camera:onSettingsChanged()
+      end
+    end
   end
 end
 
@@ -811,8 +1006,6 @@ local function onSerialize()
     end
   end
 
-  --data.freeCam = M.freeCam
-
   return data
 end
 
@@ -861,14 +1054,12 @@ local function onDeserialized(data)
     end
   end
 
-  --M.freeCam = data.freeCam
-
   pendingSerializationData = nil
 end
 
 
 -- callbacks
-M.onUpdate = onUpdate
+M.onPreRender = onPreRender -- just update the camera right before the rendering
 M.onTrigger = onTrigger
 M.onExtensionLoaded = onExtensionLoaded
 M.onDespawnObject = onDespawnObject
@@ -876,6 +1067,7 @@ M.onSettingsChanged = onSettingsChanged
 M.onVehicleResetted = onVehicleResetted
 M.onScenarioRestarted = onScenarioRestarted
 M.onScenarioChange = onScenarioChange
+M.onMouseLocked = onMouseLocked
 
 -- internal things
 M.onSerialize = onSerialize
@@ -885,6 +1077,7 @@ M.onDeserialized = onDeserialized
 M.onVehicleCameraConfigChanged = onVehicleCameraConfigChanged
 
 -- functions used by other GE lua code
+M.clearInputs = clearInputs
 M.resetCameraByID = resetCameraByID
 M.setRotation = setRotation
 M.setFOV = setFOV
@@ -897,8 +1090,12 @@ M.setDistance = setDistance
 M.setMaxDistance = setMaxDistance
 M.startTransition = startTransition
 M.setByName = setCameraByName
+M.setById = setCameraById
+M.toggleEnabledById = toggleEnabledCameraById
 M.setBySlotId = setBySlotId
+M.changeOrder = changeOrder
 M.getCameraDataById = getCameraDataById
+M.getDriverData = getDriverData
 M.getActiveCamName = getActiveCamName
 M.exitCinematicCamera = exitCinematicCamera
 M.updateUIMessage = updateUIMessage
@@ -916,5 +1113,24 @@ M.switchCamera = switchCamera
 M.resetCamera = resetCamera
 M.lookBack = lookBack
 M.hotkey = hotkey
+M.rotate_pitch = rotate_pitch
+M.rotate_pitch_up = rotate_pitch_up
+M.rotate_pitch_down = rotate_pitch_down
+M.rotate_yaw = rotate_yaw
+M.rotate_yaw_left = rotate_yaw_left
+M.rotate_yaw_right = rotate_yaw_right
+M.cameraZoom = cameraZoom
+M.rotate_yaw_relative = rotate_yaw_relative
+M.rotate_pitch_relative = rotate_pitch_relative
+M.yawAbs = yawAbs
+M.rollAbs = rollAbs
+M.pitchAbs = pitchAbs
+M.moveleft     = moveleft
+M.moveright    = moveright
+M.moveforward  = moveforward
+M.movebackward = movebackward
+M.moveup       = moveup
+M.movedown     = movedown
+M.getLastFilter = getLastFilter
 
 return M

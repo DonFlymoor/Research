@@ -12,12 +12,12 @@ local function getHighscores()
   if content == nil or content == "" then
     return {}
   end
-  return readJsonData(content, highscoreFile)
+  return jsonDecode(content, highscoreFile)
 end
 
 local function setHighscores(scores)
- 	serializeJsonToFile(highscoreFile,scores, false)
- 	serializeJsonToFile(highscoreFile.."_beautfied",scores, true)
+ 	jsonWriteFile(highscoreFile,scores, false)
+ 	jsonWriteFile(highscoreFile.."_beautfied",scores, true)
 end
 
 local function getScenarioHighscores(levelName, scenarioName, configKey)

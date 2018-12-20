@@ -88,9 +88,7 @@ function toggleEditor()
 
     if( !$missionRunning )
     {
-        // Flag saying, when level is chosen, launch it with the editor open.
-        ChooseLevelDlg.launchInEditor = true;
-        Canvas.pushDialog( ChooseLevelDlg );
+        error("Level editor can only be used while a level is open");
     }
     else
     {

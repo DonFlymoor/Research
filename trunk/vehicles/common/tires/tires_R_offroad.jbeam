@@ -1,4 +1,77 @@
 {
+"tire_R_27_10_15_offroad": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"27x10.0R15 Mud Terrain Rear Tires",
+        "value":280,
+    }
+    "slotType" : "tire_R_15x8_alt",
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["offroadtire_03a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+        ["offroadtire_03a_15x8_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$tirepressure_R", "range", "psi", "Wheels", 15, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}]
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false},
+        {"hasTire":true},
+        {"enableTireReinfBeams":false},
+        {"enableTireLbeams":true},
+        {"enableTireSideReinfBeams":false},
+        {"enableTreadReinfBeams":true},
+
+        //general settings
+        {"radius":0.348},
+        {"tireWidth":0.205},
+
+
+        //tire options
+        {"wheelSideBeamSpring":100,"wheelSideBeamDamp":30},
+        {"wheelSideBeamSpringExpansion":461000,"wheelSideBeamDampExpansion":40},
+        {"wheelSideTransitionZone":0.1,"wheelSideBeamPrecompression":0.99},
+
+        {"wheelReinfBeamSpring":25000,"wheelReinfBeamDamp":180},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":1.00},
+
+        {"wheelTreadBeamSpring":211000,"wheelTreadBeamDamp":60},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
+
+        {"wheelTreadReinfBeamSpring":81000,"wheelTreadReinfBeamDamp":80},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
+
+        {"wheelPeripheryBeamSpring":181000,"wheelPeripheryBeamDamp":40},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
+
+        //general tire values
+        {"nodeWeight":0.18},
+        {"nodeMaterial":"|NM_RUBBER"},
+        {"triangleCollision":false},
+        {"pressurePSI":"$tirepressure_R"},
+        {"dragCoef":5},
+
+        //groundmodel friction multipliers
+        {"frictionCoef":1.0},
+        {"slidingFrictionCoef":1.0},
+        {"treadCoef":0.8},
+
+        //advanced friction values
+        {"noLoadCoef":1.35},
+        {"loadSensitivitySlope":0.00012}
+        {"fullLoadCoef":0.6},
+        {"softnessCoef":0.7},
+
+        //deform values
+        {"wheelSideBeamDeform":23000,"wheelSideBeamStrength":30000},
+        {"wheelReinfBeamDeform":101000,"wheelReinfBeamStrength":101000},
+        {"wheelTreadBeamDeform":22000,"wheelTreadBeamStrength":28000},
+        {"wheelTreadReinfBeamDeform":22000,"wheelTreadReinfBeamStrength":28000},
+        {"wheelPeripheryBeamDeform":101000,"wheelPeripheryBeamStrength":101000},
+    ],
+}
 "tire_R_215_70_15_offroad": {
     "information":{
         "authors":"BeamNG",
@@ -8,7 +81,7 @@
     "slotType" : "tire_R_15x8_altb",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["offroadtire_01a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
         ["offroadtire_01a_15x8_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
@@ -55,7 +128,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.8},
 
         //advanced friction values
@@ -81,7 +154,7 @@
     "slotType" : "tire_R_15x8_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.93, "y":1, "z":1}}],
+        ["offroadtire_01a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.93, "y":1, "z":1}}],
         ["offroadtire_01a_15x8_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.93, "y":1, "z":1}}],
     ],
     "variables": [
@@ -128,7 +201,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.8},
 
         //advanced friction values
@@ -154,7 +227,7 @@
     "slotType" : "tire_R_15x7_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.05, "z":1.05}}],
+        ["offroadtire_01a_15x8_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.05, "z":1.05}}],
         ["offroadtire_01a_15x8_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.05, "z":1.05}}],
     ],
     "variables": [
@@ -200,7 +273,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.85},
 
         //advanced friction values
@@ -226,7 +299,7 @@
     "slotType" : "tire_R_15x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_17x9_33", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.94, "y":0.90, "z":0.90}}],
+        ["offroadtire_01a_17x9_33", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.94, "y":0.90, "z":0.90}}],
         ["offroadtire_01a_17x9_33", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.94, "y":0.90, "z":0.90}}],
     ],
     "variables": [
@@ -272,7 +345,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.85},
 
         //advanced friction values
@@ -298,7 +371,7 @@
     "slotType" : "tire_R_15x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_15x9_31", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
+        ["offroadtire_01a_15x9_31", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
         ["offroadtire_01a_15x9_31", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":1.0, "z":1.0}}],
     ],
     "variables": [
@@ -344,7 +417,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.85},
 
         //advanced friction values
@@ -370,7 +443,7 @@
     "slotType" : "tire_R_16x8_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_17x9_33", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.87, "y":0.95, "z":0.95}}],
+        ["offroadtire_01a_17x9_33", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.87, "y":0.95, "z":0.95}}],
         ["offroadtire_01a_17x9_33", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.87, "y":0.95, "z":0.95}}],
     ],
     "variables": [
@@ -417,7 +490,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.85},
 
         //advanced friction values
@@ -443,7 +516,7 @@
     "slotType" : "tire_R_17x9_offroad",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_17x9_33", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.56, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["offroadtire_01a_17x9_33", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.56, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
         ["offroadtire_01a_17x9_33", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.56, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
@@ -490,7 +563,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.8},
 
         //advanced friction values
@@ -516,7 +589,7 @@
     "slotType" : "tire_R_17x9_offroad",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["offroadtire_01a_17x9_35", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.56, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["offroadtire_01a_17x9_35", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.56, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
         ["offroadtire_01a_17x9_35", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.56, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
@@ -563,7 +636,7 @@
 
         //groundmodel friction multipliers
         {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
+        {"slidingFrictionCoef":1.05},
         {"treadCoef":0.8},
 
         //advanced friction values

@@ -33,56 +33,6 @@ angular.module('beamng.stuff')
         }
     };
 })
-.directive('releaseInfo', ['$interval', function ($interval) {
-  return {
-    restrict: 'AE',
-    scope: {
-      releaseDate: '='
-    },
-    replace: true,
-    template: `
-      <div ng-show="timeRemainingString">
-        <span style='color:#333399;'>{{ ::releaseDate | date:'dd. MMM yyyy' }}<br/></span>
-        <span style='color:#993333;font-size:0.8em;' >{{ timeRemainingString }}</span>
-      </div>`,
-    controller: function ($scope, $element, $attrs) {
-      var millis = {
-        minute: 1000 * 60,
-        hour:   1000 * 60 * 60,
-        day:    1000 * 60 * 60 * 24
-      };
-
-      var periodString = function (millisRemaining) {
-        if (millisRemaining <= 0)
-          return 'anytime soon';
-
-        var rem = millisRemaining;
-
-        var days = Math.floor(rem / millis.day);       rem -= days * millis.day;
-        var hours = Math.floor(rem / millis.hour);     rem -= hours * millis.hour;
-        var minutes = Math.floor(rem / millis.minute); rem -= minutes * millis.minute;
-
-        return `${days} days, ${hours} hours and ${minutes} minutes`;
-      };
-
-      $scope.buildtime = beamng.buildtime;
-      $scope.buildInfo = beamng.buildinfo;
-
-      var updateRemainingTime = function () {
-        var millisRemaining = $scope.releaseDate - Date.now();
-        $scope.timeRemainingString = periodString(millisRemaining);
-      };
-
-      updateRemainingTime();
-      var intervalId = $interval(updateRemainingTime, 10000);
-
-      $scope.$on('$destroy', function () {
-        $interval.cancel(intervalId);
-      });
-    }
-  }
-}])
-
 .directive('accountInfo', [function () {
   return {
     replace: true,
@@ -158,6 +108,7 @@ angular.module('beamng.stuff')
         , scaling = true
       ;
       scope.video = true;
+      scope.sailingTheHighSeas = false;
 
       bngApi.engineLua('settings.getValue("MainMenuBackgroundMode")', (val) => {
         scope.$evalAsync(() => {
@@ -181,12 +132,17 @@ angular.module('beamng.stuff')
           }
         });
 
+        bngApi.engineLua('sailingTheHighSeas', (val) => {
+          scope.sailingTheHighSeas = val
+        });
 
         bngApi.engineLua(`dirContent("ui/modules/mainmenu/${beamng.product}/${scope.video ? 'videos' : 'images'}")`, (data) => {
           scope.$evalAsync(() => {
             scope.files = data.map((elem) => elem.slice('ui/'.length));
-
-            if (scope.video) {
+            if (scope.sailingTheHighSeas === true) {
+              scope.files = ["modules/mainmenu/unofficial_version.jpg"]
+            }
+            if (scope.video && scope.sailingTheHighSeas === false) {
               scope.videoSrc = scope.files[Utils.random(0, scope.files.length -1, true)];
               var currentSum = 0
                 , rand = Utils.random(0, 100)
@@ -201,7 +157,6 @@ angular.module('beamng.stuff')
             } else if (typeof scope.videoLoaded === 'function') {
               scope.videoLoaded();
             }
-
             logger.mainMenu.log(scope.files);
           });
         });
@@ -427,7 +382,7 @@ angular.module('beamng.stuff')
           var txt = $filter('translate')('ui.performance.warnings.' + data[key].warnings[i].msg);
           var html = Utils.parseBBCode(txt);
           toastr[(data.globalState === 'warn' ? 'warning' : 'error')](
-            $filter('translate')('ui.mainmenu.warningdetails')+". ("+data[key].warnings[i].msg+")",//need a unique message
+            $filter('translate')('ui.mainmenu.warningdetails'),//need a unique message
             html,
             {
             positionClass: 'toast-top-right',

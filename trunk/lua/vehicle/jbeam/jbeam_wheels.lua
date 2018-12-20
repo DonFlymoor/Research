@@ -1313,7 +1313,6 @@ function addPressureWheel(vehicle, wheelKey, wheel)
   local cleanwheel = deepcopy(wheel)
   cleanwheel.axleBeams = nil
   cleanwheel.childParts = nil
-  cleanwheel.originFilename = nil
   cleanwheel.slotType = nil
   cleanwheel.partOrigin = nil
   cleanwheel.enableABS = nil

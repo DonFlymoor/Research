@@ -51,6 +51,33 @@ singleton Material(checkpoint_marker_base)
     castShadows = "0";
 };
 
+singleton Material(chevron)
+{
+    mapTo = "chevron";
+    doubleSided = "1";
+    translucentBlendOp = "LerpAlpha";
+    detailScale[0] = "10 10";
+    materialTag0 = "beamng";
+    useAnisotropic[0] = "1";
+    specularPower[0] = "1";
+    specularStrength[0] = "5";
+    pixelSpecular[0] = "0";
+    animFlags[0] = "0x00000001";
+    scrollDir[0] = "0 -1";
+    scrollSpeed[0] = "0";
+    translucent = "1";
+    alphaRef = "245";
+    glow[0] = "0";
+    emissive[0] = "1";
+    diffuseColor[0] = "0.996078 0.992157 0.992157 0.75";
+    diffuseColor[1] = "White";
+    instanceDiffuse[0] = "1";
+    scrollDir[1] = "0 0";
+    scrollSpeed[1] = "0";
+    diffuseMap[0] = "art/shapes/interface/checkpoint_marker_base_d.dds";
+    castShadows = "0";
+};
+
 singleton Material(position_marker)
 {
     mapTo = "position_marker";

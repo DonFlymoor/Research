@@ -17,7 +17,6 @@ local conversion = {
 local parentEngine = nil
 local jbeamData = nil
 local tEnv = 0
-
 --Thermal variables
 M.engineBlockTemperature = 0
 M.cylinderWallTemperature = 0
@@ -99,7 +98,7 @@ local radiatorSteamParticleTick = 0
 local knockSoundTick = 0
 local particulates = 0
 local idleParticulates = 0
-
+local radiatorHissSound = nil
 local startPreHeated = true
 
 --Thermal constants
@@ -193,7 +192,7 @@ local function updateExhaustGFX(dt)
             emitBigAfterFireParticles(n.finish, n.start, exhaustGrayParticleType)
           end
 
-          tmpAfterFireTime = max(tmpAfterFireTime, 0.0 + random(100) * 0.001)
+          tmpAfterFireTime = max(tmpAfterFireTime, 0.01 + random(100) * 0.001)
         elseif reason == 2 then -- transmission ignition cut sounds
           --print("shift (audio): "..exhaustAudioEndFuel)
           --print("shift (visual): "..exhaustVisualEndFuel)
@@ -226,6 +225,8 @@ local function updateExhaustGFX(dt)
       emitBigAfterFireParticles(n.finish, n.start, exhaustGrayParticleType)
     end
 
+    electrics.values.exhaustFlow = clamp(parentEngine.exhaustFlowDelay:popSum(dt) + clamp(maxFuel, 0, 1), 0, 1)
+
     --steam from broken head gasket
     if M.headGasketBlown and exhaustSteamParticleTick > 1 and coolantMass > constants.minimumCoolantMass and not (parentEngine.isDisabled or parentEngine.isStalled) and hasCoolantRadiator then
       --also emit steam from all exhaust ends because we are actually vaporizing coolant in the combustion chamber
@@ -243,7 +244,9 @@ local function updateExhaustGFX(dt)
     end
   end
 
-  if afterFire.afterFireSoundTimer <= 0 and tmpAfterFireTime > 0 then
+  afterFire.sustainedAfterFireFuel = max(afterFire.sustainedAfterFireFuel - 1000000 * dt, 0)
+
+  if (afterFire.afterFireSoundTimer <= 0 and tmpAfterFireTime > 0) then
     afterFire.instantAfterFireFuel = 0
     afterFire.sustainedAfterFireFuel = 0
     afterFire.shiftAfterFireFuel = 0
@@ -304,6 +307,7 @@ local function updateThermalsAirGFX(dt)
   M.oilTemperature = max(M.oilTemperature + (energyToOil + (energyCylinderWallToOil - energyOilToAir - energyOilSumpToAir - energyOilToBlock) * dt) * energyCoef.oil, tEnv)
   M.engineBlockTemperature = max(M.engineBlockTemperature + (energyCylinderWallToBlock - energyBlockToAir + energyOilToBlock) * energyCoef.engineBlock * dt, tEnv)
   M.exhaustTemperature = max(M.exhaustTemperature + (energyToExhaust - energyExhaustToAir * dt) * energyCoef.exhaust, tEnv)
+  M.coolantTemperature = nil
 
   local particleAirspeed = electrics.values.airspeed
   local engineRunning = (parentEngine.isDisabled or parentEngine.isStalled or parentEngine.ignitionCoef < 1) and 0 or 1
@@ -383,13 +387,13 @@ local function updateThermalsAirGFX(dt)
     gui.send(
       "engineThermalData",
       {
-        coolantTemperature = M.coolantTemperature,
+        coolantTemperature = 0,
         oilTemperature = M.oilTemperature,
         engineBlockTemperature = M.engineBlockTemperature,
         cylinderWallTemperature = M.cylinderWallTemperature,
         exhaustTemperature = M.exhaustTemperature,
-        radiatorAirSpeed = radiatorAirSpeed,
-        radiatorAirSpeedEfficiency = radiatorAirSpeedCoef,
+        radiatorAirSpeed = 0,
+        radiatorAirSpeedEfficiency = 0,
         fanActive = fanAirSpeed > 0,
         thermostatStatus = 0,
         oilThermostatStatus = oilRadiatorActive,
@@ -507,16 +511,12 @@ local function updateThermalsCoolantGFX(dt)
   local energyExhaustToAir = exhaustTempSquared * exhaustTempSquared * kExhaustToAir
   --local energyFireToBlock         = 0
 
-  --We can lose coolant in different places, sum up all the rates and calculate the new mass
-  local overallLeakRate = coolantOverpressureLeakRate + coolantHeadGasketLeakRate + radiatorLeakRate
-
   --Step 2: The integrator
   M.cylinderWallTemperature = max(M.cylinderWallTemperature + (energyToCylinderWall - (energyCylinderWallToOil + energyCylinderWallToCoolant + energyCylinderWallToBlock) * dt) * energyCoef.cylinderWall, tEnv)
   M.coolantTemperature = min(max(M.coolantTemperature + (energyCylinderWallToCoolant - energyCoolantToAir - energyCoolantToBlock) * energyCoef.coolant * dt, tEnv), constants.maxCoolantTemperature)
   M.oilTemperature = max(M.oilTemperature + (energyToOil + (energyCylinderWallToOil - energyOilToAir - energyOilSumpToAir - energyOilToBlock) * dt) * energyCoef.oil, tEnv)
   M.engineBlockTemperature = max(M.engineBlockTemperature + (energyCoolantToBlock + energyCylinderWallToBlock - energyBlockToAir + energyOilToBlock) * energyCoef.engineBlock * dt, tEnv)
   M.exhaustTemperature = max(M.exhaustTemperature + (energyToExhaust - energyExhaustToAir * dt) * energyCoef.exhaust, tEnv)
-  coolantMass = max(coolantMass - overallLeakRate * dt, constants.minimumCoolantMass)
 
   local particleAirspeed = electrics.values.airspeed
   local engineRunning = (parentEngine.isDisabled or parentEngine.isStalled or parentEngine.ignitionCoef < 1) and 0 or 1
@@ -634,6 +634,15 @@ local function updateThermalsCoolantGFX(dt)
     end
   end
 
+  --We can lose coolant in different places, sum up all the rates and calculate the new mass
+  local overallLeakRate = (coolantMass > constants.minimumCoolantMass) and (coolantOverpressureLeakRate + coolantHeadGasketLeakRate + radiatorLeakRate) or 0 -- max: 0.01 + 0.1 + 1
+  coolantMass = max(coolantMass - overallLeakRate * dt, constants.minimumCoolantMass)
+
+  if radiatorHissSound then
+    obj:setVolumePitch(radiatorHissSound, overallLeakRate, M.coolantTemperature / constants.maxCoolantTemperature, 0, 0)
+  end
+  --print (M.coolantTemperature / constants.maxCoolantTemperature)
+  --obj:setVolumePitch(radiatorHissSound, 1, 1)
   if streams.willSend("engineThermalData") then
     gui.send(
       "engineThermalData",
@@ -735,9 +744,9 @@ local function getExhaustEndNodes(startNode, exhaustTree)
   return endNodes
 end
 
-local function parseExhaustTree(currentBranch, exhaustBeams, startNodeLookup)
+local function parseExhaustTree(currentBranch, currentExhaustBeams, startNodeLookup)
   --copy table to not mess with the original one
-  local beams = shallowcopy(exhaustBeams)
+  local beams = shallowcopy(currentExhaustBeams)
   local currentBeamKey, currentBeam = next(beams, nil)
   currentBranch.childrenCount = 0
   currentBranch.children = {}
@@ -884,15 +893,19 @@ local function beamBroke(id)
     --dump(tmpExhaustNodes)
 
     exhaustNodes = {}
+    local exhaustEndNodeIDs = {}
     local exhaustNodeDeDuplicate = {}
     for _, v in ipairs(tmpExhaustNodes) do
       if not exhaustNodeDeDuplicate[v.finish] then
         table.insert(exhaustNodes, v)
+        table.insert(exhaustEndNodeIDs, v.finish)
         exhaustNodeDeDuplicate[v.finish] = true
       end
     end
     invExhaustNodeCount = #exhaustNodes > 0 and 1 / sqrt(#exhaustNodes) or 0
-  --dump(exhaustNodes)
+    --dump(exhaustNodes)
+
+    parentEngine:exhaustEndNodesChanged(exhaustEndNodeIDs)
   end
 end
 
@@ -1042,6 +1055,7 @@ local function initThermals()
 
   afterFire = {
     afterFireSoundTimer = 0,
+    afterFireDecayTimer = 0,
     instantAfterFireFuel = 0,
     sustainedAfterFireFuel = 0,
     shiftAfterFireFuel = 0,
@@ -1199,6 +1213,13 @@ local function initThermals()
   thermalsEnabled = true
 end
 
+local function initSounds()
+  if hasCoolantRadiator then
+    local hissSample = jbeamData.radiatorHissLoopEvent or "event:>Vehicle>Failures>failure_radiator"
+    radiatorHissSound = obj:createSFXSource(hissSample, "AudioDefaultLoop3D", "radiatorHiss", radiatorNodes[1] or engineNodes[1] or parentEngine.engineNodeID)
+  end
+end
+
 local function updateGFX(dt)
   updateThermalsGFXMethod(dt)
   updateExhaustGFXMethod(dt)
@@ -1212,6 +1233,7 @@ local function init(engine, engineJbeamData)
 end
 
 M.init = init
+M.initSounds = initSounds
 M.reset = reset
 M.updateGFX = updateGFX
 M.beamBroke = beamBroke

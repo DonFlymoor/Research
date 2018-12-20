@@ -2,8 +2,8 @@
 angular.module('beamng.apps')
 .directive('simpleSpeedo', ['StreamsManager', 'logger', 'bngApi', 'UiUnits', function (StreamsManager, logger, bngApi, UiUnits) {
   return {
-    template: 
-        '<object style="width:100%; height:100%; box-sizing:border-box; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleSpeedo/simple-speedo.svg?t=' + Date.now() + '"/>',
+    template:
+        '<object style="width:100%; height:100%; box-sizing:border-box; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleSpeedo/simple-speedo.svg?t=' + Date.now() + '"></object>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -19,13 +19,13 @@ angular.module('beamng.apps')
             var ar = [0,1,2,3,4,5,6,7];
             var interval = (max / 8);
             for (var i = 0; i < ar.length; i++) {
-                svg.getElementById('text' + i).innerHTML = Math.round(i * interval); 
+                svg.getElementById('text' + i).innerHTML = Math.round(i * interval);
             }
             maxNode.innerHTML = Math.round(max);
         }
 
 
-      
+
       element.on('load', function () {
 
         var svg = element[0].contentDocument;

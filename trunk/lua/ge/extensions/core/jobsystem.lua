@@ -41,7 +41,7 @@ local disableBackgroundTasks = false
 local function create(fct, maxdt, ...)
   if disableBackgroundTasks then
     -- runs things in the foreground
-    fct({yield = function() end}, unpack({...}))
+    fct({yield = function() end, sleep = function() end}, unpack({...}))
     return
   end
   local res =  {
@@ -62,6 +62,18 @@ local function create(fct, maxdt, ...)
     else
       --print("*** yield skipped: " .. tostring(dt))
     end
+  end
+  res.sleep = function(secs)
+    if coroutine.running() == nil then return end -- not running in a coroutine
+    repeat
+      coroutine.yield()
+      local dt = res.hp:stop() / 1000
+      if dt >= secs then break end
+    until true
+  end
+
+  res.setExitCallback = function(fct)
+    res.exitcbl = fct
   end
 
   table.insert(coroutines, res)
@@ -96,16 +108,25 @@ local function onUpdate()
   end
   -- remove the things in reverse
   for i = #toRemove, 1, -1 do
-    --print('removing entry ' .. tostring(i) .. ' / fct: ' .. tostring(coroutines[i].fct))
+    --log('E', 'jobsystem', 'removing entry ' .. tostring(i) .. ' / fct: ' .. tostring(coroutines[i].fct))
     local ci = toRemove[i]
+    if type(coroutines[ci].exitcbl) == 'function' then
+      coroutines[ci].exitcbl(coroutines[ci])
+    end
+    extensions.hook('onJobDone', coroutines[ci], #coroutines)
     runningFct[coroutines[ci].fct] = nil
     table.remove(coroutines, ci)
   end
+end
+
+local function getRunningJobCount()
+  return #coroutines
 end
 
 -- public interface
 M.onUpdate = onUpdate
 M.create = create
 M.wrap = wrap
+M.getRunningJobCount = getRunningJobCount
 
 return M

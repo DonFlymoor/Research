@@ -23,8 +23,8 @@ local function fillNormalizeBindingDefaults(binding)
     if binding.deadzoneResting then binding.deadzoneResting = tonumber(binding.deadzoneResting) end
     if binding.deadzoneEnd     then binding.deadzoneEnd     = tonumber(binding.deadzoneEnd)     end
     binding.deadzone = nil -- remove deprecated field
-    if binding.deadzoneResting == nil  then binding.deadzoneResting = 0 end
-    if binding.deadzoneEnd     == nil  then binding.deadzoneEnd = 0 end
+    if binding.deadzoneResting == nil then binding.deadzoneResting = 0 end
+    if binding.deadzoneEnd     == nil then binding.deadzoneEnd = 0 end
     if binding.control         ~= nil then binding.control = string.lower(binding.control) end
     if binding.linearity       == nil then binding.linearity = 1 end
     if binding.isInverted      == nil then binding.isInverted = false end
@@ -32,11 +32,15 @@ local function fillNormalizeBindingDefaults(binding)
     if binding.isForceInverted == nil then binding.isForceInverted = false end
     if binding.ffbUpdateType   == nil then binding.ffbUpdateType = 0 end
     binding.ffbUpdateType = tonumber(binding.ffbUpdateType)
-    if binding.ffb             == nil then binding.ffb = { forceCoef = 200, forceLimit = 2, smoothing = 150, smoothingHF = 50 } end
+    if binding.ffb             == nil then binding.ffb = { forceCoef = 200, forceLimit = 2, smoothing = 150 } end
+    binding.ffb.smoothingHF = nil -- remove deprecated field
     if binding.ffb.frequency   == nil then binding.ffb.frequency = 0 end
+    if binding.ffb.gforceCoef  == nil then binding.ffb.gforceCoef = 0 end
     if binding.ffb.responseCurve==nil then binding.ffb.responseCurve = { {0, 0}, {1, 1} } end
     if binding.ffb.responseCorrected==nil then binding.ffb.responseCorrected = false end
     if binding.ffb.forceCoefLowSpeed==nil then binding.ffb.forceCoefLowSpeed = binding.ffb.forceCoef end
+    if binding.ffb.lowspeedCoef== nil then binding.ffb.lowspeedCoef = (binding.ffb.forceCoefLowSpeed / binding.ffb.forceCoef) < 0.9 end
+    binding.ffb.forceCoefLowSpeed = nil -- remove deprecated field
     if binding.filterType      == nil then binding.filterType = -1 end
     if binding.angle           == nil then binding.angle = 0 end
     return binding
@@ -88,7 +92,7 @@ local function sendBindingsToGE(devname, bindings, player)
           am = ActionMap(actionMapName)
           log('D', 'bindings', "Registered new action map: "..actionMapName)
         end
-        am:bindFull(devname, b.action, b.control, isCentered, b.deadzoneResting, b.deadzoneEnd, b.linearity, b.angle or 0, b.isInverted, b.isForceEnabled, b.isForceInverted, b.ffbUpdateType, encodeJson(b.ffb), actsOnChange, onChange, actsOnDown, onDown, actsOnUp, onUp, b.filterType, isRelative, player, ctx)
+        am:bindFull(devname, b.action, b.control, isCentered, b.deadzoneResting, b.deadzoneEnd, b.linearity, b.angle or 0, b.isInverted, b.isForceEnabled, b.isForceInverted, b.ffbUpdateType, jsonEncode(b.ffb), actsOnChange, onChange, actsOnDown, onDown, actsOnUp, onUp, b.filterType, isRelative, player, ctx)
         count = count + 1
         ::continue::
     end
@@ -378,7 +382,7 @@ local function updateDevicesList(oldDevices)
             if string.startswith(device, "xinput") then
                 local n = string.sub(device, -1, -1) -- get controller number (xinput3 -> 3)
                 local event = {controller = n, connected = true}
-                be:executeJS("HookManager.trigger('XInputControllerUpdated', "..tostring(encodeJson(event))..");")
+                be:executeJS("HookManager.trigger('XInputControllerUpdated', "..tostring(jsonEncode(event))..");")
             elseif not isCommonDevice then
                 ui_message(msg)
             end
@@ -402,7 +406,7 @@ local function updateDevicesList(oldDevices)
             if string.startswith(device, "xinput") then
                 local n = string.sub(device, -1, -1) -- get controller number (xinput3 -> 3)
                 local event = {controller = n, connected = false}
-                be:executeJS("HookManager.trigger('XInputControllerUpdated', "..tostring(encodeJson(event))..");")
+                be:executeJS("HookManager.trigger('XInputControllerUpdated', "..tostring(jsonEncode(event))..");")
             else
                 ui_message(msg)
             end
@@ -486,7 +490,7 @@ local function notifyUI(reason)
                      actions         = actions.getActions(),
                      bindingTemplate = fillNormalizeBindingDefaults({}),
                      bindings        = M.bindings }
-    be:executeJS("HookManager.trigger('InputBindingsChanged', "..tostring(encodeJson(result))..");")
+    be:executeJS("HookManager.trigger('InputBindingsChanged', "..tostring(jsonEncode(result))..");")
 end
 
 local function resetDeviceBindings(devname, guid, name, pidvid, vehicleName)
@@ -510,11 +514,11 @@ local function saveBindingsFileToDisk(data, vehicleName)
     for _,b in pairs(diffData.bindings or {}) do b.action = actions.uniqueNameToName(b.action, vehicleName) end
     for _,b in pairs(diffData.removed  or {}) do b.action = actions.uniqueNameToName(b.action, vehicleName) end
 
-    local contents = encodeJson(diffData)
+    local contents = jsonEncode(diffData)
     local path = getWritingPath(vehicleName, data.devicetype, data.vidpid)
     if contents == nil then
         log('E', 'bindings', "Couldn't parse bindings data for file: "..path); return false end
-    if saveCompiledJBeam(diffData, path) == nil then -- some simple indentation
+    if jsonWriteFile(path, diffData, true) == nil then -- some simple indentation
     --if writeFile(path, contents) == nil then   -- straight dump with no format
         log('E', 'bindings', "Couldn't write bindings file to: "..path);
         return false
@@ -677,7 +681,9 @@ local function updateGFX(dtRaw)
 end
 
 local function onFileChanged(filename)
-  if string.startswith(filename, "settings/inputmaps/") then
+  local actionsModified = string.startswith(filename, "lua/ge/input_actions") and string.endswith(filename, ".json")
+  local bindingsModified = string.startswith(filename, "settings/inputmaps/")
+  if actionsModified or bindingsModified then
     filechangeTimeout = 0.1 -- seconds
     M.updateGFX = updateGFX
   end

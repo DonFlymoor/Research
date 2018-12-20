@@ -1,10 +1,10 @@
 angular.module('beamng.apps')
 .directive('winds', ['UiUnits', function (UiUnits) {
   return {
-    
-    template: 
+
+    template:
       '<div class="bngApp">' +
-        '<object style="width:100%;" type="image/svg+xml" data="modules/apps/Winds/winds.svg?t=' + Date.now() + '"/>' +
+        '<object style="width:100%;" type="image/svg+xml" data="modules/apps/Winds/winds.svg?t=' + Date.now() + '"></object>' +
         '<md-slider flex min=0 max=210 ng-model="wind.mag" aria-label="_" style="padding: 0 10px"></md-slider>' +
       '</div>',
 
@@ -50,15 +50,15 @@ angular.module('beamng.apps')
           , dragging = false
           , auxPt  = svg[0].rootElement.createSVGPoint() // auxiliary svg point to get transform matrix between window and SVG element
           , groupTransform = svg[0].rootElement.getTransformToElement(svg[0].getElementById('layer1'))
-          , posInGroup = function (event) { 
+          , posInGroup = function (event) {
               // First convert window coordinates to SVG coordinates by taking the root element's transform matrix
               // This should not be cached because it will change when the app is moved and/or resized.
               svgTransform = svg[0].rootElement.getScreenCTM().inverse();
-              auxPt.x = event.x; 
+              auxPt.x = event.x;
               auxPt.y = event.y;
 
               // Secondly, apply the transformation for the group's local coordinates.
-              return auxPt.matrixTransform(svgTransform).matrixTransform(groupTransform); 
+              return auxPt.matrixTransform(svgTransform).matrixTransform(groupTransform);
             }
         ;
 

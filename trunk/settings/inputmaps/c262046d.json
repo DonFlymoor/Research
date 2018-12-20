@@ -84,7 +84,7 @@
     "control"           : "button8"          
     }, 
     {
-    "ffb" :       {"forceLimit"        : 5                   , "smoothing"         : 150                 , "forceCoef"         : 450                 , "forceCoefLowSpeed": 220, "smoothingHF"       : 50                  , "frequency": 0}, 
+    "ffb" :       {"forceLimit"        : 5                   , "smoothing"         : 150                 , "forceCoef"         : 450                 , "forceCoefLowSpeed": 220, "smoothingHF"       : 150                  , "frequency": 0}, 
     "isForceInverted"   : true                , 
     "ffbUpdateType" : 0,
     "isForceEnabled"    : true                , 

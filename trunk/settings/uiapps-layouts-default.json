@@ -923,7 +923,7 @@
       "jsSource": "../../ui/modules/apps/Messages/app.js"
     }
   ],
-  "christmasEvent":[
+  "collectionEvent":[
     {
       "name": "Messages",
       "domElement": "<messages></messages>",

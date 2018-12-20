@@ -581,10 +581,13 @@ function (logger, $scope, $sce, Utils, UiUnits, $state, bngApi, $stateParams, Ca
       $scope.$emit('MenuToggle', true);
       setTimeout(function() {$state.go('menu.scenarios');});
     },
-
     openQuickrace:function(){
       $scope.$emit('MenuToggle', true);
       setTimeout(function() {$state.go('menu.quickraceOverview');});
+    },
+    openLightRunner:function(){
+      $scope.$emit('MenuToggle', true);
+      setTimeout(function() {$state.go('menu.lightrunnerOverview');});
     },
     openCampaigns:function(){
       $scope.$emit('MenuToggle', true);

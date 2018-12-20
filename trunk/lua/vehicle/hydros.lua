@@ -6,13 +6,14 @@ local min, max, abs = math.min, math.max, math.abs
 local M = {}
 
 M.enableFFB = true
-M.wheelFFBForceCoef = 400 -- regular force coef (at speed)
-M.wheelFFBForceCoefLowSpeed = 400 -- force coef used at parking speeds
+M.wheelFFBForceCoef = 200 -- regular force coef (at speed)
+M.wheelFFBForceCoefLowSpeed = 200 -- force coef used at parking speeds
 M.wheelFFBForceCoefCurrent = M.wheelFFBForceCoefLowSpeed -- updated over time depending on speed (start at parking speed) and AI driver
 M.wheelPowerSteeringCoef = 1
 M.wheelFFBForceLimit = 2 -- The FFB steady force limits (in Newton)
-M.wheelFFBSmoothing = 100 -- low freq
-M.wheelFFBSmoothingHF = 50 -- high freq
+M.wheelFFBSmoothing = 150
+M.GforceCoef = 0
+local GforceVelCoef = 0
 
 M.hydros = {}
 local hydroCount = 0
@@ -35,7 +36,6 @@ local lastDriverUpdate = 0 -- last time we sent an update to the drivers
 local hp = HighPerfTimer()
 local FFmax = 10
 local FFstep = FFmax / 256
-local action = "steering"
 local ffbSpeedFast = 10 / 3.6
 local dtInternal = 1
 local moveSteering = true
@@ -123,7 +123,6 @@ local function getDriverForce(force)
 end
 
 local function FFBcalc(wheelDispl)
-  local lastForce = M.forceAtWheel
   M.forceAtWheel = M.wheelFFBForceCoefCurrent * vehicleFFBForceCoef * wheelDispl * M.wheelPowerSteeringCoef
 
   -- TODO: why check for ffb and controller presence (steering wheel hardware) this late, instead of at the beginning of function?
@@ -136,8 +135,7 @@ local function FFBcalc(wheelDispl)
     -- TODO: instead, maybe we can re-set the smoother when we've gone over the limit and use getUncapped? (just like the fix for lag in skidding sound smoothers)
     -- reminder: FFBsmooth must run at a constant rate, such as 2KHz (replace with a temporal smoother otherwise)
     local limit = 10 * M.curForceLimit
-    M.forceAtWheel = FFBsmooth:getWindow(max(min(M.forceAtWheel, limit), -limit),
-      sign(M.forceAtWheel) ~= sign(lastForce) and M.wheelFFBSmoothingHF or M.wheelFFBSmoothing)
+    M.forceAtWheel = FFBsmooth:getWindow(max(min(M.forceAtWheel, limit), -limit), M.wheelFFBSmoothing) - GforceVelCoef * sensors.gx * M.GforceCoef
 
     -- drivers will struggle if sending too many updates per wall clock second, so we throttle them here (according to FFBperiodms)
     local now = hp:stop() -- important, this must be wall clock time, not sim time (steering wheel drivers don't care about sim time)
@@ -191,15 +189,19 @@ local function updateGFX(dt) -- dt in seconds
   end
 
   if FFBHydrosExist then
+    local invDt = 1 / (dt + 1e-30)
     dtInternal = 0
     moveSteering = true
     p0 = statewheelpos
     local wheelpos = electrics.values.steering_input or 0
     local prevvel = wheelvel
-    wheelvel = (wheelpos - p0) / (dt + 1e-30)
+    wheelvel = (wheelpos - p0) * invDt
+    GforceVelCoef = min(1, 1/(abs(wheelvel) + 1))
     p1 = wheelpos
     local nextvel = 2 * wheelvel - prevvel
-    t0 = sign(wheelvel) * max(abs(prevvel), abs(wheelvel), abs(nextvel)) * dt;
+    local smoothEst = max(1, 0.05 * invDt)
+    smoothEst = smoothEst * smoothEst * 1 -- to increase responsiveness increase 1 <--
+    t0 = (wheelvel + sign(wheelvel) * smoothEst * (max(abs(prevvel), abs(wheelvel), abs(nextvel)) - abs(wheelvel))) * dt;
     t1 = 2 * wheelvel * dt - t0
 
     M.curForceLimit = curForceLimitSmoother:getWithRate(M.wheelFFBForceLimit, dt, 10)
@@ -248,9 +250,9 @@ local function update(dtSim)
         local h = FFBHydros[i]
 
         local hbcid = h.bcid
-        if not obj:beamIsBroken(hbcid) then
+        if not h.fIsBroken(obj, hbcid) then
           FFBhcount = FFBhcount + 1
-          hwp = hwp + toInputSpace(h, obj:getBeamLength(hbcid) * h.invFFBHydroRefL)
+          hwp = hwp + toInputSpace(h, h.fgetDisplacement(obj, hbcid) * h.invFFBHydroRefL)
           statewp = statewp + toInputSpace(h, h.state)
         end
 
@@ -270,7 +272,7 @@ local function update(dtSim)
               else
                 h.state = min(h.state + dtSim * h._outrate, h.cmd)
               end
-              obj:setBeamLengthRefRatio(h.bcid, h.state)
+              h.fsetRelDisplacement(obj, h.bcid, h.state)
             end
           end
         end
@@ -293,7 +295,7 @@ local function update(dtSim)
       else
         h.state = min(h.state + dtSim * h._outrate, h.cmd)
       end
-      obj:setBeamLengthRefRatio(h.bcid, h.state)
+      h.fsetRelDisplacement(obj, h.bcid, h.state)
     end
   end
 end
@@ -309,11 +311,11 @@ local function onFFBConfigChanged(newFFBConfig)
     curForceLimitSmoother:set(0)
     log("D", "hydros.init", "Response to FFB config request: "..dumps(newFFBConfig))
 
-    if newFFBConfig == nil or newFFBConfig[action] == nil then
+    if newFFBConfig == nil or newFFBConfig.steering == nil then
       return
     end
 
-    local ffbConfig = newFFBConfig[action]
+    local ffbConfig = newFFBConfig.steering
 
     if M.enableFFB then
       FFBID = ffbConfig.FFBID or -1
@@ -324,7 +326,7 @@ local function onFFBConfigChanged(newFFBConfig)
         FFmax = ffbConfig.ff_max_force
         M.wheelFFBForceLimit = math.min(M.wheelFFBForceLimit, FFmax)
         if ffbConfig.ff_res == 0 then
-          ffbConfig.ff_res = 256
+          ffbConfig.ff_res = 65536
           log("W", "", "Steering wheel drivers didn't provide any FFB resolution information. Defaulting to "..dumps(ffbConfig.ff_res).. " steps")
         end
         FFstep = FFmax / ffbConfig.ff_res
@@ -332,10 +334,10 @@ local function onFFBConfigChanged(newFFBConfig)
         if ffbparams then
           local maxFFBrate = 0
           if ffbparams[  "forceCoef"] ~= nil then M.wheelFFBForceCoef   = ffbparams["forceCoef"]   end
-          if ffbparams["forceCoefLowSpeed"] ~= nil then M.wheelFFBForceCoefLowSpeed = ffbparams["forceCoefLowSpeed"]   end
+          if ffbparams["lowspeedCoef"] then M.wheelFFBForceCoefLowSpeed = ffbparams["forceCoef"]/2 end
           if ffbparams[ "forceLimit"] ~= nil then M.wheelFFBForceLimit  = ffbparams["forceLimit"]  end
           if ffbparams[  "smoothing"] ~= nil then M.wheelFFBSmoothing   = ffbparams["smoothing"]   end
-          if ffbparams["smoothingHF"] ~= nil then M.wheelFFBSmoothingHF = ffbparams["smoothingHF"] end
+          if ffbparams[ "gforceCoef"] ~= nil then M.GforceCoef  = ffbparams["gforceCoef"]  end
           if ffbparams[  "frequency"] ~= nil then maxFFBrate = tonumber(ffbparams["frequency"])  end
           if ffbparams["responseCorrected"] ~= nil then responseCorrected = ffbparams["responseCorrected"] end
           if ffbparams["responseCurve"]~=nil then responseCurve       = ffbparams["responseCurve"]end
@@ -354,8 +356,8 @@ local function onFFBConfigChanged(newFFBConfig)
             end
           end
           FFBperiodms = 1000.0/maxFFBrate
-          log("D", "hydros.init", "Force Feedback motor found for '"..action.."' hydro (physicsID: "..dumps(obj:getID())..", FFBID: "..dumps(FFBID)..", ForceCoef "..M.wheelFFBForceCoef..", ForceLimit "..M.wheelFFBForceLimit..", Smoothing "..M.wheelFFBSmoothing..", SmoothingHF "..M.wheelFFBSmoothingHF..", Period "..FFBperiodms.." ms / "..maxFFBrate.."Hz ("..(ffbparams["frequency"]==0 and "auto" or "manual")..", ffbSendMs "..dumps(ffbConfig.ffbSendms).."))")
-          gui.message("Controller with force feedback detected<br>Disabling "..action.." from the other controllers", 5, "hydros")
+          log("D", "hydros.init", "Force Feedback motor found for steering hydro (physicsID: "..dumps(obj:getID())..", FFBID: "..dumps(FFBID)..", ForceCoef "..M.wheelFFBForceCoef..", ForceLimit "..M.wheelFFBForceLimit..", Smoothing "..M.wheelFFBSmoothing..", Period "..FFBperiodms.." ms / "..maxFFBrate.."Hz ("..(ffbparams["frequency"]==0 and "auto" or "manual")..", ffbSendMs "..dumps(ffbConfig.ffbSendms).."))")
+          gui.message("Controller with force feedback detected<br>Disabling steering from the other controllers", 5, "hydros")
           obj:sendForceFeedback(FFBID, 0)
           --TODO: we should probably set the lastDriverUpdate time here, to prevent momentary overload of drivers
         else
@@ -375,26 +377,39 @@ M.updateGFX = updateGFX
 M.update = update
 
 local function init()
-  if v.data.hydros == nil or (v.data.hydros ~= nil and tableSize(v.data.hydros) == 0) then
-    M.updateGFX = nop
-    M.update = nop
-    M.hydros = {}
-    hydroCount = 0
-    return
-  end
-
   if v.data.input and v.data.input.FFBcoef ~= nil then
     vehicleFFBForceCoef = v.data.input.FFBcoef * 1.2
   end
 
+  FFBHydros = {}
+  FFBRest = {}
   M.hydros = {}
-  for _, v in pairs(v.data.hydros) do
-    table.insert(M.hydros, v)
+
+  if v.data.hydros then
+    for _, h in pairs(v.data.hydros) do
+      h.fIsBroken = obj.beamIsBroken
+      h.fgetDisplacement = obj.getBeamLength
+      h.fsetRelDisplacement = obj.setBeamLengthRefRatio
+      h.bcid = h.beam.cid
+      h.invFFBHydroRefL = 1 / obj:getBeamRefLength(h.bcid)
+      h.center = 1
+      table.insert(M.hydros, h)
+    end
   end
 
-  hydroCount = 0
+  if v.data.torsionHydros then
+    for _, h in pairs(v.data.torsionHydros) do
+      h.fIsBroken = obj.torsionbarIsBroken
+      h.fgetDisplacement = obj.getTorsionbarAngle
+      h.fsetRelDisplacement = obj.setTorsionbarAngle
+      h.bcid = h.cid
+      h.invFFBHydroRefL = 1
+      h.center = 0
+      table.insert(M.hydros, h)
+    end
+  end
+
   for _, h in pairs (M.hydros) do
-    hydroCount = hydroCount + 1
     h.inputCenter = h.inputCenter * h.inputFactor
     h.inputInLimit = h.inputInLimit * h.inputFactor
     h.inputOutLimit = h.inputOutLimit * h.inputFactor
@@ -406,11 +421,11 @@ local function init()
 
     local inputMiddle = (h.inputOutLimit + h.inputInLimit) * 0.5
     if h.inputCenter >= inputMiddle then
-      h.center = 1 + (h.outLimit - 1) * (h.inputCenter - inputMiddle) / (h.inputOutLimit - inputMiddle)
+      h.center = h.center + (h.outLimit - 1) * (h.inputCenter - inputMiddle) / (h.inputOutLimit - inputMiddle)
     else
-      h.center = 1 - (1 - h.inLimit) * (inputMiddle - h.inputCenter) / (inputMiddle - h.inputInLimit)
+      h.center = h.center - (1 - h.inLimit) * (inputMiddle - h.inputCenter) / (inputMiddle - h.inputInLimit)
     end
-    h.state = h.center + 1e-28 -- so as it initializes correctly
+
     h.multOut = (h.outLimit - h.center) / (h.inputOutLimit - h.inputCenter)
     h.cOut = h.center - h.inputCenter * h.multOut
     h.multIn = (h.center - h.inLimit) / (h.inputCenter - h.inputInLimit)
@@ -420,46 +435,34 @@ local function init()
     h.invMultIn = 1 / (h.center - h.inLimit) * inputFactorSign
     h._inrate = h.inRate
     h._outrate = h.outRate
+
+    h.state = h.center + 1e-28 -- so as it initializes correctly
     h.hydroDirState = 0
-    h.bcid = h.beam.cid
 
-    -- little workaround
-    if h.inputSource == action then
-      h.inputSource = action.."_input"
-    end
-
-    if h.inputSource == action.."_input" then
-      h[action] = true
+    h.inputSource = h.inputSource == "steering" and "steering_input" or h.inputSource
+    if h.inputSource == "steering_input" then
+      table.insert(FFBHydros, h)
+    else
+      table.insert(FFBRest, h)
     end
 
     if h.inputSource == "steering_input" then
       steeringHydro = h
     end
   end
+  hydroCount = #M.hydros
+  FFBRestCount = #FFBRest
 
   if hydroCount == 0 then
     M.updateGFX = nop
     M.update = nop
   end
 
-  FFBHydros = {}
-  FFBRest = {}
-  for _,h in pairs(M.hydros) do
-    if h[action] then
-      h.invFFBHydroRefL = 1 / obj:getBeamRefLength(h.beam.cid)
-      table.insert(FFBHydros, h)
-    else
-      table.insert(FFBRest, h)
-    end
-  end
-
-  FFBRestCount = #FFBRest
-  hydroCount = #M.hydros
   M.reset()
 end
 
 local function reset()
-  if v.data.hydros == nil or (v.data.hydros ~= nil and tableSize(v.data.hydros) == 0) then
+  if tableSize(M.hydros) == 0 then
     M.updateGFX = nop
     M.update = nop
     return
@@ -484,7 +487,7 @@ local function reset()
 end
 
 local function sendHydroStateToGUI()
-  obj:executeJS("HookManager.trigger('HydrosUpdate', "..encodeJson(M.hydros)..");")
+  obj:executeJS("HookManager.trigger('HydrosUpdate', "..jsonEncode(M.hydros)..");")
 end
 
 -- public interface

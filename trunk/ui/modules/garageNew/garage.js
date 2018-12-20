@@ -310,13 +310,13 @@ angular.module('beamng.garage')
         scope.dirWidth = 'height';
         scope.direction = 'top';
         scope.layout = 'column'
-        scope.toggleDir = () => scope.direction === 'top' ? 'bottom' : 'top';
+        scope.toggleDir = (direction) => direction === 'top' ? 'bottom' : 'top';
       } else {
         scope.dirHeight = 'height';
         scope.dirWidth = 'width';
         scope.direction = 'left';
         scope.layout = 'row'
-        scope.toggleDir = () => scope.direction === 'right' ? 'left' : 'right';
+        scope.toggleDir = (direction) => direction === 'right' ? 'left' : 'right';
       }
 
     }
@@ -352,7 +352,7 @@ angular.module('beamng.garage')
   return {
     template: `
     <div class="container" bng-nav-item nav-item-disabled="{{navigatable}}" class="animateAwesomeThings">
-      <div class="container" style="-webkit-mask-image: -webkit-linear-gradient({{getDir()}}, transparent, black 10%, black 90%, transparent)">
+      <div class="container" style="-webkit-mask-image: -webkit-linear-gradient({{horizontal ? 'right' : 'top'}}, transparent, black 10%, black 90%, transparent)">
         <div class="filler movingPixels" style="position: relative;" layout="{{dir}}" layout-align="space-between center">
           <div ng-repeat="item in newList | orderBy:$index:reverse track by $index" style="height: calc({{boxHeight}}px * {{scaleUp($index) ? '1.25' : '1'}}); width: calc({{boxWidth}}px * {{scaleUp($index) ? '1.25' : '1'}}); padding: {{paddingDim}};">
             <div class="filler imgListItem" layout="row" layout-align="center center">

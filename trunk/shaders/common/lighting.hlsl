@@ -337,6 +337,46 @@ float AL_CalcSpecular2( float3 L, float3 N, float3 V, float specPower )
     return ((specPower + 1)/(8 * pow(dLH, 3))) * pow(dNH, specPower);
 }
 
+#define NON_METALIC_SPECULAR_COLOR 0.04
+
+float specularD( float roughness, float dotNH  )
+{
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float temp = (dotNH * dotNH) * (a2-1) + 1;
+    return a2 / (PI * temp * temp);
+}
+
+float specularG( float roughness, float dotNV, float dotNL )
+{
+    // include specular denominator
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float GV = dotNL * sqrt((dotNV - a2 * dotNV) * dotNV + a2);
+    float GL = dotNV * sqrt((dotNL - a2 * dotNL) * dotNL + a2);
+    return 0.5 / (GV + GL);
+}
+
+float3 specularF( float3 f0, float dotVH )
+{
+    return f0 + (1 - f0) * pow(1.0 - dotVH, 5.0);
+}
+
+float3 EnvironmentBRDF_Aprox( float3 specColor, float roughness, float dotNV)
+{
+    float4 t = float4( 1/0.96, 0.475, (0.0275 -0.25 * 0.04)/0.96, 0.25 );
+    t *= (1 - roughness);
+    t += float4(0, 0, (0.015 -0.75 * 0.04)/0.96, 0.75 );
+    float a0 = t.x * min( t.y, exp2( -9.28 * dotNV ) ) + t.z;
+    float a1 = t.w;
+    return saturate( a0 + specColor * ( a1 - a0 ));
+}
+
+float3 toCubeMapCoords(float3 normal)
+{
+    return float3(normal.x, normal.z, normal.y);
+}
+
 float4 calcDiffuseAmbient( float4 upAmbColor, float3 normal )
 {
    float4 downAmbColor = upAmbColor * 0.5f;

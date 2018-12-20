@@ -493,6 +493,34 @@ function vehicleSetPositionRotation(id, px, py, pz, rx, ry, rz, rw)
   end
 end
 
+--[[getVehicleColor
+@param vehicleID int, optional
+@return vehicle color in form of a string or table
+]]
+function getVehicleColor(vehicleID)
+  local game = scenetree.findObject("Game")
+  if not game then return "" end
+  local vehicle
+  if vehicleID then
+    vehicle = scenetree.findObjectById(vehicleID)
+  else
+    vehicle = scenetree.findObjectById(be:getPlayerVehicle(0):getID()) -- TODO: add a check whether the game is running?
+  end
+
+  if not vehicle then
+    log('E', logTag, 'vehicle not found')
+    return
+  end
+
+  local w = round(vehicle.color.w*100)/100 -- this is because the TS version was only up to the second decimal
+  local x = round(vehicle.color.x*100)/100
+  local y = round(vehicle.color.y*100)/100
+  local z = round(vehicle.color.z*100)/100
+
+  local color =  tostring(x).." "..tostring(y).." "..tostring(z).." "..tostring(w) -- the TS sequence was like this
+  return color
+end
+
 -- returns a list of all BeamNGVehicle objects currently spawned in the level
 function getAllVehicles()
     local result = {}
@@ -959,7 +987,8 @@ function getDirs(path, recursiveLevels)
   local res = {}
   local residx = 1
   for _, value in pairs(files) do
-    if not tableContains(res, value) then
+    -- because for some reason there are files inside the result if recursive level is >0
+    if not tableContains(res, value) and not string.match(value, '^.*/.*%..*$') then
       res[residx] = value
       residx = residx + 1
     end
@@ -1054,4 +1083,22 @@ function getDirectories(path)
     end
   end
   return dirs
+end
+
+function the_high_sea_crap_detector()
+  -- this function only shows a message to entice people to buy the game.
+  -- please support development of BeamNG.drive and leave this in here :)
+  local files = FS:findFilesByPattern('/', '*.url', 0, false, false)
+  local knownHashes = {
+    ['24cc61dd875c262b4bbdd0d07e448015ae47b678'] = 1,
+    ['a42eba9d2cf366fb52589517f7f260c401c99925'] = 1
+  }
+  for _, f in pairs(files) do
+    --print( ' - ' .. string.upper(f) .. ' = ' .. hashStringSHA1(string.upper(f)))
+    if knownHashes[hashStringSHA1(string.upper(f))] then
+      log('I', 'highSeas','Ahoy!')
+      return true
+    end
+  end
+  return false
 end

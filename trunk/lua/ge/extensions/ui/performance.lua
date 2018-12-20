@@ -52,29 +52,6 @@ local function onPreRender()
   guihooks.triggerStream('PerformanceData', rawData)
 end
 
-local function rainbowColor(numOfSteps, step)
-  -- This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
-  -- Adam Cole, 2011-Sept-14
-  -- HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
-  local r = 0
-  local g = 0
-  local b = 0
-  local h = step / numOfSteps
-  local i = math.floor(h * 6)
-  local f = h * 6 - i
-  local q = 1 - f
-  local iMod = i % 6
-  if     iMod == 0 then r = 1; g = f; b = 0
-  elseif iMod == 1 then r = q; g = 1; b = 0
-  elseif iMod == 2 then r = 0; g = 1; b = f
-  elseif iMod == 3 then r = 0; g = q; b = 1
-  elseif iMod == 4 then r = f; g = 0; b = 1
-  elseif iMod == 5 then r = 1; g = 0; b = q
-  end
-  --return 'rgba(' .. (r*255) .. ',' .. (g*255) .. ',' .. (b*255) .. ',1)'
-  return { math.floor(r*255), math.floor(g*255), math.floor(b*255), 1}
-end
-
 local function requestConfig()
   log('D', 'performance.requestConfig', 'assembling config')
   local graphCount = 9
@@ -87,7 +64,6 @@ local function requestConfig()
       cpuRender     = { title = 'CPU Render', unit = 'ms', precision = 1, window = 30, color = rainbowColor(graphCount, 7) },
       fps           = { title = 'FPS', unit = 'fps', precision = 0, window = 30, color = rainbowColor(graphCount, 2) },
       framePresentDelay      = { title = 'GPU Present Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 3) },
-      gpuVsync      = { title = 'Vsync', unit = '', precision = 0, window = 30, color = rainbowColor(graphCount, 7) },
       sfxDelay      = { title = 'Audio Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 4) },
       luaDelay      = { title = 'Lua Delay', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 5) },
       cpuPreRender  = { title = 'preRender', unit = 'ms', precision = 2, window = 30, color = rainbowColor(graphCount, 6) },
@@ -124,7 +100,6 @@ local function requestConfig()
       { title = 'Physics delay', graph = 'physDelay' },
       { title = 'CPU delay', graph = 'cpuRender' },
       { title = 'GPU Present Delay', graph = 'framePresentDelay' },
-      { title = 'GPU vsync', graph = 'gpuVsync' },
       { title = 'Audio delay', graph = 'sfxDelay' },
       { title = 'Lua delay', graph = 'luaDelay' },
       { title = 'Phys. Memory', graph = 'memprocessPhysUsed' },

@@ -1,5 +1,19 @@
 <section class="overviewContainer">
 
+  <md-card class="card" flex ng-if="hwinfo.sailingTheHighSeas">
+    <div class="md-title md-padding">{{ ::'ui.performance.warnings.highseas' | translate }}</div>
+    <md-divider></md-divider>
+    <div layout="row" flex layout-align="start start">
+      <div>
+        <md-icon style="font-size:128px; height:128px; color: rgb(255,100,0)">favorite</md-icon>
+      </div>
+      <md-list class="questionAnswer" flex layout="column" layout-align="center start" style="min-height:128px;font-weight:bold;" ng-repeat="(i, w) in hwinfo.hs.warnings">
+        <div ng-bind-html='hstxt'></div><br/>
+        <md-button class="md-accent md-raised" ng-if="!w.ack" ng-click="acknowledgeWarning(w.msg)" ng-style="hsbtn_style_nope" ng-mouseover="hsbtn_style={position: 'absolute',marginLeft:'-1000px'}"> {{ ::'ui.performance.highsea.okay' | translate }}</md-button>
+      </md-list>
+    </div>
+  </md-card>
+
   <md-card class="card" flex>
     <div class="md-title md-padding">{{ ::'ui.performance.cpu' | translate }}</div>
     <md-divider></md-divider>
@@ -251,6 +265,43 @@
           </div>
         </md-list-item>
         <md-list-item layout="row" layout-align="start center" ng-repeat="(i, w) in hwinfo.mods.warnings">
+          <div class="{{::w.type}}" layout="row" flex>
+            <div flex><b>{{ ::'ui.common.' + w.type | translate }}</b>: <span bng-translate="ui.performance.warnings.{{w.msg}}"></span></div>
+            <md-button class="md-warn md-raised" ng-if="!w.ack" ng-click="acknowledgeWarning(w.msg)">{{ ::'ui.performance.acknowledge' | translate }}</md-button>
+            <md-button class="md-raised" disabled ng-if="w.ack">{{ ::'ui.performance.acknowledged' | translate }}</md-button>
+          </div>
+        </md-list-item>
+      </md-list>
+    </div>
+  </md-card>
+
+  <md-card class="card" flex>
+    <div class="md-title md-padding">{{ ::'ui.performance.disk' | translate }}</div>
+    <md-divider></md-divider>
+    <div layout="row" flex layout-align="start start">
+      <div>
+        <md-icon style="font-size:128px; height:128px; color: rgb(139,195,74)" ng-if="hwinfo.disk.state == 'ok'">check_circle</md-icon>
+        <md-icon style="font-size:128px; height:128px; color: rgb(255,152,0)" ng-if="hwinfo.disk.state == 'warn'">error</md-icon>
+        <md-icon style="font-size:128px; height:128px; color: rgb(211,47,47)" ng-if="hwinfo.disk.state == 'error'">error</md-icon>
+      </div>
+
+      <md-list class="questionAnswer" flex layout="column" layout-align="center start" style="min-height:128px">
+        <md-button class="md-primary md-raised" ng-click="runDiskUsage()" ng-if="disk.usage.userpath == undefined">{{ ::'ui.performance.disk.run' | translate }}</md-button>
+        <md-list-item layout="row" layout-align="start center" style="font-size:0.8em">
+          <div class="leftSide">{{ ::'ui.performance.userpath' | translate }}</div>
+          <div flex layout="row" layout-align="start center">
+            <div>{{ 'ui.performance.disk.used' | translate }}: {{ disk.usage.userpath.size | bytes }}, {{ 'ui.performance.disk.free' | translate }} : {{ hwinfo.disk.freeSpace.user | bytes }}</div>
+            <div><md-progress-circular ng-if="disk.usage.userpath.running" md-mode="indeterminate" ng-disabled="true" md-diameter="20"></md-progress-circular> </div>
+          </div>
+        </md-list-item>
+        <md-list-item layout="row" layout-align="start center" style="font-size:0.8em">
+            <div class="leftSide">{{ ::'ui.performance.rootpath' | translate }}</div>
+            <div flex layout="row" layout-align="start center">
+              <div>{{'ui.performance.disk.used' | translate}}: {{ disk.usage.rootpath.size | bytes}}, {{'ui.performance.disk.free' | translate}} : {{ hwinfo.disk.freeSpace.root | bytes}}</div>
+              <div><md-progress-circular ng-if="disk.usage.rootpath.running" md-mode="indeterminate" ng-disabled="true" md-diameter="20"></md-progress-circular> </div>
+            </div>
+          </md-list-item>
+        <md-list-item layout="row" layout-align="start center" ng-repeat="(i, w) in hwinfo.disk.warnings">
           <div class="{{::w.type}}" layout="row" flex>
             <div flex><b>{{ ::'ui.common.' + w.type | translate }}</b>: <span bng-translate="ui.performance.warnings.{{w.msg}}"></span></div>
             <md-button class="md-warn md-raised" ng-if="!w.ack" ng-click="acknowledgeWarning(w.msg)">{{ ::'ui.performance.acknowledge' | translate }}</md-button>

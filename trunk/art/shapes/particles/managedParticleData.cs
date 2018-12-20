@@ -698,7 +698,7 @@ datablock ParticleData(BNG_smoke_small_black : DefaultParticle)
     colors[2] = "1 1 1 0.1";
     colors[3] = "1 1 1 0";
     dragCoefficient = "2";
-    gravityCoefficient = "-0.12";
+    gravityCoefficient = "-0.1";
     inheritedVelFactor = "1";
     spinRandomMin = "-360";
     spinRandomMax = "360";
@@ -1755,4 +1755,30 @@ datablock ParticleData(BNG_smoke_JATO : DefaultParticle)
     times[2] = "0.7";
     times[3] = "1";
     spinSpeed = "0.5";
+};
+
+datablock ParticleData(BNG_confetti : DefaultParticle)
+{
+    textureName = "art/shapes/particles/confetti.dds";
+    animTexName = "art/shapes/particles/confetti.dds";
+    colors[0] = "1 1 1 1";
+    colors[1] = "1 1 1 1";
+    colors[2] = "1 1 1 1";
+    colors[3] = "1 1 1 0.00";
+    dragCoefficient = "1";
+    gravityCoefficient = "1";
+    inheritedVelFactor = "1";
+    spinRandomMin = "-708";
+    spinRandomMax = "833";
+    lifetimeMS = "750";
+    lifetimeVarianceMS = "400";
+    sizes[0] = "0.5";
+    sizes[1] = "1";
+    sizes[2] = "1.5";
+    sizes[3] = "2";
+    times[0] = "0";
+    times[1] = "0.0980392";
+    times[2] = "0.6875";
+    times[3] = "1";
+    spinSpeed = "0.100";
 };

@@ -1,0 +1,6 @@
+{
+"bindings": [
+    {"action": "toggleEditor", "control": "f10"},
+    {"action": "nodegrabberRender", "control": "lcontrol"},
+    ]
+}

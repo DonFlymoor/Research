@@ -27,7 +27,7 @@ end
 local function load(mapFolder)
   local jFiles = FS:findFilesByPattern(mapFolder.."/buslines/", '*.buslines.json', -1, true, false)
   for _,jFilename in pairs(jFiles) do
-    local data = readJsonFile(jFilename)
+    local data = jsonReadFile(jFilename)
     if data == nil then log('E', logTag, "Error while loading file "..jFilename)
     else
       --log('I',logtagFN("load"),"Loaded "..jFilename)

@@ -1,5 +1,5 @@
 --[[
- SJSON Parser for Lua 5.1:
+ SJSON Parser for Lua 5.1
 
  Copyright (c) 2013-2018 BeamNG GmbH.
  All Rights Reserved.
@@ -40,37 +40,32 @@
 
 local M = {}
 
-local table = table
-local error = error
-local tonumber = tonumber
-local setmetatable = setmetatable
-local byte, sub, tconcat = string.byte, string.sub, table.concat
-
-local escapes = {
-  ['t'] = '\t',
-  ['n'] = '\n',
-  ['f'] = '\f',
-  ['r'] = '\r',
-  ['b'] = '\b',
-  ['"'] = '"',
-  ['\\'] = '\\'
-}
-
-local JsonReader = {}
-local peekTable = {}
-
-function JsonReader:Match(pat)
-  local res = self.s:match(pat, self.i)
-  self.i = self.i + (res and res:len() or 0)
-  return res
+if not pcall(require, "table.new") then
+  table.new = function() return {} end
 end
 
-function JsonReader:Error(msg)
+local error = error
+local tonumber = tonumber
+local byte, sub, tconcat, tablenew = string.byte, string.sub, table.concat, table.new
+
+local escapes = {
+  [116] = '\t',
+  [110] = '\n',
+  [102] = '\f',
+  [114] = '\r',
+  [98] = '\b',
+  [34] = '"',
+  [92] = '\\'
+}
+
+local peekTable = tablenew(256,0)
+
+local function jsonError(msg, s, i)
   local curlen = 0
   local n = 1
-  for w in self.s:gmatch("([^\n]*)") do
+  for w in s:gmatch("([^\n]*)") do
     curlen = curlen + #w
-    if curlen >= self.i then
+    if curlen >= i then
       error(string.format("%s near line %d, '%s'",msg, n, w:match'^%s*(.*%S)' or ''))
     end
     if w == '' then
@@ -80,89 +75,111 @@ function JsonReader:Error(msg)
   end
 end
 
-local function parseNumber(self)
+local function parseNumber(self, s)
   -- Read Number
-  local s, i = self.s, self.i + 1
+  local i = self[1]
   local c = byte(s, i)
-  while (c >= 45 and c <= 57) or c == 43 or c == 101 or c == 69 do -- matches \d-+.eE
+  local coef = 1
+
+  if c == 45 then -- -
+    coef = -1
     i = i + 1
+  elseif c == 43 then i = i + 1 end -- +
+
+  local r = 0
+  c = byte(s, i)
+  while (c >= 48 and c <= 57) do -- \d
+    i = i + 1
+    r = r * 10 + (c - 48)
     c = byte(s, i)
   end
-  i = i - 1
-
-  local result = tonumber(sub(s, self.i, i))
-  if result == nil then
-    self:Error(string.format("Invalid number: '%s'", sub(s, self.i, i)))
-  end
-
-  -- 1#INF00 support:
-  if i == self.i and byte(s, i + 1) == 35 then -- matches #
-    local infend = self.i + 6
-    if sub(s, self.i, infend) == "1#INF00" then
-      result = math.huge
-      self.i = infend
+  if c == 46 then -- .
+    i = i + 1
+    c = byte(s, i)
+    local f = 0
+    local scale = 0.1
+    while (c >= 48 and c <= 57) do -- \d
+      i = i + 1
+      f = f + (c - 48) * scale
+      c = byte(s, i)
+      scale = scale * 0.1
+    end
+    r = r + f
+  elseif c == 35 then -- #
+    local infend = self[1] + 6
+    if sub(s, self[1], infend) == "1#INF00" then
+      self[1] = infend
+      return math.huge
     else
-      self:Error(string.format("Invalid number: '%s'", sub(s, self.i, infend)))
+      jsonError(string.format("Invalid number: '%s'", sub(s, self[1], infend)), s, self[1])
+    end
+  end
+  if c == 101 or c == 69 then -- e E
+    i = i + 1
+    c = byte(s, i)
+    while (c >= 45 and c <= 57) or c == 43 do -- \d-+
+      i = i + 1
+      c = byte(s, i)
+    end
+    r = tonumber(sub(s, self[1], i - 1))
+    if r == nil then
+      jsonError(string.format("Invalid number: '%s'", sub(s, self[1], i-1)), s, self[1])
     end
   else
-    self.i = i
+    r = r * coef
   end
-
-  return result
+  self[1] = i - 1
+  return r
 end
 
-local function error_input(self)
-  self:Error('Invalid input')
+local function error_input(self, s)
+  jsonError('Invalid input', s, self[1])
 end
 
-local function readComment(self)
-  local s, i = self.s, self.i + 1
-  local p = byte(s, i)
-  if p == 47 then -- /
-    -- Read single line comment "//"
-    repeat
-      i = i + 1
-      p = byte(s, i)
-    until p == 10 or p == 13 or p == nil
-    self.i = i
-  elseif p == 42 then -- *
-    -- Read block comment "/*  xxxxxxx */"
-    while true do
-      i = i + 1
-      p = byte(s, i)
-      if (p == 42 and byte(s, i+1) == 47) or p == nil then -- */
-        break
-      elseif p == 47 and byte(s, i+1) == 42 then -- /*
-        self:Error("'/*' inside another '/*' comment is not permitted")
-      end
-    end
-    self.i = i + 1
-  else
-    self:Error('Invalid comment')
-  end
-end
+local function SkipWhiteSpace(self, s)
+  local i = self[1] + 1
 
-local function SkipWhiteSpace(self)
 ::restart::
-  local s, i = self.s, self.i + 1
   local p = byte(s, i)
   while p ~= nil and (p <= 32 or p == 44) do -- matches space tab comma newline
     i = i + 1
     p = byte(s, i)
   end
 
-  self.i = i
-  if p == 47 then -- matches /
-    readComment(self)
+  if p == 47 then -- / -- read comment
+    i = i + 1
+    p = byte(s, i)
+    if p == 47 then -- / -- single line comment "//"
+      repeat
+        i = i + 1
+        p = byte(s, i)
+      until p == 10 or p == 13 or p == nil
+      i = i + 1
+    elseif p == 42 then -- * -- block comment "/*  xxxxxxx */"
+      while true do
+        i = i + 1
+        p = byte(s, i)
+        if (p == 42 and byte(s, i+1) == 47) or p == nil then -- */
+          break
+        elseif p == 47 and byte(s, i+1) == 42 then -- /*
+          jsonError("'/*' inside another '/*' comment is not permitted", s, i)
+        end
+      end
+      i = i + 2
+    else
+      jsonError('Invalid comment', s, i)
+    end
     goto restart
   end
+
+  self[1] = i
   return p
 end
 
-local function readString(self)
+local function readString(self, s)
   -- parse string
   -- fast path
-  local s, i = self.s, self.i + 1
+  local i = self[1] + 1
   local si = i -- "
   local ch = byte(s, i)
   while ch ~= 34 and ch ~= 92 and ch ~= nil do  -- " \
@@ -171,50 +188,52 @@ local function readString(self)
   end
 
   if ch == 34 then -- "
-    local result = sub(s, si, i - 1)
-    self.i = i
-    return result
+    self[1] = i
+    return sub(s, si, i - 1)
   end
 
-  self.i = si
   -- slow path for strings with escape chars
   if ch ~= 92 then -- \
-    self:Error("Not closed string")
+    self[1] = si
+    jsonError("String not having an end-quote", s, self[1])
     return
   end
 
+  i = si
   local result = {}
   local resultidx = 1
-  ch = sub(s, self.i, self.i)
-  while ch ~= '"' do
-    ch = self:Match('^[^"\\]*')
+  ch = byte(s, i)
+  while ch ~= 34 do -- "
+    ch = s:match('^[^"\\]*', i)
+    i = i + (ch and ch:len() or 0)
     result[resultidx] = ch
     resultidx = resultidx + 1
-    ch = sub(s, self.i, self.i)
-    if ch == '\\' then
-      local ch1 = escapes[sub(self.s, self.i + 1, self.i + 1)]
+    ch = byte(s, i)
+    if ch == 92 then -- \
+      local ch1 = escapes[byte(s, i+1)]
       if ch1 then
         result[resultidx] = ch1
         resultidx = resultidx + 1
-        self.i = self.i + 1
+        i = i + 1
       else
         result[resultidx] = '\\'
         resultidx = resultidx + 1
       end
-      self.i = self.i + 1 -- "
+      i = i + 1 -- "
     end
   end
 
+  self[1] = i
   return tconcat(result)
 end
 
-local function readKey(self, c)
+local function readKey(self, s, c)
   local key
-  local starti = self.i
+  local starti = self[1]
   if c == 34 then -- '"'
-    key = readString(self)
+    key = readString(self, s)
   else
-    local s, i = self.s, self.i
+    local i = starti
     local ch = byte(s, i)
     while (ch >= 97 and ch <= 122) or (ch >= 65 and ch <= 90) or (ch >= 48 and ch <= 57) or ch == 95 do -- [a z] [A Z] or [0 9] or _
       i = i + 1
@@ -223,37 +242,29 @@ local function readKey(self, c)
 
     local i_1 = i - 1
     key = sub(s, starti, i_1)
-    self.i = i_1
+    self[1] = i_1
   end
-  if self.i < starti then
-    self:Error(string.format("Expected dictionary key"))
+  if self[1] < starti then
+    jsonError(string.format("Expected dictionary key"), s, self[1])
   end
-  local delim = SkipWhiteSpace(self)
+  local delim = SkipWhiteSpace(self, s)
   if delim ~= 58 and delim ~= 61 then -- : =
-    self:Error(string.format("Expected dictionary separator ':' or '=' instead of: '%s'", string.char(delim)))
+    jsonError(string.format("Expected dictionary separator ':' or '=' instead of: '%s'", string.char(delim)), s, self[1])
   end
   return key
 end
 
-function JsonReader:New(s)
-  local o = {}
-  setmetatable(o, self)
-  self.__index = self
-  self.s = s
-  self.i = 0
-  return o
-end
-
 local function decode(s)
-  local self = JsonReader:New(s)
-  local c = SkipWhiteSpace(self)
+  if s == nil then return nil end
+  local self = {0}
+  local c = SkipWhiteSpace(self,s)
   if c == 123 or c == 91 then
-    return peekTable[c](self)
+      return peekTable[c](self, s)
   else
     local result = {}
     while c do
-      result[readKey(self, c)] = peekTable[SkipWhiteSpace(self)](self)
-      c = SkipWhiteSpace(self)
+      result[readKey(self, s, c)] = peekTable[SkipWhiteSpace(self, s)](self, s)
+      c = SkipWhiteSpace(self, s)
     end
     return result
   end
@@ -265,52 +276,52 @@ do
     peekTable[i] = error_input
   end
 
-  peekTable[123] = function(self) -- {
+  peekTable[123] = function(self, s) -- {
       -- parse object
-      local result = {}
-      local c = SkipWhiteSpace(self)
+      local result = tablenew(0, 2)
+      local c = SkipWhiteSpace(self, s)
       while c ~= 125 do -- }
-        result[readKey(self, c)] = peekTable[SkipWhiteSpace(self)](self)
-        c = SkipWhiteSpace(self)
+        result[readKey(self, s, c)] = peekTable[SkipWhiteSpace(self, s)](self, s)
+        c = SkipWhiteSpace(self, s)
       end
       return result
     end
-  peekTable[116] = function(self) -- t
-      local s, i = self.s, self.i
+  peekTable[116] = function(self, s) -- t
+      local i = self[1]
       if byte(s, i+1) == 114 and byte(s, i+2) == 117 and byte(s, i+3) == 101 then -- rue
-        self.i = i + 3
+        self[1] = i + 3
         return true
       else
-        self:Error('Error reading value: true')
+        jsonError('Error reading value: true', s, self[1])
       end
     end
-  peekTable[110] = function(self) -- n
-      local s, i = self.s, self.i
+  peekTable[110] = function(self, s) -- n
+      local i = self[1]
       if byte(s, i+1) == 117 and byte(s, i+2) == 108 and byte(s, i+3) == 108 then -- ull
-        self.i = i + 3
+        self[1] = i + 3
         return nil
       else
-        self:Error('Error reading value: null')
+        jsonError('Error reading value: null', s, self[1])
       end
     end
-  peekTable[102] = function(self) -- f
-      local s, i = self.s, self.i
+  peekTable[102] = function(self, s) -- f
+      local i = self[1]
       if byte(s, i+1) == 97 and byte(s, i+2) == 108 and byte(s, i+3) == 115 and byte(s, i+4) == 101 then -- alse
-        self.i = i + 4
+        self[1] = i + 4
         return false
       else
-        self:Error('Error reading value: false')
+        jsonError('Error reading value: false', s, self[1])
       end
     end
-  peekTable[91] = function(self) -- [
+  peekTable[91] = function(self, s) -- [
       -- Read Array
-      local result = {}
+      local result = tablenew(2, 0)
       local tidx = 1
-      local c = SkipWhiteSpace(self)
+      local c = SkipWhiteSpace(self, s)
       while c ~= 93 do -- ]
-        result[tidx] = peekTable[c](self)
+        result[tidx] = peekTable[c](self, s)
         tidx = tidx + 1
-        c = SkipWhiteSpace(self)
+        c = SkipWhiteSpace(self, s)
       end
       return result
     end

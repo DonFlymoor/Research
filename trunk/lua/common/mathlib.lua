@@ -2,6 +2,8 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
+-- simple an incomplete pure Lua math library created by BeamNG
+
 --[[
 Usage:
 
@@ -547,21 +549,17 @@ function quatFromEuler(x, y, z)
   )
 end
 
---------------------------------------------------------------------------------
--- generic things
-function sign2(n)
-  if n >= 0 then return 1 else return -1 end
+-- returns -1, 1
+function sign2(x)
+  return max(min(x * math.huge, 1), -1)
 end
 
-function sign(n)
-  if n > 0 then return 1 end
-  if n < 0 then return -1 end
-  return 0
+-- returns -1, 0, 1
+function fsign(x)
+  return max(min((x * 1e200) * 1e200, 1), -1)
 end
 
-function fsign(x) --branchless
-  return x / (abs(x) + 1e-307)
-end
+sign = fsign
 
 function guardZero(x) --branchless
   return 1 / max(min(1/x, 1e300), -1e300)
@@ -594,6 +592,12 @@ end
 
 function smootherstep(x)
   return min(1, max(0, (x*x)*x*(x*(x*6 - 15) + 10)))
+end
+
+function smootheststep(x)
+  x = min(1, max(0, x))
+  local x2 = x*x
+  return (x2*x2)*((35+70*x2)-x*(20*x2+84))
 end
 
 function smoothmin(a, b, k)
@@ -632,23 +636,28 @@ end
 
 function catmullRom(p0, p1, p2, p3, t, s)
   s = s or 0.5
-  local c0 = p1
-  local c1 = s * (p2 - p0)
-  local c2 = 2 * s * p0 + (s - 3) * p1 + (3 - 2 * s) * p2 - s * p3
-  local c3 = -s * p0 + (2 - s) * p1 +  (s - 2) * p2 + s * p3
-  return (c0 + (c1 * t) + (c2 * (t * t)) + (c3 * (t * t * t)))
+  local tt, s_2 = t*t, s-2
+  return (s*t*(t*(2-t)-1))*p0 + (1+tt*(s-3-t*s_2))*p1 + (t*s+tt*(3-2*s+t*s_2))*p2 + (tt*s*(t-1))*p3
 end
 
 function catmullRomQuat(p0, p1, _p2, p3, t, s)
   local p2 = _p2
   if p1:dot(p2) < 0 then
-  p2 = -_p2
+    p2 = -_p2
   end
-  s = s or 0.5
-  local c0 = p1
-  local c1 = s * (p2 - p0)
-  local c2 = 2 * s * p0 + (s - 3) * p1 + (3 - 2 * s) * p2 - s * p3
-  local c3 = -s * p0 + (2 - s) * p1 +  (s - 2) * p2 + s * p3
-  return (c0 + (c1 * t) + (c2 * (t * t)) + (c3 * (t * t * t)))
+  return catmullRom(p0, p1, p2, p3, t, s)
 end
 
+
+function convertQuatToTorqueFormat(rot)
+  local quat = {x=1,y=0,z=0,w=0}
+  quat.w = 2 * math.acos(rot.w)
+  local sinHalfAngle = math.sqrt(rot.x * rot.x + rot.y * rot.y + rot.z * rot.z)
+  if sinHalfAngle ~= 0 then
+    quat.x = rot.x / sinHalfAngle
+    quat.y = rot.y / sinHalfAngle
+    quat.z = rot.z / sinHalfAngle
+  end
+  quat.w = quat.w * 180 / math.pi
+  return quat
+end

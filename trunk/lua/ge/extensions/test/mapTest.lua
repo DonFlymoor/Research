@@ -21,11 +21,11 @@ local qualityLevels = {"Custom", "Lowest", "Low", "Normal", "High"}
 local levelsToSkip = {template = 1, italy = 1, west_coast_usa = 1}
 local first = true
 
-local function writeJsonFile(filename, data)
+local function jsonWriteFile(filename, data)
 	local header = {version = 1}
 	data["header"] = header
-	
-	if serializeJsonToFile(filename, data, true) then
+
+	if jsonWriteFile(filename, data, true) then
 		log('I', logTag, "Creation of file \"" .. filename .. "\" successful")
 	else
 		log('E', logTag, "Creation of file \"" .. filename .. "\" failed")
@@ -38,7 +38,7 @@ local function changeQualityLevel(level)
 		log('E', logTag, "No quality settings")
 		return
 	end
-	
+
 	for parameter, value in pairs(qualitySettings[level]) do
 		settings.setValue(parameter, value)
 	end
@@ -48,18 +48,18 @@ local function endTest()
 	local outfilename = "mapTest.json"
 	log('I', logTag, "End of test")
 	io.input("beamng.log")
-	
+
 	local mapErrors = {}
 	local currentMap = ""
 	local currentQuality = ""
 	local addErrors = false
-	
+
     while true do
 		local line = io.read()
 		if line == nil then break end
-	  
+
 		if (string.match(line, "|E|") or string.match(line, "|GELua." .. logTag .. "|")) and not string.match(line, "|GELua." .. logTag .. "|initialized") then
-		
+
 			-- If a new map is loaded, set the currentMap
 			if string.match(line, "|GELua." .. logTag .. "|Map and Quality level: ") then
 				-- Get map name
@@ -70,7 +70,7 @@ local function endTest()
 				mapErrors[currentMap .. " " .. currentQuality] = {}
 				addErrors = true
 			end
-			
+
 			if string.match(line, "|GELua." .. logTag .. "|Load level: ") then
 				addErrors = false
 			end
@@ -84,10 +84,10 @@ local function endTest()
 			end
 		end
     end
-	
+
 	-- Write output file
-	writeJsonFile(outfilename, mapErrors)
-	
+	jsonWriteFile(outfilename, mapErrors)
+
 	log('I', logTag, "Created output file " .. outfilename)
 end
 
@@ -95,7 +95,7 @@ local function onPreRender(dt, simdt, rawdt)
 	-- After 200 frames, load the next map in the list
 	if frameCounter > 400 then
 		frameCounter = 1
-		
+
 		if quality < 5 and not first then
 			quality = quality + 1
 			log('I', logTag, "Map and Quality level: " .. mapNames[mapCounter] .. " " .. qualityLevels[quality])
@@ -111,12 +111,12 @@ local function onPreRender(dt, simdt, rawdt)
 				shutdown(returnValue)
 				return
 			end
-			
+
 			--Load the next map
 			local mapName = mapNames[mapCounter]
-			if mapName then			
+			if mapName then
 				log('I', logTag, "Load level: " .. mapName)
-				beamng_cef.startLevel('levels/'.. mapName ..'/main.level.json')
+				core_levels.startLevel('levels/'.. mapName ..'/main.level.json')
 			else
 				log('W', logTag, "No map found")
 			end
@@ -134,13 +134,13 @@ local function onInit()
 		for k,v in ipairs(core_levels.getList()) do
 			if v.size and levelsToSkip[v.levelName] == nil then
 				table.insert(mapNames, v.levelName)
-			end	
+			end
 		end
 		log('I', logTag, "Found " .. table.getn(mapNames) .. " levels")
 		gotAllLevels = true
 	end
-	
-	qualitySettings = readJsonFile("ui/modules/options/settingsPresets.json")
+
+	qualitySettings = jsonReadFile("ui/modules/options/settingsPresets.json")
 	if not qualitySettings then
 		log('E', logTag, "No quality settings found")
 	end

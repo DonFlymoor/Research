@@ -27,10 +27,10 @@ local function onPreRender(dt)
   end
 end
 
-local function initEngineSound(vehicleId, engineId, jsonPath, nodeId, noloadVol, loadVol)
+local function initEngineSound(vehicleId, engineId, jsonPath, nodeIdArray, noloadVol, loadVol)
   local vehicle = scenetree.findObjectById(vehicleId)
   if vehicle then
-    vehicle:engineSoundInit(engineId, jsonPath, nodeId or -1, noloadVol or 1, loadVol or 1)
+    vehicle:engineSoundInit(engineId, jsonPath, nodeIdArray, noloadVol or 1, loadVol or 1)
     vehicle:engineSoundParameterList(engineId, {wet_level = 0, dry_level = 1})
   end
 end
@@ -53,11 +53,17 @@ local function setEngineSoundParameterList(vehicleId, engineId, parameters)
   vehicle:engineSoundParameterList(engineId, parameters)
 end
 
-M.setGlobalParameter = setGlobalParameter
-M.onPreRender = onPreRender
-M.initEngineSound = initEngineSound
-M.updateEngineSound = updateEngineSound
-M.setEngineSoundParameter = setEngineSoundParameter
-M.setEngineSoundParameterList = setEngineSoundParameterList
+local function setEngineSoundNodes(vehicleId, engineId, nodeIdArray)
+  local vehicle = scenetree.findObjectById(vehicleId)
+  if not vehicle then return end
+  vehicle:engineSoundNodes(engineId, nodeIdArray)
+end
 
+M.setGlobalParameter          = setGlobalParameter
+M.onPreRender                 = onPreRender
+M.initEngineSound             = initEngineSound
+M.updateEngineSound           = updateEngineSound
+M.setEngineSoundParameter     = setEngineSoundParameter
+M.setEngineSoundParameterList = setEngineSoundParameterList
+M.setEngineSoundNodes         = setEngineSoundNodes
 return M

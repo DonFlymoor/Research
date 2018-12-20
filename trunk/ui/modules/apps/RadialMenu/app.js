@@ -15,7 +15,7 @@ angular.module('beamng.apps')
             </filter>-->
           </defs>
         </svg>
-        <div ng-if="false" ng-cloak style="padding:5px; bottom:0; left:0; width:auto; position:absolute; pointer-events:none;background-color:rgba(0,0,0,0.4);color:white;" layout="row" layout-align"start center">
+        <div ng-if="false" ng-cloak style="padding:5px; bottom:0; left:0; width:auto; position:absolute; pointer-events:none;background-color:rgba(0,0,0,0.4);color:white;" layout="row" layout-align="start center">
           <div ng-if="controller == 'gamepad'  && false">
             <binding action="menu_item_select" style="margin: 0 5px;"></binding> select
             <binding action="menu_item_back" style="margin: 0 5px;"></binding> back
@@ -107,7 +107,7 @@ angular.module('beamng.apps')
 
       function getIconName (name) {
         return luaIconMap[name] || name;
-      } 
+      }
 
       bngApi.engineLua('core_quickAccess and core_quickAccess.isEnabled()', (enabled) => {
         scope.enabled = enabled;
@@ -122,7 +122,7 @@ angular.module('beamng.apps')
         //   bngApi.engineLua('bullettime.set(' + 0.1 + ')');
         // }
         // else {
-        //   bngApi.engineLua('bullettime.set(' + currSlowMo + ')');   
+        //   bngApi.engineLua('bullettime.set(' + currSlowMo + ')');
         // }
         scope.enabled = d;
         // console.log(d);
@@ -155,7 +155,7 @@ angular.module('beamng.apps')
         elst['fill'] = bool?"white":'grey';
         elst['font-size'] = fontSizeTXT* (bool?1:0.75);
         elst['font-family'] = 'Play';
-        elst['color']= bool?"white":'grey'; 
+        elst['color']= bool?"white":'grey';
         elst['white-space']= "normal";
         elst['margin']="0px";
       }
@@ -258,8 +258,8 @@ angular.module('beamng.apps')
 
         /*var s = hu('<style>', svg).text("@font-face {font-family: 'Material_Icons'; font-style: normal; font-weight: 400; src: local('Material Icons'), url(common/MaterialIcons-Regular.ttf);}");
         itm.push(s);
-        
-        
+
+
         //defs for icon*/
         var svgSize = size * 0.1;
         var fontSizeMat = svgSize;
@@ -341,7 +341,7 @@ angular.module('beamng.apps')
 
           var ex1 = (ex2) - Math.cos(endAngle) * (radius2-radius4);
           var ey1 = (ey2) - Math.sin(endAngle) * (radius2-radius4);
-          
+
           //console.log(sx1,sy1,sx2,sy2,ex1,ey1,ex2,ey2);
           // the animation translation
           var animTransX = Math.cos(midAngle) * animationTranslation;
@@ -549,7 +549,7 @@ angular.module('beamng.apps')
                       template.content.firstElementChild.height.baseVal.value = svgSize;
                       if(response.config.selected||focus===response.config.indexSlices){paintSVG(template.content.firstElementChild, response.config.selected);}else{paintSVG(template.content.firstElementChild, "grey");}
                       response.config.parentEl.n.appendChild(template.content.firstElementChild);
-                      response.config.parentEl.n.firstElementChild.style.cursor ="pointer"; 
+                      response.config.parentEl.n.firstElementChild.style.cursor ="pointer";
                       iconSlices[response.config.indexSlices]=response.config.parentEl.n.firstElementChild;
                       updateFocus();
                     }, function errorCallback(response) {
@@ -571,7 +571,7 @@ angular.module('beamng.apps')
             }else{
               //new method svg symbol
               var u = hu('<use>', svg).attr({
-                x: textX-svgSize/2, 
+                x: textX-svgSize/2,
                 y: textY-svgSize/2,
                 href: "#" + getIconName(d.icon),
                 width: svgSize,
@@ -604,7 +604,7 @@ angular.module('beamng.apps')
                       template.content.firstElementChild.height.baseVal.value = svgSize;
                       if(response.config.selected||focus===response.config.indexSlices){paintSVG(template.content.firstElementChild, "white");}else{paintSVG(template.content.firstElementChild, "grey");}
                       response.config.parentEl.n.appendChild(template.content.firstElementChild);
-                      response.config.parentEl.n.firstElementChild.style.cursor ="pointer"; 
+                      response.config.parentEl.n.firstElementChild.style.cursor ="pointer";
                       iconSlices[response.config.indexSlices]=response.config.parentEl.n.firstElementChild;
                       updateFocus();
                     }, function errorCallback(response) {
@@ -619,8 +619,8 @@ angular.module('beamng.apps')
                   });
                   itm.push(g);
                   var t = hu('<text>', g).attr({id: IconList[il].name}).css(textMatCSS).text(IconList[il].material);
-                  t.n.innerHTML = IconList[il].material; //fix HU library escaping the & to &amp; 
-                  t.n.style.cursor ="pointer"; 
+                  t.n.innerHTML = IconList[il].material; //fix HU library escaping the & to &amp;
+                  t.n.style.cursor ="pointer";
                   if(typeof d.color !== undefined){t.n.style.fill="grey";}
                   itm.push(t);
                   iconSlices[i]=t.n;
@@ -688,7 +688,7 @@ angular.module('beamng.apps')
         textCSS['font-family'] = 'Play';
         //textCSS['font-weight'] = 'bold';
         textCSS['text-anchor'] = 'middle';
-        textCSS['color']= "white"; 
+        textCSS['color']= "white";
         textCSS['white-space']= "normal";
         textCSS['margin']="0px";
         textCSS['vertical-align']= "middle";
@@ -838,9 +838,9 @@ angular.module('beamng.apps')
         itm.push(f);
         itemTxt = document.createElement('p');
         itemTxt.style.color="white";
-        itemTxt.style.fontSize= fontSizeTXT+"px"; 
+        itemTxt.style.fontSize= fontSizeTXT+"px";
         console.log("fontSizeTXT",fontSizeTXT);
-        itemTxt.style.fontFamily= "Play"; 
+        itemTxt.style.fontFamily= "Play";
         itemTxt.style.textAlign= "middle";
         itemTxt.style.whiteSpace= "normal";
         itemTxt.style.margin="0px";
@@ -864,7 +864,7 @@ angular.module('beamng.apps')
       }
 
       function updateFocus() {
-        
+
         if(!initialized) return;
         var px = centerX;
         var py = centerY;
@@ -995,7 +995,7 @@ angular.module('beamng.apps')
                 iconSlices[oldFocus].style.fill = scope.data.items[oldFocus].color?scope.data.items[oldFocus].color:"grey";
               }}}
             }
-            
+
           }
           itemTxt.text("");
           itemSecLineTxt.text("");
@@ -1051,7 +1051,7 @@ angular.module('beamng.apps')
                   iconSlices[oldFocus].style.fill = scope.data.items[oldFocus].color?scope.data.items[oldFocus].color:"grey";
                 }}}
               }
-              
+
             }
           }
 
@@ -1132,7 +1132,7 @@ angular.module('beamng.apps')
           goBack();
         }
       }
-      
+
       scope.mouseLeave = function(event){
         if(!scope.rvisible) return;
         if(scope.$parent.$parent.editMode)return;
@@ -1150,9 +1150,9 @@ angular.module('beamng.apps')
       scope.$on('QuickAccessMenu', function (event, data) {
         //console.log('QuickAccessMenu', data);
         // reset some things
-        
+
         scope.$apply(function(){
-       
+
           focus = null;
           scope.rvisible = (data !== null && data !== undefined);
           if (!scope.rvisible) return;

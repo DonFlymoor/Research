@@ -6,7 +6,7 @@
 local M = {}
 
 local triggerName = 'hotlappingCheckPoint'
-local logTag = 'hotLapping' 
+local logTag = 'hotLapping'
 local markerTS = [[if(isObject(hotlappingMarker)) {
           hotlappingMarker.delete();
         }
@@ -89,7 +89,7 @@ local bestLapIndex = -1
 
 --stores all checkPoints
 local checkPoints = {}
--- stores amount of checkPoints 
+-- stores amount of checkPoints
 local checkPointCount = 0
 -- stores the amount of passed checkPoints
 local checkPointIndex = 0
@@ -113,7 +113,7 @@ local forceSendToGui = true
 
 
 --------------------------------------------------------------------
--- Starting and stopping of hotlapping, 
+-- Starting and stopping of hotlapping,
 -- placing, removing and passing markers,
 -- starting, pausing and stopping of the race
 --------------------------------------------------------------------
@@ -130,7 +130,7 @@ local function startHotlapping()
     if(isObject(HotlappingGroup)) {
         HotlappingGroup.delete();
     }
-    new SimGroup(HotlappingGroup); 
+    new SimGroup(HotlappingGroup);
     HotlappingGroup.clear();
     ]])
     TorqueScript.eval(markerTS)
@@ -223,13 +223,13 @@ end
 
 
 -- adds a checkpoint to the track.
-local function addCheckPoint(cpPos, cpSize) 
+local function addCheckPoint(cpPos, cpSize)
     if not allowPlacingCP then
         return
     end
-    if cpPos == nil then -- use the current players position 
+    if cpPos == nil then -- use the current players position
       cpPos = be:getPlayerVehicle(0):getPosition()
-    end 
+    end
     if cpSize == nil then
       cpSize = Point3F(size*4,size*4,8)
     end
@@ -244,7 +244,7 @@ local function addCheckPoint(cpPos, cpSize)
     checkPoint:registerObject(triggerName .. checkPointCount)
     checkPoint:setPosition(cpPos)
     checkPoint:setScale(cpSize)
-  
+
     --add checkPoint to list of checkPoints
     checkPoints[checkPointCount] = checkPoint
     checkPointPosAndSize[checkPointCount+1] = {}
@@ -298,7 +298,7 @@ local function clearAllCP()
     TorqueScript.eval([[
         if(isObject(HotlappingGroup)) {
             HotlappingGroup.clear();
-        } 
+        }
     ]])
 
 end
@@ -306,7 +306,7 @@ end
 -- positions the markers. The big marker will be on the next checkpoint, the small marker on the one after
 local function positionMarkers( )
     if not scenetree.hotlappingMarker then
-        return 
+        return
     end
     scenetree.hotlappingMarker:setPosition((vec3(checkPointPosAndSize[nextCheckPointToBePassed+1].position)):toPoint3F())
     scenetree.hotlappingMarker.hidden = false;
@@ -330,7 +330,7 @@ local function onBeamNGTrigger( data )
         local cpNumber = tonumber(string.match (data['triggerName'], "%d+"))
         --log('E',logTag,"Passed CP nr. "..cpNumber)
         if not started and cpNumber == 0 then
-            
+
             --if ( (not instantStart) and firstRoundIgnored) or instantStart then
                 M.start()
             --else
@@ -345,22 +345,22 @@ local function onBeamNGTrigger( data )
                 --log('E',logTag,"curcuit now closed. checkPointCount "..checkPointCount)
                 nextCheckPointToBePassed = 0
             end
-            
+
         end
-        M.onCheckPointPassed(cpNumber)  
+        M.onCheckPointPassed(cpNumber)
     end
 end
 
 
 
 -- gets called when a checkpoint gets passed. takes the time and updates the checkpoint indices
-local function onCheckPointPassed(index) 
+local function onCheckPointPassed(index)
 
 
     if index == nextCheckPointToBePassed then
        -- log('E',logTag,"Passed checkPoint "..index)
         --times[currentLap][currentCP]['current'] = false;
-        
+
         local finishedRound = false
         if index == 0 then
             -- lapped!
@@ -371,22 +371,22 @@ local function onCheckPointPassed(index)
             currentCP = currentCP+1
             justPassedCPWithinLap = true
         end
-        
+
 
         nextCheckPointToBePassed = nextCheckPointToBePassed +1;
 
         if closed then
             -- wrap index
             nextCheckPointToBePassed = nextCheckPointToBePassed%checkPointCount
-            
+
             --position marker and next marker, if more than one checkpoint
             M.positionMarkers()
 
-            
-        end
-        
 
-       
+        end
+
+
+
     end
     -- wrong number!
 end
@@ -412,7 +412,7 @@ local function onUpdate()
     end
 
 
-    if started and be:getEnabled() then 
+    if started and be:getEnabled() then
         if currentPauseTime > 0 then
             totalPauseTime = totalPauseTime + currentPauseTime
             currentPauseTime = 0
@@ -420,7 +420,7 @@ local function onUpdate()
             forceSendToGui = true
             justStarted = true
         end
-        
+
         if not useScenarioTimer or not scenario_scenarios.getScenario().timer  then
           totalTime = (Engine.Platform.getRealMilliseconds() - startTime) - totalPauseTime
         else
@@ -428,16 +428,16 @@ local function onUpdate()
         end
         M.setTime()
         M.passTimeToGUI()
-        
-       
+
+
         justStarted = false
         justPassedCPWithinLap = false
         justLapped = false
     end
 
     -- rendering stuff
-    if closed and scenetree.hotlappingMarker then 
- 
+    if closed and scenetree.hotlappingMarker then
+
         local camPos = vec3(getCameraPosition())
         local nextIndex = nextCheckPointToBePassed+1
         local overNextIndex = ((nextIndex)%checkPointCount)+1
@@ -477,7 +477,7 @@ local function passTimeToGUI()
 end
 
 
-local function setEndTime() 
+local function setEndTime()
   -- adjust data for current lap and cp.
   times[currentLap][currentCP]['endTime'] = totalTime;
   times[currentLap][currentCP]['duration'] = times[currentLap][currentCP]['endTime'] - times[currentLap][currentCP]['startTime']
@@ -492,7 +492,7 @@ local function setEndTime()
       times[currentLap]['diff'] = times[currentLap]['duration'] - times[bestLapIndex]['duration']
       local bestLapDurationUntilThisCP = times[bestLapIndex][currentCP]['endTime'] - times[bestLapIndex]['startTime']
       local currentLapDurationUntilThisCP = times[currentLap][currentCP]['endTime'] - times[currentLap]['startTime']
-      times[currentLap][currentCP]['diff'] = currentLapDurationUntilThisCP - bestLapDurationUntilThisCP  
+      times[currentLap][currentCP]['diff'] = currentLapDurationUntilThisCP - bestLapDurationUntilThisCP
   end
 
   -- after lapping and at least second lap, without having skipped this or the previous lap,
@@ -535,7 +535,7 @@ local function setTime(ignoreNewLap)
         times[currentLap][currentCP]['startTime'] = totalTime;
         times[currentLap][currentCP]['cp'] = currentCP;
         act = true
-       
+
 
         -- after changing checkpoint, adjust endTime, duration and diff for previous checkpoint.
         -- figure out which cp and lap to change.
@@ -553,10 +553,10 @@ local function setTime(ignoreNewLap)
             times[lapToChange]['diff'] = times[lapToChange]['duration'] - times[bestLapIndex]['duration']
             local bestLapDurationUntilCP = times[bestLapIndex][cpToChange]['endTime'] - times[bestLapIndex]['startTime']
             local currentLapDurationUntilCP = times[lapToChange][cpToChange]['endTime'] - times[lapToChange]['startTime']
-            times[lapToChange][cpToChange]['diff'] = currentLapDurationUntilCP - bestLapDurationUntilCP  
+            times[lapToChange][cpToChange]['diff'] = currentLapDurationUntilCP - bestLapDurationUntilCP
           end
         end
-        
+
     end
 
     -- adjust data for current lap and cp.
@@ -573,7 +573,7 @@ local function setTime(ignoreNewLap)
         times[currentLap]['diff'] = times[currentLap]['duration'] - times[bestLapIndex]['duration']
         local bestLapDurationUntilThisCP = times[bestLapIndex][currentCP]['endTime'] - times[bestLapIndex]['startTime']
         local currentLapDurationUntilThisCP = times[currentLap][currentCP]['endTime'] - times[currentLap]['startTime']
-        times[currentLap][currentCP]['diff'] = currentLapDurationUntilThisCP - bestLapDurationUntilThisCP  
+        times[currentLap][currentCP]['diff'] = currentLapDurationUntilThisCP - bestLapDurationUntilThisCP
     end
 
     -- after lapping and at least second lap, without having skipped this or the previous lap,
@@ -586,7 +586,7 @@ local function setTime(ignoreNewLap)
         end
     end
 
-   -- if act then 
+   -- if act then
    --     dump(times)
   --  end
 end
@@ -597,7 +597,7 @@ end
 
 -- gets the full time info for a certain index
 local function getTimeInfo( )
-   
+
     local retNormal = {}
     local retDetail = {}
     local i = 0
@@ -623,12 +623,12 @@ local function getTimeInfo( )
             else
                 if lapIndex == currentLap and justPassedCPWithinLap then
                     retNormal[lapIndex].diff = M.formatMillis(lapValue[#lapValue-1]['diff'],true)
-                    retNormal[lapIndex].diffColor = M.getDiffColor(lapValue[#lapValue-1]['diff'])    
+                    retNormal[lapIndex].diffColor = M.getDiffColor(lapValue[#lapValue-1]['diff'])
                 end
 
                 if lapIndex ~= currentLap or not started then
                     retNormal[lapIndex].diff = M.formatMillis(lapValue['diff'],true)
-                    retNormal[lapIndex].diffColor = M.getDiffColor(lapValue['diff'])       
+                    retNormal[lapIndex].diffColor = M.getDiffColor(lapValue['diff'])
                 end
 
             end
@@ -659,7 +659,7 @@ local function getTimeInfo( )
                     retDetail[i].diff = 'Skipped'
                 else
                     retDetail[i].diff = M.formatMillis(cpValue['diff'], true)
-                    retDetail[i].diffColor = M.getDiffColor(cpValue['diff'])    
+                    retDetail[i].diffColor = M.getDiffColor(cpValue['diff'])
                 end
             end
             i = i+1
@@ -683,22 +683,22 @@ local function getTimeInfo( )
                 retDetail[i].diff = 'Skipped'
             else
                 retDetail[i].diff = M.formatMillis(lapValue['diff'], true)
-                retDetail[i].diffColor = M.getDiffColor(lapValue['diff'])    
+                retDetail[i].diffColor = M.getDiffColor(lapValue['diff'])
             end
-            
+
         end
 
 
 
-    end 
-    return {normal = retNormal, detail = retDetail};   
-end 
+    end
+    return {normal = retNormal, detail = retDetail};
+end
 
- 
+
 -- formats the time given nicely.
 local function formatMillis( timeInMillis, addSign )
-    if timeInMillis == nil then 
-        return nil 
+    if timeInMillis == nil then
+        return nil
     end
 
 
@@ -745,7 +745,7 @@ local function load( originalFilename )
    --dump(filename)
     --log('E',logTag,'loading file '..filename..' ...')
     if FS:fileExists(filename) then
-        local pos = readJsonFile(filename)
+        local pos = jsonReadFile(filename)
         if not pos or #pos == 0 then
             log('I',logTag,'No checkpoints found in file Documents/BeamNG.drive/'..filename)
             return
@@ -759,12 +759,12 @@ local function load( originalFilename )
         started = false
         checkPointPosAndSize = {}
         checkPointIndex = 0
-        
+
         checkPointCount = 0
         nextCheckPointToBePassed = 0
         times = {}
         closed = true
-        
+
         for k,v in ipairs(pos) do
             M.addCheckPoint(Point3F(v.position[1],v.position[2],v.position[3]),Point3F(v.size[1],v.size[2],v.size[3]))
         end
@@ -787,7 +787,7 @@ local function save( filename )
     local now = string.format("%.4d-%.2d-%.2d_%.2d-%.2d-%.2d", date.year,date.month,date.day, date.hour,date.min,date.sec)
     fn = M.getCurrentTrackName()
     filename = 'settings/hotlapping/'..fn..'/'..now..'.json';
-    serializeJsonToFile(filename,checkPointPosAndSize, false)
+    jsonWriteFile(filename,checkPointPosAndSize, false)
     log('I',logTag,'Serialized '..#checkPointPosAndSize..' checkpoints to file Documents/BeamNG.drive/'..filename)
     guihooks.trigger('HotlappingSuccessfullySaved', now)
     M.refreshTracklist()
@@ -799,7 +799,7 @@ local function rename( oldName, newName )
     local pre = 'settings/hotlapping/' .. M.getCurrentTrackName() ..'/'
     if not FS:fileExists(pre..oldName..'.json') then
         log('I',logTag,'Failed renaming '..oldName..' to '..newName..': File not found')
-        return 
+        return
     end
     FS:renameFile(pre..oldName..'.json', pre..newName..'.json')
     FS:removeFile(pre..oldName..'.json')
@@ -807,7 +807,7 @@ local function rename( oldName, newName )
 end
 
 -- get the name of the current track, without extension
-local function getCurrentTrackName() 
+local function getCurrentTrackName()
     local missionFile = getMissionFilename()
     local _, fn, e = string.match(missionFile, "(.-)([^/]-([^%.]-))$")
     fn = fn:sub(1,#fn - #e - 1)
@@ -850,7 +850,7 @@ local function refreshTracklist(  )
 
         tracks[i] = fn:sub(1,#fn - #e - 1)
     end
-   
+
    --dump(tracks)
     return tracks
 end
@@ -886,10 +886,10 @@ end
 
 local function onRaceStart( )
   log('D',logTag,'onRaceStart')
-  
+
   M.start()
   closed = true
-  times = {}  
+  times = {}
   nextCheckPointToBePassed = 1
   currentLap = 1
   useScenarioTimer = true
@@ -899,9 +899,9 @@ local function onRaceStart( )
 end
 
 local function onRaceWaypointReached( wpInfo )
- 
+
  --[[ local prevTimes = 0
-  
+
   if currentLap > 1 then
     for i = 1, currentLap-1 do
       prevTimes = prevTimes + times[i]["duration"]
@@ -935,9 +935,9 @@ local function onRaceWaypointReached( wpInfo )
         --highscores.setScenarioHighscores(times[currentLap]["duration"],"vehicleName","playerName","eca","track","reverse",0)
     end
     nextCheckPointToBePassed = nextCheckPointToBePassed +1
- 
+
     totalTime = scenario_scenarios.getScenario().timer*1000
-          
+
     M.setTime()
   end
 end

@@ -8,7 +8,7 @@
         <md-checkbox style="max-height:22px; margin-top:0px; margin-bottom:0px" ng-model="controlsFilters.filters[i].limitEnabled" ng-change="controlsFilters.apply(i)"></md-checkbox>
       </md-list-item>
       <div ng-show="controlsFilters.filters[i].limitEnabled" style="width:430px; height: 50px; position:relative; border: solid grey 2px; margin-left: 20px;">
-        <canvas width="430" height="50" id="filter{{i}}_graph"></canvas>
+        <canvas width="430" height="50" id="inputFilter{{i}}_graph"></canvas>
       </div>
       <md-list-item ng-if="controlsFilters.filters[i].limitEnabled" layout>
         <span flex="30">{{::"ui.controls.filters.limitStartSpeed" | translate }}</span>

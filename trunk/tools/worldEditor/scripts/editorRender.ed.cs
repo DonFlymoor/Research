@@ -16,15 +16,15 @@
 //   - consoleLineWidth
 //------------------------------------------------------------------------------
 
-function SpawnSphere::onEditorRender(%this, %editor, %selected, %expanded)
-{
-    if(%selected $= "true")
-    {
-        %editor.consoleFrameColor = "255 0 0";
-        %editor.consoleFillColor = "0 160 0 95";
-        %editor.renderSphere(%this.getWorldBoxCenter(), %this.radius, 1);
-    }
-}
+// function SpawnSphere::onEditorRender(%this, %editor, %selected, %expanded)
+// {
+    // if(%selected $= "true")
+    // {
+        // %editor.consoleFrameColor = "255 0 0";
+        // %editor.consoleFillColor = "0 160 0 95";
+        // %editor.renderSphere(%this.getWorldBoxCenter(), %this.radius, 1);
+    // }
+// }
 
 //function Item::onEditorRender(%this, %editor, %selected, %expanded)
 //{

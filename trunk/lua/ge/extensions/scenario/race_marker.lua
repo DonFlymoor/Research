@@ -319,4 +319,5 @@ M.clearNextStat = clearNextStat
 M.clearFinalStat = clearFinalStat
 
 M.removeFinalMarker = removeFinalMarker
+M.createRaceMarker = createRaceMarker
 return M

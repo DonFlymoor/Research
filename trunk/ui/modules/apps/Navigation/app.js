@@ -4,6 +4,7 @@ angular.module('beamng.apps')
       template: `
       <div style="height: 100%; width: 100%; position: relative;">
         <!-- map container -->
+
         <div id="overflow-wrap" style=" width: 100%; height: 100%; overflow: hidden">
           <div id="mapContainer" style="overflow: visible;">
             <svg style="overflow: visible">
@@ -20,6 +21,24 @@ angular.module('beamng.apps')
             </svg>
           </div>
         </div>
+
+        <!-- Collectible Display -->
+        <div ng-if="collectableTotal > 0" style="font-size: 1.2em; padding: 1%; color: white; background-color: rgba(0, 0, 0, 0.3); position: absolute; top:15px; left: 15px">
+          <md-icon style="margin-bottom: 3px;" md-svg-src="{{ 'modules/apps/Navigation/snowman.svg' }}" />
+          {{ collectableCurrent + '/' + collectableTotal }}
+        </div>
+
+        <style>
+          .bounce {
+            animation: bounce 1s cubic-bezier(0.4,0.1,0.2,1) both;
+          }
+          @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-4px); }
+            60% { transform: translateY(-2px); }
+          }
+        </style>
+
       </div>
       `,
       replace: true,
@@ -44,6 +63,10 @@ angular.module('beamng.apps')
         // receive live data from the GE map
         var vehicleShapes = {};
         var lastcontrolID = -1;
+
+        var collectableShapes = {};
+        // group to store all collectable svgs
+        var collGroup;
 
         var visibilitySlots = [0.2, 0.6, 0.8, 1]
         var activeVisibilitySlot = 1;
@@ -89,9 +112,28 @@ angular.module('beamng.apps')
           //console.log(data);
         });
 
-        function _createCircle(x, y, r, c) {
+        scope.$on('CollectablesInit', (event, data) => {
+          if (data) setupCollectables(data);
+        });
+
+        scope.$on('CollectablesUpdate', (event, data) => {
+          if (data) {
+            // remove collectable from svg
+            collectableShapes[data.collectableName].remove();
+            // play animation
+            var collectIcon = root.children[1].children[0];
+            collectIcon.classList.add('bounce')
+            collectIcon.addEventListener("animationend", function () {  // resetting the animation
+              collectIcon.classList.remove('bounce');
+            });
+            // update collected amount
+            scope.collectableCurrent = data.collectableAmount;
+          };
+        });
+
+        function _createCircle(x, y, r, c, s, sw) {
           hu('<circle>', svg).attr({
-            cx: x, cy: y, r: 0.5 * r, fill: c
+            cx: x, cy: y, r: 0.5 * r, fill: c, stroke: s, 'stroke-width': sw
           });
         }
 
@@ -125,6 +167,16 @@ angular.module('beamng.apps')
           northPointer.style.transform = 'translate(' + Math.min(Math.max(npx, -borderWidth / 2 - 2), borderWidth / 2) + 'px,' + Math.min(Math.max(npy, 0), borderHeight) + 'px)';
         }
 
+        // no cheating :D
+        function hideCollectables(camera) {
+          if (camera) {
+            collGroup.attr({opacity: 0});
+          }
+          else {
+            collGroup.attr({opacity: 1});
+          }
+        }
+
         function updatePlayerShape(key, data) {
           //console.log('updatePlayerShape', key)
           if (vehicleShapes[key]) vehicleShapes[key].remove();
@@ -134,6 +186,7 @@ angular.module('beamng.apps')
           var obj = data.objects[key];
           if (isControlled) {
             if (obj.type == 'Camera') {
+              hideCollectables(true)
               vehicleShapes[key] = hu('<circle>', svg)
               vehicleShapes[key].attr('cx', 0)
               vehicleShapes[key].attr('cy', 0)
@@ -141,6 +194,7 @@ angular.module('beamng.apps')
               vehicleShapes[key].css('fill', '#FD6A00');
             }
             else {
+              hideCollectables(false)
               vehicleShapes[key] = hu('<use>', svg);
               vehicleShapes[key].attr({ 'xlink:href': '#vehicleMarker' });
             }
@@ -269,15 +323,6 @@ angular.module('beamng.apps')
               return 'rgba(160, 160, 160, 1)'; //#fa9e28';
             }
 
-            function drawPOI() {
-              if (data.pois) {
-                for (var key in data.pois) {
-                  var poi = data.pois[key];
-                  _createCircle(-poi.pos[0], poi.pos[1], 100, 'rgba(255, 160, 0, 0.5)');
-                }
-              }
-            }
-
             function drawRoads(drivabilityMin, drivabilityMax) {
               for (var key in nodes) {
                 var el = nodes[key];
@@ -301,23 +346,98 @@ angular.module('beamng.apps')
                       );
                     }
                   }
+
+                  /*
+                    if(first) {
+                      d += 'M' + -el2.pos[0] + ' ' + -el2.pos[1]
+                      first = false;
+                    } else {
+                      d += ' L' + -el2.pos[0] + ' ' + -el2.pos[1]
+                    }
+                    d +=' Z'
+                  var p = hu('<path>', svg).attr({
+                    stroke: getDrivabilityColor(drivability),
+                    strokeWidth: 10,
+                    strokeLinecap: "round",
+                    fill: 'none',
+                    d: d,
+                  });
+                    */
+
                 }
               }
             }
 
             // draw dirt roads and then normal on top
-            drawRoads(0, 0.9);
-            drawRoads(0.9, 1);
+            drawRoads(0, 0.9)
+            drawRoads(0.9, 1)
 
-            // draw places of interest on top of roads
-            drawPOI();
+            // draw nodes on top
+            /*
+            var nodeColor = '#fa9e28'
+            for (var key in nodes) {
+              var el = nodes[key];
+              if (el.links !== undefined) {
+                nodeColor = getDrivabilityColor(el.links[Object.keys(el.links)[0]]);
+              }
+              _createCircle(-el.pos[0], el.pos[1], el.radius * 2, nodeColor); // nodes
+            }
+            */
 
             mapReady = true;
           }
 
         }
 
+        // need to draw collectables after roads have been drawn
+        function setupCollectables(data) {
+          var mapSize = viewParams[2];
+          var perimeterScale = 0;
+
+          scope.collectableTotal = data.collectableAmount;
+          scope.collectableCurrent = data.collectableCurrent;
+
+          // Calculating the different radius' for the collectible containers
+          // based on map size.
+          switch (true) {
+            case (mapSize <= 1024): {
+              perimeterScale = 130;
+              break;
+            }
+            case (mapSize > 1024): {
+              perimeterScale = 125
+              break;
+            }
+            case (mapSize >= 2048): {
+              perimeterScale = 100;
+              break;
+            }
+          };
+
+          // remove any existing collectable svgs
+          for (var key in collectableShapes) {
+            collectableShapes[key].remove();
+          }
+          collGroup = hu('<g>', svg);
+          // draw collectable svgs
+          for (var item in data.collectableItems) {
+            var offset = (Math.random() * 50);
+            var coll = hu('<circle>', collGroup).attr({
+              cx: (-data.collectableItems[item][1] - (Math.max(Math.random() * 50), 50)), // collectable will be located somewhere within this circle but never in the exact center.
+              cy: (data.collectableItems[item][2] - (Math.max(Math.random() * 50), 50)),
+              r: perimeterScale,
+              fill: 'rgba(255, 160, 0, 0.2)',
+              stroke: 'rgba(255, 160, 0, 0.6)',
+              'stroke-width': 3,
+            });
+            // store all collectable svgs
+            collectableShapes[item] = coll;
+          }
+        };
+
         bngApi.engineLua('extensions.ui_uiNavi.requestUIDashboardMap()');
+
+        bngApi.engineLua(`extensions.core_collectables.sendUIState()`);
 
       }
     };

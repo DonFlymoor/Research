@@ -291,18 +291,11 @@ end
 local function updateSounds(device, dt)
   local rpm = device.soundRPMSmoother:get(abs(device.outputAV1 * avToRPM), dt)
   local engineLoad = min(max(device.soundLoadSmoother:get(device.instantEngineLoad * device.instantEngineLoad, dt), device.soundMinLoadMix), device.soundMaxLoadMix)
-  --rpm = abs(rpm - (device.lastSoundRPM or 0)) > 100 and rpm or (device.lastSoundRPM or 0)
-  --engineLoad = abs(engineLoad - (device.lastSoundLoad or 0)) > 1.99 and engineLoad or (device.lastSoundLoad or 0)
-  --print(abs(rpm - (device.lastSoundRPM or 0)))
-  --  if abs(rpm - (device.lastSoundRPM or 0)) > rpm * 0.0015 or abs(engineLoad - (device.lastSoundLoad or 0)) > 0.05 then
-  --    obj:setEngineSound(0, rpm, engineLoad, sounds.hzToFMODHz(rpm / 20), device.engineVolumeCoef)
-  --    device.lastSoundRPM = rpm
-  --    device.lastSoundLoad = engineLoad
-  --  end
 
-  obj:setEngineSound(device.engineSoundID, rpm, engineLoad, sounds.hzToFMODHz(rpm * device.fundamentalFrequencyRPMCoef), device.engineVolumeCoef)
+  local fundamentalFreq = sounds.hzToFMODHz(rpm * device.fundamentalFrequencyRPMCoef)
+  obj:setEngineSound(device.engineSoundID, rpm, engineLoad, fundamentalFreq, device.engineVolumeCoef)
   if device.engineSoundIDExhaust then
-    obj:setEngineSound(device.engineSoundIDExhaust, rpm, engineLoad, sounds.hzToFMODHz(rpm * device.fundamentalFrequencyRPMCoef), device.engineVolumeCoef)
+    obj:setEngineSound(device.engineSoundIDExhaust, rpm, engineLoad, fundamentalFreq, device.engineVolumeCoef)
   end
   device.turbocharger.updateSounds()
   device.supercharger.updateSounds()
@@ -503,6 +496,8 @@ local function updateGFX(device, dt)
     --however, we need to communicate that with other subsystems to prevent issues, so in this case we ADDITIONALLY lock it up manually
     device:lockUp()
   end
+
+  device.exhaustFlowDelay:push(device.engineLoad)
 
   --push our summed fuels into the delay lines (shift fuel does not have any delay and therefore does not need a line)
   if device.shiftAfterFireFuel <= 0 then
@@ -785,6 +780,12 @@ local function calculateInertia(device)
   device.maxCumulativeGearRatio = maxCumulativeGearRatio
 end
 
+local function exhaustEndNodesChanged(device, endNodeIDs)
+  if device.engineSoundIDExhaust then
+    obj:queueGameEngineLua(string.format("core_sounds.setEngineSoundNodes(%d,%d,%s)", objectId, device.engineSoundIDExhaust, serialize(endNodeIDs)))
+  end
+end
+
 local function resetSounds(device)
   if not sounds.usesOldCustomSounds then
     if device.jbeamData.soundConfig then
@@ -797,6 +798,18 @@ local function resetSounds(device)
         sounds.disableOldEngineSounds()
       else
         log("E", "combustionEngine.init", "Can't find sound config: " .. device.jbeamData.soundConfig)
+      end
+      if device.engineSoundIDExhaust then
+        local endNodeIDs
+        if device.thermals.exhaustEndNodes and #device.thermals.exhaustEndNodes > 0 then
+          endNodeIDs = {}
+          for _, v in pairs(device.thermals.exhaustEndNodes) do
+            table.insert(endNodeIDs, v.finish)
+          end
+        else
+          endNodeIDs = {device.engineNodeID}
+        end
+        obj:queueGameEngineLua(string.format("core_sounds.setEngineSoundNodes(%d,%d,%s)", objectId, device.engineSoundIDExhaust, serialize(endNodeIDs)))
       end
       obj:stopSFX(device.engineStarterSound.startSound)
     end
@@ -913,6 +926,7 @@ end
 
 local function initSounds(device)
   if not sounds.usesOldCustomSounds then
+    local hasNewSounds = false
     if device.jbeamData.soundConfig then
       local soundConfig = v.data[device.jbeamData.soundConfig]
       if soundConfig then
@@ -932,16 +946,11 @@ local function initSounds(device)
         device.engineVolumeCoef = 1
 
         local sampleName = soundConfig.sampleName
-        local samplePath = "art/sound/blends/" .. sampleName .. ".sfxBlend2D.json"
-        obj:queueGameEngineLua(string.format("core_sounds.initEngineSound(%d,%d,%q,%s,%f,%f)", objectId, device.engineSoundID, samplePath, device.engineNodeID, offLoadGain, onLoadGain))
+        local sampleFolder = soundConfig.sampleFolder or "art/sound/blends/"
+        local samplePath = sampleFolder .. sampleName .. ".sfxBlend2D.json"
 
-        local sampleNameExhaust = soundConfig.sampleNameExhaust
-        if sampleNameExhaust then
-          local samplePathExhaust = "art/sound/blends/" .. sampleNameExhaust .. ".sfxBlend2D.json"
-          device.engineSoundIDExhaust = powertrain.getEngineSoundID()
-          local exhaustNode = device.thermals.exhaustEndNodes[1].finish or device.engineNodeID
-          obj:queueGameEngineLua(string.format("core_sounds.initEngineSound(%d,%d,%q,%s,%f,%f)", objectId, device.engineSoundIDExhaust, samplePathExhaust, exhaustNode, offLoadGain, onLoadGain))
-        end
+        local engineNodeIDs = {device.engineNodeID} --Hardcode intake sound location to a single node, no need for multiple
+        obj:queueGameEngineLua(string.format("core_sounds.initEngineSound(%d,%d,%q,%s,%f,%f)", objectId, device.engineSoundID, samplePath, serialize(engineNodeIDs), offLoadGain, onLoadGain))
 
         local main_gain = soundConfig.mainGain or 0
 
@@ -982,16 +991,93 @@ local function initSounds(device)
         --dump(params)
 
         obj:queueGameEngineLua(string.format("core_sounds.setEngineSoundParameterList(%d,%d,%s)", objectId, device.engineSoundID, serialize(params)))
-        if device.engineSoundIDExhaust then
-          obj:queueGameEngineLua(string.format("core_sounds.setEngineSoundParameterList(%d,%d,%s)", objectId, device.engineSoundIDExhaust, serialize(params)))
-        end
-
-        device.updateSounds = updateSounds
         --dump(sounds)
-        sounds.disableOldEngineSounds()
+        hasNewSounds = true
       else
         log("E", "combustionEngine.init", "Can't find sound config: " .. device.jbeamData.soundConfig)
       end
+    end
+    if device.jbeamData.soundConfigExhaust then
+      local soundConfig = v.data[device.jbeamData.soundConfigExhaust]
+      if soundConfig then
+        device.engineSoundIDExhaust = powertrain.getEngineSoundID()
+        local rpmInRate = soundConfig.rpmSmootherInRate or 15
+        local rpmOutRate = soundConfig.rpmSmootherOutRate or 25
+        device.soundRPMSmoother = newTemporalSmoothingNonLinear(rpmInRate, rpmOutRate)
+        local loadInRate = soundConfig.loadSmootherInRate or 20
+        local loadOutRate = soundConfig.loadSmootherOutRate or 20
+        device.soundLoadSmoother = newTemporalSmoothingNonLinear(loadInRate, loadOutRate)
+        device.soundMaxLoadMix = soundConfig.maxLoadMix or 1
+        device.soundMinLoadMix = soundConfig.minLoadMix or 0
+        local onLoadGain = soundConfig.onLoadGain or 1
+        local offLoadGain = soundConfig.offLoadGain or 1
+        local fundamentalFrequencyCylinderCount = soundConfig.fundamentalFrequencyCylinderCount or 6
+        device.fundamentalFrequencyRPMCoef = fundamentalFrequencyCylinderCount / 120
+        device.engineVolumeCoef = 1
+
+        local sampleName = soundConfig.sampleName
+        local sampleFolder = soundConfig.sampleFolder or "art/sound/blends/"
+        local samplePath = sampleFolder .. sampleName .. ".sfxBlend2D.json"
+
+        local endNodeIDs
+        if device.thermals.exhaustEndNodes and #device.thermals.exhaustEndNodes > 0 then
+          endNodeIDs = {}
+          for _, v in pairs(device.thermals.exhaustEndNodes) do
+            table.insert(endNodeIDs, v.finish)
+          end
+        else
+          endNodeIDs = {device.engineNodeID}
+        end
+        obj:queueGameEngineLua(string.format("core_sounds.initEngineSound(%d,%d,%q,%s,%f,%f)", objectId, device.engineSoundIDExhaust, samplePath, serialize(endNodeIDs), offLoadGain, onLoadGain))
+
+        local main_gain = soundConfig.mainGain or 0
+
+        local eq_a_freq = sounds.hzToFMODHz(soundConfig.lowCutFreq or 20)
+        local eq_b_freq = sounds.hzToFMODHz(soundConfig.highCutFreq or 10000)
+        local eq_c_freq = sounds.hzToFMODHz(soundConfig.eqLowFreq or 500)
+        local eq_c_gain = soundConfig.eqLowGain or 0
+        local eq_c_reso = soundConfig.eqLowWidth or 0
+        local eq_d_freq = sounds.hzToFMODHz(soundConfig.eqHighFreq or 2000)
+        local eq_d_gain = soundConfig.eqHighGain or 0
+        local eq_d_reso = soundConfig.eqHighWidth or 0
+        local eq_e_gain = soundConfig.eqFundamentalGain or 0
+        local eq_e_reso = soundConfig.eqFundamentalWidth or 1
+
+        local al_selection = soundConfig.additionalIdleSampleID or 0
+        local al_gain = soundConfig.additionalIdleGain or 0
+
+        local distortion = soundConfig.distortion or 0
+
+        local params = {
+          main_gain = main_gain,
+          eq_a_freq = eq_a_freq,
+          eq_b_freq = eq_b_freq,
+          eq_c_freq = eq_c_freq,
+          eq_c_gain = eq_c_gain,
+          eq_c_reso = eq_c_reso,
+          eq_d_freq = eq_d_freq,
+          eq_d_gain = eq_d_gain,
+          eq_d_reso = eq_d_reso,
+          eq_e_gain = eq_e_gain,
+          eq_e_reso = eq_e_reso,
+          al_selection = al_selection,
+          al_gain = al_gain,
+          onLoadGain = onLoadGain,
+          offLoadGain = offLoadGain,
+          distortion = distortion
+        }
+        --dump(params)
+
+        obj:queueGameEngineLua(string.format("core_sounds.setEngineSoundParameterList(%d,%d,%s)", objectId, device.engineSoundIDExhaust, serialize(params)))
+        hasNewSounds = true
+      else
+        log("E", "combustionEngine.init", "Can't find sound config: " .. device.jbeamData.soundConfig)
+      end
+    end
+
+    if hasNewSounds then
+      device.updateSounds = updateSounds
+      sounds.disableOldEngineSounds()
     end
   else
     log("W", "combustionEngine.init", "Disabling new sounds, found old custom engine sounds...")
@@ -1005,6 +1091,7 @@ local function initSounds(device)
 
   device.turbocharger.initSounds()
   device.supercharger.initSounds()
+  device.thermals.initSounds()
 end
 
 local function new(jbeamData)
@@ -1085,6 +1172,7 @@ local function new(jbeamData)
     continuousAfterFireFuel = 0,
     instantAfterFireFuelDelay = delayLine.new(0.1),
     sustainedAfterFireFuelDelay = delayLine.new(0.3),
+    exhaustFlowDelay = delayLine.new(0.1),
     overRevDamage = 0,
     maxOverRevDamage = jbeamData.maxOverRevDamage or 1500,
     maxTorqueRating = jbeamData.maxTorqueRating or -1,
@@ -1125,7 +1213,8 @@ local function new(jbeamData)
     resetTempRevLimiter = resetTempRevLimiter,
     updateFuelUsage = updateFuelUsage,
     updateEnergyStorageRatios = updateEnergyStorageRatios,
-    registerStorage = registerStorage
+    registerStorage = registerStorage,
+    exhaustEndNodesChanged = exhaustEndNodesChanged
   }
 
   local torqueReactionNodes_nodes = jbeamData.torqueReactionNodes_nodes

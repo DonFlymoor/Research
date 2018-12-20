@@ -144,11 +144,11 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
     })
 
     // Track Builder
-    .state('menu.trackBuilder', {
-      url: '/trackBuilder',
-      templateUrl: 'modules/trackBuilder/trackBuilder.html',
-      controller:  'TrackBuilderController as trackBuilder'
-    })
+    // .state('menu.trackBuilder', {
+    //   url: '/trackBuilder',
+    //   templateUrl: 'modules/trackBuilder/trackBuilder.html',
+    //   controller:  'TrackBuilderController as trackBuilder'
+    // })
 
     .state('menu.scenarios', {
       url: '/scenarios',
@@ -220,13 +220,13 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
     })
 
     .state('menu.vehicles', {
-      url: '/vehicleselect/:garage/:mode',
+      url: '/vehicleselect/:garage/:mode/:event',
       templateUrl: 'modules/vehicleselect/vehicleselect.html',
       controller: 'VehicleSelectController as vehicles',
     })
 
     .state('menu.vehicleDetails', {
-      url: '/vehicle-details/:model/:config/:mode',
+      url: '/vehicle-details/:model/:config/:mode/:event',
       templateUrl: 'modules/vehicleselect/vehicleselect-details.html',
       controller: 'VehicleDetailsController as vehicle'
     })
@@ -699,11 +699,24 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
       }
     })
 
+    // LightRunner States
+    .state('menu.lightrunnerOverview', {
+      url: '/lightrunner/overview',
+      templateUrl: 'modules/lightrunner/overview.html',
+      controller: 'LightRunnerController',
+    })
+
+    .state('menu.lightrunnerTrackSelect', {
+      url: '/lightrunner/track',
+      templateUrl: 'modules/lightrunner/trackSelect.html',
+      controller: 'LightRunnerTrackController'
+    })
+
     //Quickrace states WIP
     .state('menu.quickraceOverview', {
       url: '/quickrace/overview',
       templateUrl: 'modules/quickrace/overview.html',
-      controller: 'QuickraceController'
+      controller: 'QuickraceController',
     })
 
     .state('menu.quickraceLevelselect', {
@@ -711,7 +724,6 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
       templateUrl: 'modules/quickrace/levelSelect.html',
       controller: 'QuickraceLevelController'
     })
-
 
     .state('menu.quickraceTrackselect', {
       url: '/quickrace/track',
@@ -729,7 +741,7 @@ angular.module('BeamNG.ui', ['beamng.ui2Ports', 'beamng.core', 'beamng.component
       params: {
         level: {},
         track: {},
-        vehicles: {}
+        vehicles: {},
       },
       templateUrl: 'modules/quickrace/overview.html',
       controller: 'QuickraceController'
@@ -886,7 +898,7 @@ function ($animate, $http, logger, $rootScope, $templateCache, $window, $transla
 
   //$animate.enabled(false);
 
-  bngApi.engineLua('core_apps.getLayouts()', function (data) {
+  bngApi.engineLua('ui_apps.getLayouts()', function (data) {
     logger.AppLayout.log('got layouts: %o', data);
     for (var key in data)
       AppLayout[key] = data[key];
@@ -937,12 +949,6 @@ function ($animate, $http, logger, $rootScope, $templateCache, $window, $transla
     $rootScope.$broadcast('updatePhysicsState', value);
   };
 
- // this function is called per frame (or per-something, but fast!) when groundmodel debug
- // is checked in the debug module. why??
-  $window.updateGroundModelDebug = function (msg) {
-    //
-  };
-
   // Update game state each time a route change is triggered.
   // Maybe an overkill, but why not be sure?
   // $rootScope.$on('$stateChangeSuccess', function (event, data) {
@@ -989,12 +995,14 @@ angular.module('beamng.stuff')
   },
 
   playModes: [
-    { translateid: 'ui.playmodes.campaigns', icon: 'star', targetState: 'campaigns', disabled: false },
-    { translateid: 'ui.playmodes.scenarios', icon: 'movie', targetState: 'scenarios', disabled: false },
-    { translateid: 'ui.playmodes.freeroam',  icon: 'terrain', targetState: 'levels', disabled: false },
-    { translateid: 'ui.playmodes.quickrace', icon: 'alarm_on', targetState: 'quickraceOverview', disabled: false },
-    { translateid: 'ui.playmodes.bus',    icon: 'directions_bus', targetState: 'busRoutes', disabled: false },
-    { translateid: 'ui.playmodes.career',    icon: 'flag', targetState: 'career', disabled: beamng.shipping },
+    { translateid: 'ui.playmodes.campaigns',    icon: 'material_star',           disabled: false,            targetState: 'campaigns',                      },
+    { translateid: 'ui.playmodes.scenarios',    icon: 'material_movie_creation', disabled: false,            targetState: 'scenarios',                      },
+    { translateid: 'ui.playmodes.freeroam',     icon: 'material_terrain',        disabled: false,            targetState: 'levels',                         },
+    { translateid: 'ui.playmodes.quickrace',    icon: 'material_alarm_on',       disabled: false,            targetState: 'quickraceOverview',              },
+    { translateid: 'ui.playmodes.bus',          icon: 'material_directions_bus', disabled: false,            targetState: 'busRoutes',                      },
+    { translateid: 'ui.playmodes.lightRunner',  icon: 'general_light_runner',    disabled: false,            targetState: 'lightrunnerOverview'             },
+    { translateid: 'ui.playmodes.trackBuilder', icon: 'material_all_inclusive',  disabled: false,            targetState: '.',     levelName: "glow_city", },
+    { translateid: 'ui.playmodes.career',       icon: 'material_flag',           disabled: beamng.shipping , targetState: 'career',                         },
   ],
 })
 
@@ -1185,8 +1193,21 @@ $scope.$on('requestUIInitialised', () => {
     updatePauseIcon();
   });
 
+  $scope.$on('$stateChangeCancel', function ( event, toState, toParams, fromState, fromParams) {
+    logger.AppCtrl.debug('$stateChangeCancel', JSON.stringify({toState: toState, toParams: toParams, fromState: fromState, fromParams: fromParams}, null, '  '));
+  });
+
+  $scope.$on('$stateChangeError', function ( event, toState, toParams, fromState, fromParams, error) {
+    logger.AppCtrl.debug('$stateChangeError', JSON.stringify({toState: toState, toParams: toParams, fromState: fromState, fromParams: fromParams}, null, '  '));
+    logger.AppCtrl.error(error)
+  });
+
+  $scope.$on('$stateNotFound', function (event, unfoundState, fromState, fromParams) {
+    logger.AppCtrl.debug('$stateNotFound', JSON.stringify({unfoundState : unfoundState, fromState: fromState, fromParams: fromParams}, null, '  '));
+  });
+
   $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-    // logger.log(JSON.stringify({toState: toState, toParams: toParams, fromState: fromState, fromParams: fromParams}, null, '  '));
+    logger.AppCtrl.debug('stateChangeStart', JSON.stringify({toState: toState, toParams: toParams, fromState: fromState, fromParams: fromParams}, null, '  '));
     transitioningTo = toState.name;
     vm.transitionAnimation = toState.transitionAnimation || fromState.transitionAnimation; // prefer the animation of the target state, otherwise use the state we came from
 
@@ -1232,7 +1253,7 @@ $scope.$on('requestUIInitialised', () => {
       { translateid: 'ui.dashboard.vehicles',      icon: 'directions_car',         state: 'menu.vehicles'      },
       { translateid: 'ui.dashboard.vehicleconfig', icon: 'settings_applications',  state: 'menu.vehicleconfig' },
       { translateid: 'ui.dashboard.environment',   icon: 'cloud_queue',            state: 'menu.environment'   },
-      { translateid: 'ui.dashboard.trackBuilder',  icon: 'all_inclusive',          state: 'menu.trackBuilder'  },
+      { translateid: 'ui.dashboard.trackBuilder',  icon: 'all_inclusive',          state: '.', action: () => bngApi.engineLua("editor.toggleTrackBuilder()") },
       { translateid: 'ui.dashboard.replay',        icon: 'local_movies',           state: 'menu.replay'        },
       { translateid: 'ui.dashboard.photomode',     icon: 'photo_camera',           state: 'photomode'          },
       { translateid: 'ui.dashboard.appedit',       icon: 'web',                    state: 'appedit'            },
@@ -1263,11 +1284,10 @@ $scope.$on('requestUIInitialised', () => {
   if(!beamng.shipping) {
     vm.menuEntries.freeroam.push({ translateid: 'ui.dashboard.luadebug', icon: 'low_priority', state: 'luadebug', advanced: true });
     vm.menuEntries.freeroam.push({ translateid: 'Icons', icon: 'new_releases', state: 'iconViewer', advanced: true });
-    vm.menuEntries.freeroam.push({ translateid: 'Drag Race', icon: 'flag', state: 'menu.dragRaceOverview', advanced: false });
+    // vm.menuEntries.freeroam.push({ translateid: 'Drag Race', icon: 'flag', state: 'menu.dragRaceOverview', advanced: false });
     // vm.menuEntries.freeroam.push({ translateid: 'ui.dashboard.template', icon: 'crop_free',    state: 'template', advanced: true});
     // vm.menuEntries.freeroam.push({ translateid: 'ui.dashboard.terraingen', icon: 'gradient',    state: 'terraingen', advanced: true});
-    vm.menuEntries.freeroam.push({ translateid: 'UI Protoype', icon: 'new_releases',    state: '.', action: () => window.location.href = "local://local/ui2/Entrypoints/Main/index.html"});
-    vm.menuEntries.scenario.push({ translateid: 'UI Protoype', icon: 'new_releases',    state: '.', action: () => window.location.href = "local://local/ui2/Entrypoints/Main/index.html"});
+    vm.menuEntries.scenario.push({ translateid: 'UI Protoype', icon: 'new_releases',    state: '.', action: () => window.location.href = "local://local/ui2/drive/index.html"});
   }
 
   // downloader start
@@ -1372,7 +1392,9 @@ $scope.$on('requestUIInitialised', () => {
   vm.stickyState = null;
 
   $scope.$on('ShowEntertainingBackground', (ev, mainmenu) => {
-    vm.mainmenu = mainmenu;
+    $scope.$evalAsync(() => {
+      vm.mainmenu = mainmenu;
+    });
   });
 
   vm.openRepo = function() {
@@ -1453,6 +1475,7 @@ $scope.$on('requestUIInitialised', () => {
         }
       });
     }
+    bngApi.engineLua(`extensions.hook("onMenuToggled", ${!vm.showMenu})`);
   });
 
   $scope.$on('CameraMode', function (event, data) {

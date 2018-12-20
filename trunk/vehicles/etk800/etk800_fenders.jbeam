@@ -10,7 +10,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["etk800_fender_R", ["etk800_fender_R"]],
          {"deformGroup":"fendersignal_R_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
-         ["etk800_fendersignal_R", ["etk800_fender_R"],[]{"deformSound":"GlassBreakSound4", "deformVolume":0.2}],
+         ["etk800_fendersignal_R", ["etk800_fender_R"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound4", "deformVolume":0.2}],
          {"deformGroup":""},
     ],
     "props": [
@@ -274,7 +274,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["etk800_fender_L", ["etk800_fender_L"]],
          {"deformGroup":"fendersignal_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
-         ["etk800_fendersignal_L", ["etk800_fender_L"],[]{"deformSound":"GlassBreakSound3", "deformVolume":0.2}],
+         ["etk800_fendersignal_L", ["etk800_fender_L"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound3", "deformVolume":0.2}],
          {"deformGroup":""},
     ],
     "props": [

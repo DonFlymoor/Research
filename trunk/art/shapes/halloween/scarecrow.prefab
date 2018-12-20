@@ -1,0 +1,89 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+   canSave = "1";
+   canSaveDynamicFields = "1";
+      groupPosition = "0.000000 0.000000 0.000000";
+
+   new PointLight() {
+      radius = "2.5";
+      isEnabled = "1";
+      color = "0.996078014 0.00392156979 0.776471019 0.00800000038";
+      brightness = "1.5";
+      castShadows = "0";
+      priority = "1";
+      animate = "1";
+      animationPeriod = "1";
+      animationPhase = "1";
+      flareScale = "1";
+      attenuationRatio = "0 1 1";
+      shadowType = "DualParaboloidSinglePass";
+      texSize = "512";
+      overDarkFactor = "2000 1000 500 100";
+      shadowDistance = "400";
+      shadowSoftness = "0.150000006";
+      numSplits = "1";
+      logWeight = "0.910000026";
+      fadeStartDistance = "0";
+      lastSplitTerrainOnly = "0";
+      representedInLightmap = "0";
+      shadowDarkenColor = "InvisibleBlack";
+      includeLightmappedGeometryInShadow = "0";
+      position = "0.0212411657 0.560645223 3.16972017";
+      rotationMatrix = "0.390888214 0.920438111 -3.02861708e-10 -0.920437932 0.390888125 -0.000690533489 -0.000635593256 0.000269921729 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new PointLight() {
+      radius = "1.5";
+      isEnabled = "1";
+      color = "0.462745011 0.996078014 0.937255025 0.00800000038";
+      brightness = "1";
+      castShadows = "0";
+      priority = "1";
+      animate = "1";
+      animationPeriod = "1";
+      animationPhase = "1";
+      flareScale = "1";
+      attenuationRatio = "0 1 1";
+      shadowType = "DualParaboloidSinglePass";
+      texSize = "512";
+      overDarkFactor = "2000 1000 500 100";
+      shadowDistance = "400";
+      shadowSoftness = "0.150000006";
+      numSplits = "1";
+      logWeight = "0.910000026";
+      fadeStartDistance = "0";
+      lastSplitTerrainOnly = "0";
+      representedInLightmap = "0";
+      shadowDarkenColor = "InvisibleBlack";
+      includeLightmappedGeometryInShadow = "0";
+      position = "0.0844697356 -0.930730224 1.54208696";
+      rotationMatrix = "0.390888214 0.920438111 -3.02861708e-10 -0.920437932 0.390888125 -0.000690533489 -0.000635593256 0.000269921729 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+   new TSStatic() {
+      shapeName = "art/shapes/halloween/scarecrow.dae";
+      playAmbient = "1";
+      meshCulling = "0";
+      originSort = "0";
+      useInstanceRenderData = "0";
+      instanceColor = "White";
+      collisionType = "Collision Mesh";
+      decalType = "Collision Mesh";
+      prebuildCollisionData = "0";
+      renderNormals = "0";
+      forceDetail = "-1";
+      position = "0 0 0";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 0.999999762 -0.000690534245 0 0.000690534245 0.999999762";
+      mode = "Ignore";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };
+};
+//--- OBJECT WRITE END ---
+
+

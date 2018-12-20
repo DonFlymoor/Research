@@ -197,6 +197,8 @@ end
 local function updateWheelsIntermediate(dt)
   if not currentESCConfiguration.escEnabled or (electrics.values.gearIndex or 0) < 0 then
     electrics.values.throttleFactor = 1
+    escActive = false
+    tcsActive = false
     if tempRevLimiterActive then
       tempRevLimiterActive = false
       for i = 1, revLimiterEngineCount, 1 do

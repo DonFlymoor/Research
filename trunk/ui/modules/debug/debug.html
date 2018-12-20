@@ -153,24 +153,11 @@
       <md-divider></md-divider>
       <md-subheader>{{ ::'ui.debug.terrain' | translate }}</md-subheader>
 
-      <md-list-item md-no-ink ng-repeat="toggle in ::debug.controls.terrain.toggleGroup_1">
-        <p>{{ ::toggle.label | translate }}</p>
-        <md-checkbox ng-model="debug.service.state.terrain[toggle.key]" ng-change="toggle.onChange()">
-        </md-checkbox>
+      <md-list-item layout>
+        <md-button ng-repeat="btn in ::debug.controls.terrain.buttonGroup_1" ng-click="btn.action()" class="md-primary md-raised" flex md-no-ink>
+          {{ ::btn.label | translate }}
+        </md-button>
       </md-list-item>
-
-      <div ng-if="debug.service.groundModelInfo && (debug.service.state.terrain['staticCollision'] || debug.service.state.terrain['groundmodel'])">
-        <md-divider></md-divider>
-        <md-subheader>Ground Model Information</md-subheader>
-        <table border="0" style="margin-left: 20px; margin-bottom: 5px">
-          <tr ng-repeat="g in debug.service.groundModelInfo">
-            <td valign="middle">
-              <div style="border:1px solid black;width:2em;height:1em;background-color:rgba({{ ::g.color.r }},{{ ::g.color.g }},{{ ::g.color.b }},{{ ::(g.color.a/255) }})">&nbsp;</div>
-            </td>
-            <td valign="middle">{{ ::g.name}} (id: {{ ::g.id }})</td>
-          </tr>
-        </table>
-      </div>
 
       <md-divider></md-divider>
       <md-subheader>{{ ::'ui.debug.renderer' | translate }}</md-subheader>

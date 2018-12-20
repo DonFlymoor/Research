@@ -52,7 +52,7 @@
         <td>{{ 'ui.repository.category' | translate }}: </td>
         <td><a ng-click="openCat(repoDetailCtrl.modData.category_title)" href="">{{ repoDetailCtrl.modData.category_title }}</a></td>
       </tr>
-      <tr><td colspan="2"><a ng-click="openDiscussion()" href="" style="text-transform: none;">{{ :: 'ui.modmanager.openForumDiscussion' | translate}}</a></td></tr>
+      <tr ng-if="repoDetailCtrl.modData.discussion_thread_id != 1" ><td colspan="2"><a ng-click="openDiscussion()" href="" style="text-transform: none;">{{ :: 'ui.modmanager.openForumDiscussion' | translate}}</a></td></tr>
     </table>
   </div>
 

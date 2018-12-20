@@ -6,7 +6,7 @@ local M = {}
 local logTag = 'ResearchGE'
 local version = 'v1.5'
 
-local socket = require('socket/socket')
+local socket = require('libs/luasocket/socket.socket')
 local rcom = require('utils/researchCommunication')
 
 local scenariosLoader = require('scenario/scenariosLoader')
@@ -51,8 +51,6 @@ local function checkMessage()
 
   if message ~= nil then
     local msgType = message['type']
-	print('Got messag type: ')
-	print(msgType)
     if msgType ~= nil then
       msgType = 'handle' .. msgType
       local handler = M[msgType]

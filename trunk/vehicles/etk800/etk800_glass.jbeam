@@ -10,7 +10,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          //glass
          {"deformGroup":"windshield_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_windshield_dmg"}
-         ["etk800_windshield", ["etk800_windshield"],[]{"deformSound":"GlassBreakSound1", "deformVolume":0.7}],
+         ["etk800_windshield", ["etk800_windshield"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound1", "deformVolume":0.7}],
          {"deformGroup":"windshield_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_int"}
          ["etk800_windshield_int", ["etk800_windshield"]],
 
@@ -18,9 +18,9 @@
          ["etk800_windshield_dmg", ["etk800_windshield"]],
 
          {"deformGroup":"sideglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_sideglass_R", ["etk800_body"],[]{"deformSound":"GlassBreakSound5", "deformVolume":0.7}],
+         ["etk800_sideglass_R", ["etk800_body"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound5", "deformVolume":0.7}],
          {"deformGroup":"sideglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_sideglass_L", ["etk800_body"],[]{"deformSound":"GlassBreakSound6", "deformVolume":0.7}],
+         ["etk800_sideglass_L", ["etk800_body"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound6", "deformVolume":0.7}],
 
          {"deformGroup":"sideglass_R_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
          ["etk800_sideglass_R_int", ["etk800_body"]],

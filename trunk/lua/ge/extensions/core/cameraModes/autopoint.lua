@@ -23,9 +23,6 @@ function C:setRefNodes(centerNodeID, leftNodeID, backNodeID)
   self.refNodes.back = backNodeID
 end
 
-function C:onVehicleResetted(...)
-  return true
-end
 function C:update(data)
   local ref  = vec3(data.veh:getNodePosition(self.refNodes.ref))
   local left = vec3(data.veh:getNodePosition(self.refNodes.left))

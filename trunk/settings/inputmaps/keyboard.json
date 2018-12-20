@@ -70,7 +70,6 @@
     {"action": "photomode", "control": "ctrl-alt p"},
     {"action": "cycle_metrics_fwd", "control" : "ctrl f" },
     {"action": "cycle_metrics_back", "control" : "shift-ctrl f" },
-    {"action": "toggleRawDt", "control": "alt f"},
     {"action": "key_e", "control": "e"},
     {"action": "key_t", "control": "t"},
     {"action": "key_g", "control": "g"},
@@ -118,16 +117,17 @@
     {"action": "camera_10","control": "0"},
 
     //{"action" : "toggle_timeTrialsScreen", "control" : "tab"},
-    {"action" : "toggle_minimap", "control" : "tab"},
-
+    {"action": "toggle_minimap", "control" : "tab"},
     // global bindings below, do not use common keys, like 'shift u' or sth alike that will break typing in the UI
     {"action": "toggleEditor", "control": "f11"},
     {"action": "toggleNewEditor", "control": "f10"},
+    {"action": "toggleVehicleEditor", "control": "ctrl f9"},
+    {"action": "toggleTrackBuilder", "control": "ctrl alt t"},
     {"action": "quit", "control": "alt f4"},
     {"action": "toggleMenues", "control": "escape"},
     {"action": "lua_reload", "control": "ctrl l"},
     {"action": "hide_ui", "control": "alt u"},
-    {"action" : "cefdev_reload_ui", "control" : "f5"},
+    {"action": "cefdev_reload_ui", "control" : "f5"},
     {"action": "appedit", "control": "alt shift u"},
     {"action": "doScreenShot", "control": "ctrl p"},
     {"action": "doBigScreenShot", "control": "alt p"},
@@ -136,6 +136,13 @@
     {"action": "toggle_fullscreen", "control": "alt enter"},
     {"action": "cefdev_console_toggle", "control" : "ctrl u" },
     {"action": "clear_console", "control" : "ctrl tilde" },
-    {"action": "nodegrabberRender", "control": "lcontrol"}
+    {"action": "nodegrabberRender", "control": "lcontrol"},
+	
+	// Editor bindings
+	{"action": "copy_road_properties", "control" : "ctrl c"},
+	{"action": "paste_road_properties", "control" : "ctrl v"},
+	{"action": "delete_road_node", "control" : "delete"},
+    {"action": "toggle_creation_mode", "control" : "lshift"},
+    {"action": "reload_road_templates", "control" : "ctrl o"}
     ]
 }

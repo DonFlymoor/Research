@@ -1,8 +1,8 @@
 angular.module('beamng.apps')
 .directive('simplePedals', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
-        '<object class="bngApp" style="width:100%; height:100%; pointer-events: none" type="image/svg+xml" data="modules/apps/SimplePedals/simple-pedals.svg?t=' + Date.now() + '"/>',
+    template:
+        '<object class="bngApp" style="width:100%; height:100%; pointer-events: none" type="image/svg+xml" data="modules/apps/SimplePedals/simple-pedals.svg?t=' + Date.now() + '"></object>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -11,7 +11,7 @@ angular.module('beamng.apps')
       scope.$on('$destroy', function () {
         StreamsManager.remove(['electrics']);
       });
-      
+
       element.on('load', function () {
         var svg    = element[0].contentDocument
           , clutch   = { bar: svg.getElementById('filler0'), txt: svg.getElementById('txt0'), val: svg.getElementById('val0'), factor: svg.getElementById('container0').getAttribute('height') / 100.0 }
@@ -19,9 +19,9 @@ angular.module('beamng.apps')
           , throttle = { bar: svg.getElementById('filler2'), txt: svg.getElementById('txt2'), val: svg.getElementById('val2'), factor: svg.getElementById('container2').getAttribute('height') / 100.0 }
           , parking  = { bar: svg.getElementById('filler3'), txt: svg.getElementById('txt3'), val: svg.getElementById('val3'), factor: svg.getElementById('container3').getAttribute('height') / 100.0 }
         ;
-        
+
         scope.$on('streamsUpdate', function (event, streams) {
-          if (streams != null && streams.electrics != null) {              
+          if (streams != null && streams.electrics != null) {
               var clutchVal   = Math.round(streams.electrics.clutch * 100 + 0.49)
                 , brakeVal    = Math.round(streams.electrics.brake * 100)
                 , throttleVal = Math.round(streams.electrics.throttle * 100)

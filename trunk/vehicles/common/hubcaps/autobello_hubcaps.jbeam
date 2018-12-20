@@ -1,0 +1,68 @@
+{
+"autobello_hubcap_01a_13_F": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Autobello Dog Dish Front Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_F_13",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["autobello_hubcap_01a_10", ["hubcap_FR"], [], {"pos":{"x":-0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["autobello_hubcap_01a_10", ["hubcap_FL"], [], {"pos":{"x": 0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.015},
+            {"hubcapWidth":-0.045},
+            {"hubcapRadius":0.12},
+            {"hubcapBeamSpring":115460, "hubcapBeamDamp":6.96}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":16},
+            {"hubcapAttachBeamDeform":1170, "hubcapAttachBeamStrength":1734},
+            {"hubcapNodeWeight":0.07},
+            {"hubcapCenterNodeWeight":0.07},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+"autobello_hubcap_01a_13_R": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"Autobello Dog Dish Rear Hubcaps",
+        "value":80,
+    }
+    "slotType" : "hubcap_R_13",
+    "flexbodies": [
+         ["mesh", "[group]:", "nonFlexMaterials"],
+         //hubcaps
+         ["autobello_hubcap_01a_10", ["hubcap_RR"], [], {"pos":{"x":-0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
+         ["autobello_hubcap_01a_10", ["hubcap_RL"], [], {"pos":{"x": 0.482, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+    ],
+    "pressureWheels": [
+            ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+            //hubcap options
+            {"enableHubcaps":true},
+            {"hubcapSelfCollision":true}
+            {"hubcapCollision":true}
+            {"enableExtraHubcapBeams":false},
+            {"hubcapOffset":0.015},
+            {"hubcapWidth":-0.045},
+            {"hubcapRadius":0.12},
+            {"hubcapBeamSpring":115460, "hubcapBeamDamp":6.96}
+            {"hubcapBeamDeform":12284, "hubcapBeamStrength":57900},
+            {"hubcapAttachBeamSpring":256830, "hubcapAttachBeamDamp":16},
+            {"hubcapAttachBeamDeform":1170, "hubcapAttachBeamStrength":1734},
+            {"hubcapNodeWeight":0.07},
+            {"hubcapCenterNodeWeight":0.07},
+            {"hubcapNodeMaterial":"|NM_METAL"},
+            {"hubcapFrictionCoef":1.0},
+    ],
+}
+}

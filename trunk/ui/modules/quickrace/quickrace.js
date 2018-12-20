@@ -38,7 +38,7 @@ angular.module('beamng.stuff')
     };
   }
 
-  //reset();
+  reset();
 
   return {
     getSelections:  function()        { return selections;            },
@@ -96,7 +96,7 @@ angular.module('beamng.stuff')
         if(color == null ) color = carObj.default_color;
         //console.log(carObj);
         QuickraceService.setVehicle({
-          official: carObj.aggregates.Source['BeamNG - Official'],
+          official: !!(carObj.aggregates.Source || {})['BeamNG - Official'],
           model: model,
           config: config,
           color: color,
@@ -133,7 +133,6 @@ angular.module('beamng.stuff')
 
 
   $scope.selections = QuickraceService.getSelections();
-
 
 
   if($stateParams.level && $stateParams.level.name ) {
@@ -235,7 +234,7 @@ angular.module('beamng.stuff')
 
     if ($scope.selections.level.file && $scope.selections.track.file && $scope.selections.vehicle) {
       bngApi.engineLua(luaCode);
-      //QuickraceService.reset();
+      QuickraceService.reset();
       $scope.$emit('CloseMenu');
     }
   };
@@ -276,9 +275,6 @@ angular.module('beamng.stuff')
         $scope.highscores = res;
       });
     });
-
-
-
   }
   $scope.settingsChanged();
   $scope.$on('$destroy', () => {

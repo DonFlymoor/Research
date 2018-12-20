@@ -588,7 +588,7 @@ datablock ParticleEmitterData(BNGP_51 : DefaultEmitter)
     blendStyle = "NORMAL";
     ejectionPeriodMS = "1";
     periodVarianceMS = "0";
-    velocityVariance = "2";
+    velocityVariance = "0";
     thetaMin = "0";
     thetaMax = "0";
     ejectionOffset = "0.15";
@@ -598,7 +598,7 @@ datablock ParticleEmitterData(BNGP_51 : DefaultEmitter)
     alignDirection = "0 0 0";
     lifetimeMS = "0";
     lifetimeVarianceMS = "0";
-    ejectionVelocity = "2";
+    ejectionVelocity = "0";
     phiVariance = "0";
     originalName = "BNGP_20";
 };
@@ -1440,6 +1440,29 @@ datablock ParticleEmitterData(BNGP_50 : DefaultEmitter)
     phiVariance = "0";
     originalName = "BNGP_21";
 };
+
+datablock ParticleEmitterData(BNGP_confetti : DefaultEmitter)
+{
+    particles = "BNG_confetti";
+    blendStyle = "NORMAL";
+    ejectionPeriodMS = "45";
+    periodVarianceMS = "15";
+    velocityVariance = "2";
+    softParticles = "1";
+    thetaMin = "0";
+    thetaMax = "20";
+    ejectionOffset = "0.2";
+    reverseOrder = "1";
+    softnessDistance = "0.85";
+    ambientFactor = "0";
+    alignDirection = "0 0 0";
+    lifetimeMS = "0";
+    lifetimeVarianceMS = "0";
+    ejectionVelocity = "7";
+    phiVariance = "360";
+    originalName = "BNGP_21";
+};
+
 
 datablock ParticleEmitterData(BNGP_80 : DefaultEmitter)
 {

@@ -65,7 +65,7 @@ M.jbeamVariableEnv = nil
 
 local triTypeMap = {['NORMAL'] = NORMALTYPE, ['NONCOLLIDABLE'] = NONCOLLIDABLE}
 
-local optionalLinks = {['torqueArm:'] = 1, ['torqueCoupling:'] = 1, ['torqueCouple:'] = 1, ['nodeArm:'] = 1, ['nodeCoupling:'] = 1, ['nodeCouple:'] = 1}
+local optionalLinks = {['torqueArm:'] = 1,['torqueArm2:'] = 1, ['torqueCoupling:'] = 1, ['torqueCouple:'] = 1, ['nodeArm:'] = 1, ['nodeCoupling:'] = 1, ['nodeCouple:'] = 1}
 
 local expressionParser = nil
 
@@ -328,8 +328,7 @@ local function prepare(vehicles)
           -- ENTRY DICTS TO BE WRITTEN
         else
           local newList = {}
-          local newListSize = 0
-          newListSize = processTableWithSchema(vehicle, keyEntry, entry, newList)
+          local newListSize = processTableWithSchema(vehicle, keyEntry, entry, newList)
           vehicle[keyEntry] = newList
           log_jbeam('D', "prepare"," - "..tostring(newListSize).." "..tostring(keyEntry))
         end
@@ -633,6 +632,121 @@ local function resolveGroupLinks(vehicle)
   return true
 end
 
+local function cleanCameraData(d)
+  for k, v in pairs(d) do
+    -- delete unneeded data to keep the messages small
+    if k == 'group' or k == 'firstGroup' or k == 'partOrigin' or k == 'childParts'
+    or k == 'partName' or k == 'slotType' or k == 'collision' or k == 'selfCollision'
+    or k == 'nodeWeight' or  k == 'beamnDamp' or k == 'beamDeform' or k == 'beamSpring'
+    or k == 'beamDamp' or k == 'cid' or k == 'globalSkin' or k == 'skinName' or k == 'beamStrength' then
+      d[k] = nil
+    elseif type(v) == 'table' then
+      cleanCameraData(v)
+    end
+  end
+end
+
+local function addBeamByData(object, vehicle, beam)
+  -- some defaults
+  beam.beamStrength = beam.beamStrength or vehicle.options.beamStrength or math.huge
+  beam.beamSpring = beam.beamSpring or vehicle.options.beamSpring
+  beam.beamDamp = beam.beamDamp or vehicle.options.beamDamp
+  beam.beamDeform = beam.beamDeform or vehicle.options.beamDeform
+  beam.beamType = beam.beamType or NORMALTYPE
+
+  -- error detection
+  if type(beam.id1) == "string" or type(beam.id2) == "string" and tostring(beam.optional) == "true" then
+    -- ignored error
+    log_jbeam('W', "jbeam.pushToPhysics","- beam not committed as node was not found: " .. tostring(beam.id1) .. " -> " .. tostring(beam.id2) .. ' : ' .. dumps(beam))
+    return nil
+  end
+
+  -- -1 as beam number appends it
+  local node1pos = vehicle.nodes[beam.id1].pos
+  local node2pos = vehicle.nodes[beam.id2].pos
+
+  if node1pos.x == node2pos.x and node1pos.y == node2pos.y and node1pos.z == node2pos.z and
+  beam.creator ~= "wheels" and tostring(beam.optional) ~= "true" then
+    local msg = "zero size beam between nodes " ..(vehicle.nodes[beam.id1].name or '-')..' and '..(vehicle.nodes[beam.id2].name or '-') .. ', beam details are:\n'
+    msg = msg .. dumps(beam)
+    log_jbeam('W', "jbeam.pushToPhysics", msg)
+  end
+
+  if type(beam.precompressionRange) == 'number' then
+    local bL = vec3(node1pos):distance(node2pos)
+    beam.beamPrecompression = max(0, (bL + beam.precompressionRange) / (bL + 1e-30))
+  end
+  local beamPrecompression = beam.beamPrecompression or 1
+  if type(beam.beamPrecompressionTime) == 'number' and beam.beamPrecompressionTime > 0 then
+    if beam.beamPrecompression == 1 or beam.beamType == BEAM_LBEAM then
+      beam.beamPrecompressionTime = nil
+    else
+      beamPrecompression = 1
+    end
+  end
+
+  local deformLimit = type(beam.deformLimit) == 'number' and beam.deformLimit or math.huge
+  local b = object:setBeam(-1, beam.id1, beam.id2, beam.beamStrength, beam.beamSpring,
+    beam.beamDamp, type(beam.dampCutoffHz) == 'number' and beam.dampCutoffHz or 0,
+    beam.beamDeform, deformLimit, type(beam.deformLimitExpansion) == 'number' and beam.deformLimitExpansion or deformLimit,
+    beamPrecompression
+  )
+
+  if b:isValid() then
+    if(beam.beamType == BEAM_ANISOTROPIC) then
+      beam.springExpansion = beam.springExpansion or beam.beamSpring
+      beam.dampExpansion = beam.dampExpansion or beam.beamDamp
+      local longBound = type(beam.beamLongExtent) == 'number' and -max(0, beam.beamLongExtent) or max(0, beam.beamLongBound or math.huge)
+      b:makeAnisotropic(beam.springExpansion, beam.dampExpansion,
+        type(beam.transitionZone) == 'number' and beam.transitionZone or 0, longBound
+      )
+    elseif(beam.beamType == BEAM_BOUNDED) then
+      local longBound = type(beam.longBoundRange) == 'number' and -max(0, beam.longBoundRange) or max(0, beam.beamLongBound or 1)
+      local shortBound = type(beam.shortBoundRange) == 'number' and -max(0, beam.shortBoundRange) or max(0, beam.beamShortBound or 1)
+      beam.beamLimitSpring = beam.beamLimitSpring or 1
+      beam.beamLimitDamp = beam.beamLimitDamp or 1
+      beam.beamLimitDampRebound = beam.beamLimitDampRebound or beam.beamLimitDamp
+      beam.beamDampRebound = beam.beamDampRebound or beam.beamDamp
+      beam.beamDampFast = beam.beamDampFast or beam.beamDamp
+      beam.beamDampReboundFast = beam.beamDampReboundFast or beam.beamDampRebound
+      beam.beamDampVelocitySplit = beam.beamDampVelocitySplit or math.huge
+
+      b:makeBounded(longBound, shortBound, beam.beamLimitSpring, beam.beamLimitDamp, beam.beamLimitDampRebound,
+        beam.beamDampRebound, beam.beamDampFast, beam.beamDampReboundFast, beam.beamDampVelocitySplit,
+        type(beam.boundZone) == 'number' and beam.boundZone or 1
+      )
+    elseif(beam.beamType == BEAM_SUPPORT) then
+      local longBound = type(beam.beamLongExtent) == 'number' and -max(0, beam.beamLongExtent) or max(0, beam.beamLongBound or 1)
+      beam.springExpansion = 0
+      beam.dampExpansion = 0
+      b:makeAnisotropic(0, 0, 0, longBound)
+    elseif(beam.beamType == BEAM_PRESSURED) then
+      if beam.pressure == nil and beam.pressurePSI == nil then beam.pressurePSI = 30 end
+      beam.pressure = beam.pressure or (beam.pressurePSI * 6894.757 + 101325) -- From PSI to Pa
+      beam.pressurePSI = (beam.pressure - 101325) / 6894.757
+      beam.surface = beam.surface or 1
+      beam.volumeCoef = beam.volumeCoef or 1
+
+      if beam.maxPressure == nil and beam.maxPressurePSI == nil then beam.maxPressure = math.huge end
+      beam.maxPressure = beam.maxPressure or (beam.maxPressurePSI * 6894.757 + 101325)
+      beam.maxPressurePSI = (beam.maxPressure - 101325) / 6894.757
+      if beam.maxPressure < 0 then beam.maxPressure = math.huge end
+      b:makePressured(beam.pressure, beam.surface, beam.volumeCoef, beam.maxPressure)
+    elseif(beam.beamType == BEAM_LBEAM) then
+      b:makeLbeam(beam.id3,
+        type(beam.springExpansion) == 'number' and beam.springExpansion or beam.beamSpring,
+        type(beam.dampExpansion) == 'number' and beam.dampExpansion or beam.beamDamp
+      )
+    end
+
+    if beam.deformationTriggerRatio ~= nil and beam.deformationTriggerRatio ~= "" then
+      b:setDeformationTriggerRatio(tonumber(beam.deformationTriggerRatio))
+    end
+    return b
+  end
+  return nil
+end
+
 --[[doxygen
 pushToPhysics  push lua data to c/c++
 @param object    object
@@ -694,6 +808,13 @@ local function pushToPhysics(object)
         selfCollision = false
       end
 
+      local staticCollision
+      if node.staticCollision ~= nil then
+        staticCollision = node.staticCollision
+      else
+        staticCollision = true
+      end
+
       local frictionCoef = type(node.frictionCoef) == 'number' and node.frictionCoef or 1
       local slidingFrictionCoef = type(node.slidingFrictionCoef) == 'number' and node.slidingFrictionCoef or frictionCoef
       local noLoadCoef = type(node.noLoadCoef) == 'number' and node.noLoadCoef or 1
@@ -719,16 +840,13 @@ local function pushToPhysics(object)
         nodeMaterialTypeID = vehicle.options.nodeMaterial or 0
       end
 
-      --print (">>> " .. tostring(node.nodeWeight) .. " | " .. tostring(vehicle.options.nodeWeight))
-      -- -1 = append
-      local id = object:setNode(-1, tableToFloat3(node.pos), nodeWeight, ntype, frictionCoef, slidingFrictionCoef, node.stribeckExponent or 1, node.stribeckVelMult or 1, noLoadCoef, fullLoadCoef, loadSensitivitySlope, node.softnessCoef or 0.5, node.treadCoef or 0.5, node.tag or '', node.couplerStrength or math.huge, node.firstGroup or -1, selfCollision, collision, nodeMaterialTypeID)
+      local id = object:setNode(-1, tableToFloat3(node.pos), nodeWeight, ntype, frictionCoef, slidingFrictionCoef, node.stribeckExponent or 1, node.stribeckVelMult or 1, noLoadCoef, fullLoadCoef, loadSensitivitySlope, node.softnessCoef or 0.5, node.treadCoef or 0.5, node.tag or '', node.couplerStrength or math.huge, node.firstGroup or -1, selfCollision, collision, staticCollision, nodeMaterialTypeID)
       if node.pairedNode then
         object:setNodePairWheelId(id, node.pairedNode, node.wheelID or -1)
       end
     end
 
     -- add nodes first
-
     if vehicle.nodes ~= nil then
       for k, node in pairs (vehicle.nodes) do
         addNodeByData(node)
@@ -736,107 +854,6 @@ local function pushToPhysics(object)
       log_jbeam('D', "jbeam.pushToPhysics","- added " .. object.node_count .. " nodes")
     end
     table.insert(loadingTimes, {'2.1 nodes', hp1:stopAndReset()})
-
-    local addBeamByData = function(beam)
-      -- some defaults
-      beam.beamStrength = beam.beamStrength or vehicle.options.beamStrength or math.huge
-      beam.beamSpring = beam.beamSpring or vehicle.options.beamSpring
-      beam.beamDamp = beam.beamDamp or vehicle.options.beamDamp
-      beam.beamDeform = beam.beamDeform or vehicle.options.beamDeform
-      beam.beamType = beam.beamType or NORMALTYPE
-
-      -- error detection
-      if type(beam.id1) == "string" or type(beam.id2) == "string" and tostring(beam.optional) == "true" then
-        -- ignored error
-        log_jbeam('W', "jbeam.pushToPhysics","- beam not committed as node was not found: " .. tostring(beam.id1) .. " -> " .. tostring(beam.id2) .. ' : ' .. dumps(beam))
-        return nil
-      end
-
-      -- -1 as beam number appends it
-      local node1pos = vehicle.nodes[beam.id1].pos
-      local node2pos = vehicle.nodes[beam.id2].pos
-
-      if node1pos.x == node2pos.x and node1pos.y == node2pos.y and node1pos.z == node2pos.z and
-      beam.creator ~= "wheels" and tostring(beam.optional) ~= "true" then
-        msg = "zero size beam between nodes " ..(vehicle.nodes[beam.id1].name or '-')..' and '..(vehicle.nodes[beam.id2].name or '-') .. ', beam details are:\n'
-        msg = msg .. dumps(beam)
-        log_jbeam('W', "jbeam.pushToPhysics", msg)
-      end
-
-      if type(beam.precompressionRange) == 'number' then
-        local bL = vec3(node1pos):distance(node2pos)
-        beam.beamPrecompression = max(0, (bL + beam.precompressionRange) / (bL + 1e-30))
-      end
-      local beamPrecompression = beam.beamPrecompression or 1
-      if type(beam.beamPrecompressionTime) == 'number' and beam.beamPrecompressionTime > 0 then
-        if beam.beamPrecompression == 1 or beam.beamType == BEAM_LBEAM then
-          beam.beamPrecompressionTime = nil
-        else
-          beamPrecompression = 1
-        end
-      end
-
-      local deformLimit = type(beam.deformLimit) == 'number' and beam.deformLimit or math.huge
-      local b = object:setBeam(-1, beam.id1, beam.id2, beam.beamStrength, beam.beamSpring,
-        beam.beamDamp, type(beam.dampCutoffHz) == 'number' and beam.dampCutoffHz or 0,
-        beam.beamDeform, deformLimit, type(beam.deformLimitExpansion) == 'number' and beam.deformLimitExpansion or deformLimit,
-        beamPrecompression
-      )
-
-      if b:isValid() then
-        if(beam.beamType == BEAM_ANISOTROPIC) then
-          beam.springExpansion = beam.springExpansion or beam.beamSpring
-          beam.dampExpansion = beam.dampExpansion or beam.beamDamp
-          local longBound = type(beam.beamLongExtent) == 'number' and -max(0, beam.beamLongExtent) or max(0, beam.beamLongBound or math.huge)
-          b:makeAnisotropic(beam.springExpansion, beam.dampExpansion,
-            type(beam.transitionZone) == 'number' and beam.transitionZone or 0, longBound
-          )
-        elseif(beam.beamType == BEAM_BOUNDED) then
-          local longBound = type(beam.longBoundRange) == 'number' and -max(0, beam.longBoundRange) or max(0, beam.beamLongBound or 1)
-          local shortBound = type(beam.shortBoundRange) == 'number' and -max(0, beam.shortBoundRange) or max(0, beam.beamShortBound or 1)
-          beam.beamLimitSpring = beam.beamLimitSpring or 1
-          beam.beamLimitDamp = beam.beamLimitDamp or 1
-          beam.beamLimitDampRebound = beam.beamLimitDampRebound or beam.beamLimitDamp
-          beam.beamDampRebound = beam.beamDampRebound or beam.beamDamp
-          beam.beamDampFast = beam.beamDampFast or beam.beamDamp
-          beam.beamDampReboundFast = beam.beamDampReboundFast or beam.beamDampRebound
-          beam.beamDampVelocitySplit = beam.beamDampVelocitySplit or math.huge
-
-          b:makeBounded(longBound, shortBound, beam.beamLimitSpring, beam.beamLimitDamp, beam.beamLimitDampRebound,
-            beam.beamDampRebound, beam.beamDampFast, beam.beamDampReboundFast, beam.beamDampVelocitySplit,
-            type(beam.boundZone) == 'number' and beam.boundZone or 1
-          )
-        elseif(beam.beamType == BEAM_SUPPORT) then
-          local longBound = type(beam.beamLongExtent) == 'number' and -max(0, beam.beamLongExtent) or max(0, beam.beamLongBound or 1)
-          beam.springExpansion = 0
-          beam.dampExpansion = 0
-          b:makeAnisotropic(0, 0, 0, longBound)
-        elseif(beam.beamType == BEAM_PRESSURED) then
-          if beam.pressure == nil and beam.pressurePSI == nil then beam.pressurePSI = 30 end
-          beam.pressure = beam.pressure or (beam.pressurePSI * 6894.757 + 101325) -- From PSI to Pa
-          beam.pressurePSI = (beam.pressure - 101325) / 6894.757
-          beam.surface = beam.surface or 1
-          beam.volumeCoef = beam.volumeCoef or 1
-
-          if beam.maxPressure == nil and beam.maxPressurePSI == nil then beam.maxPressure = math.huge end
-          beam.maxPressure = beam.maxPressure or (beam.maxPressurePSI * 6894.757 + 101325)
-          beam.maxPressurePSI = (beam.maxPressure - 101325) / 6894.757
-          if beam.maxPressure < 0 then beam.maxPressure = math.huge end
-          b:makePressured(beam.pressure, beam.surface, beam.volumeCoef, beam.maxPressure)
-        elseif(beam.beamType == BEAM_LBEAM) then
-          b:makeLbeam(beam.id3,
-            type(beam.springExpansion) == 'number' and beam.springExpansion or beam.beamSpring,
-            type(beam.dampExpansion) == 'number' and beam.dampExpansion or beam.beamDamp
-          )
-        end
-
-        if beam.deformationTriggerRatio ~= nil and beam.deformationTriggerRatio ~= "" then
-          b:setDeformationTriggerRatio(tonumber(beam.deformationTriggerRatio))
-        end
-        return b
-      end
-      return nil
-    end
 
     -- then the beams
     if vehicle.beams ~= nil then
@@ -864,7 +881,7 @@ local function pushToPhysics(object)
           end
         end
 
-        addBeamByData(beam)
+        addBeamByData(object, vehicle, beam)
       end
       log_jbeam('D', "jbeam.pushToPhysics","- added " .. object.beam_count .. " beams")
     end
@@ -997,12 +1014,94 @@ local function pushToPhysics(object)
     end
     table.insert(loadingTimes, {'2.5 slidenodes', hp1:stopAndReset()})
 
+    -- Add the torsionHydros
+    if vehicle.torsionHydros ~= nil then
+      vehicle.torsionbars = vehicle.torsionbars or {}
+      local torsionHydroCount = 0
+
+      for i, hydro in pairs(vehicle.torsionHydros) do
+        table.insert(vehicle.torsionbars, hydro)
+        hydro.inRate = hydro.inRate or 2
+        hydro.outRate = hydro.outRate or hydro.inRate
+        hydro.autoCenterRate = hydro.autoCenterRate or hydro.inRate
+        hydro.inLimit = type(hydro.inExtent) == 'number' and hydro.inExtent or hydro.inLimit
+        hydro.outLimit = type(hydro.outExtent) == 'number' and hydro.outExtent or hydro.outLimit
+        hydro.inLimit = hydro.inLimit or -1
+        hydro.outLimit = hydro.outLimit or 1
+        hydro.inputSource = hydro.inputSource or "steering"
+        hydro.inputCenter = hydro.inputCenter or 0
+        hydro.inputInLimit = hydro.inputInLimit or -1
+        hydro.inputOutLimit = hydro.inputOutLimit or 1
+        hydro.inputFactor = hydro.inputFactor or 1
+
+        if type(hydro.extentFactor) == 'number' then
+          hydro.factor = hydro.extentFactor
+        end
+
+        if type(hydro.factor) == 'number' then
+          hydro.inLimit = -math.abs(hydro.factor)
+          hydro.outLimit = math.abs(hydro.factor)
+          hydro.inputFactor = sign2(hydro.factor)
+        end
+
+        torsionHydroCount = torsionHydroCount + 1
+      end
+      log_jbeam('D', "jbeam.postProcess"," - added " .. torsionHydroCount .. " torsionHydros")
+    end
+
+    -- torsionbars
+    if vehicle.torsionbars ~= nil then
+      for _, tb in pairs(vehicle.torsionbars) do
+        local spring = tb.spring
+        local damp = type(tb.damp) == 'number' and tb.damp or 0
+        local id1, id2, id3, id4 = tb.id1, tb.id2, tb.id3, tb.id4
+        if type(id1) ~= 'number' then
+          id1, spring, damp = 0, 0, 0
+        end
+        if type(id2) ~= 'number' then
+          id2, spring, damp = 0, 0, 0
+        end
+        if type(id3) ~= 'number' then
+          id3, spring, damp = 0, 0, 0
+        end
+        if type(id4) ~= 'number' then
+          id4, spring, damp = 0, 0, 0
+        end
+        tb.cid = object:setTorsionbar(-1, id1, id2, id3, id4, spring, damp,
+          type(tb.strength) == 'number' and tb.strength or math.huge,
+          type(tb.deform) == 'number' and tb.deform or math.huge,
+          type(tb.precompressionAngle) == 'number' and tb.precompressionAngle or 0)
+      end
+    end
+
+    -- request the 3d meshes for faster processing on the c++ side
+    local reuseMesh = false
+
+    if object.ibody then
+      table.insert(loadingTimes, {'2.5.1 torsionbars', hp1:stopAndReset()})
+      object.ibody:requestMeshBegin()
+      if vehicle.props ~= nil then
+        for _, prop in pairs(vehicle.props) do
+          if prop.mesh ~= "SPOTLIGHT" and prop.mesh ~= "POINTLIGHT" then
+            object.ibody:requestMesh(prop.mesh)
+          end
+        end
+      end
+      if vehicle.flexbodies ~= nil then
+        for _, flexbody in pairs(vehicle.flexbodies) do
+          object.ibody:requestMesh(flexbody.mesh)
+        end
+      end
+      reuseMesh = (object.ibody:requestMeshCommit() == 1)
+      table.insert(loadingTimes, {'2.5.2 meshes', hp1:stopAndReset()})
+    end
+
     local disableSteeringProp = settings.getValue("disableSteeringwheel")
     if disableSteeringProp == nil then disableSteeringProp = false end
     -- props
     if vehicle.props ~= nil and object.ibody then
       local prop_count = 0
-      for propKey, prop in pairs (vehicle.props) do
+      for propKey, prop in pairs(vehicle.props) do
         if disableSteeringProp and prop.func == 'steering' then
           log_jbeam('I', 'jbeam.pushToPhysics', 'removed steering wheel prop due to settings')
           goto continue
@@ -1097,7 +1196,6 @@ local function pushToPhysics(object)
       end
       log_jbeam('D', "jbeam.pushToPhysics","- added ".. prop_count .." props")
     end
-
     table.insert(loadingTimes, {'2.6 props', hp1:stopAndReset()})
 
     vehicle.pressureGroups = {}
@@ -1105,7 +1203,7 @@ local function pushToPhysics(object)
 
     if vehicle.triangles ~= nil then
       local n = vehicle.nodes
-      for triangleKey, triangle in pairs (vehicle.triangles) do
+      for triangleKey, triangle in pairs(vehicle.triangles) do
         if triangle.breakGroup == '' then triangle.breakGroup = nil end
         if triangle.triangleType ~= nil and type(triangle.triangleType) == 'string' then
           triangle.triangleType = triTypeMap[triangle.triangleType]
@@ -1134,10 +1232,7 @@ local function pushToPhysics(object)
         local liftCoef = triangle.liftCoef or dragCoef
         if triangle.id1 == triangle.id2 or triangle.id1 == triangle.id3 or triangle.id2 == triangle.id3 then
           local t1, t2, t3 = n[triangle.id1].name, n[triangle.id2].name, n[triangle.id3].name
-          if t1 == t2 and t2 == t3 then
-            t1, t2, t3 = triangle.id1, triangle.id2, triangle.id3
-          end
-          log_jbeam('E', "jbeam.pushToPhysics","Degenerate collision triangle with nodes: "..t1..', '..t2..', '..t3)
+          log_jbeam('E', "jbeam.pushToPhysics","Found degenerate collision triangle with nodes: "..t1..', '..t2..', '..t3)
         end
         object:setTriangle(-1, triangle.id1, triangle.id2, triangle.id3, dragCoef/100, liftCoef/100,
           type(triangle.stallAngle) == 'number' and triangle.stallAngle or 0.58, pressure, pressureGroup, triangle.triangleType,
@@ -1145,7 +1240,6 @@ local function pushToPhysics(object)
       end
       log_jbeam('D', "jbeam.pushToPhysics","- added ".. object:getTriangleCount() .." total triangles")
     end
-
     table.insert(loadingTimes, {'2.7 triangles', hp1:stopAndReset()})
 
     -- flexbodies (must be the last thing)
@@ -1185,7 +1279,6 @@ local function pushToPhysics(object)
       end
       log_jbeam('D', "jbeam.pushToPhysics","- added ".. flexmesh_count .." flexMeshes")
     end
-
     table.insert(loadingTimes, {'2.8 flexmeshes', hp1:stopAndReset()})
 
     if vehicle.refNodes == nil then
@@ -1232,20 +1325,6 @@ local function pushToPhysics(object)
       --log("I", "", "Found cameras: "..dumps(vehicle.cameras.onboard))
     end
 
-    local function cleanCameraData(d)
-      for k, v in pairs(d) do
-        -- delete unneeded data to keep the messages small
-        if k == 'group' or k == 'firstGroup' or k == 'partOrigin' or k == 'childParts'
-        or k == 'partName' or k == 'slotType' or k == 'collision' or k == 'selfCollision'
-        or k == 'nodeWeight' or  k == 'beamnDamp' or k == 'beamDeform' or k == 'beamSpring'
-        or k == 'beamDamp' or k == 'cid' or k == 'globalSkin' or k == 'skinName' or k == 'beamStrength' then
-          d[k] = nil
-        elseif type(v) == 'table' then
-          cleanCameraData(v)
-        end
-      end
-    end
-
     -- compile camera data
     local cameraData = { common = { refNodes = deepcopy(vehicle.refNodes[0]) } }
     for k,v in pairs(vehicle.cameras) do
@@ -1260,14 +1339,11 @@ local function pushToPhysics(object)
 
     cleanCameraData(cameraData)
     setCameraConfig(cameraData)
-    --log("I", "", "Camera data: "..dumps(cameraData))
-
     table.insert(loadingTimes, {'2.9 camera', hp1:stopAndReset()})
 
     -- end
     object:finishLoading()
     log_jbeam('D', "jbeam.pushToPhysics","object creation took "..hpo:stop().." ms")
-
     table.insert(loadingTimes, {'2.10 finish hook', hp1:stopAndReset()})
 
     -- find active parts
@@ -1328,10 +1404,15 @@ local function pushToPhysics(object)
     end
 
     if useLicensePlate then
-      obj:queueGameEngineLua("setPlateText( false, "..obj:getID()..",'"..licenseplatePath.. "')")
+      obj:queueGameEngineLua("core_vehicles.setPlateText( false, "..obj:getID()..",'"..licenseplatePath.. "')")
     end
-
     table.insert(loadingTimes, {'2.11 skin', hp1:stopAndReset()})
+
+    if object.ibody then
+      -- all meshes are done, tell that to the other side...
+      object.ibody:meshCommit()
+    end
+    table.insert(loadingTimes, {'2.12 meshCommit', hp1:stopAndReset()})
 
     ::continue::
   end
@@ -1566,10 +1647,9 @@ local function fillSlots(partMap, part, level, _slotOptions)
               end
             end
 
-            slotOptions.childParts = deepcopy(_childParts or {})
-
             -- TODO: add virtual parts
             unifyParts(part, v2, tmp.level, slotOptions)
+            slotOptions.childParts = deepcopy(_childParts or {}) -- this is after unifyparts to not leak childparts into all things below
           end
           table.insert(slotMap[partType], tmp)
         end
@@ -1595,7 +1675,8 @@ local function scaleValuesRecursive(data)
   for key, v in pairs(data) do
     local typev = type(v)
     if typev == 'number' then
-      if type(key) == 'string' and str_sub(key,1,5) == "scale" and str_len(key) > 5 then
+      if str_byte(key,1)==115 and str_byte(key,2)==99 and str_byte(key,3)==97 and str_byte(key,4)==108 and str_byte(key,5)==101 --scale
+      and str_byte(key,6)~=nil then
         -- look for scaled key
         local keytoscale = str_sub(key, 6)
         if type(data[keytoscale]) == "number" then
@@ -1618,8 +1699,8 @@ local function applyVariables(data, vars)
     for key, v in pairs(d) do
       local typev = type(v)
       if typev == "string" then
-        if str_byte(v,1,1) == 36 then -- $
-          if str_sub(v,2,2) == '=' then
+        if str_byte(v,1) == 36 then -- $
+          if str_byte(v,2) == 61 then -- =
             if not expressionParser then
               expressionParser = require("expressionParser")
               M.jbeamVariableEnv = expressionParser.buildEnvJbeamVariables(vars, M.userVars)
@@ -1987,6 +2068,9 @@ local function postProcess(vehicles)
               --log("W", "", "Renaming deprecated 'dash' onboard camera to 'driver'")
               v.name = "driver"
             end
+            if v.name == "driver" then
+              v.rightHandCamera = v.rightHandCamera or false -- replace missing field with actual, explicit value
+            end
           end
         end
         vehicle.cameras[newName] = vehicle[oldName]
@@ -2334,12 +2418,11 @@ end
 local function removeKeysRecursive(d)
   if type(d) ~= 'table' then return end
   -- what to clean up now
-  if d.childParts then d.childParts = nil end
-  if d.originFilename then d.originFilename = nil end
-  if d.partName then d.partName = nil end
-  if d.partOrigin then d.partOrigin = nil end
-  if d.skinName then d.skinName = nil end
-  if d.slotType then d.slotType = nil end
+  d.childParts = nil
+  d.partName = nil
+  d.partOrigin = nil
+  d.skinName = nil
+  d.slotType = nil
   -- recurse
   for _, v in pairs(d) do
     removeKeysRecursive(v)
@@ -2369,7 +2452,7 @@ local function assemble()
 
   table.insert(loadingTimes, {'1.3.1 fillslots', hp1:stopAndReset()})
 
-  --serializeJsonToFile(M.vehicleDirectory .. "all_parts.json", partsCopy, true)
+  --jsonWriteFile(M.vehicleDirectory .. "all_parts.json", partsCopy, true)
   --saveCompiledJBeam(partsCopy, M.vehicleDirectory .. "all_parts.json", -1)
 
   -- uncomment this for insights what the jbeamm looks like
@@ -2430,8 +2513,8 @@ local function resolveBaseParts(allParts)
       local tempPart = deepcopy(allParts[v.basePart])
       _mergeJBEAM(tempPart, v)
       allParts[k] = tempPart
-      --writeJsonFile(k.."_orig.jbeam", allParts[v.basePart], true)
-      --writeJsonFile(k..".jbeam", allParts[k], true)
+      --jsonWriteFile(k.."_orig.jbeam", allParts[v.basePart], true)
+      --jsonWriteFile(k..".jbeam", allParts[k], true)
     end
   end
 end
@@ -2474,8 +2557,9 @@ local function loadDirectories(directories, _allParts, _partMap)
 
   -- step 2: load them all from the Filesystem in one go
   --perf.enable(1)
-  local json = require("json")
+  local partFilenames = {}
 
+  local json = require("json")
   for filename, content in pairs(fileContent) do
     local state, parts = pcall(json.decode, content)
     if state == false then
@@ -2483,13 +2567,14 @@ local function loadDirectories(directories, _allParts, _partMap)
       log_jbeam('E', "jbeam.loadDirectories","JSON decoding error: "..tostring(parts))
       return nil
     end
+
     --log_jbeam('D', "jbeam.loadDirectories","  * " .. filename .. " - "..tableSize(parts).." parts")
     for partName, part in pairs(parts) do
       if allParts[partName] ~= nil then
-        log_jbeam('W', "jbeam.loadDirectories", "Duplicated part: "..tostring(partName) .. ' from file: ' .. tostring(filename) .. ' and ' .. (allParts[partName].originFilename or ''))
+        log_jbeam('W', "jbeam.loadDirectories", "Duplicated part: "..tostring(partName) .. ' from file: ' .. tostring(filename) .. ' and ' .. (partFilenames[partName] or ''))
       end
       if type(part) == 'table' then
-        part.originFilename = filename
+        partFilenames[partName] = filename
         allParts[partName] = part;
       else
         log_jbeam('W', "jbeam.loadDirectories","Ignoring invalid part: "..tostring(part))
@@ -2535,7 +2620,12 @@ local function loadVehicle(vehicleDir)
   log_jbeam('D', "jbeam.loadVehicle","set vehicle directory to "..tostring(M.vehicleDirectory))
 
   -- 1st: load the vehicle dir:
-  local allParts, partMap = loadDirectories({M.vehicleDirectory})
+  local dirs = {M.vehicleDirectory}
+  if M.main.information == nil or M.main.information.includes == nil then
+    table.insert(dirs, 'vehicles/common')
+  end
+
+  local allParts, partMap = loadDirectories(dirs)
 
   -- 2nd: find the main part in the goo
 
@@ -2545,28 +2635,36 @@ local function loadVehicle(vehicleDir)
   end
 
   M.main = partMap[mainPartType][1]
-  --dump(M.main)
-
 
   --3rd: do we need to load more files?
-  if M.main.information == nil or M.main.information.includes == nil then
-    -- backward compatibility: load common folder
-    allParts, partMap = loadDirectories({'vehicles/common'}, allParts, partMap)
-  elseif type(M.main.information.includes) == 'table' then
-    -- yes, respect the order
-    allParts, partMap = loadDirectories(M.main.information.includes, allParts, partMap)
-  else
-    log_jbeam('D', "jbeam.loadVehicle","invalid include directive: " .. dumps(M.main.information.includes))
+  if type(M.main.information) == 'table' then
+    if type(M.main.information.includes) == 'table' then
+      -- yes, respect the order
+      allParts, partMap = loadDirectories(M.main.information.includes, allParts, partMap)
+    else
+      log_jbeam('D', "jbeam.loadVehicle","invalid include directive: " .. dumps(M.main.information.includes))
+    end
   end
 
   M.partMap = partMap
+  local partCostLookup = {}
+  for _,v in pairs(allParts) do
+    if v.information and v.partName then
+      partCostLookup[v.partName] =
+      {
+        value = v.information.value or 0,
+        name = v.information.name or "None"
+      }
+    end
+  end
+  M.partCostLookup = partCostLookup
 
   log_jbeam('D', "jbeam.loadDirectories","*** jbeam loading done, found "..tableSize(allParts) .. ' parts')
 
-  --serializeJsonToFile(M.vehicleDirectory .. "all_parts.json", allParts, true)
+  --jsonWriteFile(M.vehicleDirectory .. "all_parts.json", allParts, true)
   --dumpTableToFile(self.partMap, false, "test-out.jbeamp")
 
-  table.insert(loadingTimes, {'1.2 partmap', hp1:stopAndReset()})
+  table.insert(loadingTimes, {'1.X.X filesystem (sum)', hp1:stopAndReset()})
 
   --log_jbeam('D', "jbeam.loadVehicle","* assembling main jbeam. " ..M.main.partName)
 

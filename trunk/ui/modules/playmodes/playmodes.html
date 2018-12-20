@@ -12,11 +12,10 @@
 </style>
 
 <md-content layout-fill style="height:100%; width:100%;" layout="row" layout-align="space-around center" class="top-level-thing transparent">
-  <div flex="60" flex-lg="40" flex-gt-lg="80" style="max-width: 1400px;">
-    <md-grid-list md-cols="2" md-cols-gt-lg="6" md-row-height="1:1" md-gutter="12px">
-      <md-grid-tile ng-repeat="card in ::modes.list" ui-sref="{{ ::(card.disabled ? '.' : 'menu.' + card.targetState) }}"
-          ng-class="{disabled: card.disabled}" mdx-paint-bg="accent">
-        <md-icon class="material-icons" style="font-size: 4vmax; color: white">{{ ::card.icon }}</md-icon>
+  <div flex="60" flex-lg="40" flex-gt-lg="50" style="max-width: 1400px;">
+    <md-grid-list md-cols="2" md-cols-gt-lg="4" md-row-height="1:1" md-gutter="12px">
+      <md-grid-tile ng-repeat="card in ::modes.list" ng-class="{disabled: card.disabled}" mdx-paint-bg="accent" ng-click="modes.handleClick(card)">
+          <bng-icon style="color: white; width: 40%;" src="card.icon" type="sprite"></bng-icon>
         <md-grid-tile-footer>
           <h2 style="margin: 0" ng-if="!card.disabled">{{ ::card.translateid | translate }}</h2>
           <div ng-if="card.disabled" style="margin: 5px;">

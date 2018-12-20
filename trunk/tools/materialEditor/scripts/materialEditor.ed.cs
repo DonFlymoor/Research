@@ -824,7 +824,7 @@ function MaterialEditorGui::guiSync( %this, %material )
 
     if((%material).annotationMap[%layer] $= "")
     {
-        MaterialEditorPropertiesWindow-->annotationMapText.setText( "None" );
+        MaterialEditorPropertiesWindow-->annotationMapNameText.setText( "None" );
         MaterialEditorPropertiesWindow-->annotationMapDisplayBitmap.setBitmap( "tools/materialeditor/gui/unknownImage" );
     }
     else
@@ -897,17 +897,6 @@ function MaterialEditorGui::guiSync( %this, %material )
     {
         MaterialEditorPropertiesWindow-->reflectivityMapNameText.setText( (%material).reflectivityMap[%layer] );
         MaterialEditorPropertiesWindow-->reflectivityMapDisplayBitmap.setBitmap( (%material).reflectivityMap[%layer] );
-    }
-
-    if((%material).PBRDataMap[%layer] $= "")
-    {
-        MaterialEditorPropertiesWindow-->PBRDataMapNameText.setText( "None" );
-        MaterialEditorPropertiesWindow-->PBRDataMapDisplayBitmap.setBitmap( "tools/materialeditor/gui/unknownImage" );
-    }
-    else
-    {
-        MaterialEditorPropertiesWindow-->PBRDataMapNameText.setText( (%material).PBRDataMap[%layer] );
-        MaterialEditorPropertiesWindow-->PBRDataMapDisplayBitmap.setBitmap( (%material).PBRDataMap[%layer] );
     }
 
     for(%i = 0; %i < materialEd_CustomTexArray.count(); %i++) {

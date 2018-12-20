@@ -8,11 +8,6 @@ local settings = require("simplesettings")
 
 local ffi = require("ffi")
 
-local acos = math.acos
-local max = math.max
-local min = math.min
-local abs = math.abs
-
 local ip = nil
 local port = nil
 
@@ -213,7 +208,6 @@ local function init()
   M.reset = nop
   M.updateGFX = nop
   M.update = nop
-  M.debugDraw = nop
 
   local isMotionSimEnabled = settings.getValue("motionSimEnabled") or false
   if isMotionSimEnabled then
@@ -234,6 +228,5 @@ M.settingsChanged = settingsChanged
 
 M.updateGFX = nop
 M.update = nop
-M.debugDraw = nop
 
 return M

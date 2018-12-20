@@ -22,9 +22,9 @@
          {"deformGroup":"foglightglass_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_foglight_L_a", ["etk800_bumper_F"]],
          {"deformGroup":"foglightglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_foglightglass_R_a", ["etk800_bumper_F"],[]{"deformSound":"GlassBreakSound2", "deformVolume":0.3}],
+         ["etk800_foglightglass_R_a", ["etk800_bumper_F"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound2", "deformVolume":0.3}],
          {"deformGroup":"foglightglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_foglightglass_L_a", ["etk800_bumper_F"],[]{"deformSound":"GlassBreakSound1", "deformVolume":0.3}],
+         ["etk800_foglightglass_L_a", ["etk800_bumper_F"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound1", "deformVolume":0.3}],
          {"deformGroup":""}
     ],
     "props": [
@@ -558,9 +558,9 @@
          {"deformGroup":"foglightglass_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_foglight_L_b", ["etk800_bumper_F"]],
          {"deformGroup":"foglightglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_foglightglass_R_b", ["etk800_bumper_F"],[]{"deformSound":"GlassBreakSound2", "deformVolume":0.3}],
+         ["etk800_foglightglass_R_b", ["etk800_bumper_F"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound2", "deformVolume":0.3}],
          {"deformGroup":"foglightglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_foglightglass_L_b", ["etk800_bumper_F"],[]{"deformSound":"GlassBreakSound1", "deformVolume":0.3}],
+         ["etk800_foglightglass_L_b", ["etk800_bumper_F"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound1", "deformVolume":0.3}],
          {"deformGroup":""}
     ],
     "props": [
@@ -1094,9 +1094,9 @@
          {"deformGroup":"foglightglass_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_foglight_L_b", ["etk800_bumper_F"]],
          {"deformGroup":"foglightglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_foglightglass_R_b", ["etk800_bumper_F"],[]{"deformSound":"GlassBreakSound2", "deformVolume":0.3}],
+         ["etk800_foglightglass_R_b", ["etk800_bumper_F"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound2", "deformVolume":0.3}],
          {"deformGroup":"foglightglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_foglightglass_L_b", ["etk800_bumper_F"],[]{"deformSound":"GlassBreakSound1", "deformVolume":0.3}],
+         ["etk800_foglightglass_L_b", ["etk800_bumper_F"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound1", "deformVolume":0.3}],
          {"deformGroup":""}
     ],
     "props": [

@@ -31,7 +31,7 @@ end
 local function downloadProgressCallback(r)
   --log('I', 'repository', 'request progress: ' .. dumps(r))
   --log('D', 'repository', 'request progress: ' .. string.format('% 4.2f', r.dlnow / r.dltotal * 100) .. ' %. Speed: ' .. string.format('%2.2f kB/s', r.dlspeed / 1024))
-  -- local js = 'if(typeof downloadStateChanged === "function") { downloadStateChanged(' .. encodeJson(r) .. '); }'
+  -- local js = 'if(typeof downloadStateChanged === "function") { downloadStateChanged(' .. jsonEncode(r) .. '); }'
 
   --print("executing JS: " .. tostring(js))
   -- be:executeJS(js)
@@ -122,8 +122,10 @@ local function updateDownloadQueue()
   --   end
   -- end
 
+  local parDownloads = tonumber(settings.getValue('modNumParallelDownload', 3))
+
   for k,v in pairs(updateQueue) do
-    if v.update and v.state == "updating" and downloading < 3 then
+    if v.update and v.state == "updating" and downloading < parDownloads then
       M.installMod(v.uri,v.filename)
       downloading = downloading + 1
     end
@@ -250,7 +252,7 @@ local function installMod(uri, filename, localPath, callback)
       uiUpdateQueue()
     end
 
-    -- local js = 'if(typeof downloadStateChanged === "function") { downloadStateChanged(' .. encodeJson(r) .. '); }'
+    -- local js = 'if(typeof downloadStateChanged === "function") { downloadStateChanged(' .. jsonEncode(r) .. '); }'
     guihooks.trigger('downloadStateChanged', r);
     --print("executing JS: " .. tostring(js))
     -- be:executeJS(js)
@@ -373,14 +375,14 @@ local function requestMyMods(query,order_by,order,page,categories)
 end
 
 local function modSubscribe(mod_id, useOptOut)
-  local optOutData = readJsonFile(optoutFile) or {}
+  local optOutData = jsonReadFile(optoutFile) or {}
   if useOptOut and optOutData[mod_id] then
     -- user opted out, ignore this request
     log('D', 'repo.modSubscribe', "Subscription '"..tostring(mod_id).."' opt out")
     return
   end
   optOutData[mod_id] = nil -- remove it from the opt-out list
-  writeJsonFile(optoutFile, optOutData)
+  jsonWriteFile(optoutFile, optOutData)
 
   if not modMgrRdy or not Engine.Online.isAuthenticated() then
     log('D', 'repo.modSubscribe', "Subscription \'"..tostring(mod_id).."\' when online and modmgr is ready")
@@ -427,9 +429,9 @@ end
 
 local function modUnsubscribe(mod_id)
   -- record in that file that we opted out intentionally
-  local optOutData = readJsonFile(optoutFile) or {}
+  local optOutData = jsonReadFile(optoutFile) or {}
   optOutData[mod_id] = true
-  writeJsonFile(optoutFile, optOutData)
+  jsonWriteFile(optoutFile, optOutData)
 
   -- if not modMgrRdy or not Engine.Online.isAuthenticated() then
   --   log('E', 'repo.modUnsubscribe', "Unsubscribe '"..tostring(mod_id).."' when online and modmgr is ready")
@@ -582,7 +584,7 @@ end
 
 local function runSubscription()
   if #subList > 0 and modMgrRdy and Engine.Online.isAuthenticated() then
-    for k,v in pairs(subList) do 
+    for k,v in pairs(subList) do
       modSubscribe(v)
     end
     subList = {}

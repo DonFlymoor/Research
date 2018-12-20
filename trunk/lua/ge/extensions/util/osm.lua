@@ -102,7 +102,7 @@ local nodes = {}
 
 -- Thus function transforms Lat/Lon to X/Y coordinates.
 local function degrees2meters(lon, lat)
-  return 
+  return
     scale * (r_major * math.rad(lon)),
     scale * (0 - r_major * math.log(math.tan(.5 * ((math.pi * .5)-math.rad(lat)))))
 end
@@ -114,7 +114,7 @@ local function processData(code, status, data)
   guihooks.trigger("osmFinished");
   writeFile('osm.xml', data)
   --data = readFile('osm.xml')
-  local root = require('slaxml'):dom(data).root
+  local root = require('libs/slaxml/slaxml'):dom(data).root
 
   nodes = {}
   log('I', "OSM", 'Parsing Nodes...')
@@ -161,7 +161,7 @@ local function processData(code, status, data)
 end
 
 -- Creates all the roads stored in the roads-list. If the road has a name tag, the DecalRoad will be named appropriately.
-local function createRoads() 
+local function createRoads()
   TorqueScript.eval([[
         if(isObject(OSM_Roadgroup)) {
             OSM_Roadgroup.delete();
@@ -169,11 +169,11 @@ local function createRoads()
         new SimGroup(OSM_Roadgroup) {
           position = "0 0 0";
           canSave = "0";
-        }; 
+        };
         OSM_Roadgroup.clear();
         MissionGroup.add(OSM_Roadgroup);
         ]])
-  log('I', "OSM", 'Creating Roads...')       
+  log('I', "OSM", 'Creating Roads...')
   for _, road in ipairs(roads) do
 
     local name = road.tags.name
@@ -211,13 +211,13 @@ local function makeRoadTS(name, road)
       detail = ".25";
       smoothness = "0.01";
     ]]
-    
+
   for _, nId in pairs(road.nodes) do
     local p = nodes[nId]
     local laneWidth = matInfo.defaultLaneWidth
     local lanes = road.tags.lanes or matInfo.defaultLanes
     local w = lanes * laneWidth + .2
-    
+
     roadTS = roadTS..'Node="'..(p.x)..' '..(p.y)..' 0 '..w..'";'
   end
   roadTS = roadTS..'});  '
@@ -231,15 +231,15 @@ local function getHighwayInfo(tag)
   local isLink = string.sub(tag,-string.len("_link"))=="_link"
 
   if isLink then
-    tag = string.gsub(tag,"_link","")  
+    tag = string.gsub(tag,"_link","")
   end
-  ret = highwayInfo[tag] or highwayInfo["default"]     
-  
+  ret = highwayInfo[tag] or highwayInfo["default"]
+
   if isLink then
     ret.defaultLanes = 1
   end
 
-  if highwayInfo[tag] == nil and tag ~= nil and not isLink then 
+  if highwayInfo[tag] == nil and tag ~= nil and not isLink then
     -- unknown tag, and not a _link tag
     log('W', "OSM", "Unspecified highway tag in data: "..tag..". Using default values.")
   end
@@ -286,12 +286,12 @@ local function getGeoData(lon, lat, width, height)
     return
   end
 
- if lat > 89.5 then 
-    lat = 89.5 
+ if lat > 89.5 then
+    lat = 89.5
     log('W', "OSM", "Latitude was outside of allowed scope (-89.5 < lat < 89.5), has been readjusted to "..lat)
   end
-  if lat < -89.5 then 
-    lat = -89.5 
+  if lat < -89.5 then
+    lat = -89.5
     log('W', "OSM", "Latitude was outside of allowed scope (-89.5 < lat < 89.5), has been readjusted to "..lat)
   end
 
@@ -302,7 +302,7 @@ local function getGeoData(lon, lat, width, height)
   local b = lat - height
   local r = lon + width
   local t = lat + height
-  
+
   scale = math.cos(math.rad(lat))
 
   center.lon = lon
