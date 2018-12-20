@@ -13,23 +13,8 @@ local min = math.min
 local abs = math.abs
 local rpmToAV = 0.104719755
 
-local function updateSounds(device, dt)
-  local straightCutGearCoef = device.straightCutGearIndexes[device.gearIndex] and 1 or 0
-  local absOutputAV = abs(device.outputAV1)
-  local fadeInStartAV = 20
-  local fadeInEndAV = 60
-  local volumeFadeIn = min(max((absOutputAV - fadeInStartAV) / (fadeInEndAV - fadeInStartAV), 0), 1)
-  local volumePerAV = 0.0005
-  local maxVolume = 3
-  local volume = min(max(abs(device.outputTorque1) * volumePerAV, 0), maxVolume) * volumeFadeIn * straightCutGearCoef
-  volume = device.gearWhineVolumeSmoother:getUncapped(volume, dt)
-  local pitchPerAV = 0.01
-  local minPitch = 0.5
-  local maxPitch = 15
-  local pitch = min(max(absOutputAV * pitchPerAV, minPitch), maxPitch)
-  pitch = device.gearWhinePitchSmoother:getUncapped(pitch, dt)
-  obj:setVolumePitch(device.gearWhineLoop, volume, pitch)
-end
+-- local function updateSounds(device, dt)
+-- end
 
 local function updateVelocity(device, dt)
   device.inputAV = device.outputAV1 * device.gearRatio * device.lockCoef
@@ -158,19 +143,10 @@ local function calculateInertia(device)
 end
 
 local function resetSounds(device)
-  device.gearWhinePitchSmoother:reset()
-  device.gearWhineVolumeSmoother:reset()
 end
 
 local function initSounds(device)
-  device.gearGrindSoundFile = device.jbeamData.gearGrindSoundFile or "file:>art>sound>transmission>gear_grind1.wav"
-  --local gearWhineSample = "event:>Vehicle>Transmission>Straight_Cut_Gear_02"
-  --device.gearWhineLoop = obj:createSFXSource(gearWhineSample, "AudioDefaultLoop3D", "GearWhine", device.transmissionNodeID or sounds.engineNode)
-  device.gearWhinePitchSmoother = newTemporalSmoothing(1.5, 1.5)
-  device.gearWhineVolumeSmoother = newTemporalSmoothing(20, 10)
-  if device.gearWhineLoop then
-    device.updateSounds = updateSounds
-  end
+  device.gearGrindSoundFile = device.jbeamData.gearGrindSoundFile or "event:>Vehicle>Transmission>grind_legacy_01"
 end
 
 local function reset(device)

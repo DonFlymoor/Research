@@ -2,26 +2,89 @@
 -- If a copy of the bCDDL was not distributed with this
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
--- utility things, big chaos
+-- utility things, see documentation
 
-local inspect = require("inspect")
+require('filters')
 
--- this function can load an optional module
-function require_optional(module)
-  local ok, m = pcall(require, module)
-  if ok then return m end
-  return nil
-end
-
-local ffi = require_optional('ffi')
-
-local __typePoint3F  = (Point3F  ~= nil) and     Point3F(0,0,0).___type or nil
-local __typeFloat3   = (float3   ~= nil) and     float3(0,0,0).___type or nil
+--== type definitions ==--
+-- used in conversions and serializations
+local __typePoint3F  = (Point3F  ~= nil) and Point3F(0,0,0).___type or nil
+local __typeFloat3   = (float3   ~= nil) and float3(0,0,0).___type or nil
 local __typeQuaternion = (Quaternion ~= nil) and Quaternion().___type or nil
 local __typeQuatF = (QuatF ~= nil) and QuatF(0,0,0,1).___type or nil
 local __typeColor = (color ~= nil) and color(0,0,0,0).___type or nil
+
+-- useful local shortcuts
 local abs, floor, min, max, stringformat, tableconcat = math.abs, math.floor, math.min, math.max, string.format, table.concat
 local str_find, str_len, str_sub = string.find, string.len, string.sub
+
+--== color things ==--
+-- returns some contrasting colors and loops after a while
+contrast_color_list = {
+  {255, 0, 0, 255},
+  {0, 255, 0, 255},
+  {0, 0, 255, 255},
+  {255, 255, 0, 255},
+  {255, 0, 255, 255},
+  {0, 255, 255, 255},
+  {96, 128, 200, 255},
+  {196, 8, 0, 255},
+  {120, 0, 196, 255},
+  {90, 255, 255, 255},
+  {63, 102, 190, 255},
+  {235, 135, 63, 255}
+}
+
+-- TODO: convert calls to rainbowColor()
+function getContrastColorF(i)
+  local c = contrast_color_list[i % (#contrast_color_list) + 1]
+  return ColorF(c[1]/255, c[2]/255, c[3]/255, c[4]/255)
+end
+
+-- TODO: convert calls to rainbowColor()
+function getContrastColorStringRGB(i)
+  local c = contrast_color_list[i % (#contrast_color_list) + 1]
+  return string.format("#%02x%02x%02x", c[1], c[2], c[3])
+end
+
+-- TODO: convert calls to rainbowColor()
+function getContrastColorStringRGBA(i)
+  local c = contrast_color_list[i % (#contrast_color_list) + 1]
+  return string.format("#%02x%02x%02x%02x", c[1], c[2], c[3], c[4])
+end
+
+-- splits the RGB color range into numOfSteps slices equally. Creates good contrast colors
+function rainbowColor(numOfSteps, step, format)
+  if format == nil then format = 255 end
+  -- This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
+  -- Adam Cole, 2011-Sept-14
+  -- HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+  local r = 0
+  local g = 0
+  local b = 0
+  local h = step / numOfSteps
+  local i = math.floor(h * 6)
+  local f = h * 6 - i
+  local q = 1 - f
+  local iMod = i % 6
+  if     iMod == 0 then r = 1; g = f; b = 0
+  elseif iMod == 1 then r = q; g = 1; b = 0
+  elseif iMod == 2 then r = 0; g = 1; b = f
+  elseif iMod == 3 then r = 0; g = q; b = 1
+  elseif iMod == 4 then r = f; g = 0; b = 1
+  elseif iMod == 5 then r = 1; g = 0; b = q
+  end
+  if format == 255 then
+  --return 'rgba(' .. (r*255) .. ',' .. (g*255) .. ',' .. (b*255) .. ',1)'
+    return { math.floor(r*255), math.floor(g*255), math.floor(b*255), 1}
+  else
+    return { r, g, b, 1}
+  end
+end
+
+--== String utilities ==--
+
+local inspect = require("libs/inspect/inspect")
 
 function dumps(...)
   if #{...} > 1 then
@@ -43,29 +106,120 @@ function dump(...)
   log('A', "lua.utils", dumps(...))
 end
 
-if ffi then
-  const = function (table)
-    local new = {}
-    for k, v in pairs(table) do
-        new[k] = v
-    end
-    local t = ffi.typeof("struct {}")
-    ffi.metatype(t, {__index = new})
-    return ffi.new(t)
+function lpad(s, l, c)
+  s = tostring(s)
+  return string.rep(c, l - #s)..s
+end
+
+function rpad(s, l, c)
+  s = tostring(s)
+  return s .. string.rep(c, l - #s)
+end
+
+function trim(s)
+  return s:match("^%s*(.-)%s*$")
+end
+
+function join(list, delimiter)
+  return table.concat(list, delimiter)
+end
+
+-- Compatibility: Lua-5.0
+function split(str, delim, nMax)
+  local aRecord = {}
+
+  if str_len(str) > 0 then
+     nMax = nMax or -1
+     local nField, nStart = 1, 1
+     local nFirst,nLast = str_find(str, delim, nStart, true)
+     while nFirst and nMax ~= 0 do
+        aRecord[nField] = str_sub(str, nStart, nFirst-1)
+        nField = nField+1
+        nStart = nLast+1
+        nFirst,nLast = str_find(str, delim, nStart, true)
+        nMax = nMax-1
+     end
+     aRecord[nField] = str_sub(str, nStart)
   end
-else
-  const = function (table) return table end
+
+  return aRecord
 end
 
--- use luajit extension table.clear and new if they exist, otherwise fallback to lua implementations
-local ok, _ = pcall(require, "table.clear")
-if not ok then
-  table.clear = function(tab) for k, _ in pairs(tab) do tab[k] = nil end end
+function string.startswith(String,Start)
+  return string.sub(String,1,string.len(Start))==Start
 end
 
-local ok, _ = pcall(require, "table.new")
-if not ok then
-  table.new = function() return {} end
+function string.endswith(String,End)
+  return End=='' or string.sub(String,-string.len(End))==End
+end
+
+function string.rstripchars(String, chrs)
+  return String:gsub("["..chrs.."]$", '')
+end
+
+function string.stripchars(String, chrs)
+  return String:gsub("["..chrs.."]", '')
+end
+
+function string.stripcharsFrontBack(str, chrs)
+  str = str:match( "^["..chrs.."]*(.+)" )
+  str = str:match( "(.-)["..chrs.."]*$" )
+  return str
+end
+
+
+function string.split(String, delimregex)
+  if not delimregex then
+    delimregex = "%S+"
+  end
+  local t = {}
+  for i in string.gmatch(String, delimregex) do
+    t[#t + 1] = i
+  end
+  return t
+end
+
+function stringHash(text)
+  -- From: http://wowwiki.wikia.com/wiki/StringHash/Analysis
+  -- available under CC-BY-SA
+  local counter = 1
+  local len = string.len(text)
+  for i = 1, len, 3 do
+    counter = math.fmod(counter * 8161, 4294967279) +
+    (string.byte(text, i) * 16776193) +
+    ((string.byte(text, i + 1) or (len - i + 256)) * 8372226) +
+    ((string.byte(text, i + 2) or (len - i + 256)) * 3932164)
+  end
+  return math.fmod(counter, 4294967291)
+end
+
+-- converts a byte count to a human readable string
+function bytes_to_string(bytes)
+    if bytes >= 1000 * 1000 then
+      return ("%.2f MB"):format(bytes / (1000 * 1000))
+    elseif bytes >= 1000 then
+      return ("%.2f KB"):format(bytes / 1000)
+    end
+    return ("%.2f B"):format(bytes)
+  end
+
+-- time string format
+function formatTimeStringNow(res)
+  local d = os.date('*t')
+  res = res:gsub("{YYYY}", string.format('%04d', d.year))
+  res = res:gsub("{YY}", string.format('%02d', d.year - 2000))
+  res = res:gsub("{Y}", d.year)
+  res = res:gsub("{MM}", string.format('%02d', d.month))
+  res = res:gsub("{M}", d.month)
+  res = res:gsub("{DD}", string.format('%02d', d.day))
+  res = res:gsub("{D}", d.day)
+  res = res:gsub("{HH}", string.format('%02d', d.hour))
+  res = res:gsub("{H}", d.hour)
+  res = res:gsub("{mm}", string.format('%02d', d.min))
+  res = res:gsub("{m}", d.min)
+  res = res:gsub("{ss}", string.format('%02d', d.sec))
+  res = res:gsub("{s}", d.sec)
+  return res
 end
 
 -- ASCII graph
@@ -74,19 +228,61 @@ function graphs(v, len)
   return '['..string.rep(v>0 and "+" or "-", size) .. string.rep(' ', len - size)..']'
 end
 
-function dumpToFile(filename, ...)
-  local f = io.open(filename, "w")
-  if f then
-    f:write(inspect(...))
-    f:close()
-    return true
+
+--== Json ==--
+
+function jsonEncode(v)
+  local vtype = type(v)
+
+  -- Handle strings
+  if vtype == 'string' then
+    return stringformat('%q', v)
   end
-  return false
+
+  -- Handle numbers and booleans
+  if vtype == 'number' then
+    if v == v + 1 then -- test for inf
+      return v >= 0 and '"inf"' or '"-inf"'
+    else
+      return stringformat('%g', v)
+    end
+  end
+
+  -- Handle tables
+  if vtype == 'table' then
+    if next(v) == 1 and next(v, #v) == nil then
+      local vcount = #v
+      if vcount <= 2 then
+        if vcount == 1 then
+          return stringformat('[%s]', jsonEncode(v[1]))
+        else
+          return stringformat('[%s,%s]', jsonEncode(v[1]), jsonEncode(v[2]))
+        end
+      else
+        local tmp = table.new(vcount, 0)
+        for i = 1, vcount do
+          tmp[i] = jsonEncode(v[i])
+        end
+        return stringformat('[%s]', tableconcat(tmp, ','))
+      end
+    else
+      local tmp = table.new(0, 2)
+      local tmpidx = 1
+      for kk, vv in pairs(v) do
+        tmp[tmpidx] = stringformat('%q:%s', kk, jsonEncode(vv))
+        tmpidx = tmpidx + 1
+      end
+      return stringformat('{%s}', tableconcat(tmp, ','))
+    end
+  end
+
+  if vtype == 'boolean' then return tostring(v) end
+
+  return "null"
 end
 
-function encodeJsonPretty(v, lvl)
+function jsonEncodePretty(v, lvl)
   if v == nil then return "null" end
-
   local vtype = type(v)
   if vtype == 'string' then return stringformat('%q', v) end
   if vtype == 'number' then return stringformat('%g', v) end
@@ -98,29 +294,39 @@ function encodeJsonPretty(v, lvl)
     local indent = string.rep('  ', lvl)
     local indentPrev = string.rep('  ', math.max(0, lvl - 1))
     local tmp = {}
-    if v[1] ~= nil and next(v, #v) == nil then
-      for _, vv in ipairs(v) do table.insert(tmp, encodeJsonPretty(vv, lvl + 1)) end
+    if next(v) == 1 and next(v, #v) == nil then
+      for _, vv in ipairs(v) do table.insert(tmp, jsonEncodePretty(vv, lvl + 1)) end
       return stringformat('[\n' .. indent .. '%s\n' .. indentPrev .. ']', table.concat(tmp, ',\n' .. indent))
     else
       for kk, vv in pairs(v) do
-        local cv = encodeJsonPretty(vv, lvl + 1)
+        local cv = jsonEncodePretty(vv, lvl + 1)
         if cv ~= nil then table.insert(tmp, string.format('"%s":%s', kk, cv)) end
       end
       return stringformat('{\n'..indent .. '%s\n'.. indentPrev ..'}', table.concat(tmp, ',\n' .. indent))
     end
   end
-
   return nil
 end
 
-function serializeJsonToFile(filename, obj, pretty)
+function jsonDecode(content, context)
+  if not json then json = require("json") end
+  local state, data = xpcall(function() return json.decode(content) end, debug.traceback)
+  if state == false then
+    log('E', "jsonDecode", "unable to decode JSON: "..tostring(context))
+    log('E', "jsonDecode", "JSON decoding error: "..tostring(data))
+    return nil
+  end
+  return data
+end
+
+function jsonWriteFile(filename, obj, pretty)
   local f = io.open(filename, "w")
   if f then
     local content
     if pretty then
-      content = encodeJsonPretty(obj)
+      content = jsonEncodePretty(obj)
     else
-      content = encodeJson(obj)
+      content = jsonEncode(obj)
     end
     f:write(content)
     f:close()
@@ -129,306 +335,17 @@ function serializeJsonToFile(filename, obj, pretty)
   return false
 end
 
-function lpad(s, l, c)
-  s = tostring(s)
-  return string.rep(c, l - #s)..s
-end
-
-function rpad(s, l, c)
-  s = tostring(s)
-  return s .. string.rep(c, l - #s)
-end
-
-function nop()
-end
-
-local temporalSpring = {}
-temporalSpring.__index = temporalSpring
-
-function newTemporalSpring(spring, damp, startingValue)
-  local data = {spring = spring or 10, damp = damp or 2, state = startingValue or 0, vel = 0}
-  setmetatable(data, temporalSpring)
-  return data
-end
-
-function temporalSpring:get(sample, dt)
-  self.vel = self.vel * max(1 - self.damp * dt, 0) + (sample - self.state) * min(self.spring * dt, 1/dt)
-  self.state = self.state + self.vel * dt
-  return self.state
-end
-
-function temporalSpring:set(sample)
-  self.state = sample
-  self.vel = 0
-end
-
-function temporalSpring:value()
-  return self.state
-end
-
-local temporalSigmoidSmoothing = {}
-temporalSigmoidSmoothing.__index = temporalSigmoidSmoothing
-
-function newTemporalSigmoidSmoothing(inRate, startAccel, stopAccel, outRate, startingValue)
-  local rate = inRate or 1
-  local startaccel = startAccel or math.huge
-  local data = {[false] = rate, [true] = outRate or rate, startAccel = startaccel, stopAccel = stopAccel or startaccel, state = startingValue or 0, prevvel = 0}
-  setmetatable(data, temporalSigmoidSmoothing)
-  return data
-end
-
-function temporalSigmoidSmoothing:get(sample, dt)
-  local dif = sample - self.state
-
-  local prevvel = self.prevvel * max(fsign(self.prevvel * dif), 0)
-  local vsq = prevvel * prevvel
-  local absdif = abs(dif)
-  local difsign = dif / (absdif + 1e-307)
-  local acceldt
-
-  local absdif2 = absdif * 2
-  if vsq > absdif2 * self.stopAccel then
-    acceldt = -difsign * min((vsq / absdif2) * dt, abs(prevvel))
-  else
-    acceldt = difsign * self.startAccel * dt
-  end
-
-  local ratelimit = self[dif * self.state >= 0]
-  self.state = self.state + difsign * min(min(abs(prevvel + 0.5 * acceldt), ratelimit) * dt, absdif)
-  self.prevvel = difsign * min(abs(prevvel + acceldt), ratelimit)
-  return self.state
-end
-
-function temporalSigmoidSmoothing:getWithRateAccel(sample, dt, ratelimit, startAccel, stopAccel)
-  local dif = sample - self.state
-  local prevvel = self.prevvel * max(fsign(self.prevvel * dif), 0)
-  local vsq = prevvel * prevvel
-  local absdif = abs(dif)
-  local difsign = dif / (absdif + 1e-307)
-  local acceldt
-
-  local absdif2 = absdif * 2
-  if vsq > absdif2 * (stopAccel or startAccel) then
-    acceldt = -difsign * min((vsq / absdif2) * dt, abs(prevvel))
-  else
-    acceldt = difsign * startAccel * dt
-  end
-
-  self.state = self.state + difsign * min(min(abs(prevvel + 0.5 * acceldt), ratelimit) * dt, absdif)
-  self.prevvel = difsign * min(abs(prevvel + acceldt), ratelimit)
-  return self.state
-end
-
-function temporalSigmoidSmoothing:set(sample)
-  self.state = sample
-  self.prevvel = 0
-end
-
-function temporalSigmoidSmoothing:value()
-  return self.state
-end
-
-local temporalSmoothingNonLinear = {}
-temporalSmoothingNonLinear.__index = temporalSmoothingNonLinear
-
-function newTemporalSmoothingNonLinear(inRate, outRate, startingValue)
-  local rate = inRate or 1
-  local data = {[false] = rate, [true] = outRate or rate, state = startingValue or 0}
-  setmetatable(data, temporalSmoothingNonLinear)
-  return data
-end
-
-function temporalSmoothingNonLinear:get(sample, dt)
-  local dif = sample - self.state
-  self.state = self.state + dif * min(self[dif * self.state >= 0] * dt, 1)
-  return self.state
-end
-
-function temporalSmoothingNonLinear:getWithRate(sample, dt, rate)
-  self.state = self.state + (sample - self.state) * min(rate * dt, 1)
-  return self.state
-end
-
-function temporalSmoothingNonLinear:set(sample)
-  self.state = sample
-end
-
-function temporalSmoothingNonLinear:value()
-  return self.state
-end
-
-function temporalSmoothingNonLinear:reset()
-  self.state = 0
-end
-
-local temporalSmoothing = {}
-temporalSmoothing.__index = temporalSmoothing
-
-function newTemporalSmoothing(inRate, outRate, autoCenterRate, startingValue)
-  inRate = max(inRate or 1, 1e-307)
-  startingValue = startingValue or 0
-
-  local data = {[false] = inRate, [true] = max(outRate or inRate, 1e-307),
-                autoCenterRate = max(autoCenterRate or inRate, 1e-307),
-                _startingValue = startingValue,
-                state = startingValue}
-
-  setmetatable(data, temporalSmoothing)
-
-  if data.autoCenterRate ~= inRate then
-    data.getUncapped = data.getUncappedAutoCenter
-  end
-  return data
-end
-
-function temporalSmoothing:getUncappedAutoCenter(sample, dt)
-  local st = self.state
-  local dif = (sample - st)
-  local rate
-
-  if sample == 0 then
-    rate = self.autoCenterRate  -- autocentering
-  else
-    rate = self[dif * st >= 0]
-  end
-  st = st + dif * min(rate * dt / abs(dif), 1)
-  self.state = st
-  return st
-end
-
-function temporalSmoothing:getUncapped(sample, dt) -- no autocenter
-  local st = self.state
-  local dif = (sample - st)
-  st = st + dif * min(self[dif * st >= 0] * dt / abs(dif), 1)
-  self.state = st
-  return st
-end
-
-function temporalSmoothing:get(sample, dt)
-  return max(min(self:getUncapped(sample, dt), 1), -1)
-end
-
-function temporalSmoothing:getWithRateUncapped(sample, dt, rate)
-  local st = self.state
-  local dif = (sample - st)
-  st = st + dif * min(rate * dt / (abs(dif) + 1e-307), 1)
-  self.state = st
-  return st
-end
-
-function temporalSmoothing:getWithRate(sample, dt, rate)
-  return max(min(self:getWithRateUncapped(sample, dt, rate), 1), -1)
-end
-
-function temporalSmoothing:reset()
-  self.state = self._startingValue
-end
-
-function temporalSmoothing:value()
-  return self.state
-end
-
-function temporalSmoothing:set(v)
-  self.state = v
-end
-
-local linearSmoothing = {}
-linearSmoothing.__index = linearSmoothing
-
-function newLinearSmoothing(dt, inRate, outRate)
-  inRate = max(inRate or 1, 1e-307)
-  local data = {[false] = inRate * dt, [true] = max(outRate or inRate, 1e-307) * dt, state = 0}
-  setmetatable(data, linearSmoothing)
-  return data
-end
-
-function linearSmoothing:get(sample) -- no autocenter
-  local st = self.state
-  local dif = (sample - st)
-  st = st + dif * min(self[dif * st >= 0] / abs(dif), 1)
-  self.state = st
-  return st
-end
-
-function linearSmoothing:set(v)
-  self.state = v
-end
-
-function linearSmoothing:reset()
-  self.state = 0
-end
-
-local ExponentialSmoothing = {}
-ExponentialSmoothing.__index = ExponentialSmoothing
-
--- creation method of the object, inits the member variables
-function newExponentialSmoothing(window, startingValue)
-  local data = {a = 2 / window, _startingValue = startingValue or 0, st = startingValue or 0}
-  setmetatable(data, ExponentialSmoothing)
-  return data
-end
-
-function ExponentialSmoothing:get(sample)
-  local st = self.st
-  st = st + self.a * (sample - st)
-  self.st = st
-  return st
-end
-
-function ExponentialSmoothing:getWindow(sample, window)
-  local st = self.st
-  st = st + 2 * (sample - st) / max(window, 2)
-  self.st = st
-  return st
-end
-
-function ExponentialSmoothing:value()
-  return self.st
-end
-
-function ExponentialSmoothing:set(value)
-  self.st = value
-end
-
-function ExponentialSmoothing:reset(value)
-  self.st = self._startingValue
-end
-
--- little snippet that enforces reloading of files
-function rerequire(module)
-  package.loaded[module] = nil
-  m = require(module)
-  if not m then
-    log('W', "rerequire", ">>> Module failed to load: " .. tostring(module).." <<<")
-  end
-  return m
-end
-
-function readJsonData(content, context)
-  if not json then json = require("json") end
-  local state, data = xpcall(function() return json.decode(content) end, debug.traceback)
-  if state == false then
-    log('E', "readJsonData", "unable to decode JSON: "..tostring(context))
-    log('E', "readJsonData", "JSON decoding error: "..tostring(data))
-    return nil
-  end
-  return data
-end
-
--- alias
-writeJsonFile = serializeJsonToFile
-
-function readJsonFile(filename)
+function jsonReadFile(filename)
   local content = readFile(filename)
   if content == nil then
     -- parent needs to deal with error reporting
     return nil
   end
-  return readJsonData(content, filename)
+  return jsonDecode(content, filename)
 end
 
 function readDictJSONTable(filename)
-  local data = readJsonFile(filename)
+  local data = jsonReadFile(filename)
   if not data then return nil end
   for k,v in pairs(data) do
     for k2,v2 in pairs(v) do
@@ -447,120 +364,9 @@ function readDictJSONTable(filename)
   return data
 end
 
-function toJSONString(d)
-  if type(d) == "string" then
-    return "\""..d.."\""
-  elseif type(d) == "number" then
-    return string.format('%g', d)
-  else
-    return tostring(d)
-  end
-end
+--== Table utilities ==--
 
-function saveCompiledJBeamRecursive(f, data, level)
-  local indent = string.rep(" ", level*2)
-  local nl = true
-  if level > 2 then nl = false end
-  if level > 3 then indent = "" end
-  --f:write(level..indent
-  f:write(indent)
-
-  if type(data) == "table" and type(data["partOrigin"]) == 'string' and data["partOrigin"] ~= ""  then
-    f:write("\n"..indent.."/*"..string.rep("*", 50).."\n")
-    f:write(indent .. " * part " .. tostring(data["partOrigin"]).."\n")
-    f:write(indent .. " *"..string.rep("*", 49) .. "*/\n")
-    f:write("\n"..indent)
-  end
-
-  if level > 2 then indent = "" end
-  if type(data) == "table" then
-    if tableIsDict(data) then
-      f:write("{")
-      if nl then f:write("\n") end
-      local localColumnCount = 0
-      for _,_ in pairs(data) do
-        localColumnCount = localColumnCount + 1
-      end
-      local i = 1
-      for k,v in pairs(data) do
-        if type(v) == "table" then
-          f:write(toJSONString(k).." : ")
-          --if nl then f:write("\n" end
-          saveCompiledJBeamRecursive(f, v, level + 1)
-          --if nl then f:write("\n" end
-        else
-          local txt = toJSONString(k) .. ' : ' .. toJSONString(v)
-          f:write(txt)
-        end
-        if i < localColumnCount then
-          f:write(", ")
-        elseif i == localColumnCount then
-          if nl then f:write("\n") end
-        end
-        i = i + 1
-      end
-      if nl then f:write("\n") end
-      f:write("}")
-      if level < 2 then f:write("\n") end
-    else
-      local nl = true
-      if level > 2 then nl = false end
-      f:write("[")
-      if nl then f:write("\n") end
-      for i=1,#data,1 do
-        --k,v in pairs(data) do
-        local v = data[i]
-        if type(v) == "table" then
-          saveCompiledJBeamRecursive(f, v, level + 1)
-        else
-          local txt = toJSONString(v)
-          f:write(txt)
-        end
-        if i < #data then
-          f:write(", ")
-          if level == 2 then f:write("\n") end
-        end
-      end
-      f:write("]")
-      if level < 2 then f:write("\n") end
-    end
-  end
-end
-
-function saveCompiledJBeam(data, filename, lvl)
-  local f = io.open(filename, "w")
-  if f == nil then
-    log('W', "saveCompiledJBeam", "unable to open file "..filename.." for writing")
-    return false
-  end
-  saveCompiledJBeamRecursive(f, data, lvl or 0)
-  f:close()
-  return true
-end
-
-function readFile(filename)
-  local f = io.open(filename, "r")
-  if f == nil then
-    return nil
-  end
-  local content = f:read("*all")
-  f:close()
-  return content
-end
-
-function writeFile(filename, data)
-  local file, err = io.open(filename,"w")
-  if file == nil then
-    log('W', "writeFile", "Error opening file for writing: "..filename..": "..err)
-    return nil
-  end
-  local content = file:write(data)
-  file:close()
-  return true
-end
-
-function pairs_tail(t, last) return next, t, last end
-
+-- checks if the table contains a certain value, compared lower-case. Non-recursive
 function tableContainsCaseInsensitive(table, element)
   element = string.lower(element)
   for _, value in pairs(table) do
@@ -571,6 +377,7 @@ function tableContainsCaseInsensitive(table, element)
   return false
 end
 
+-- checks if the table contains a certain value. Non-recursive
 function tableContains(t, element)
   for _, v in pairs(t) do
     if v == element then
@@ -580,6 +387,7 @@ function tableContains(t, element)
   return false
 end
 
+-- checks if the table is a dictionary by checking if key 1 exists
 function tableIsDict(tbl)
   if type(tbl) ~= "table" then
     return false
@@ -587,10 +395,12 @@ function tableIsDict(tbl)
   return next(tbl) ~= 1
 end
 
+-- checks if the table is empty. Fors for dicts and arrays
 function tableIsEmpty(tbl)
   return type(tbl) ~= 'table' or next(tbl) == nil
 end
 
+-- returns a new array containing all table keys
 function tableKeys(tbl)
   local keys = table.new(#tbl, 0)
   local keysidx = 1
@@ -601,11 +411,12 @@ function tableKeys(tbl)
   return keys
 end
 
+-- appends an array table(int keys) to another
 function arrayConcat(dst, src)
   local dstidx = #dst
-  for i, v in pairs(src) do
+  for i = src[0] == nil and 1 or 0, #src do
     dstidx = dstidx + 1
-    dst[dstidx] = v
+    dst[dstidx] = src[i]
   end
   return dst
 end
@@ -635,83 +446,7 @@ function tableMergeRecursive(t1, t2)
   return t1
 end
 
-function tableFromHeaderTable(entry)
-  --local function processTableWithSchema(vehicle, keyEntry, entry, newList)
-  -- its a list, so a table for us. Verify that the first row is the header
-  local header = entry[1]
-
-  if type(header) ~= "table" then
-    log('W', "tableFromHeaderTable", "*** Invalid table header: "..dumps(header))
-    return false
-  end
-
-  local headerSize = #header
-  local newListSize = 0
-  local localOptions = {}
-  local output = {}
-  local outputidx = 1
-
-  -- walk the list entries
-  for i = 2, #entry do
-    local rowValue = entry[i]
-
-    if type(rowValue) ~= "table" then
-      log('W', "tableFromHeaderTable", "*** Invalid table row: "..dumps(rowValue))
-      return false
-    end
-    if tableIsDict(rowValue) then
-      -- case where options is a dict on its own, filling a whole line
-      localOptions = tableMerge( localOptions, deepcopy(rowValue) )
-    else
-      -- allow last type to be the options always
-      if #rowValue > headerSize + 1 then -- and type(rowValue[#rowValue]) ~= "table" then
-        log('W', "tableFromHeaderTable", "*** Invalid table header, must be as long as all table cells (plus one additional options column):")
-        log('W', "tableFromHeaderTable", "*** Table header: "..dumps(header))
-        log('W', "tableFromHeaderTable", "*** Mismatched row: "..dumps(rowValue))
-        return false
-      end
-
-      local newRow
-      if next(localOptions) == nil then
-        newRow = {}
-      else
-        newRow = deepcopy(localOptions)
-      end
-
-      local rvcc = 0
-      for rk,rv in pairs(rowValue) do
-        --log('D', "jbeam.processTableWithSchema", "### "..header[rk].."//"..tostring(newRow[header[rk]]))
-        if header[rk] ~= nil then
-          newRow[header[rk]] = rv
-        end
-        -- check if inline options are provided, merge them then
-        if rvcc >= headerSize and type(rv) == 'table' and tableIsDict(rv) and #rowValue > headerSize then
-          tableMerge(newRow, rv)
-          break
-        end
-        rvcc = rvcc  + 1
-      end
-
-      if newRow.id ~= nil then
-        newRow.name = newRow.id -- this keeps the name for debugging or alike
-        newRow.id = nil
-      end
-
-      output[outputidx] = newRow
-      outputidx = outputidx + 1
-    end
-  end
-  return output
-end
-
-function trim(s)
-  return s:match("^%s*(.-)%s*$")
-end
-
-function join(list, delimiter)
-  return table.concat(list, delimiter)
-end
-
+-- returns the size of the table. Works with arrays and dictionaries. SLOW, as it iterates all ekements
 function tableSize(tbl)
   if type(tbl) ~= "table" then
     return 0
@@ -723,10 +458,12 @@ function tableSize(tbl)
   return count
 end
 
+-- counts the 0 elemnet as well if existing (Lua tables start with 1)
 function tableSizeC(tbl)
-  return #tbl + (tbl[0] and 1 or 0)
+  return #tbl + (tbl[0] == nil and 0 or 1)
 end
 
+-- finds the key of a certain value. Non-recursive
 function tableFindKey(t, element)
   for k, v in pairs(t) do
     if v == element then
@@ -736,13 +473,38 @@ function tableFindKey(t, element)
   return nil
 end
 
-function tableClear(tbl)
-  local count = #tbl
-  for i = 1, count do
-    tbl[i] = nil
-  end
+--returns a readonly table (only primary level unless all sub-tables are also created as readonly)
+function tableReadOnly(table)
+  return setmetatable({}, {
+      __index = table,
+      __newindex = function(table, key, value)
+        error(string.format("Attempt to modify read-only table entry: %s = %s", key, value))
+      end,
+      __metatable = false
+    });
 end
 
+-- TODO: duplicate of tableContains ?
+function tableFindValue(t, val)
+    for index, value in ipairs(t) do
+        if value == val then
+            return true
+        end
+    end
+    return false
+end
+
+-- TODO: duplicate of tableFindKey ?
+function arrayFindValueIndex(t, val)
+    for i = 1, #t do
+        if t[i] == val then
+            return i
+        end
+    end
+    return false
+end
+
+-- counts the depth of a table. Recursive, super slow
 function tableDepth(tbl, lookup)
   if type(tbl) ~= 'table' then return 0 end
   lookup = lookup or {}
@@ -760,6 +522,7 @@ function tableDepth(tbl, lookup)
   return depth
 end
 
+-- creates a copy of the value or table. Non-recursive
 function shallowcopy(orig)
   local copy
   if type(orig) == 'table' then
@@ -773,6 +536,7 @@ function shallowcopy(orig)
   return copy
 end
 
+-- local, used in deepcopy()
 local function _deepcopyTable(lookup_table, object)
   local new_table = table.new(#object, 0)
   lookup_table[object] = new_table
@@ -788,6 +552,7 @@ local function _deepcopyTable(lookup_table, object)
   return setmetatable(new_table, getmetatable(object))
 end
 
+-- copies the object, recreates an exact  copy. Recursive. Slow
 function deepcopy(object)
   if type(object) == 'table' then
     local lookup_table = {}
@@ -797,6 +562,44 @@ function deepcopy(object)
   end
 end
 
+
+--== Input/Output helpers ==--
+
+-- inspects the arguments and writes the output to the file
+function dumpToFile(filename, ...)
+  local f = io.open(filename, "w")
+  if f then
+    f:write(inspect(...))
+    f:close()
+    return true
+  end
+  return false
+end
+
+-- reads the content of a file
+function readFile(filename)
+  local f = io.open(filename, "r")
+  if f == nil then
+    return nil
+  end
+  local content = f:read("*all")
+  f:close()
+  return content
+end
+
+-- writes text to a file
+function writeFile(filename, data)
+  local file, err = io.open(filename,"w")
+  if file == nil then
+    log('W', "writeFile", "Error opening file for writing: "..filename..": "..err)
+    return nil
+  end
+  local content = file:write(data)
+  file:close()
+  return true
+end
+
+--== Math ==--
 -- float3 conversion helpers
 function tableToFloat3(v)
   if v == nil then
@@ -805,178 +608,18 @@ function tableToFloat3(v)
   return float3(v.x, v.y, v.z)
 end
 
--- color conversion helpers
-function tableToColor(v)
-  if v == nil then
-    return color(0,0,0,0)
-  end
-  return color(v.r, v.g, v.b, v.a)
+-- linear interpolation between two values
+function lerp(from, to, t)
+  return from + (to - from) * min(max(0, t), 1)
 end
 
-function parseColor(v)
-  if v == nil then
-    return color(0,0,0,0)
-  end
-  if type(v) == 'table' then
-    return color(v.r, v.g, v.b, v.a)
-  elseif type(v) == 'string' and string.len(v) > 7 and v:sub(1,1) == '#' then
-    v = v:gsub("#","")
-    return color(tonumber("0x"..v:sub(1,2)), tonumber("0x"..v:sub(3,4)), tonumber("0x"..v:sub(5,6)), tonumber("0x"..v:sub(7,8)))
-  end
+--== User interface ==--
+
+function ui_message(msg, ttl, category, icon)
+  (obj or be):executeJS("HookManager.trigger('Message',"..jsonEncode({msg=msg, ttl=ttl or 5, category=category or '', icon = icon})..");")
 end
 
--- safe table iteration functions: it will iterate the tables via a copy: "adding" to the tables will not change the iteration
-function ipairs_safe(t)
-  local tcount = #t
-  local new_table = table.new(tcount, 0)
-  for i = 1, tcount do
-    new_table[i] = t[i]
-  end
-  local function ipairs_safe_it(t, i)
-    i = i + 1
-    local v = t[i]
-    if v ~= nil then
-      return i,v
-    else
-      return nil
-    end
-  end
-  return ipairs_safe_it, new_table, 0
-end
-
-function pairs_safe(t)
-  local new_table = table.new(#t, 0)
-  for index, value in pairs(t) do
-    new_table[index] = value
-  end
-  local function pairs_safe_it(t, i)
-    local k, v = next(t, i)
-    if k ~= nil then
-      return k,v
-    else
-      return nil
-    end
-  end
-  return pairs_safe_it, new_table, nil
-end
-
-function CatMullRomSpline(points, returnArray)
-  if #points < 3 then return nil end
-
-  local res
-  if returnArray then
-    if ffi then
-      res = ffi.new("float[?]", points[#points][1] + 1)
-    else
-      res = table.new(points[#points][1] + 1, 0)
-    end
-  else
-    res = table.new(points[#points][1] + 1, 0)
-  end
-
-  local p0, p1, p2, p3, x, steps, t
-
-  for i = 1, #points - 1 do
-    p0, p1, p2, p3 = points[max(i - 1, 1)], points[i], points[i + 1], points[min(i + 2, #points)]
-    steps = p2[1] - p1[1]
-    t = 0
-    for x = floor(p1[1]), floor(p2[1]) do
-      res[x] = 0.5 * (
-      (2 * p1[2])
-      + (  p2[2] -   p0[2]) * t
-      + (2 * p0[2] - 5 * p1[2] + 4 * p2[2] - p3[2]) * t * t
-      + (3 * p1[2] -   p0[2] - 3 * p2[2] + p3[2]) * t * t * t)
-      t = t + 1/steps
-    end
-  end
-  return res
-end
-
-function createCurve(points, returnArray)
-  if #points < 2 then return nil end
-  local res
-  if returnArray then
-    if ffi then
-      res = ffi.new("float[?]", points[#points][1] + 1)
-    else
-      res = table.new(points[#points][1] + 1, 0)
-    end
-  else
-    res = table.new(points[#points][1] + 1, 0)
-  end
-  local p1, p2, steps, t
-
-  if #points == 2 then
-    p1, p2 = points[1], points[2]
-    steps = p2[1] - p1[1]
-    local p2p1 = p2[2] - p1[2]
-    t = 0
-    for x = floor(p1[1]), floor(p2[1]) do
-      res[x] = p1[2] + t * p2p1
-      t = t + 1/steps
-    end
-    return res
-  end
-
-  return CatMullRomSpline(points, returnArray)
-end
-
-function createCurveArray(points)
-  if #points < 2 then return nil end
-
-  return createCurve(points, true), points[#points][1] + 1
-end
-
-function PSItoPascal(psi)
-  return psi * 6894.757 + 101325
-end
-
-function unrequire(m)
-  package.loaded[m] = nil
-  _G[m] = nil
-end
-
-function encodeJson(v)
-  local vtype = type(v)
-
-  -- Handle strings
-  if vtype == 'string' then
-    return stringformat('%q', v)
-  end
-
-  -- Handle numbers and booleans
-  if vtype == 'number' then
-    if v == v + 1 then -- test for inf
-      return v >= 0 and '"inf"' or '"-inf"'
-    else
-      return stringformat('%g', v)
-    end
-  end
-
-  -- Handle tables
-  if vtype == 'table' then
-    if next(v) ~= 1 then
-      local tmp = {}
-      local tmpidx = 1
-      for kk, vv in pairs(v) do
-        tmp[tmpidx] = stringformat('%q:%s', kk, encodeJson(vv))
-        tmpidx = tmpidx + 1
-      end
-      return stringformat('{%s}', tableconcat(tmp, ','))
-    else
-      local vcount = #v
-      local tmp = table.new(vcount, 0)
-      for i = 1, vcount do
-        tmp[i] = encodeJson(v[i])
-      end
-      return stringformat('[%s]', tableconcat(tmp, ','))
-    end
-  end
-
-  if vtype == 'boolean' then return tostring(v) end
-
-  return "null"
-end
+--== Extension/Packages ==--
 
 local function isPackage(name, entry)
   if name == 'extensions' then
@@ -1049,6 +692,112 @@ function deserializePackages(data, filter)
     end
   end
 end
+
+--== path/directory utils ==--
+
+
+path = {}
+path.dirname = function (filename)
+  while true do
+    if filename == "" or string.sub(filename, -1) == "/" then
+      break
+    end
+    filename = string.sub(filename, 1, -2)
+  end
+  if filename == "" then
+    filename = "."
+  end
+
+  return filename
+end
+
+path.is_file = function (filename)
+  local f = io.open(filename, "r")
+  if f ~= nil then
+    io.close(f)
+    return true
+  end
+  return false
+end
+
+path.split = function(path)
+  local dir, filename, ext = string.match(path, "(.-)([^/]-([^/%.]*))$") --  "(.-)([^/]-([^/%.]+))$" - enforces a filename
+  if filename == ext then ext = '' end
+  return dir, filename, ext
+end
+
+-- WIP
+path.split2 = function(filepath)
+  local dir, filename, ext = path.split(filepath)
+  filename = filename:gsub('.'..ext, "")
+  return dir, filename, ext
+end
+
+path.getCurrentPath = function()
+  local dirname, filename = path.split(debug.getinfo(2).short_src)
+  return dirname
+end
+
+--== Ini settings file ==--
+-- plain, no section, no nested INI support
+function loadIni(filename)
+  local d = {}
+  local f = io.open(filename, "r")
+  if not f then return nil end
+  for line in f:lines() do
+    if string.len(line) > 0 then
+      local firstChar = string.sub(line, 1, 1)
+      if firstChar ~= '#' and firstChar ~= ';' and firstChar ~= '/' then
+        local key, value = line:match("^([^%s=]+)%s-=%s-(.+)$")
+        if key and value then
+          value = trim(value)
+          if tonumber(value) then
+            value = tonumber(value)
+          elseif value == "true" then
+            value = true
+          elseif value == "false" then
+            value = false
+          end
+          d[key] = value
+        else
+          log("E", "", "Unable to parse INI line: "..line)
+        end
+      end
+    end
+  end
+  f:close()
+  return d
+end
+
+function saveIni(filename, d)
+  local c = {}
+
+  -- sort the keys
+  local dkeys = {}
+  for k in pairs(d) do table.insert(dkeys, k) end
+  table.sort(dkeys)
+
+  -- save a header
+  table.insert(c, '# ' .. beamng_windowtitle .. '\r\n')
+  table.insert(c, '# ' .. beamng_buildinfo .. '\r\n')
+  table.insert(c, '# saved on ' .. formatTimeStringNow('{YYYY}/{MM}/{DD} {HH}:{mm}:{ss}') .. '\r\n')
+
+  -- save the text
+  for _, k in pairs(dkeys) do
+    local v = d[k]
+    table.insert(c, ("%s = %s\r\n"):format(tostring(k), tostring(v)))
+  end
+
+  -- create the file
+  local f = io.open(filename, "w")
+  if not f then return end
+  f:write(tableconcat(c, ""))
+  f:close()
+end
+
+
+--== Serialization ==--
+
 
 -- serialization functions, see testSerialization, be aware that you need to add custom datatypes in this in case you need them
 -- serialized Lua
@@ -1155,171 +904,7 @@ end
 -- end
 --testSerialization()
 
--- Compatibility: Lua-5.0
-function split(str, delim, nMax)
-  local aRecord = {}
-
-  if str_len(str) > 0 then
-     nMax = nMax or -1
-     local nField, nStart = 1, 1
-     local nFirst,nLast = str_find(str, delim, nStart, true)
-     while nFirst and nMax ~= 0 do
-        aRecord[nField] = str_sub(str, nStart, nFirst-1)
-        nField = nField+1
-        nStart = nLast+1
-        nFirst,nLast = str_find(str, delim, nStart, true)
-        nMax = nMax-1
-     end
-     aRecord[nField] = str_sub(str, nStart)
-  end
-
-  return aRecord
-end
-
-function string.startswith(String,Start)
-  return string.sub(String,1,string.len(Start))==Start
-end
-
-function string.endswith(String,End)
-  return End=='' or string.sub(String,-string.len(End))==End
-end
-
-function string.rstripchars(String, chrs)
-  return String:gsub("["..chrs.."]$", '')
-end
-
-function string.stripchars(String, chrs)
-  return String:gsub("["..chrs.."]", '')
-end
-
-function string.split(String, delimregex)
-  if not delimregex then
-    delimregex = "%S+"
-  end
-  local t = {}
-  for i in string.gmatch(String, delimregex) do
-    t[#t + 1] = i
-  end
-  return t
-end
-
-path = {}
-path.dirname = function (filename)
-  while true do
-    if filename == "" or string.sub(filename, -1) == "/" then
-      break
-    end
-    filename = string.sub(filename, 1, -2)
-  end
-  if filename == "" then
-    filename = "."
-  end
-
-  return filename
-end
-
-path.is_file = function (filename)
-  local f = io.open(filename, "r")
-  if f ~= nil then
-    io.close(f)
-    return true
-  end
-  return false
-end
-
-path.split = function(path)
-  local dir, filename, ext = string.match(path, "(.-)([^/]-([^/%.]*))$") --  "(.-)([^/]-([^/%.]+))$" - enforces a filename
-  if filename == ext then ext = '' end
-  return dir, filename, ext
-end
-
--- WIP
-path.split2 = function(filepath)
-  local dir, filename, ext = path.split(filepath)
-  filename = filename:gsub('.'..ext, "")
-  return dir, filename, ext
-end
-
-path.getCurrentPath = function()
-  local dirname, filename = path.split(debug.getinfo(2).short_src)
-  return dirname
-end
-
--- returns some contrasting colors and loops after a while
-local contrast_color_list = {
-  {255, 0, 0, 255},
-  {0, 255, 0, 255},
-  {0, 0, 255, 255},
-  {255, 255, 0, 255},
-  {255, 0, 255, 255},
-  {0, 255, 255, 255},
-  {96, 128, 200, 255},
-  {196, 8, 0, 255},
-  {120, 0, 196, 255},
-  {90, 255, 255, 255},
-  {63, 102, 190, 255},
-  {235, 135, 63, 255}
-}
-
-function getContrastColor(i)
-  local c = contrast_color_list[i % (#contrast_color_list) + 1]
-  return color(c[1], c[2], c[3], c[4])
-end
-
-function getContrastColorF(i)
-  local c = contrast_color_list[i % (#contrast_color_list) + 1]
-  return ColorF(c[1]/255, c[2]/255, c[3]/255, c[4]/255)
-end
-
-function getContrastColorStringRGB(i)
-  local c = contrast_color_list[i % (#contrast_color_list) + 1]
-  return string.format("#%02x%02x%02x", c[1], c[2], c[3])
-end
-
-function getContrastColorStringRGBA(i)
-  local c = contrast_color_list[i % (#contrast_color_list) + 1]
-  return string.format("#%02x%02x%02x%02x", c[1], c[2], c[3], c[4])
-end
-
--- plain, no section, no nested INI support
-function loadIni(filename)
-  local d = {}
-  local f = io.open(filename, "r")
-  if not f then return nil end
-  for line in f:lines() do
-    local key, value = line:match("^([^%s=]+)%s-=%s-(.+)$")
-    if key and value then
-      value = trim(value)
-      if tonumber(value) then
-        value = tonumber(value)
-      elseif value == "true" then
-        value = true
-      elseif value == "false" then
-        value = false
-      end
-      d[key] = value
-    else
-      log("E", "", "Unable to parse INI line: "..line)
-    end
-  end
-  f:close()
-  return d
-end
-
-function saveIni(filename, d)
-  local c = {}
-  for k,v in pairs(d) do
-    table.insert(c, ("%s = %s\r\n"):format(tostring(k), tostring(v)))
-  end
-  local f = io.open(filename, "w")
-  if not f then return end
-  f:write(tableconcat(c, ""))
-  f:close()
-end
-
-function ui_message(msg, ttl, category, icon)
-  (obj or be):executeJS("HookManager.trigger('Message',"..encodeJson({msg=msg, ttl=ttl or 5, category=category or '', icon = icon})..");")
-end
+--== Other ==--
 
 function detectGlobalWrites()
   setmetatable(_G, {
@@ -1330,31 +915,6 @@ function detectGlobalWrites()
   })
 end
 
-function lerp(from,to,t)
-  return from + (to - from) * min(max(0, t),1)
-end
-
-function stringHash(text)
-  -- From: http://wowwiki.wikia.com/wiki/StringHash/Analysis
-  -- available under CC-BY-SA
-  local counter = 1
-  local len = string.len(text)
-  for i = 1, len, 3 do
-    counter = math.fmod(counter * 8161, 4294967279) +
-    (string.byte(text, i) * 16776193) +
-    ((string.byte(text, i + 1) or (len - i + 256)) * 8372226) +
-    ((string.byte(text, i + 2) or (len - i + 256)) * 3932164)
-  end
-  return math.fmod(counter, 4294967291)
-end
-
-function bytes_to_string(bytes)
-    if bytes >= 1024 * 1000 then
-      return ("%.2f MiB"):format(bytes / (1024 * 1024))
-    else
-      return ("%.2f KiB"):format(bytes / 1024)
-    end
-end
 
 -- safe lua function execution with IO overrides
 -- NOTE: this cannot be conceptually safe as you can always get hidden objects
@@ -1435,11 +995,33 @@ function timeprobe()
   end
 end
 
-debugPoll = nop
-dbg = { halt = nop }
-function startDebugger()
-  if debugPoll ~= nop then return end
-  dbg = require('debugger/vscode-debuggee') -- global intentionally
-  debugPoll = dbg.poll
-  dbg.start(luaVMInstanceName, {logFunc = log}) -- luaVMInstanceName should be hardcoded in c++
+--== Package loaders ==--
+
+-- test for writing our own package loader
+local function advancedModuleLoader(modulename)
+  local modulepath = string.gsub(modulename, "%.", "/")
+  for path in string.gmatch(package.path, "([^;]+)") do
+    local filename = string.gsub(path, "%?", modulepath)
+    local file = io.open(filename, "rb")
+    if file then
+      local content = file:read("*a")
+      file:close()
+      --print(">>>>> load <<<< " .. tostring(modulename) .. ' = ' .. tostring(filename))
+      if string.find(filename, '/extensions/') then
+        local modulenameVirt = string.gsub(modulename, "/", '_')
+        -- the trick to not screw with line numbers: everything needs to be in the same line. Otherwise the line numbers for the debuggers won't fit anymore
+        content = [[local logTag = "]].. modulenameVirt ..[[" ; local log = function(level, origin, msg) log(level, ']].. modulenameVirt ..[[.' .. origin, msg) end ; local logf = function(level, msg) local d = debug.getinfo(2, "n") ; if d then log(level, d.name, msg) else log(level, ']].. modulenameVirt ..[[', msg) end end ; ]] .. content
+        --print(content)
+      end
+      -- Compile and return the module
+      return loadstring(content, filename)
+    end
+    --errmsg = errmsg.."\n\tno file '"..filename.."' (checked with custom loader)"
+  end
+  return nil
+end
+
+-- Install the loader so that it's called just before the normal Lua loader
+if vmType == 'game' then
+  table.insert(package.loaders, 2, advancedModuleLoader)
 end

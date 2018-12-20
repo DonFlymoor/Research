@@ -10,7 +10,7 @@
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
-local qrencode = require "qrencode"
+local qrencode = require("libs/luaqrcode/qrencode")
 
 local M = {}
 
@@ -30,14 +30,15 @@ local appPort = listenPort + 1 -- port where the apps receive data on
 
 local udpSocket = nil
 
--- Table of connected devices. The keys are a string of the IP address and the value is the virtual
--- devices id.
+-- Table of connected devices.
+--  The keys are a string of the IP address
+--  The values are the virtual devices instance id, and a control state dictionary ( button2=0, axis0=0.873, etc)
 local virtualDevices = {}
 
 -- The time of the last package received by each IP address
 local lastPackageTimes = {}
 
--- The player number of each vDevice
+-- The player number of each dev.deviceInst
 local assignedPlayers = {}
 
 local prevX = -1
@@ -99,7 +100,7 @@ local function onUpdate()
   for ip, lastPackageTime in pairs(lastPackageTimes) do
     -- Unplug controller after a 10 seconds timeout
     if virtualDevices[ip] ~= nil and currentTime - lastPackageTime > 10000 then
-      virtualinput.deleteDevice(virtualDevices[ip])
+      virtualinput.deleteDevice(virtualDevices[ip].deviceInst)
       virtualDevices[ip] = nil
     end
   end
@@ -123,8 +124,7 @@ local function onUpdate()
       if deviceName == "" then
         deviceName = "Unknown"
       end
-      log('D', logTag, "Got discovery package from device " .. deviceName ..
-                     " with code " .. args[3])
+      log('D', logTag, "Got discovery package from device " .. deviceName ..  " with code " .. args[3])
       if not (args[3] == tostring(code)) then
         log('D', logTag, "Code doesn't match "..code..", ignoring package.")
       else
@@ -132,13 +132,11 @@ local function onUpdate()
           local nAxes = 1
           local nButtons = 2
           local nPovs = 0
-          local vDevice = virtualinput.createDevice(
-            deviceName, "bngremotectrlv1", nAxes, nButtons, nPovs
-          )
-          if not vDevice or vDevice < 0 then
+          local deviceInst = virtualinput.createDevice(deviceName, "bngremotectrlv1", nAxes, nButtons, nPovs)
+          if not deviceInst or deviceInst < 0 then
             log('E', logTag, 'unable to create remote controller input')
           else
-            virtualDevices[ip] = vDevice
+            virtualDevices[ip] = { deviceInst = deviceInst, state = {} }
           end
         end
         if virtualDevices[ip] ~= nil then
@@ -159,14 +157,13 @@ local function onUpdate()
       --log('D', logTag, "Orientation: "..math.floor(orientation.x * 100)..", "..math.floor(orientation.y*100)..", "..math.floor(orientation.z*100))
       --log('D', logTag, string.format("Orientation: %0.2f, %0.2f, %0.2f", orientation.x, orientation.y, orientation.z))
 
-      local vDevice = virtualDevices[ip]
+      local dev = virtualDevices[ip]
 
       -- ask the vehicle to send the UI data to the target
-      local vehicle = assignedPlayers[vDevice] and be:getPlayerVehicle(assignedPlayers[vDevice]) or nil
+      local vehicle = assignedPlayers[dev.deviceInst] and be:getPlayerVehicle(assignedPlayers[dev.deviceInst]) or nil
       if vehicle then
         -- we reuse the outgauge extension for updating the user interface of the app
-        -- this is incompatible with the outgauge settings. You cannot use outgauge and this at the same time for now
-        vehicle:queueLuaCommand('extensions.outgauge.sendPackage("' .. ip .. '", ' .. appPort .. ', ' .. orientation.w .. ')')
+        vehicle:queueLuaCommand('if outgauge then outgauge.sendPackage("' .. ip .. '", ' .. appPort .. ', ' .. orientation.w .. ') end')
       end
 
       -- normalize data
@@ -175,13 +172,15 @@ local function onUpdate()
       orientation.z = math.min(1, math.max(0, orientation.z))
 
       -- send the received input events to the vehicle
-      virtualinput.emit(
-        vDevice, "button", 0, (orientation.x > 0.5) and "make" or "break", orientation.x
-      )
-      virtualinput.emit(
-        vDevice, "button", 1, (orientation.y > 0.5) and "make" or "break", orientation.y
-      )
-      virtualinput.emit(vDevice, "axis", 0, "move",  orientation.z)
+      local state = {
+        button0 = (orientation.x > 0.5) and 1 or 0,
+        button1 = (orientation.y > 0.5) and 1 or 0,
+        axis0 = orientation.z
+      }
+      if dev.state.button0 ~= state.button0 then virtualinput.emit(dev.deviceInst, "button", 0, (state.button0 > 0.5) and "down" or "up", state.button0) end
+      if dev.state.button1 ~= state.button1 then virtualinput.emit(dev.deviceInst, "button", 1, (state.button1 > 0.5) and "down" or "up", state.button1) end
+      if dev.state.axis0   ~= state.axis0   then virtualinput.emit(dev.deviceInst,   "axis", 0,                                 "change", state.axis0  ) end
+      dev.state = state
     end
   end
 end
@@ -196,15 +195,15 @@ end
 
 local function onInputBindingsChanged(players)
   for device, player in pairs(players) do
-    for _, vDevice in pairs(virtualDevices) do
-      if "vinput"..vDevice == device then
-        assignedPlayers[vDevice] = player
+    for _, dev in pairs(virtualDevices) do
+      if "vinput"..dev.deviceInst == device then
+        assignedPlayers[dev.deviceInst] = player
       end
     end
   end
 end
 
-local function devicesConnected () 
+local function devicesConnected ()
   return tableSize(virtualDevices) > 0
 end
 

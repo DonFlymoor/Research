@@ -9,7 +9,6 @@ local workerCoroutine = nil
 local moveNext = false
 local timer = 0
 local frameCounter = 1
-
 local helper = require('scenario/scenariohelper')
 
 local vehicles = {
@@ -156,6 +155,8 @@ local function onExtensionLoaded()
     end
 
     local counter = 0
+    local faulty_automobile ={}
+    local faultyvehicleFilename = '/settings/cloud/faultyvehicles.json'
     for _, v in pairs(filteredConfigs) do
       -- Replace the vehicle
       counter = counter + 1
@@ -180,12 +181,12 @@ local function onExtensionLoaded()
 
       local endPosition = vec3(newVehicle:getPosition())
       local distance = endPosition:distance(startPosition)
-
       if distance <= 10 then
         log('E', logTag, 'vehicle: ' .. tostring(v.model_key) .. ' config: ' .. tostring(v.key) .. ' did not move')
+        table.insert(faulty_automobile, v.model_key..' '..v.key)
+        jsonWriteFile(faultyvehicleFilename, faulty_automobile)
       end
-
-      local timeoutStart = timer
+        local timeoutStart = timer
       while (timer - timeoutStart) < 20 and moveNext == false do
         coroutine.yield()
       end

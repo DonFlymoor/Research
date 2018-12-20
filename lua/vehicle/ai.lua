@@ -390,11 +390,23 @@ end
 
 local function createPlan(route, planIdx)
   local i = planIdx or 2
-  local newPlan = {{radius = 2, radiusOrig = 2, pos = vec3(aiPos), posz0 = aiPos:z0(), posOrig = vec3(aiPos), turnDir = vec3(0,0,0), speed = 0}} -- speed here is might not be need to be defined
-  local midTargetSegIdx = route.midTargetSegIdx
   local path = route.path
   local plan = route.plan
   local planCount = #plan
+  local pathidx = nil
+
+  local newPlan = {{radius = 2, radiusOrig = 2, pos = vec3(aiPos), posz0 = aiPos:z0(), posOrig = vec3(aiPos), turnDir = vec3(0,0,0), speed = 0}}
+  if speedList ~= nil then -- If speed list is given, initialise new plan with corresponding manSpeed
+    if planCount > 0  then
+      pathidx = plan[1].pathidx or nil
+    end
+
+    if pathidx ~= nil then
+      newPlan[1].manSpeed = speedList[pathidx]
+    end
+  end
+
+  local midTargetSegIdx = route.midTargetSegIdx
   local n = plan[i] or buildNextRoute(plan, planCount, path)
   if n == nil then
     route.plan = newPlan
@@ -415,7 +427,7 @@ local function createPlan(route, planIdx)
       local pos = (n1.pos + n2.pos)*0.5
       local vec = (n1.pos - n2.pos):z0()
       tableInsert(newPlan, j+1, {posOrig = (n1.posOrig + n2.posOrig)*0.5, pos = pos, posz0 = pos:z0(),
-                                vec = vec, dirVec = vec:normalized(), turnDir = vec3(0,0,0),
+                                vec = vec, dirVec = vec:normalized(), turnDir = vec3(0,0,0), manSpeed = n2.manSpeed,
                                 radiusOrig = (n1.radiusOrig + n2.radiusOrig)*0.5, radius = (n1.radius + n2.radius)*0.5,
                                 pathidx = n2.pathidx})
       newPlanCount = newPlanCount + 1
@@ -435,6 +447,7 @@ local function createPlan(route, planIdx)
   until newPlanLen > minPlanLen and newPlanCount >= minPlanCount and i >= planCount or newPlanCount > 100
   newPlan[1].pathidx = newPlan[2].pathidx
   route.plan = newPlan
+
   return newPlanCount
 end
 
@@ -470,7 +483,7 @@ local function planAhead(route, baseRoute)
         while i <= #baseRoute.plan and baseRoute.plan[i].pathidx <= commonpathend do
           local n = baseRoute.plan[i]
           plan[i] = {pos = vec3(n.pos), posOrig = vec3(n.posOrig), radius = n.radius, radiusOrig = n.radiusOrig,
-                    posz0 = vec3(n.posz0), vec = vec3(n.vec), dirVec = vec3(n.dirVec), turnDir = vec3(n.turnDir), pathidx = n.pathidx - refpathidx}
+                    posz0 = vec3(n.posz0), vec = vec3(n.vec), dirVec = vec3(n.dirVec), turnDir = vec3(n.turnDir), manSpeed = n.manSpeed, pathidx = n.pathidx - refpathidx}
           i = i + 1
         end
         route.midTargetSegIdx = baseRoute.midTargetSegIdx
@@ -479,6 +492,7 @@ local function planAhead(route, baseRoute)
 
     planCount = createPlan(route)
     plan = route.plan
+
     if planCount == 0 then targetstatus = -1; return end
   end
 
@@ -839,6 +853,7 @@ local function planAhead(route, baseRoute)
 end
 
 local function resetMapAndRoute()
+  map = nil
   currentRoute = nil
   targetPos = nil
   race = nil
@@ -1726,7 +1741,8 @@ end
 -- e.g. ai.driveUsingPath{ wpTargetList = {'wp1', 'wp10'}, noOfLaps = 3, aggression = 0.9, wpSpeeds = {wp1 = 10, wp2 = 20} }
 -- all arguments except wpTargetList are optional
 local function driveUsingPath(arg)
-  if arg.wpTargetList == nil or type(arg.wpTargetList) ~= 'table' or
+  if (arg.wpTargetList == nil and arg.script == nil) or
+  (type(arg.wpTargetList) ~= 'table' and type(arg.script) ~= 'table') or
   (arg.wpSpeeds ~= nil and type(arg.wpSpeeds) ~= 'table') or
   (arg.noOfLaps ~= nil and type(arg.noOfLaps) ~= 'number') or
   (arg.routeSpeed ~= nil and type(arg.routeSpeed) ~= 'number') or
@@ -1745,9 +1761,20 @@ local function driveUsingPath(arg)
   else
     setState({mode = 'manual'})
     noOfLaps = arg.noOfLaps and max(arg.noOfLaps, 1) or 1
-    wpList = arg.wpTargetList
-    validateInput = validateUserInput
-    if noOfLaps > 1 and #wpList > 1 and wpList[1] == wpList[#wpList] then race = true end
+    if arg.script ~= nil then
+      -- TODO: Switch to time-based script format once code to calculate point
+      -- speed is done.
+      map = {nodes = arg.script}
+      local path = {}
+      for idx, vtx in ipairs(arg.script) do
+        table.insert(path, idx)
+      end
+      currentRoute = {plan = {}, path = path, midTargetSegIdx = 1}
+    else
+      wpList = arg.wpTargetList
+      validateInput = validateUserInput
+      if noOfLaps > 1 and #wpList > 1 and wpList[1] == wpList[#wpList] then race = true end
+    end
   end
 
   speedList = arg.wpSpeeds or {}

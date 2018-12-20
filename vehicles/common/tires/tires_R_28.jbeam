@@ -8,7 +8,7 @@
     "slotType" : "tire_R_15x7_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":0.96, "z":0.96}}],
+        ["tire_01a_16x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.96, "y":0.96, "z":0.96}}],
         ["tire_01a_16x8_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":0.96, "z":0.96}}],
     ],
     "variables": [

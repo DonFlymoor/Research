@@ -8,7 +8,7 @@ angular.module('beamng.apps')
         <small ng-repeat="graph in graphList" style="color:{{ graph.color }}; padding:2px">{{ graph.title }}</small>
       </div>
       <canvas></canvas>
-    <div>`,
+    </div>`,
 
     replace: true,
     link: function (scope, element, attrs) {
@@ -62,8 +62,8 @@ angular.module('beamng.apps')
             graphs[wheelName] = new TimeSeries();
             $log.debug(`${TAG} adding graph for ${wheelName}`);
             var wheelColor = colors[scope.graphList.length % colors.length];
-            scope.graphList.push({title: wheelName, color: wheelColor});  
-            chart.addTimeSeries(graphs[wheelName], {strokeStyle: wheelColor, lineWidth: 2});  
+            scope.graphList.push({title: wheelName, color: wheelColor});
+            chart.addTimeSeries(graphs[wheelName], {strokeStyle: wheelColor, lineWidth: 2});
             scope.$digest();
             return;
           }
@@ -86,7 +86,7 @@ angular.module('beamng.apps')
         scope.graphList = [{title: 'Speed', color: colors[0]}];
         scope.$digest();
       });
-      
+
       scope.$on('app:resized', function (event, data) {
         canvas.width = data.width;
         canvas.height = data.height;

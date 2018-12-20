@@ -23,6 +23,9 @@ local testData = {}
 local levelLoaded = false
 local modDownloaded = false
 
+local testJob = false
+local testLevel = "levels/showroom_v2_white/main.level.json"
+
 --launched using
 --BeamNG.drive.x64.exe -batch -console -level showroom_v2_white/main.level.json -onLevelLoad_ext 'test_testMods'
 
@@ -34,37 +37,35 @@ local function refreshBuiltin()
   builtinScenarios = scenario_scenariosLoader.getList()
 end
 
+local function workMain(job)
+  while true do
+    job.yield()
+  end
+end
+
+local function work(tagid, resource_version_id)
+  testData.tagid = tagid
+  testData.resource_version_id = resource_version_id
+  log('I', 'testMods', ' ### Test data: ' .. dumps(testData))
+  testJob = extensions.core_jobsystem.create(workMain)
+
+  -- figure out the level
+  local missionFile = getMissionFilename()
+  if not missionFile or missionFile ~= testLevel then
+    core_levels.startLevel(testLevel)
+  else
+    levelLoaded = true
+  end
+end
+
 local function onExtensionLoaded()
   TorqueScript.setVar('$preventPlayerSpawning', '1')
 
+  if core_camera == nil then
+    loadGameModeModules()
+  end
   --log('I', logTag, 'loaded')
   refreshBuiltin()
-
-  -- find the installed mod:
-  local files = FS:findFiles('/', "mod_info.json", -1, true, false)
-  if not files or #files == 0 then
-    log('E', 'testMods', 'unable to find file: mod_info.json')
-    shutdown(0)
-  end
-
-  local datafilename = files[1]
-
-  -- start downloading the mod
-  testData = readJsonFile(datafilename)
-  if not testData then
-    log('E', 'testMods', 'Test data file not existing: ' .. tostring(datafilename))
-    shutdown(0)
-  end
-  log('I', 'testMods', ' ### Test data: ' .. dumps(testData))
-
-  -- local uri = testData.tagid .. "/" .. testData.current_version_id .. "/" .. testData.attachment_filename
-  --print(uri)
-
-  -- local filename = split(uri, '/')
-  -- filename = filename[#filename]
-
-  --extensions.core_repository.installMod(uri, filename, 'mods/')
-  -- extensions.core_repository.modSubscribe(testData.tagid, {})
 end
 
 local function onModDeactivated(mod)
@@ -213,7 +214,7 @@ end
 local function _screenshot(screenShotName, job)
   job.yield()
   log('I', logTag, "   saved screenshot: "..screenShotName..'.png')
-  TorqueScript.eval('screenShot("'..screenShotName..'", "PNG");')
+  TorqueScript.eval('screenShot("'..screenShotName..'", "PNG", 1);')
   yieldForSeconds(1, job)
 end
 
@@ -224,7 +225,7 @@ local function _360_screenshot(newVehicle, vehicleId, screenShotName, job)
   for r=-180, (180 - step), step do
     core_camera.setRotation(vehicleId, vec3(r, -10, 0))
     yieldForSeconds(1, job)
-    TorqueScript.eval('screenShot("'..(screenShotName .. '_' .. string.format('%03d', i))..'", "PNG");')
+    TorqueScript.eval('screenShot("'..(screenShotName .. '_' .. string.format('%03d', i))..'", "PNG", 1);')
     i = i + 1
   end
 end
@@ -274,7 +275,7 @@ local function _createScreenshots(currentPath, vehicle, job)
   core_camera.setDistance(vehicleId, idealDistance)
   core_camera.setFOV(vehicleId, 12)
   core_camera.setOffset(vehicleId, vec3(0, 0, 2 / idealDistance))
-  --BeamEngine.zoomInSpeed = idealDistance
+  --MoveManager.zoomInSpeed = idealDistance
   --print("* new distance: " .. tostring(idealDistance))
 
   --newVehicle:queueLuaCommand("input.event('steering', 0.0, 1); input.event('parkingbrake', 1, 1); electrics.toggle_lights() ; electrics.toggle_lightbar_signal() ; electrics.toggle_fog_lights()")
@@ -322,32 +323,6 @@ local function _createScreenshots(currentPath, vehicle, job)
   newVehicle:queueLuaCommand('bdebug.state.debugEnabled=false;bdebug.state.vehicle.beamVis="off";bdebug.state.vehicle.nodeVis="simpoffle";bdebug.meshVisChange(1, true);bdebug.setState(bdebug.state)')
   bullettime.togglePause()
   ::continue::
-end
-
-local function writeErrorsToFile()
-	local outfilename = "errors.json"
-	log('I', logTag, "Writing errors to file")
-	io.input("beamng.log")
-
-	local errors = {}
-
-    while true do
-		local line = io.read()
-		if line == nil then break end
-
-		if (string.match(line, "|E|") or string.match(line, "|W|")) then
-
-			-- If there is an error, add it to the list of errors
-			if string.match(line, "|E|") then
-				table.insert(errors, line)
-			end
-		end
-    end
-
-	-- Write output file
-	writeJsonFile(outfilename, errors)
-
-	log('I', logTag, "Created output file " .. outfilename)
 end
 
 local function onModActivated(mod)
@@ -453,7 +428,7 @@ local function onModActivated(mod)
       local currentPath = 'generated/vehicles/' .. vehicle.vehicleName..'/'..(vehicle.configName or 'default')
       logSink:open(currentPath .. '/log.json')
       _spawnVehicle(vehicle, job)
-      -- _createScreenshots(currentPath, vehicle, job)
+      _createScreenshots(currentPath, vehicle, job)
       _functionTest(vehicle, job)
       _resetVehicle(job)
       logSink:close()
@@ -464,7 +439,7 @@ local function onModActivated(mod)
       local currentPath = 'generated/levels/' .. level.levelName..'/'
       --_startLogging(currentPath .. '/log.json')
 
-      beamng_cef.startLevel(level.misFilePath)--don't know how to test it
+      core_levels.startLevel(level.misFilePath)--don't know how to test it
       -- wait for the level to load
       while not levelLoaded do
         job.yield()
@@ -490,7 +465,6 @@ local function onModActivated(mod)
       --_endLogging()
     end
     -- all done, quit
-	writeErrorsToFile()
     shutdown(0)
   end
 
@@ -538,10 +512,10 @@ local function onModManagerReady()
   log('D', logTag, "onModManagerReady")
 
   extensions.core_modmanager.deactivateModId(testData.tagid)
-  extensions.core_modmanager.deactivateMod(tostring(testData.id))
+  extensions.core_modmanager.deactivateMod(tostring(testData.resource_version_id))
   refreshBuiltin()
   extensions.core_modmanager.activateModId(testData.tagid)
-  extensions.core_modmanager.activateMod(tostring(testData.id))
+  extensions.core_modmanager.activateMod(tostring(testData.resource_version_id))
 end
 
 M.onInit = onInit
@@ -555,5 +529,7 @@ M.onClientStartMission = onClientStartMission
 M.onScenarioLoaded = onScenarioLoaded
 M.onFreeroamLoaded = onFreeroamLoaded
 M.onModManagerReady = onModManagerReady
+
+M.work = work
 
 return M

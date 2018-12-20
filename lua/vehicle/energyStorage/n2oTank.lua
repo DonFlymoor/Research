@@ -11,7 +11,7 @@ local function updateGFX(storage, dt)
   storage.remainingMass = storage.initialStoredEnergy > 0 and storage.storedEnergy / storage.energyDensity or 0
   storage.remainingRatio = storage.initialStoredEnergy > 0 and storage.storedEnergy / storage.initialStoredEnergy or 0
 
-  for k,v in pairs(storage.nodes) do
+  for k, v in pairs(storage.nodes) do
     obj:setNodeMass(k, v + storage.storedEnergy * storage.nodeMassCoef)
   end
 
@@ -38,6 +38,13 @@ end
 
 local function reset(storage)
   storage.currentLeakRate = 0
+  storage.storedEnergy = storage.startingCapacity * storage.energyDensity
+  storage.remainingRatio = storage.initialStoredEnergy > 0 and storage.storedEnergy / storage.initialStoredEnergy or 0
+
+  --apply final weight as soon as possible
+  for k, v in pairs(storage.nodes) do
+    obj:setNodeMass(k, v + storage.storedEnergy * storage.nodeMassCoef)
+  end
 end
 
 local function deserialize(storage, data)
@@ -47,22 +54,20 @@ local function deserialize(storage, data)
 end
 
 local function serialize(storage)
-  return { remainingMass = storage.remainingMass }
+  return {remainingMass = storage.remainingMass}
 end
 
 local function new(jbeamData)
   local storage = {
     name = jbeamData.name,
     type = jbeamData.type,
-
     assignedDevices = {},
     remainingRatio = 1,
     remainingMass = 1,
     currentLeakRate = 0,
-
+    energyType = "n2o",
     breakTriggerBeam = jbeamData.breakTriggerBeam,
     jbeamData = jbeamData,
-
     updateGFX = updateGFX,
     setRemainingMass = setRemainingMass,
     setRemainingRatio = setRemainingRatio,
@@ -70,7 +75,7 @@ local function new(jbeamData)
     serialize = serialize,
     registerDevice = registerDevice,
     onBreak = onBreak,
-    reset = reset,
+    reset = reset
   }
 
   storage.energyDensity = 41 * 1000000 / 5 --MJ/kg, we use a fuel to N2O ratio of 1:5
@@ -79,8 +84,8 @@ local function new(jbeamData)
   storage.energyDensity = jbeamData.energyDensity or storage.energyDensity or 0 --MJ/kg
 
   storage.capacity = jbeamData.capacity or 0
-  local startingCapacity = min(jbeamData.startingCapacity or storage.capacity, storage.capacity)
-  storage.storedEnergy = startingCapacity * storage.energyDensity
+  storage.startingCapacity = min(jbeamData.startingCapacity or storage.capacity, storage.capacity)
+  storage.storedEnergy = storage.startingCapacity * storage.energyDensity
 
   storage.brokenLeakRate = storage.capacity / 60 --drain tank in 60 seconds, no matter how much is in there
 
@@ -88,17 +93,17 @@ local function new(jbeamData)
   storage.nodes = {}
   local nodeCount = 0
   if jbeamData.nodes and jbeamData.nodes._engineGroup_nodes then
-    for _,n in pairs(jbeamData.nodes._engineGroup_nodes) do
+    for _, n in pairs(jbeamData.nodes._engineGroup_nodes) do
       storage.nodes[n] = v.data.nodes[n].nodeWeight --save initial mass as the offset for the node weights
       nodeCount = nodeCount + 1
     end
     if nodeCount > 0 and storage.energyDensity > 0 then
-      storage.nodeMassCoef =  1 / (storage.energyDensity * nodeCount) --calculate weight per energy left
+      storage.nodeMassCoef = 1 / (storage.energyDensity * nodeCount) --calculate weight per energy left
     end
   end
 
   --apply final weight as soon as possible
-  for k,v in pairs(storage.nodes) do
+  for k, v in pairs(storage.nodes) do
     obj:setNodeMass(k, v + storage.storedEnergy * storage.nodeMassCoef)
   end
 

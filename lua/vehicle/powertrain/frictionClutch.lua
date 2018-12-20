@@ -10,6 +10,7 @@ M.requiredExternalInertiaOutputs = {1}
 
 local max = math.max
 local min = math.min
+local abs = math.abs
 
 local kelvinToCelsius = -273.15
 
@@ -81,8 +82,14 @@ local function updateTorque(device, dt)
   device.clutchRatio = electrics.values[device.electricsClutchRatioName] or 1
   local avDiff = device.inputAV - device.outputAV1
   device.clutchAngle = min(max(device.clutchAngle + avDiff * dt * device.clutchStiffness, -device.maxClutchAngle), device.maxClutchAngle)
+
+  local absFreeClutchAngle = max(abs(device.clutchAngle) - device.clutchFreePlay, 0)
+
   local lockTorque = device.lockTorque * device.thermalEfficiency
-  device.torqueDiff = (min(max(device.clutchAngle * device.lockSpring + device.lockDamp * avDiff, -lockTorque), lockTorque)) * device.clutchRatio
+
+  local lockDampAV = min(abs(device.clutchAngle) / device.clutchFreePlay, 1) * avDiff
+  device.torqueDiff = (min(max(min(1, absFreeClutchAngle) * absFreeClutchAngle * fsign(device.clutchAngle) * device.lockSpring + device.lockDamp * lockDampAV, -lockTorque), lockTorque)) * device.clutchRatio
+
   device.outputTorque1 = device.torqueDiff
 
   device.frictionLossPerUpdate = device.frictionLossPerUpdate + device.torqueDiff * avDiff * dt
@@ -105,7 +112,7 @@ local function validate(device)
     return false
   end
 
-  device.lockTorque = device.jbeamData.lockTorque or (device.parent.torqueData.maxTorque + device.parent.maxRPM * device.parent.inertia * math.pi / 30)
+  device.lockTorque = device.jbeamData.lockTorque or (device.parent.torqueData.maxTorque * 1.25 + device.parent.maxRPM * device.parent.inertia * math.pi / 30)
   return true
 end
 
@@ -122,8 +129,10 @@ local function calculateInertia(device)
 
   device.cumulativeInertia = min(outputInertia, device.parent.inertia * 0.5)
   device.lockSpring = device.jbeamData.lockSpring or (powertrain.stabilityCoef * powertrain.stabilityCoef * device.cumulativeInertia) --Nm/rad
-  device.lockDamp = device.lockSpring / 1000
-  device.maxClutchAngle = device.lockTorque / device.lockSpring --rad
+  device.lockDamp = 0.05 * math.sqrt(device.lockSpring * device.cumulativeInertia)
+
+  --^2 spring
+  device.maxClutchAngle = math.sqrt(device.lockTorque / device.lockSpring) + device.clutchFreePlay --rad
 
   device.cumulativeGearRatio = cumulativeGearRatio
   device.maxCumulativeGearRatio = maxCumulativeGearRatio
@@ -183,6 +192,7 @@ local function new(jbeamData)
     clutchThermalsMessageTimer = 0,
     electricsClutchRatioName = jbeamData.electricsClutchRatioName or "clutchRatio",
     clutchStiffness = jbeamData.clutchStiffness or 1,
+    clutchFreePlay = jbeamData.clutchFreePlay or 0.125,
     reset = reset,
     validate = validate,
     calculateInertia = calculateInertia,

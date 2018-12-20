@@ -6,7 +6,7 @@
       template:
       `
         <div>
-          <div style="width: 100%; height: 100%" ng-include src="'modules/apps/DamageAppVehicleSimple/damage_car.svg'" onload="svgLoaded()" />
+          <div style="width: 100%; height: 100%" ng-include="'modules/apps/DamageAppVehicleSimple/damage_car.svg'" onload="svgLoaded()"></div>
         </div>
       `,
       replace: true,

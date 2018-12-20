@@ -5,8 +5,7 @@ local logTag = 'levels'
 
 local levelsDir = 'levels'
 
-local inputActionFilter = require('input_action_filter')
-
+local cacheInvalid = true
 
 -- finds all levels: this has a lot of backward compatibility code in there
 function findAvailableLevels()
@@ -62,7 +61,7 @@ function findAvailableLevels()
   return res
 end
 
-local function getList()
+local function getList(allLevels)
   -- if levels then
   --   return levels
   -- else
@@ -80,10 +79,12 @@ local function getList()
 
   for _, l in pairs(found_levels) do
     -- so, enrich the data of the levels for the user interface below
-    local info = readJsonFile(l.infoPath) or {}
-    info.misFilePath = l.dir ..'/'..l.entryPoint
+    local info = jsonReadFile(l.infoPath) or {}
+    
     -- hidden?
-    if info.hidden then goto continue end
+    if not allLevels and info.hidden then goto continue end
+
+    info.misFilePath = l.dir ..'/'..l.entryPoint
     info.levelName = l.levelName
     info.fullfilename = l.fullfilename
 
@@ -163,6 +164,7 @@ end
 
 local function sendData()
   guihooks.trigger('InstalledContentUpdate', {context='levels', list=getList()})
+  guihooks.trigger('InstalledContentUpdate', {context='allLevels', list=getList(true)})
 end
 
 local function isFileRelatedToLevel(filepath)
@@ -172,115 +174,96 @@ end
 
 local function onFileChanged(filename, type)
   if string.sub(filename, 1, string.len(levelsDir)) == levelsDir or (string.find(filename, 'mods/') == 1 and isFileRelatedToLevel(filename) )then
+    cacheInvalid = true
+  end
+end
+
+local function onFileChangedEnd()
+  if cacheInvalid then
     sendData()
+    cacheInvalid = false
   end
 end
 
-local function startFreeroamHelper (level, startPointName)
-  core_gamestate.requestEnterLoadingScreen(logTag .. '.startFreeroamHelper')
-  loadGameModeModules()
-  M.state = {}
-  M.state.freeromActive = true
+local function expandMissionFileName(missionFileName)
+  if FS:directoryExists(missionFileName) then
+    return missionFileName
+  end
+  local mfn = String(missionFileName):c_str()
+  local missionFile = FS:expandFilename(missionFileName)
 
-  local levelPath = level
-  if type(level) == 'table' then
-    setSpawnpoint.setDefaultSP(startPointName, level.levelName)
-    levelPath = level.misFilePath
+  if  FS:fileExists(missionFile) then
+    return missionFile
+  end
+  --If the mission file doesn't exist... try to fix up the string.
+  local newMission = missionFile
+  --Support for old .mis files
+  if string.find(missionFile, ".mis$") then
+    newMission = string.gsub(missionFile, ".mis$", ".level.json")
+
+    if FS:fileExists(newMission) then
+      return newMission
+    end
   end
 
-  inputActionFilter.clear(0)
+  --try the new filename
+  if not string.find(missionFile, ".level.json$") then
+    newMission = missionFile..".level.json"
 
-  beamng_cef.startLevel(levelPath, startPointName)
-  core_gamestate.requestExitLoadingScreen(logTag .. '.startFreeroamHelper')
+    if FS:fileExists(newMission) then
+      return newMission
+    end
+  end
+
+  if FS:fileExists(missionFile..'.mis') then
+    return missionFile..'.mis'
+  end
 end
 
-local function startFreeroam(level, startPointName)
-  log('D', logTag, 'startFreeroam called...')
+local function startLevelActual(missionFileName)
+  if scenetree.serverGroup then
+    return
+  end
+
+  -- check if new format
+  if missionFileName:find('.level.json') and not FS:fileExists(missionFileName) then
+    local newName = missionFileName:sub(0, missionFileName:find('.level.json') - 1)
+    if FS:directoryExists(newName) then
+      log('D', 'startLevel', 'converting level argument to new format: ' .. tostring(missionFileName) .. ' > ' .. tostring(newName))
+      missionFileName = newName
+    end
+  end
+
+  local missionFile = expandMissionFileName(missionFileName)
+  if not missionFile or missionFile == "" then
+    log('E', logTag, 'expanded mission file is invalid - '..dumps(missionFile))
+    return false
+  end
+
+  server.createGame(missionFile)
+  core_gamestate.requestExitLoadingScreen(logTag)
+end
+
+local function startLevelWrapper (missionFile)
+  -- restirct from calling again until done
+  if core_gamestate.getLoadingStatus(logTag) then return end
+
   core_gamestate.requestEnterLoadingScreen(logTag)
-
-  -- this is to prevent bug where freerom is started while a different level is still loaded.
-  -- Loading the new freerom causes the current loaded freerom to unload which breaks the new freerom
-  if scenetree.MissionGroup then
-    log('D', logTag, 'Delaying start of freerom until current level is unloaded...')
-    M.triggerDelayedStart = function()
-      log('D', logTag, 'Triggering a delayed start of freerom...')
-      M.triggerDelayedStart = nil
-      startFreeroam(level, startPointName)
-    end
-
-    endActiveGameMode(M.triggerDelayedStart)
-  elseif not core_gamestate.getLoadingStatus(logTag .. '.startFreeroamHelper') then -- remove again at some point
-    startFreeroamHelper(level, startPointName)
-    core_gamestate.requestExitLoadingScreen(logTag)
+  local function help ()
+    return startLevelActual(missionFile)
   end
-end
-
-local function onClientPreStartMission(mission)
-  local path, file, ext = path.split2(mission)
-  file = path .. 'mainLevel'
-  if not FS:fileExists(file..'.lua') then return end
-  extensions.load({{extName = file, globalAlias = 'mainLevel'}})
-  if mainLevel and mainLevel.onClientPreStartMission then
-    mainLevel.onClientPreStartMission(mission)
-  end
-end
-
-local function onClientStartMission(mission)
-  local path, file, ext = path.split2(mission)
-  file = path .. 'mainLevel'
-
-  if M.state.freeromActive then
-    extensions.hook('onFreeroamLoaded', mission)
-
-    local ExplorationCheckpoints = scenetree.findObject("ExplorationCheckpointsActionMap")
-    if ExplorationCheckpoints then
-      ExplorationCheckpoints:push()
-    end
-  end
-end
-
-local function onClientEndMission(mission)
-  if M.state.freeromActive then
-    M.state.freeromActive = false
-    local ExplorationCheckpoints = scenetree.findObject("ExplorationCheckpointsActionMap")
-    if ExplorationCheckpoints then
-      ExplorationCheckpoints:pop()
-    end
-  end
-
-  if not mainLevel then return end
-  local path, file, ext = path.split2(mission)
-  extensions.unload(path .. 'mainLevel')
-end
-
--- Resets previous vehicle alpha when switching between different vehicles
--- Used to fix multipart highlighting when switching vehicles
-local function onVehicleSwitched(oldId, newId, player)
-  if oldId then
-    local veh = be:getObjectByID(oldId)
-    if veh then
-      veh:queueLuaCommand('partmgmt.selectReset()')
-    end
-  end
-end
-
-local function onResetGameplay(playerID)
-  local scenario = scenario_scenarios and scenario_scenarios.getScenario()
-  local campaign = campaign_campaigns and campaign_campaigns.getCampaign()
-  if not scenario and not campaign then
-    be:resetVehicle(playerID)
+  if scenetree.serverGroup then
+    return serverConnection.disconnect(help)
+  else
+    return help()
   end
 end
 
 -- public interface
-M.onFileChanged           = onFileChanged
-M.requestData             = sendData
-M.getList                 = getList
-M.startFreeroam           = startFreeroam
-M.onClientPreStartMission = onClientPreStartMission
-M.onClientStartMission    = onClientStartMission
-M.onClientEndMission      = onClientEndMission
-M.onVehicleSwitched       = onVehicleSwitched
-M.onResetGameplay         = onResetGameplay
-
+M.onFileChanged         = onFileChanged
+M.onFileChangedEnd      = onFileChangedEnd
+M.requestData           = sendData
+M.getList               = getList
+M.startLevel            = startLevelWrapper
+M.expandMissionFileName = expandMissionFileName
 return M

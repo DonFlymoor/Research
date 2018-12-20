@@ -136,6 +136,22 @@ local function buildOptionHelpers()
         end
     }
 
+  -- AudioMusicVol
+    o.AudioMusicVol = {
+        get = function ()
+            local AudioMusic = scenetree.findObject("AudioMusic")
+            if not AudioMusic then
+                log('E', "AudioMusic not found")
+                return
+            end
+            local channel = audio_client.sfxGroupToOldChannel(AudioMusic.sourceGroup)
+            return tonumber( TorqueScript.getVar( '$pref::SFX::channelVolume'..channel ) )
+        end,
+        set = function ( value )
+            TorqueScript.call( 'OptAudioUpdateChannelVolume', 'AudioMusic', value)
+        end
+    }
+
     -- AudioMaxChannels
     o.AudioMaxChannels = {
         get = function ()

@@ -36,7 +36,7 @@ float3 TonemapOperatorUncharted2(float3 x)
 
 float3 TonemapUncharted2(float3 color)
 {
-    const float exposure_adjustment = 2; //16;
+    const float exposure_adjustment = 1; //16;
     const float exposure_bias = 2;
 
     color *= exposure_adjustment;
@@ -48,6 +48,15 @@ float3 TonemapUncharted2(float3 color)
 float4 main( PFXVertToPix IN ) : SV_TARGET0
 {
    float4 sample = hdrDecode( tex2D( sceneTex, IN.uv0 ) );
+
+#ifdef BGE_USE_GAMMA_CORRECTION
+    // Tonemapping
+    sample.rgb = TonemapUncharted2(sample.rgb);
+
+    // gamma correction
+    sample.rgb = linearToGammaColor(sample.rgb);
+#else
+
    float adaptedLum = tex2D( luminanceTex, 0.5f ).r;
    float4 bloom = tex2D( bloomTex, IN.uv0 );
 
@@ -66,29 +75,22 @@ float4 main( PFXVertToPix IN ) : SV_TARGET0
       // Lerp between current color and blue, desaturated copy
       float3 rodColor = dot( sample.rgb, LUMINANCE_VECTOR ) * g_fBlueShiftColor;
       sample.rgb = lerp( sample.rgb, rodColor, coef );
-	  
+
       rodColor = dot( bloom.rgb, LUMINANCE_VECTOR ) * g_fBlueShiftColor;
       bloom.rgb = lerp( bloom.rgb, rodColor, coef );
    }
 
-   // Add the bloom effect. 
-   sample += g_fBloomScale * bloom;
+    // Add the bloom effect. 
+    sample += g_fBloomScale * bloom;
 
-   // Apply the color correction.
-   sample.r = tex1D( colorCorrectionTex, sample.r ).r;
-   sample.g = tex1D( colorCorrectionTex, sample.g ).g;
-   sample.b = tex1D( colorCorrectionTex, sample.b ).b;
+    // Apply the color correction.
+    sample.r = tex1D( colorCorrectionTex, sample.r ).r;
+    sample.g = tex1D( colorCorrectionTex, sample.g ).g;
+    sample.b = tex1D( colorCorrectionTex, sample.b ).b;
 
-    #ifdef BGE_USE_GAMMA_CORRECTION
-        // Tonemapping
-        sample.rgb = TonemapUncharted2(sample.rgb);
-
-        // gamma correction
-        sample.rgb = linearToGammaColor(sample.rgb);
-    #else
-        // Apply gamma correction
-        sample.rgb = pow( abs(sample.rgb), g_fOneOverGamma );
-    #endif    
+    // Apply gamma correction
+    sample.rgb = pow( abs(sample.rgb), g_fOneOverGamma );
+#endif    
 
    return sample;
 }

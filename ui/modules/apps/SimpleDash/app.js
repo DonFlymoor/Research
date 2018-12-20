@@ -1,8 +1,8 @@
 angular.module('beamng.apps')
 .directive('simpleDash', ['bngApi', 'StreamsManager', function (bngApi, StreamsManager) {
   return {
-    template: 
-      '<object class="bngApp" style="width:100%; height:100%; type="image/svg+xml" data="modules/apps/SimpleDash/simple-dash.svg?t=' + Date.now() + '"/>',
+    template:
+      '<object class="bngApp" style="width:100%; height:100%;" type="image/svg+xml" data="modules/apps/SimpleDash/simple-dash.svg?t=' + Date.now() + '"></object>',
     replace: true,
     link: function (scope, element, attrs) {
       var streamsList = ['electrics'];
@@ -44,7 +44,7 @@ angular.module('beamng.apps')
         });
 
         scope.$on('streamsUpdate', function (event, streams) {
-          
+
           // Fuel
           if (streams.electrics.lowfuel)
             fuelbar.style.fill="#FF8000";

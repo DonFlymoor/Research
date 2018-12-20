@@ -44,7 +44,7 @@ http://wiki.beamng.com/Groundmodel
     "defaultDepth"               : 0,
     "collisiontype"              : "ASPHALT",
     "skidMarks"                  : false,
-    //"aliases"                    : [""]
+    "aliases"                    : ["groundmodel_asphalt_old"]
   },
   "ASPHALT_PREPPED": {
     "staticFrictionCoefficient"  : 1.5,
@@ -200,7 +200,7 @@ http://wiki.beamng.com/Groundmodel
     "defaultDepth"               : 0,
     "collisiontype"              : "GRASS",
     "skidMarks"                  : false,
-    "aliases"                    : ["grass2", "forest"]
+    "aliases"                    : ["grass", "grass2", "grass3", "grass4", "forest", "forest_floor"]
   },
 
   "MUD":{
@@ -250,6 +250,19 @@ http://wiki.beamng.com/Groundmodel
 
     "defaultDepth"               : 0,
     "collisiontype"              : "ICE",
+    "skidMarks"                  : false
+  },
+  
+  "FRICTIONLESS":{
+    "staticFrictionCoefficient"  : 0,
+    "slidingFrictionCoefficient" : 0,
+    "hydrodynamicFriction"       : 0,
+    "stribeckVelocity"           : 0.2,
+    "strength"                   : 1,
+    "roughnessCoefficient"       : 0.1,
+
+    "defaultDepth"               : 0,
+    "collisiontype"              : "FRICTIONLESS",
     "skidMarks"                  : false
   },
 
@@ -347,6 +360,24 @@ http://wiki.beamng.com/Groundmodel
     "shearStrength"              : 0,
     "defaultDepth"               : 1,
     "collisiontype"              : "GRASS",
+    "skidMarks"                  : false
+  },
+  
+  "SOFT_COLLISION_GENERAL":{
+    "staticFrictionCoefficient"  : 0,
+    "slidingFrictionCoefficient" : 0,
+    "hydrodynamicFriction"       : 0,
+    "stribeckVelocity"           : 1,
+    "strength"                   : 1,
+    "roughnessCoefficient"       : 0,
+
+    "fluidDensity"               : 8000,
+    "flowConsistencyIndex"       : 500,
+    "flowBehaviorIndex"          : 0.8,
+    "dragAnisotropy"             : 1,
+    "shearStrength"              : 0,
+    "defaultDepth"               : 0,
+    "collisiontype"              : "PLASTIC",
     "skidMarks"                  : false
   },
 

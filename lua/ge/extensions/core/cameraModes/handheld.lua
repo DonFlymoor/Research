@@ -13,10 +13,6 @@ function C:init(spring, damping, rotspring)
   self.mustReset = true
 end
 
-function C:onVehicleResetted(...)
-  return true
-end
-
 function C:update(data)
   if self.mustReset then
     self.mustReset = false

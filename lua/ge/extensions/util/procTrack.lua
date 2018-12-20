@@ -1156,10 +1156,8 @@ local function createWaypointsForScenario(nodes)
         scenario.nodes['gym_'..i].radius = 2.5
       end
      
-
       scenario.lapConfig[#scenario.lapConfig+1] = 'gym_'..i
       
-
       local nv = {}
       if n.gateDir then
         nv = {x = n.gateDir.x, y = n.gateDir.y}
@@ -1190,9 +1188,23 @@ local function createWaypointsForScenario(nodes)
       
       scenario.nodes['gym_'..i].rot = vec3(nvRot.x,nvRot.y,0)
       
+
+      local checkPoint = createObject('BeamNGWaypoint')
+      checkPoint:setPosition(vec3(pos.x,pos.y,pos.z):toPoint3F())
+      checkPoint.scale = Point3F(scenario.nodes['gym_'..i].radius,scenario.nodes['gym_'..i].radius,scenario.nodes['gym_'..i].radius)
+      local quat = convertQuatToTorqueFormat(quatFromEuler(0,0,-math.atan2(nvRot.y, nvRot.x)))
+      checkPoint:setField('rotation', 0, quat.x .. ' ' ..quat.y..' '..quat.z..' '..quat.w)
+      checkPoint:setField('directionalWaypoint', 0, '1')
+      checkPoint:registerObject('gym_'..i)
+      scenetree.GymkhanaArena:addObject(checkPoint)
+
+
     end
   end
   
+
+
+
   scenario.lapCount = params.path.lapCount or scenario.lapCount
   
 

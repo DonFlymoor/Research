@@ -6,12 +6,12 @@ angular.module('beamng.apps')
     link: function ($scope, element, attrs) {
 
       $scope.selectedLine = '';
-      
+
       $scope.route = {
         direction: '',
         routeID: ''
       }
- 
+
       $scope.updateDisplay = function() {
         bngApi.activeObjectLua(`controller.onGameplayEvent("onRouteChange", ${bngApi.serializeToLua($scope.route)})`);
       };
@@ -22,7 +22,7 @@ angular.module('beamng.apps')
           // $scope.busLines = data;
         });
       });
-  
+
       $scope.changeLine = function () {
         // splitting routeID and variance
         var line = $scope.selectedLine.split('|')
@@ -64,7 +64,7 @@ angular.module('beamng.apps')
 
           if (data.routeColor)
             $scope.routeColor = data.routeColor;
-          
+
           if (data.tasklist && data.tasklist.length > 0) {
             // just getting name of stop since lua is sending an object
             $scope.stopsList = data.tasklist.map((stopName) => stopName[1]);
@@ -72,9 +72,9 @@ angular.module('beamng.apps')
             $scope.stopsList = $scope.stopsList.length > 4 ? $scope.stopsList.slice(0, 5) : $scope.stopsList;
           }
           // if data.tasklist doesnt exist we presume that the stop list just needs to be updated.
-          else 
+          else
             $scope.stopsList = data.length > 4 ? data.slice(0, 5) : data;
-          
+
           if ($scope.stopsList.length > 0) {
             // reversing order of stops so next stop shows up correctly
             $scope.stopsList.reverse();
@@ -89,11 +89,11 @@ angular.module('beamng.apps')
       // TODO: Icon parsing
       function parseTxt(txt){
         var ptxt = txt.toString();
-        ptxt = ptxt.replace(/(\[BNG\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="../../../../ui/assets/svg-symbols.svg#general_beamng_logo_bw"></use></svg>`);
-        ptxt = ptxt.replace(/(\[BUS\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="../../../../ui/assets/svg-symbols.svg#material_directions_bus"></use></svg>`);
-        ptxt = ptxt.replace(/(\[AIR\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="../../../../ui/assets/svg-symbols.svg#material_local_airport"></use></svg>`);
-        ptxt = ptxt.replace(/(\[ROTR\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="../../../../ui/assets/svg-symbols.svg#material_rotate_right"></use></svg>`);
-        ptxt = ptxt.replace(/(\[ROTL\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="../../../../ui/assets/svg-symbols.svg#material_rotate_left"></use></svg>`);
+        ptxt = ptxt.replace(/(\[BNG\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="#general_beamng_logo_bw"></use></svg>`);
+        ptxt = ptxt.replace(/(\[BUS\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="#material_directions_bus"></use></svg>`);
+        ptxt = ptxt.replace(/(\[AIR\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="#material_local_airport"></use></svg>`);
+        ptxt = ptxt.replace(/(\[ROTR\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="#material_rotate_right"></use></svg>`);
+        ptxt = ptxt.replace(/(\[ROTL\])/gi, `<svg style="width: 20px" viewBox="0 0 10 10"><use fill="white" width="100%" xlink:href="#material_rotate_left"></use></svg>`);
 
         return ptxt;
       }

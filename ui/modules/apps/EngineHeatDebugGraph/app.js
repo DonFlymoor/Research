@@ -1,16 +1,16 @@
 angular.module('beamng.apps')
 .directive('engineHeatDebugGraph', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
+    template:
       '<div style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono;">' +
-        '<div layout="column" style="position: absolute; top: 0; left: 5px;">' + 
+        '<div layout="column" style="position: absolute; top: 0; left: 5px;">' +
           '<small style="color:#333676; padding:2px">Water</small>' +
           '<small style="color:#AA8C39; padding:2px">Oil</small>' +
           '<small style="color:#378B2E; padding:2px">Block</small>' +
           '<small style="color:#A7383E; padding:2px">Exhaust</small>' +
         '</div>' +
         '<canvas></canvas>' +
-      '<div>',
+      '</div>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {

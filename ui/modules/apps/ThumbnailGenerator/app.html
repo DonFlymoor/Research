@@ -1,102 +1,105 @@
 <div style="width:100%; height:100%; background-color: rgba(0,0,0,0.6)" class="bngApp" layout="column">
   <md-content flex layout-padding>
     <h4>Thumbnail Generator</h4>
-    <span>
-      <ul>
-        <li>This app will take thumbnails of your current vehicle and its configs.</li>
-        <li>Please be patient while it takes the thumbnails of your mod.</li>
-        <li>If you want your thumbnail to look different from official ones please enable advanced options.</li>
-      </ul>
-    <span>
-      <md-divider ></md-divider>
-      <br/>
-  <md-input-container>
-    <span>Thumbnail Width (px)</span>
+    <ul>
+      <li>This app will take thumbnails of your current vehicle and its configs.</li>
+      <li>Please be patient while it takes the thumbnails of your mod.</li>
+      <li>If you want your thumbnail to look different from official ones please enable advanced options.</li>
+    </ul>
+    <md-divider></md-divider>
+    <br/>
     <md-input-container>
-      <input style="color: #000000" flex type="text" ng-model="width" ng-click="focus();" aria-label="Licence Text" >
+      <span>Thumbnail Width (px)</span>
+      <md-input-container>
+        <input style="color: #000000" flex type="text" ng-model="width" ng-click="focus();" aria-label="Licence Text">
+      </md-input-container>
+
+      <span>Licence Text</span>
+      <md-input-container>
+        <input style="color: #000000" flex type="text" ng-model="plate" ng-click="focus();" aria-label="Licence Text">
+      </md-input-container>
+
+      <md-checkbox ng-click="currentMap = !currentMap" aria-label="Advanced Mode">
+        Stay on current map
+      </md-checkbox>
+
+
+      <md-checkbox ng-click="default = !default" aria-label="Advanced Mode">
+        Enable Advanced Mode
+      </md-checkbox>
     </md-input-container>
 
-    <span>Licence Text</span>
-    <md-input-container>
-      <input style="color: #000000" flex type="text" ng-model="plate" ng-click="focus();" aria-label="Licence Text" >
+    <md-input-container ng-hide="default" class="md-padding">
+      <span>View</span>
+      <md-input-container>
+        <md-select ng-model="view.selectedView" aria-label="View Select">
+          <md-option ng-click="getParams()" ng-repeat="opt in view" ng-value="opt">
+            {{opt}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+
+      <md-input-container layout="column">
+        <span>Distance</span>
+        <md-slider-container layout="row">
+          <md-slider min=0 max=100 step="1" ng-model="distance" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
+          <md-input-container style="width: 20%;">
+            <input style="color: #000000" flex type="number" ng-click="focus();" step="0.1" ng-model="distance" ng-change="setParameters()"
+              aria-label="rotation">
+          </md-input-container>
+        </md-slider-container>
+        <span>Rotation</span>
+        <md-slider-container layout="row">
+          <md-slider min=0 max=360 ng-model="rotation" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
+          <md-input-container style="width: 20%;">
+            <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="rotation" ng-change="setParameters()" aria-label="rotation"
+              aria-controls="rotation-slider">
+          </md-input-container>
+        </md-slider-container>
+        <span>FOV</span>
+        <md-slider-container layout="row">
+          <md-slider min=0 max=90 ng-model="fov" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
+          <md-input-container style="width: 20%;">
+            <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="fov" ng-change="setParameters()" aria-label="rotation"
+              aria-controls="rotation-slider">
+          </md-input-container>
+        </md-slider-container>
+      </md-input-container>
+
+      <md-input-container>
+        <span>Offsets</span>
+
+        <md-slider-container layout="row">
+          <span style="line-height: 3em">X</span>
+          <md-slider min=-50 max=50 value=0 ng-model="offsets.x" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
+          <md-input-container style="width: 20%;">
+            <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="offsets.x" ng-change="setParameters()" aria-label="rotation"
+              aria-controls="rotation-slider">
+          </md-input-container>
+        </md-slider-container>
+
+        <md-slider-container layout="row">
+          <span style="line-height: 3em">Y</span>
+          <md-slider min=-50 max=50 value=0 ng-model="offsets.y" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
+          <md-input-container style="width: 20%;">
+            <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="offsets.y" ng-change="setParameters()" aria-label="rotation"
+              aria-controls="rotation-slider">
+          </md-input-container>
+        </md-slider-container>
+
+        <md-slider-container layout="row">
+          <span style="line-height: 3em">Z</span>
+          <md-slider min=-50 max=50 value=0 ng-model="offsets.z" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
+          <md-input-container style="width: 20%;">
+            <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="offsets.z" ng-change="setParameters()" aria-label="rotation"
+              aria-controls="rotation-slider">
+          </md-input-container>
+        </md-slider-container>
+      </md-input-container>
+
+
     </md-input-container>
-
-    <md-checkbox ng-click="currentMap = !currentMap"  aria-label="Advanced Mode">
-      Stay on current map
-    </md-checkbox>
-
-
-    <md-checkbox ng-click="default = !default"  aria-label="Advanced Mode">
-      Enable Advanced Mode
-    </md-checkbox>
-  </md-input-container>
-
-  <md-input-container ng-hide="default"  class="md-padding">
-    <span>View</span>
-    <md-input-container>
-      <md-select ng-model="view.selectedView" aria-label="View Select">
-        <md-option ng-click="getParams()" ng-repeat="opt in view" ng-value="opt">
-          {{opt}}
-        </md-option>
-      </md-select>
-    </md-input-container>
-
-    <md-input-container layout="column">
-      <span>Distance</span>
-      <md-slider-container layout="row">
-        <md-slider min=0 max=100 step="1" ng-model="distance" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
-        <md-input-container style="width: 20%;">
-          <input style="color: #000000" flex type="number" ng-click="focus();" step="0.1" ng-model="distance" ng-change="setParameters()" aria-label="rotation">
-        </md-input-container>
-      </md-slider-container>
-      <span>Rotation</span>
-      <md-slider-container layout="row">
-        <md-slider min=0 max=360 ng-model="rotation" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
-        <md-input-container style="width: 20%;">
-          <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="rotation" ng-change="setParameters()" aria-label="rotation" aria-controls="rotation-slider">
-        </md-input-container>
-      </md-slider-container>
-      <span>FOV</span>
-      <md-slider-container layout="row">
-        <md-slider min=0 max=90 ng-model="fov" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
-        <md-input-container style="width: 20%;">
-          <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="fov" ng-change="setParameters()" aria-label="rotation" aria-controls="rotation-slider">
-        </md-input-container>
-      </md-slider-container>
-    </md-input-container>
-
-    <md-input-container>
-      <span>Offsets</span>
-
-      <md-slider-container layout="row">
-        <span style="line-height: 3em">X</span>
-        <md-slider min=-50 max=50 value=0 ng-model="offsets.x" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
-        <md-input-container style="width: 20%;">
-          <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="offsets.x" ng-change="setParameters()" aria-label="rotation" aria-controls="rotation-slider">
-        </md-input-container>
-      </md-slider-container>
-
-      <md-slider-container layout="row">
-        <span style="line-height: 3em">Y</span>
-        <md-slider min=-50 max=50 value=0 ng-model="offsets.y" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
-        <md-input-container style="width: 20%;">
-          <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="offsets.y" ng-change="setParameters()" aria-label="rotation" aria-controls="rotation-slider">
-        </md-input-container>
-      </md-slider-container>
-
-      <md-slider-container layout="row">
-        <span style="line-height: 3em">Z</span>
-        <md-slider min=-50 max=50 value=0 ng-model="offsets.z" ng-change="setParameters()" aria-label="Camera Rotation" style="width: 70%; float: left"></md-slider>
-        <md-input-container style="width: 20%;">
-          <input style="color: #000000" flex type="number" ng-click="focus();" ng-model="offsets.z" ng-change="setParameters()" aria-label="rotation" aria-controls="rotation-slider">
-        </md-input-container>
-      </md-slider-container>
-    </md-input-container>
-
-
-  </md-input-container>
-
-
-  <md-button style="color: white; background-color: #ff6600" flex style="margin: 2px; min-width: 198px" md-no-ink class="md-raised" ng-click="generateThumbs()">Generate Thumbnails</md-button>
+    <md-button style="color: white; background-color: #ff6600" flex style="margin: 2px; min-width: 198px" md-no-ink class="md-raised"
+      ng-click="generateThumbs()">Generate Thumbnails</md-button>
   </md-content>
 </div>

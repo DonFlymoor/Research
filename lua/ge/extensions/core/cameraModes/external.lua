@@ -21,10 +21,10 @@ end
 
 function C:init()
   self.now = 0 -- timekeeping (cannot use a countdown since the countdown will randomly change over time)
-  self.tvModeOdds = settings.getValue('cameraFanVsTV') or 0.1
   self.isFanMode = true
   self.offsetPeriod = 1
   self.lastOffset = self.now
+  self.cameraResetted = 3
 
   -- vehicle position
   self.lastCarPos = vec3()
@@ -35,7 +35,6 @@ function C:init()
 
   -- camera panning effect
   self.camVel = vec3(0,0,0)
-  self.panningSpeedFactor = settings.getValue('cameraTVSpeed') or 1
 
   -- camera switch triggers:
   -- * teleporting
@@ -54,13 +53,23 @@ function C:init()
   -- filters
   self.autozoom = autozoom()
   self.autopoint = autopoint()
-  self.autopoint.refNodes = self.refNodes
   self.noise = noise()
   self.noise:init(0.14)
   self.smooth = smooth()
   self.smooth:init(20, 2.0)
   self.handheld = handheld()
   self.predictor = predictor()
+  self:onSettingsChanged()
+  self:onVehicleCameraConfigChanged()
+end
+
+function C:onVehicleCameraConfigChanged()
+  self.autopoint.refNodes = self.refNodes
+  self.cameraResetted = 3
+end
+function C:onSettingsChanged()
+  self.tvModeOdds = settings.getValue('cameraFanVsTV') or 0.1
+  self.panningSpeedFactor = settings.getValue('cameraTVSpeed') or 1 -- camera panning effect
 end
 
 function C:setRefNodes(centerNodeID, leftNodeID, backNodeID)
@@ -143,6 +152,14 @@ function C:update(data)
     return
   end
 
+  -- retrieve camera node (except when resetting, because data is not reliable then)
+  self.cameraResetted = math.max(self.cameraResetted - 1, 0)
+  if self.cameraResetted > 0 then
+    data.res.pos = data.pos
+    data.res.rot = quatFromDir(vec3(0,1,0), vec3(0, 0, 1))
+    return
+  end
+
   -- if car moved way too fast, reset smoothers and trigger a switch of camera
   local vehicleTeleported = (data.pos - self.lastCarPos):length()/data.dt > self.teleportingSpeed
   local cameraTeleported = (self.lastCamPos - self.camPos):length()/data.dt > self.teleportingSpeed
@@ -150,7 +167,7 @@ function C:update(data)
 
   -- right after a reset, we initialize the stuff that requires vehicle data
   if vehicleTeleported or self.now == 0 then
-    self:init()
+    self:reset()
     self.lastCarPos = data.pos
   end
   if cameraTeleported or self.now == 0 then

@@ -282,7 +282,7 @@ end
 
 -- loads one preset
 local function loadPreset(filename)
-  local filePresets = readJsonFile(filename)
+  local filePresets = jsonReadFile(filename)
   --log('D', 'weather', "Weather preset loaded: " .. tostring(filename) .. ": "..dumps(filePresets))
   if tableSize(filePresets) == 0 then
     log('E', 'weather', 'preset invalid: ' .. tostring(filename))

@@ -21,9 +21,9 @@
         ["etk800_chmsl", ["etk800_tailgate"]],
 
         {"deformGroup":"tailgatelight_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
-        ["etk800_tailgatelight_L", ["etk800_tailgate"],[]{"deformSound":"GlassBreakSound3", "deformVolume":0.3}],
+        ["etk800_tailgatelight_L", ["etk800_tailgate"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound3", "deformVolume":0.3}],
         {"deformGroup":"tailgatelight_R_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
-        ["etk800_tailgatelight_R", ["etk800_tailgate"],[]{"deformSound":"GlassBreakSound4", "deformVolume":0.3}],
+        ["etk800_tailgatelight_R", ["etk800_tailgate"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound4", "deformVolume":0.3}],
 
         {"deformGroup":"tailgatelight_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
         ["etk800_tailgatelightglass_L", ["etk800_tailgate"]],
@@ -401,7 +401,7 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          {"deformGroup":"tailgateglass_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_tailgateglass", ["etk800_tailgate"],[]{"deformSound":"GlassBreakSound10", "deformVolume":0.8}],
+         ["etk800_tailgateglass", ["etk800_tailgate"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound10", "deformVolume":0.8}],
          {"deformGroup":"tailgateglass_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
          ["etk800_tailgateglass_int", ["etk800_tailgate"]],
          {"deformGroup":""}

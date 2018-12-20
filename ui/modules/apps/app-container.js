@@ -165,7 +165,7 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
      */
     getLayouts: function () {
       return new Promise((resolve, reject) => {
-        bngApi.engineLua('core_apps.getLayouts()', (data) => {
+        bngApi.engineLua('ui_apps.getLayouts()', (data) => {
           Object.keys(data).forEach(layout => { AppLayout[layout] = data[layout]; });
           resolve();
         })
@@ -203,11 +203,11 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
       if (layoutSaveName !== undefined) {
           playmode = layoutSaveName;
       }
-      AppLayout[playmode] = Object.keys(AppLayout.current).map(appId => 
+      AppLayout[playmode] = Object.keys(AppLayout.current).map(appId =>
         propertiesToSave.reduce((obj, prop) => { obj[prop] = AppLayout.current[appId][prop]; return obj; }, {}));
-      
+
       var outLayouts = Object.keys(AppLayout).filter(x => x !== 'current').reduce((out, layout) => { out[layout] = AppLayout[layout]; return out; }, {});
-      bngApi.engineLua(`core_apps.saveLayouts(${bngApi.serializeToLua(outLayouts)})`);
+      bngApi.engineLua(`ui_apps.saveLayouts(${bngApi.serializeToLua(outLayouts)})`);
     },
 
     /**
@@ -223,7 +223,7 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
       service.clearCurrentLayout();
 
       layoutSaveName = undefined;
-     
+
       if (typeof layout === 'string') {
         layoutSaveName = layout;
         layout = AppLayout[layout] || [];
@@ -249,8 +249,8 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
      * @description Reset all user layouts to the game's default ones
      */
     resetLayouts: function () {
-      return new Promise((resolve, reject) => { 
-        bngApi.engineLua('core_apps.resetLayouts()', (data) => {
+      return new Promise((resolve, reject) => {
+        bngApi.engineLua('ui_apps.resetLayouts()', (data) => {
           for (var gameState in data) AppLayout[gameState] = data[gameState];
           resolve();
         });
@@ -260,7 +260,7 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
     resetLayout: function () {
       var d = $q.defer();
       var listener = $rootScope.$on('GameStateUpdate', (ev, data) => {
-        bngApi.engineLua(`core_apps.resetLayout('${data.appLayout}')`, function (val) {
+        bngApi.engineLua(`ui_apps.resetLayout('${data.appLayout}')`, function (val) {
           AppLayout[data.appLayout] = val;
 
           d.resolve();
@@ -273,9 +273,9 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
     },
 
     resetPositionAttributes: function (element) {
-      var top  = element.offsetTop, 
+      var top  = element.offsetTop,
           left = element.offsetLeft;
-      
+
       element.style.bottom = element.style.right = element.style.margin = '';
       element.style.top  = `${top}px`;
       element.style.left = `${left}px`;
@@ -517,11 +517,11 @@ function ($compile, $filter, $http, $injector, $q, $rootScope, $ocLazyLoad, AppL
     handleCameraChange: function (cameraMode, editMode) {
       var visibleOpacity = 1; // always fully visible
       var hiddenOpacity = 1; // fully visible in non-driver cameras
-      if (cameraMode === 'onboard.driver') {
+      if (cameraMode === 'driver') {
         if (editMode) hiddenOpacity = 0.7; // partially transparent while editing apps
         else hiddenOpacity = 0; // fully transparent while playing
       }
-      
+
       Object.keys(AppLayout.current)
         .forEach(appId => {
             AppLayout.current[appId].element[0].style.opacity = AppLayout.current[appId].noCockpit? hiddenOpacity : visibleOpacity;
@@ -674,7 +674,7 @@ function ($document, bngApi, RateLimiter, StreamsManager, UiAppsService, Utils, 
           , d = $q.defer()
         ;
 
-        bngApi.engineLua(`core_apps.getSettings("${directory}")`, function (data) {
+        bngApi.engineLua(`ui_apps.getSettings("${directory}")`, function (data) {
           d.resolve(data);
         });
 
@@ -694,7 +694,7 @@ function ($document, bngApi, RateLimiter, StreamsManager, UiAppsService, Utils, 
           , directory = pathParts[pathParts.length - 2]
         ;
 
-        bngApi.engineLua(`core_apps.saveSettings("${directory}", ${bngApi.serializeToLua(settings)})`);
+        bngApi.engineLua(`ui_apps.saveSettings("${directory}", ${bngApi.serializeToLua(settings)})`);
       };
 
 
@@ -787,7 +787,7 @@ function ($document, bngApi, RateLimiter, StreamsManager, UiAppsService, Utils, 
           , height = Math.max(Math.ceil((event.pageY - startY) / 10) * 10, 40)
         ;
 
-        
+
         if ($scope.entry.preserveAspectRatio) {
           if (width > height) {
             height = width / initAspectRatio;

@@ -3,42 +3,51 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 
 local M = {}
-
-local devices = {}
-
--- VirtualInputManager API:
-
--- getVirtualInputManager()
--- void emitEvent(const char* deviceType, int deviceInstance, const char* objType, int objectInstance, const char* action, float fValue);
--- int registerDevice(const char* productName, int axes, int buttons, int povs);
--- void resetDevices();
-
-M.update = function()
-end
-
-M.enable = function(state)
- -- state = true or false
-end
+M.devices = {}
+M.update = nop
 
 M.init = function()
+    local mgr = getVirtualInputManager()
+    if not mgr then
+      log("E", "", "No virtual input manager found")
+      return
+    end
     getVirtualInputManager():resetDevices()
 end
+
+local function ensureOutgaugeExtension()
+  local enabled = settings.getValue("outgaugeEnabled") == true
+  local anyDevices = tableSize(M.devices) > 0
+  local mustBeLoaded = enabled or anyDevices
+
+  local cmdEnable  = 'if outgauge == nil then extensions.load  ("outgauge") end'
+  local cmdDisable = 'if outgauge ~= nil then extensions.unload("outgauge") end'
+
+  be:queueAllObjectLua(cmdDisable)
+  if mustBeLoaded then
+    local player = 0
+    local veh = be:getPlayerVehicle(player)
+    if veh then veh:queueLuaCommand(cmdEnable) end
+  end
+end
+M.onVehicleSpawned = ensureOutgaugeExtension
+M.onVehicleChanged = ensureOutgaugeExtension
+M.onSettingsChanged = ensureOutgaugeExtension
 
 -- consumer API
 
 M.createDevice = function(productName, vidpid, axes, buttons, povs)
     local mgr = getVirtualInputManager()
-    print("MANAGER?")
-    if not mgr then return nil end
-    print(tostring(mgr))
-
+    if not mgr then return end
+    local info = {productName, vidpid, axes, buttons, povs}
     local deviceInstance = mgr:registerDevice(productName, vidpid, axes, buttons, povs)
     if deviceInstance < 0 then
-        print("IS NULL")
-        return nil
+      log("E", "", "No device instance '"..dumps(deviceInstance).." found: "..dumps(info))
+      return
     end
-    log('D', 'lua.virtualinput', 'registered device "' .. productName .. '" to vinput' .. tostring(deviceInstance))
-
+    log('I', '', "Registered device '"..dumps(deviceInstance).."' as vinput: "..dumps(info))
+    M.devices[deviceInstance] = info
+    ensureOutgaugeExtension()
     return deviceInstance
 end
 
@@ -46,20 +55,15 @@ M.deleteDevice = function(deviceInstance)
     local mgr = getVirtualInputManager()
     if not mgr then return nil end
     mgr:unregisterDevice('vinput' .. tostring(deviceInstance))
+    log('I', '', "Deleted device '"..dumps(deviceInstance).."' as vinput: "..dumps({productName, vidpid, axes, buttons, povs}))
+    M.devices[deviceInstance] = nil
+    ensureOutgaugeExtension()
 end
 
 M.emit = function(deviceInstance, objType, objectInstance, action, val)
     local mgr = getVirtualInputManager()
     if not mgr then return nil end
     mgr:emitEvent('vinput', deviceInstance, objType, objectInstance, action, val)
-end
-
-M.emitAxis = function(deviceInstance, objectInstance, val)
-    local mgr = getVirtualInputManager()
-    if not mgr then return nil end
-
-    log('D', 'lua.virtualinput', 'moving axis ' .. tostring(objectInstance) .. ' of device ' .. tostring(deviceInstance) .. ' to ' .. val)
-    mgr:emitEvent('vinput', deviceInstance, 'axis', objectInstance, 'move', val)
 end
 
 return M

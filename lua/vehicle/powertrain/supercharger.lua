@@ -17,6 +17,15 @@ M.isExisting = true
 
 local jbeamData = nil
 
+local forcedInductionInfoStream = {
+  rpm = 0,
+  coef = 1,
+  boost = 0,
+  maxBoost = 0,
+  pulses = 0,
+  loss = 0
+}
+
 local dtSum = 0
 local twoPi = 2 * math.pi
 
@@ -41,11 +50,12 @@ local crankLossPerRPM = 0
 
 local blowerRPM = 0
 local blowerAV = 0
-local maxBlowerAV = 0
 
 local whineLoop = nil
 local whinePitchPerAV
 local whineVolumePerPascal
+local fadeInStartRPM = 1200
+local fadeInEndRPM = 2200
 
 local efficiencyCurveRootsTwisted = {b1 = -0.35, b2 = 0, b3 = 1}
 local efficiencyCurveRootsNonTwisted = {b1 = -0.55, b2 = 0, b3 = 1}
@@ -53,11 +63,8 @@ local efficiencyCurveScrews = {b1 = 0.3, b2 = 0, b3 = 0.7}
 local efficiencyCurveCentrifugal = {b1 = 0.6, b2 = 0, b3 = 0.45}
 
 local function updateSounds(dt)
-  local fadeInStartRPM = 1200
-  local fadeInEndRPM = 2200
   local volumeFadeIn = min(max((blowerRPM - fadeInStartRPM) / (fadeInEndRPM - fadeInStartRPM), 0), 1)
   local volume = min(max(abs(blowerPressure) * whineVolumePerPascal, 0), 15) * volumeFadeIn
-  local pitchPerRPM = 0.000077
   local pitch = max(blowerAV * whinePitchPerAV, 0)
   obj:setVolumePitch(whineLoop, volume, pitch)
 end
@@ -108,19 +115,12 @@ local function updateGFX(dt)
 
   -- Update streams
   if streams.willSend("forcedInductionInfo") then
-    gui.send(
-      "forcedInductionInfo",
-      {
-        rpm = blowerRPM,
-        coef = assignedEngine.forcedInductionCoef,
-        --send kPa to UI
-        boost = blowerPressure * 0.001,
-        maxBoost = maxPressure * 6.89475,
-        --specific stuff
-        pulses = pulseCoef,
-        loss = lostTorqueCoef
-      }
-    )
+    forcedInductionInfoStream.rpm = blowerRPM
+    forcedInductionInfoStream.coef = assignedEngine.forcedInductionCoef
+    forcedInductionInfoStream.boost = blowerPressure * 0.001
+    forcedInductionInfoStream.pulses = pulseCoef
+    forcedInductionInfoStream.loss = lostTorqueCoef
+    gui.send("forcedInductionInfo", forcedInductionInfoStream)
   end
 end
 
@@ -157,7 +157,6 @@ local function init(device, data)
 
   blowerRatio = jbeamData.gearRatio or 1
   local maxBlowerRPM = math.ceil(assignedEngine.maxRPM * blowerRatio)
-  maxBlowerAV = maxBlowerRPM * rpmToAV
 
   crankLossPerRPM = (jbeamData.crankLossPer1kRPM or 5) * 0.001
 
@@ -238,6 +237,8 @@ local function init(device, data)
     return
   end
   boostControllerCurve = createCurve(tipoints)
+
+  forcedInductionInfoStream.maxBoost = maxPressure * 6.89475
 
   M.updateGFX = updateGFX
 end

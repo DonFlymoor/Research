@@ -37,12 +37,14 @@ local sqrt = math.sqrt
 local min = math.min
 local max = math.max
 
+M.debugData = {}
+
 local function updateGFX(dt)
   local rand = random(1) --use the same random value for all effects in this frame
 
   --we combine these two values only once per frame here, we need the result of this quite often below
   local nodeCountTimeFactor = dt * fireNodeCounter
-  local airSpeed = electrics.values.airspeed or 0
+  local airSpeed = electrics.values.airflowspeed
   tEnv = obj:getEnvTemperature() - 273.15
 
   -- Node Iteration --
@@ -231,13 +233,7 @@ local function nodeCollision(p)
     return
   end
 
-  local normalEnergy = p.normalForce * p.perpendicularVel * lastDt
-  local slipEnergy = p.slipForce * p.slipVel * lastDt
-  -- energy = work, sum up the normal and slip work for the time being, lastDt comes directly from main lua and is the dT from the last gfx frame
-  local collisionEnergy = normalEnergy + slipEnergy
-  if collisionEnergy <= 0 then
-    return
-  end
+  local collisionEnergy = p.normalForce * p.slipVel * lastDt
 
   node.heatEnergy = node.heatEnergy + (collisionEnergy * collisionEnergyMultiplier * node.selfIgnitionCoef)
   node.temperature = max(min(node.heatEnergy / node.weightSpecHeatCoef, maxNodeTemp), node.temperature)
@@ -258,6 +254,7 @@ local function init()
   M.updateGFX = nop
 
   flammableNodes = {}
+  M.debugData.flammableNodes = flammableNodes
   hotNodes = {}
   wheelNodes = {}
   currentNodeKey = nil

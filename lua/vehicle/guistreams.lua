@@ -99,10 +99,19 @@ local function updateReferenceCounts(state)
   end
 end
 
+local graphValues = {}
+local function drawGraph(k, val)
+  if willSend("profilingData") then
+    graphValues[k] = val
+    gui.send('profilingData', graphValues)
+  end
+end
+
 -- public interface
 M.reset = reset
 M.updateStreams = updateStreams
 M.setRequiredStreams = updateReferenceCounts
 M.willSend = willSend
+M.drawGraph = drawGraph
 
 return M

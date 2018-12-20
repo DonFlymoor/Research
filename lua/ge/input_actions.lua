@@ -43,7 +43,7 @@ local function uniqueNameToName(uniqueActionName, vehicleName)
 end
 -- read the actions from the specified file
 local function readActionsFile(path, vehicleName)
-    local vehiclesActions = readJsonFile(path)
+    local vehiclesActions = jsonReadFile(path)
     if vehiclesActions == nil then
         log("E", "input_actions", 'unable to read json file: ' .. tostring(path))
         return {}

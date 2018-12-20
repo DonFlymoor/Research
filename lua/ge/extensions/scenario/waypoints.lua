@@ -11,15 +11,21 @@ TODO
 ]]--
 
 local M = {}
+M.state = {}
 
 local logTag = 'waypoints'
-local vehicleWaypointsData = {}
-local nextWpForVehicle = {}
-local waypointBranches = {}
-local currentWaypointChoice = {}
-local currentBranch = nil
-local waypointsConfigData = {}
+
 local raceMarker = require("scenario/race_marker")
+
+local function clearState()
+  M.state = {}
+  M.state.vehicleWaypointsData = {}
+  M.state.nextWpForVehicle = {}
+  M.state.waypointBranches = {}
+  M.state.currentWaypointChoice = {}
+  M.state.currentBranch = nil
+  M.state.waypointsConfigData = {}
+end
 
 -- returns the next waypoint
 local function getNextWaypoint(w, diff)
@@ -56,6 +62,7 @@ local function processWaypoint(vid)
     return nil
   end
 
+  local vehicleWaypointsData = M.state.vehicleWaypointsData
   local w = vehicleWaypointsData[vid]
   -- log('D', logTag, "waypoint: cur:" .. vid .. " = " .. w.cur .. ", next: " .. w.next)
   -- dump(w)
@@ -88,7 +95,7 @@ local function processWaypoint(vid)
   -- log( 'D', logTag,"set next WP for vehicle "..vid)
   -- dump(w.nextWp)
 
-  nextWpForVehicle[vid] = w.next
+  M.state.nextWpForVehicle[vid] = w.next
 
   w.next2Wp = nil
   w.next2 = getNextWaypoint(w, 2)
@@ -102,7 +109,7 @@ local function processWaypoint(vid)
   -- update the 3d markers
   if bo.playerUsable then
     if w.nextWp then
-      if w.next2 == nil and waypointsConfigData.highlightLastWaypoint then
+      if w.next2 == nil and M.state.waypointsConfigData.highlightLastWaypoint then
         raceMarker.clearStat()
       else
         raceMarker.setPosition(vec3(w.nextWp.pos), w.nextWp.radius)
@@ -124,7 +131,7 @@ local function initialiseVehicleData(vid)
   if not scenario then
     return
   end
-
+  local vehicleWaypointsData = M.state.vehicleWaypointsData
   local vehicle = be:getObjectByID(vid)
   if vehicle and vehicle.playerUsable or checkVehicleProperty(vid, 'isAIControlled', '1') then
     if scenario.rollingStart and scenario.startTimerCheckpoint ~= nil then
@@ -139,7 +146,10 @@ end
 
 local function onRaceWaypointReached(data)
   local selected = {}
-  currentWaypointChoice = {}
+  
+  M.state.currentWaypointChoice = {}
+  local currentWaypointChoice = M.state.currentWaypointChoice 
+  local waypointBranches = M.state.waypointBranches
   for k, v in pairs(waypointBranches) do
     if v.action == 'after' and v.location == data.waypointName then
       currentWaypointChoice[k] = v.waypoints[1]
@@ -178,6 +188,7 @@ local function onScenarioVehicleTrigger(vid, wpData)
   if not bo then return end
 
   local lapDiff = processWaypoint(vid)
+  local vehicleWaypointsData = M.state.vehicleWaypointsData
   local w = vehicleWaypointsData[vid]
 
   if scenario.rollingStart and w.cur == 0 then -- hit the starting line
@@ -188,7 +199,7 @@ local function onScenarioVehicleTrigger(vid, wpData)
     end
   elseif w.cur ~= -1 then
   -- log( 'D', logTag, 'onTrigger wp '..tostring(w.cur) )
-    local data = {cur = w.cur, curPos = wpData.pos, curRadius = wpData.radius, next = w.next, 
+    local data = {cur = w.cur, curPos = wpData.pos, curRot = wpData.rot, curRadius = wpData.radius, next = w.next, 
                   vehicleId = vid, vehicleName = bo:getField('name', ''), 
                   waypointName = scenario.lapConfig[w.cur] or "", time = scenario.timer}
 
@@ -219,15 +230,16 @@ end
 
 local function onPreRender(dt)
   -- see if a vehicle has driven through a target waypoint
+  local vehicleWaypointsData = M.state.vehicleWaypointsData or {}
   for vid, vehWpData in pairs(vehicleWaypointsData) do
     local vehicle = be:getObjectByID(vid)
     local vehicleData = map.objects[vid]
     local nextWp = vehWpData.nextWp -- target waypoint
     if vehicle and vehicleData and nextWp and nextWp.pos then
       local planeNormal = nextWp.rot
-      local pos2node = 0.5 * (vec3(vehicle:getCornerPosition(1)) + vec3(vehicle:getCornerPosition(0))) - nextWp.pos
+      local wp2node = 0.5 * (vec3(vehicle:getCornerPosition(1)) + vec3(vehicle:getCornerPosition(0))) - nextWp.pos
 
-      if pos2node:squaredLength() <= square(nextWp.radius) and pos2node:dot(vehicleData.vel) >= 0 and (planeNormal == nil or pos2node:dot(planeNormal) >= 0) then
+      if wp2node:squaredLength() <= square(nextWp.radius) and (planeNormal == nil or (wp2node:dot(planeNormal) >= 0 and wp2node:dot(vehicleData.vel) >= 0)) then
         vehWpData.nextWp = nil
         onScenarioVehicleTrigger(vid, nextWp)
       end
@@ -238,30 +250,8 @@ end
 local function onScenarioChange(scenario)
   -- log('D', logTag, 'onScenarioChange: ' .. tostring(scenario and scenario.state or 'nil'))
   if not scenario then
-    vehicleWaypointsData = {}
-    nextWpForVehicle = {}
-    waypointBranches = {}
-    currentWaypointChoice = {}
-    currentBranch = nil
+    clearState()
     return
-  end
-end
-
-local function onVehicleSwitched(oldId, newId, player)
-  --log( 'I', logTag, 'onVehicleSwitched '..oldId..','..newId..','..player)
-  if scenario_scenarios then
-    local scenario = scenario_scenarios.getScenario()
-    if not scenario then return end
-    if not nextWpForVehicle[oldId] then return end
-
-    local vehicle = be:getObjectByID(newId)
-    if not vehicle then return end
-    local wayPointID = nextWpForVehicle[oldId]
-    if waypoint and scenario.lapConfig[wayPointID] then
-      local nwp = scenario.nodes[scenario.lapConfig[wayPointID]]
-      -- TODO(AK): this is STALE. Update to new approach which is handle in this file.
-      -- vehicle:queueLuaCommand('scenario.setTrigger("scenario_waypoints.onScenarioVehicleTrigger", ' .. serialize(nwp.pos) .. ',' .. nwp.radius .. ',' .. serialize(nwp.rot) .. ');')
-    end
   end
 end
 
@@ -331,21 +321,22 @@ local function deactivateWaypointBranch(branchName)
   local scenario = scenario_scenarios.getScenario()
   if not scenario then return end
 
+  local waypointBranches = M.state.waypointBranches
   if waypointBranches[branchName] then
     removeWaypoints(waypointBranches[branchName])
   end
 
-  if currentBranch == branchName then
-    currentBranch = nil
+  if M.state.currentBranch == branchName then
+    M.state.currentBranch = nil
   end
 end
 
 local function activateWaypointBranch(branchName, vehicleID)
-  if not branchName or currentBranch == branchName then
+  if not branchName or M.state.currentBranch == branchName then
     return
   end
   local scenario = scenario_scenarios.getScenario()
-  local vehWpData = vehicleWaypointsData[vehicleID]
+  local vehWpData = M.state.vehicleWaypointsData[vehicleID]
   local vehicle = be:getObjectByID(vehicleID)
   if not scenario or not vehicle or not vehWpData then
     return
@@ -354,17 +345,17 @@ local function activateWaypointBranch(branchName, vehicleID)
   -- log('I', logTag,'activateWaypointBranch called for branch: '..branchName .. '  By vehicle: '..vehicle:getField('name', ''))
   -- dump(vehWpData)
 
-  if currentBranch then
-    deactivateWaypointBranch(currentBranch)
+  if M.state.currentBranch then
+    deactivateWaypointBranch(M.state.currentBranch)
   end
 
-  currentBranch = branchName
+  M.state.currentBranch = branchName
 
   if vehWpData.cur > #scenario.lapConfig then
     vehWpData.next = 0
   end
 
-  local insertionData = waypointBranches[branchName]
+  local insertionData = M.state.waypointBranches[branchName]
   local insertIndex = insertWaypoints(insertionData)
   -- log('I', logTag,'insertion index '..tostring(insertIndex))
 
@@ -412,7 +403,7 @@ local function addWaypointBranch(branchName, waypointsData, action, location)
 
   if waypointsProcessed then
     local insertionData = {waypoints=waypointsProcessed, action=action, location=location}
-    waypointBranches[branchName] = insertionData
+    M.state.waypointBranches[branchName] = insertionData
   end
 end
 
@@ -436,28 +427,12 @@ local function onRaceStart()
   end
 end
 
-local function setupWaypointsData(scenario)
-  vehicleWaypointsData = {}
-  nextWpForVehicle = {}
-  waypointBranches = {}
-  currentWaypointChoice = {}
-
-  -- Set waypoint for all vehicles
-  if scenario.lapConfig then
-    for _, vid in pairs(scenario.vehicleNameToId) do
-        initialiseVehicleData(vid)
-    end
-  end
-end
-
 local function onScenarioRestarted(scenario)
-  log('I', logTag,'onScenarioRestarted called')
-
+  -- log('I', logTag,'onScenarioRestarted called')
+  local waypointBranches = M.state.waypointBranches
   for branchName,data in pairs(waypointBranches) do
     deactivateWaypointBranch(branchName)
   end
-
-  setupWaypointsData(scenario)
 
   -- log('I', logTag,'lapConfig: ')
   -- dump(scenario.lapConfig)
@@ -470,6 +445,11 @@ local function onScenarioRestarted(scenario)
 end
 
 local function initialise()
+  -- log('I', logTag,'initialise called....')
+
+  clearState()
+
+  local waypointsConfigData = M.state.waypointsConfigData
   if campaign_campaigns and campaign_campaigns.getCampaignActive() then
 
     local campaign = campaign_campaigns.getCampaign()
@@ -487,7 +467,12 @@ local function initialise()
   end
 
   local scenario = scenario_scenarios.getScenario()
-  setupWaypointsData(scenario)
+  -- Set waypoint for all vehicles
+  if scenario.lapConfig then
+    for _, vid in pairs(scenario.vehicleNameToId) do
+        initialiseVehicleData(vid)
+    end
+  end
 
   -- For Prototype idea of highlighting the final waypoint always
   if waypointsConfigData.highlightLastWaypoint and scenario.lapConfig then
@@ -505,7 +490,8 @@ local function onUpdate()
   if not scenario_scenarios then return end
   local scenario = scenario_scenarios.getScenario()
   local veh = be:getPlayerVehicle(0)
-  if not scenario or not veh then return end
+  if not scenario or not veh or not M.state.currentWaypointChoice then return end
+  local currentWaypointChoice = M.state.currentWaypointChoice 
   for k, v in pairs(currentWaypointChoice) do
     local wpPos = Point3F(scenario.nodes[v].pos.x, scenario.nodes[v].pos.y, scenario.nodes[v].pos.z)
     local dist = (wpPos - veh:getPosition()):len()    
@@ -524,7 +510,7 @@ local function isFinalWaypoint(vehicleId, waypointName)
     return false
   end
 
-  local vehWaypointData = vehicleWaypointsData[vehicleId]
+  local vehWaypointData = M.state.vehicleWaypointsData[vehicleId]
   if not vehWaypointData then
     return false
   end
@@ -555,18 +541,18 @@ local function isFinalWaypoint(vehicleId, waypointName)
 end
 
 local function getVehicleWaypointData(vehicleID)
-  local data = deepcopy(vehicleWaypointsData[vehicleID])
+  local data = deepcopy(M.state.vehicleWaypointsData[vehicleID])
   return data
 end
 
 local function onSerialize()
   -- log('D', logTag, 'onSerialize called...')
   local data = {}
-  data.vehicleWaypointsData = convertVehicleIdKeysToVehicleNameKeys(vehicleWaypointsData)
-  data.nextWpForVehicle = convertVehicleIdKeysToVehicleNameKeys(nextWpForVehicle)
-  data.waypointBranches = waypointBranches
-  data.currentWaypointChoice = currentWaypointChoice
-  data.currentBranch = currentBranch
+  data.vehicleWaypointsData = convertVehicleIdKeysToVehicleNameKeys(M.state.vehicleWaypointsData)
+  data.nextWpForVehicle = convertVehicleIdKeysToVehicleNameKeys(M.state.nextWpForVehicle)
+  data.waypointBranches = M.state.waypointBranches
+  data.currentWaypointChoice = M.state.currentWaypointChoice
+  data.currentBranch = M.state.currentBranch
   -- dump(data)
   --writeFile("scenario_waypoints.txt", dumps(data))
   return data
@@ -574,23 +560,33 @@ end
 
 local function onDeserialized(data)
   -- log('D', logTag, 'onDeserialized called...')
-  vehicleWaypointsData = convertVehicleNameKeysToVehicleIdKeys(data.vehicleWaypointsData)
-  nextWpForVehicle = convertVehicleNameKeysToVehicleIdKeys(data.nextWpForVehicle)
-  waypointBranches = data.waypointBranches
-  currentWaypointChoice = data.currentWaypointChoice
-  currentBranch = data.currentBranch
+  M.state.vehicleWaypointsData = convertVehicleNameKeysToVehicleIdKeys(data.vehicleWaypointsData)
+  M.state.nextWpForVehicle = convertVehicleNameKeysToVehicleIdKeys(data.nextWpForVehicle)
+  M.state.waypointBranches = data.waypointBranches
+  M.state.currentWaypointChoice = data.currentWaypointChoice
+  M.state.currentBranch = data.currentBranch
 end
 
 local function onVehicleAIStateChanged(data)
-  if data and data.aiControlled == true then
+  if data and data.aiControlled == true and not M.state.vehicleWaypointsData[data.vehicleId] then
     initialiseVehicleData(data.vehicleId)
   end
 end
 
+local function updateResetVehicleData(vehicleId, curWpIndex, nextWpIndex)
+  local vehicleWaypointsData = M.state.vehicleWaypointsData
+  if vehicleWaypointsData and not vehicleWaypointsData[vehicleId] or not curWpIndex then
+    initialiseVehicleData(vehicleId)
+  elseif curWpIndex and nextWpIndex then
+    M.state.vehicleWaypointsData[vehicleId] = { cur = curWpIndex - 1, next = nextWpIndex - 1, lap = 0 }
+    processWaypoint(vehicleId)
+  end
+end
+
+
 -- public interface
 M.onPreRender               = onPreRender
 M.onScenarioVehicleTrigger  = onScenarioVehicleTrigger
-M.onVehicleSwitched         = onVehicleSwitched
 M.onScenarioChange          = onScenarioChange
 M.onRaceStart               = onRaceStart
 M.onScenarioRestarted       = onScenarioRestarted
@@ -605,5 +601,6 @@ M.isFinalWaypoint           = isFinalWaypoint
 M.onSerialize               = onSerialize
 M.onDeserialized            = onDeserialized
 M.onVehicleAIStateChanged   = onVehicleAIStateChanged
+M.updateResetVehicleData    = updateResetVehicleData
 return M
 

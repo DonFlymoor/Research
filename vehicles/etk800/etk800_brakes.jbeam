@@ -2,7 +2,7 @@
 "etk800_brake_F": {
     "information":{
         "authors":"BeamNG",
-        "name":"Front Brakes",
+        "name":"Front Disc Brakes",
         "value":600,
     }
     "slotType" : "etk800_brake_F",
@@ -20,8 +20,7 @@
     "pressureWheels": [
         ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
         //brakes
-
-        {"brakeTorque":2900},
+        {"brakeTorque":3100},
         {"brakeInputSplit":1},
         {"brakeSplitCoef":1},
         {"parkingTorque":0},
@@ -39,7 +38,7 @@
 "etk800_brake_R": {
     "information":{
         "authors":"BeamNG",
-        "name":"Rear Brakes",
+        "name":"Rear Disc Brakes",
         "value":500,
     }
     "slotType" : "etk800_brake_R",
@@ -58,7 +57,7 @@
         ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
         //brakes
 
-        {"brakeTorque":1900},
+        {"brakeTorque":1800},
         {"brakeInputSplit":0.5},
         {"brakeSplitCoef":0.5},
         {"parkingTorque":2000},
@@ -76,7 +75,7 @@
 "etk800_brake_F_tt": {
     "information":{
         "authors":"BeamNG",
-        "name":"ttSport Front Brakes",
+        "name":"ttSport Front Disc Brakes",
         "value":1200,
     }
     "slotType" : "etk800_brake_F",
@@ -113,7 +112,7 @@
 "etk800_brake_R_tt": {
     "information":{
         "authors":"BeamNG",
-        "name":"ttSport Rear Brakes",
+        "name":"ttSport Rear Disc Brakes",
         "value":1100,
     }
     "slotType" : "etk800_brake_R",
@@ -150,7 +149,7 @@
 "etk800_brake_F_race": {
     "information":{
         "authors":"BeamNG",
-        "name":"Race Front Brakes",
+        "name":"Race Front Disc Brakes",
         "value":1600,
     }
     "slotType" : "etk800_brake_F",
@@ -193,7 +192,7 @@
 "etk800_brake_R_race": {
     "information":{
         "authors":"BeamNG",
-        "name":"Race Rear Brakes",
+        "name":"Race Rear Disc Brakes",
         "value":1500,
     }
     "slotType" : "etk800_brake_R",

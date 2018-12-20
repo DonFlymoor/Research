@@ -16,7 +16,7 @@ function test(n)
     for i=0,n,1
     do
         --hp = HighPerfTimer()
-        BeamEngine:update(1/2000, 1/2000)
+        BeamEngine:update(1/2000, 1/2000, 0)
         --print(" - "..hp:stop().-" ms")
     end
 end

@@ -9,6 +9,8 @@ function getSaveFilename( %filespec, %callback, %currentFile, %overwrite )
     else
         %DefaultPathtmp = getUserPath();
 
+    debug("% - getSaveFilename Manager - DefaultPathtmp = " @ %DefaultPathtmp);
+
     %dlg = new SaveFileDialog()
     {
         Filters = %filespec;
@@ -17,8 +19,6 @@ function getSaveFilename( %filespec, %callback, %currentFile, %overwrite )
         ChangePath = false;
         OverwritePrompt = %overwrite;
     };
-
-    if( filePath( %currentFile ) !$= "" )
 
     if( %dlg.Execute() )
     {

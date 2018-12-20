@@ -4,7 +4,8 @@ local logTag = "gamestate"
 M.state = {}
 
 local loadingActive = false
-local waitingForUI = false
+local waitingForUIToBeInitialised = false
+local waitingForUIChangeToLoading = false
 local UIInitialised = false
 -- GameState = GAME (not UI)
 -- This is meant to store if we are in freeroam or campaign etc
@@ -87,6 +88,7 @@ local function showLoadingScreen (tagName, func)
   if first and not loadingActive then
     log('D', logTag, 'sending show loading screen')
     guihooks.trigger('ChangeState', 'loading')
+    waitingForUIChangeToLoading = true
   end
 
   if loadingActive then
@@ -95,9 +97,9 @@ local function showLoadingScreen (tagName, func)
   else
     table.insert(listeners, func)
     log('D', logTag, 'ui initialised (' .. tostring(UIInitialised) .. ')')
-    log('D', logTag, 'waiting for ui (' .. tostring(waitingForUI) .. ')')
+    log('D', logTag, 'waiting for ui (' .. tostring(waitingForUIToBeInitialised) .. ')')
     if not UIInitialised then
-      waitingForUI = true
+      waitingForUIToBeInitialised = true
     end
   end
 end
@@ -138,7 +140,7 @@ local function uiReady ()
   log('D', logTag, 'ui finished loading')
   UIInitialised = true;
 
-  if waitingForUI then
+  if waitingForUIToBeInitialised then
     log('D', logTag, 'wait for ui is over')
     guihooks.trigger('ChangeState', 'loading')
   end
@@ -151,6 +153,24 @@ local function onExtensionLoaded ()
   guihooks.trigger('requestUIInitialised')
   log('D', logTag, 'see if ui is loaded')
 end
+
+-- this code is added to solve an issue when loading screen dont load for some reason
+-- kick listeners after 1 sec of waiting
+local waitingForChangeUI = 0
+local function onUpdate(dtReal, dtSim, dtRaw)
+  if #listeners == 0 or waitingForUIChangeToLoading then
+    waitingForChangeUI = 0
+    return
+  end
+
+  waitingForChangeUI = waitingForChangeUI + math.min(dtReal, 1 / 30)
+  if(waitingForChangeUI > 1) then
+    waitingForChangeUI = 0
+    log('D', logTag, 'Forcing continue without loading screen')
+    loadingScreenActive()
+  end
+end
+-- -------------------------------------------------
 
 -- interface
 M.onDeserialized = onDeserialized
@@ -168,6 +188,7 @@ M.getLoadingStatus = getLoadingStatus -- use this instead
 M.loadingScreenActive = loadingScreenActive
 
 M.onUIInitialised = uiReady
+M.onUpdate = onUpdate
 M.onExtensionLoaded = onExtensionLoaded
 
 return M

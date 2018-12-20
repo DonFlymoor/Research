@@ -6,7 +6,7 @@ local M = {}
 
 local function call(webViewTag, jsMethod, data)
   --print('call(' .. tostring(webViewTag) .. ',' .. tostring(jsMethod) .. ',' .. dumps(data) .. ')')
-  local jsCmd = string.format("%s(%s)", jsMethod, encodeJson(data))
+  local jsCmd = string.format("%s(%s)", jsMethod, jsonEncode(data))
   obj:queueWebViewJS(webViewTag, jsCmd)
 end
 

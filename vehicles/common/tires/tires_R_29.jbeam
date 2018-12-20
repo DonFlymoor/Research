@@ -8,7 +8,7 @@
     "slotType" : "tire_R_15x8",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
+        ["tire_01a_15x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_15x8_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
     ],
     "variables": [
@@ -84,7 +84,7 @@
     "slotType" : "tire_R_15x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.22, "y":0.99, "z":0.99}}],
+        ["tire_01a_16x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.22, "y":0.99, "z":0.99}}],
         ["tire_01a_16x8_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.22, "y":0.99, "z":0.99}}],
     ],
     "variables": [
@@ -160,7 +160,7 @@
     "slotType" : "tire_R_16x8_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
+        ["tire_01a_16x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_16x8_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
     ],
     "variables": [
@@ -236,7 +236,7 @@
     "slotType" : "tire_R_16x8_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_29", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
+        ["tire_01a_16x8_29", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_16x8_29", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
     ],
     "variables": [
@@ -311,7 +311,7 @@
     "slotType" : "tire_R_17x8_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["tire_01a_17x8_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
         ["tire_01a_17x8_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
@@ -387,7 +387,7 @@
     "slotType" : "tire_R_17x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x10_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.99, "y":0.99, "z":0.99}}],
+        ["tire_01a_17x10_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.99, "y":0.99, "z":0.99}}],
         ["tire_01a_17x10_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.99, "y":0.99, "z":0.99}}],
     ],
     "variables": [
@@ -463,7 +463,7 @@
     "slotType" : "tire_R_18x10_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_18x10_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
+        ["tire_01a_18x10_29", ["tire_RR","wheel_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_18x10_29", ["tire_RL","wheel_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
     ],
     "variables": [
@@ -539,7 +539,7 @@
     "slotType" : "tire_R_16x8_dually",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_29", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.47, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
+        ["tire_01a_16x8_29", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.47, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_16x8_29", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.47, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_16x8_29", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.72, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],
         ["tire_01a_16x8_29", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.72, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.99, "z":0.99}}],

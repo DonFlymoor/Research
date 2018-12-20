@@ -4,7 +4,7 @@ angular.module('beamng.apps')
       template:
       `
         <div class="bngApp" style="width:100%; height:100%; padding: 10px; background-color: transparent;">
-          <object style="width:100%; pointer-events: none;" type="image/svg+xml" data="modules/apps/DamageAppEngine/damage_engine.svg"/>
+          <object style="width:100%; pointer-events: none;" type="image/svg+xml" data="modules/apps/DamageAppEngine/damage_engine.svg"></object>
         </div>
       `,
       replace: true,

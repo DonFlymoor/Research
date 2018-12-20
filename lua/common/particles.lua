@@ -94,8 +94,7 @@ local function getMaterialsParticlesTable()
             return {}
         end
 
-
-        local mKey = v.materialID1 .. "_" .. v.materialID2
+        local mKey = v.materialID1 * 10000 + v.materialID2
         if materialsMap[mKey] == nil then
             materialsMap[mKey] = {}
         end

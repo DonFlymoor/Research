@@ -10,8 +10,6 @@ local abs = math.abs
 
 local constants = {rpmToAV = 0.104719755, avToRPM = 9.549296596425384}
 
-local newDesiredGearIndex = 0
-local previousGearIndex = 0
 local gearbox = nil
 local engine = nil
 local torqueConverter = nil
@@ -35,10 +33,29 @@ M.throttleInput = 0
 M.isArcadeSwitched = false
 M.isSportModeActive = false
 
+M.smoothedAvgAVInput = 0
+M.rpm = 0
+M.idleRPM = 0
+M.maxRPM = 0
+
+M.engineThrottle = 0
+M.engineLoad = 0
+M.engineTorque = 0
+M.gearboxTorque = 0
+
+M.ignition = true
+M.isEngineRunning = 0
+
+M.oilTemp = 0
+M.waterTemp = 0
+M.checkEngine = false
+
+M.energyStorages = {}
+
 local automaticHandling = {
-  availableModes = {"P","R", "N", "D", "S", "1", "2", "M"},
+  availableModes = {"P", "R", "N", "D", "S", "1", "2", "M"},
   hShifterModeLookup = {[-1] = "R", [0] = "N", "P", "D", "S", "2", "1", "M1"},
-  cvtGearIndexLookup = {P = -2, R = -1, N = 0, D = 1, S = 2, ["2"] = 3, ["1"]= 4, M1 = 5},
+  cvtGearIndexLookup = {P = -2, R = -1, N = 0, D = 1, S = 2, ["2"] = 3, ["1"] = 4, M1 = 5},
   availableModeLookup = {},
   existingModeLookup = {},
   modeIndexLookup = {},
@@ -46,36 +63,30 @@ local automaticHandling = {
   mode = nil,
   modeIndex = 0,
   maxAllowedGearIndex = 0,
-  minAllowedGearIndex = 0,
+  minAllowedGearIndex = 0
 }
 
 local cvtHandling = {
   aggression = 0.5,
   highAV = 0,
-  lowAV = 0,
+  lowAV = 0
 }
 
 local smoother = {
   --gearRatio smoother reduces oscillations during sharp changes in throttle
   cvtGearRatioSmoother = nil,
   --target smoother represents "driver intent"
-  cvtTargetAVSmoother = nil,
+  cvtTargetAVSmoother = nil
 }
 
 local torqueConverterHandling = {
   lockupAV = 0,
   lockupRange = 0,
   lockupMinGear = 0,
-  hasLockup = false,
+  hasLockup = false
 }
 
 local function getGearName()
-  local modePrefix = ""
-  if automaticHandling.mode == "S" then
-    modePrefix = "S"
-  elseif type(automaticHandling.mode) == "number" then
-    modePrefix = "M"
-  end
   return automaticHandling.mode
 end
 
@@ -85,7 +96,7 @@ end
 
 local function applyGearboxModeRestrictions()
   local manualModeIndex
-  if string.sub(automaticHandling.mode, 1,1) == "M" then
+  if string.sub(automaticHandling.mode, 1, 1) == "M" then
     manualModeIndex = string.sub(automaticHandling.mode, 2)
   end
   local maxGearIndex = gearbox.maxGearIndex
@@ -171,6 +182,21 @@ local function shiftToGearIndex(index)
   applyGearboxModeRestrictions()
 end
 
+local function updateExposedData()
+  M.rpm = engine and (engine.outputAV1 * constants.avToRPM) or 0
+  M.smoothedAvgAVInput = sharedFunctions.updateAvgAVSingleDevice("gearbox")
+  M.waterTemp = (engine and engine.thermals) and (engine.thermals.coolantTemperature and engine.thermals.coolantTemperature or engine.thermals.oilTemperature) or 0
+  M.oilTemp = (engine and engine.thermals) and engine.thermals.oilTemperature or 0
+  M.checkEngine = engine and engine.isDisabled or false
+  M.ignition = engine and not engine.isDisabled or false
+  M.engineThrottle = (engine and engine.isDisabled) and 0 or M.throttle
+  M.engineLoad = engine and (engine.isDisabled and 0 or engine.instantEngineLoad) or 0
+  M.running = engine and not engine.isDisabled or false
+  M.engineTorque = engine and engine.combustionTorque or 0
+  M.gearboxTorque = gearbox and gearbox.outputTorque or 0
+  M.isEngineRunning = engine and ((engine.isStalled or engine.ignitionCoef <= 0) and 0 or 1) or 1
+end
+
 local function updateInGearArcade(dt)
   M.throttle = M.inputValues.throttle
   M.brake = M.inputValues.brake
@@ -184,13 +210,12 @@ local function updateInGearArcade(dt)
   end
 
   --interpolate based on throttle between high/low ranges
-  local throttleCubed = M.throttle * M.throttle * M.throttle
-  local targetAV = cvtHandling.lowAV + (cvtHandling.highAV - cvtHandling.lowAV) * throttleCubed
-  local targetAVSmooth = smoother.cvtTargetAVSmoother:get(targetAV,dt)
+  local targetAV = cvtHandling.lowAV + (cvtHandling.highAV - cvtHandling.lowAV) * M.smoothedValues.drivingAggression
+  local targetAVSmooth = smoother.cvtTargetAVSmoother:get(targetAV, dt)
   local engineAV = engine.outputAV1
-  local avError = ((targetAVSmooth - engineAV)) * cvtHandling.aggression
+  local avError = (targetAVSmooth - engineAV) * cvtHandling.aggression
 
-  gearbox:setGearRatio(smoother.cvtGearRatioSmoother:get(gearbox.gearRatio + avError * dt,dt))
+  gearbox:setGearRatio(smoother.cvtGearRatioSmoother:get(gearbox.gearRatio + avError * dt, dt))
 
   if torqueConverterHandling.hasLockup and gearIndex >= torqueConverterHandling.lockupMinGear then
     electrics.values.lockupClutchRatio = min(max((engineAV - torqueConverterHandling.lockupAV) / torqueConverterHandling.lockupRange, 0), 1)
@@ -216,7 +241,7 @@ local function updateInGearArcade(dt)
         applyGearboxMode()
       end
 
-      if M.smoothedValues.brakeInput > 0.1 and M.inputValues.brake > 0 and M.smoothedValues.throttleInput <= 0 and M.smoothedValues.avgAV <= 0.15 and gearIndex > -1  then
+      if M.smoothedValues.brakeInput > 0.1 and M.inputValues.brake > 0 and M.smoothedValues.throttleInput <= 0 and M.smoothedValues.avgAV <= 0.15 and gearIndex > -1 then
         gearIndex = -1
         M.timer.neutralSelectionDelayTimer = M.timerConstants.neutralSelectionDelay
         automaticHandling.mode = "R"
@@ -231,6 +256,7 @@ local function updateInGearArcade(dt)
   end
 
   M.currentGearIndex = (automaticHandling.mode == "N" or automaticHandling.mode == "P") and 0 or gearIndex
+  updateExposedData()
 end
 
 local function updateInGear(dt)
@@ -240,11 +266,10 @@ local function updateInGear(dt)
 
   local gearIndex = automaticHandling.cvtGearIndexLookup[automaticHandling.mode]
   --interpolate based on throttle between high/low ranges
-  local throttleCubed = automaticHandling.mode ~= "S" and (M.throttle * M.throttle * M.throttle) or 1
-  local targetAV = cvtHandling.lowAV + (cvtHandling.highAV - cvtHandling.lowAV) * throttleCubed
-  local targetAVSmooth = smoother.cvtTargetAVSmoother:get(targetAV,dt)
+  local targetAV = cvtHandling.lowAV + (cvtHandling.highAV - cvtHandling.lowAV) * M.smoothedValues.drivingAggression
+  local targetAVSmooth = smoother.cvtTargetAVSmoother:get(targetAV, dt)
   local engineAV = engine.outputAV1
-  local avError = ((targetAVSmooth - engineAV)) * cvtHandling.aggression
+  local avError = (targetAVSmooth - engineAV) * cvtHandling.aggression
 
   gearbox:setGearRatio(smoother.cvtGearRatioSmoother:get(gearbox.gearRatio + avError * dt, dt))
 
@@ -255,15 +280,20 @@ local function updateInGear(dt)
   end
 
   M.currentGearIndex = (automaticHandling.mode == "N" or automaticHandling.mode == "P") and 0 or gearIndex
+  updateExposedData()
 end
 
-local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPoints, engineDevice, gearboxDevice)
+local function sendTorqueData()
+  if engine then
+    engine:sendTorqueData()
+  end
+end
+
+local function init(jbeamData, sharedFunctionTable)
   sharedFunctions = sharedFunctionTable
-  engine = engineDevice
-  gearbox = gearboxDevice
-  torqueConverter = powertrain.getDevice(expectedDeviceNames.torqueConverter)
-  newDesiredGearIndex = 0
-  previousGearIndex = 0
+  engine = powertrain.getDevice("mainEngine")
+  gearbox = powertrain.getDevice("gearbox")
+  torqueConverter = powertrain.getDevice("torqueConverter")
 
   M.currentGearIndex = 0
   M.throttle = 0
@@ -271,19 +301,17 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   M.clutchRatio = 0
 
   gearboxAvailableLogic = {
-    arcade =
-    {
+    arcade = {
       inGear = updateInGearArcade,
       shiftUp = sharedFunctions.warnCannotShiftSequential,
       shiftDown = sharedFunctions.warnCannotShiftSequential,
-      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior,
+      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior
     },
-    realistic =
-    {
+    realistic = {
       inGear = updateInGear,
       shiftUp = shiftUp,
       shiftDown = shiftDown,
-      shiftToGearIndex = shiftToGearIndex,
+      shiftToGearIndex = shiftToGearIndex
     }
   }
 
@@ -296,7 +324,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   smoother.cvtTargetAVSmoother = newTemporalSmoothingNonLinear(cvtTargetAVSmoothingIn, cvtTargetAVSmoothingOut)
 
   automaticHandling.availableModeLookup = {}
-  for _,v in pairs(automaticHandling.availableModes) do
+  for _, v in pairs(automaticHandling.availableModes) do
     automaticHandling.availableModeLookup[v] = true
   end
 
@@ -306,7 +334,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   local modeCount = #modes
   local modeOffset = 0
   for i = 1, modeCount do
-    local mode = modes:sub(i,i)
+    local mode = modes:sub(i, i)
     if automaticHandling.availableModeLookup[mode] then
       if mode ~= "M" then
         automaticHandling.modes[i + modeOffset] = mode
@@ -314,7 +342,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
         automaticHandling.existingModeLookup[mode] = true
       else
         for j = 1, gearbox.maxGearIndex, 1 do
-          local manualMode = "M"..tostring(j)
+          local manualMode = "M" .. tostring(j)
           local manualModeIndex = i + j - 1
           automaticHandling.modes[manualModeIndex] = manualMode
           automaticHandling.modeIndexLookup[manualMode] = manualModeIndex
@@ -323,7 +351,7 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
         end
       end
     else
-      print("unknown auto mode: "..mode)
+      print("unknown auto mode: " .. mode)
     end
   end
 
@@ -341,11 +369,19 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   automaticHandling.minGearIndex = gearbox.minGearIndex
 
   cvtHandling.aggression = jbeamData.cvtAggression or 0.5
-  cvtHandling.highAV = (jbeamData.cvtHighRPM or (shiftPoints[1] and shiftPoints[1].highShiftUpAV / constants.rpmToAV) or 0) * constants.rpmToAV
-  cvtHandling.lowAV = (jbeamData.cvtLowRPM or (shiftPoints[1] and shiftPoints[1].lowShiftUpAV / constants.rpmToAV) or 0) * constants.rpmToAV
+  local firstGearShiftPoint = sharedFunctions.getShiftPoints()[1]
+  cvtHandling.highAV = (jbeamData.cvtHighRPM or (firstGearShiftPoint and firstGearShiftPoint.highShiftUpAV / constants.rpmToAV) or 0) * constants.rpmToAV
+  cvtHandling.lowAV = (jbeamData.cvtLowRPM or (firstGearShiftPoint and firstGearShiftPoint.lowShiftUpAV / constants.rpmToAV) or 0) * constants.rpmToAV
 
   smoother.cvtGearRatioSmoother:set(gearbox.maxGearRatio)
   smoother.cvtTargetAVSmoother:set(cvtHandling.lowAV)
+
+  M.maxRPM = engine.maxRPM
+  M.idleRPM = engine.idleRPM
+  M.maxGearIndex = automaticHandling.maxGearIndex
+  M.minGearIndex = abs(automaticHandling.minGearIndex)
+  M.energyStorages = sharedFunctions.getEnergyStorages({engine})
+
   applyGearboxMode()
 end
 
@@ -358,5 +394,6 @@ M.shiftToGearIndex = shiftToGearIndex
 M.updateGearboxGFX = nop
 M.getGearName = getGearName
 M.getGearPosition = getGearPosition
+M.sendTorqueData = sendTorqueData
 
 return M

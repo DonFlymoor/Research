@@ -518,28 +518,26 @@ end
 local function getSerializationData(reason)
   if reason == nil then reason = 'reload' end
   local tmp = {}
-  if vmType == 'game' then
-    tmp['extensions'] = M.state
-    local newLoadedModules = {}
-    for k,_ in pairs(M.state.loadedModules) do
-      table.insert(newLoadedModules, k)
-    end
-    tmp['extensions'].loadedModules = newLoadedModules
+  tmp['extensions'] = M.state
+  local newLoadedModules = {}
+  for k,_ in pairs(M.state.loadedModules) do
+    table.insert(newLoadedModules, k)
+  end
+  tmp['extensions'].loadedModules = newLoadedModules
 
-    for i = 1,#resolvedModules do
-      local v = resolvedModules[i]
-      local k = resolvedModuleIndexToName[i]
-      if type(v) == 'table' and (v['onDeserialized'] ~= nil or v['onSerialize'] ~= nil) then
-        if type(v['onSerialize']) == 'function' then
-          -- if serialization function is existing, use that
-          tmp[k] = v['onSerialize'](reason)
-        elseif v['state']  then
-          -- if M.state is existing, use only that
-          tmp[k] = v.state
-        else
-          -- fallback: whole M
-          tmp[k] = v
-        end
+  for i = 1,#resolvedModules do
+    local v = resolvedModules[i]
+    local k = resolvedModuleIndexToName[i]
+    if type(v) == 'table' and (v['onDeserialized'] ~= nil or v['onSerialize'] ~= nil) then
+      if type(v['onSerialize']) == 'function' then
+        -- if serialization function is existing, use that
+        tmp[k] = v['onSerialize'](reason)
+      elseif v['state']  then
+        -- if M.state is existing, use only that
+        tmp[k] = v.state
+      else
+        -- fallback: whole M
+        tmp[k] = v
       end
     end
   end
@@ -548,30 +546,28 @@ end
 
 local function deserialize(data, filter)
   if data == nil then return end
-  if vmType == 'game' then
-    local extensionsData = data['extensions']
-    if extensionsData and extensionsData.loadedModules then
-      load(extensionsData.loadedModules)
-    end
+  local extensionsData = data['extensions']
+  if extensionsData and extensionsData.loadedModules then
+    load(extensionsData.loadedModules)
+  end
 
-    for i = 1,#resolvedModules do
-      local v = resolvedModules[i]
-      local k = resolvedModuleIndexToName[i]
-      --print("k="..tostring(k) .. " = " .. tostring(v))
-      if (filter == nil or k == filter) and type(v) == 'table' and (v['onDeserialized'] ~= nil or v['onDeserialize'] ~= nil) and data[k] ~= nil then
-        if type(v['onDeserialize']) == 'function' then
-          -- having a deserilization function? then use that!
-          v['onDeserialize'](data[k])
-        elseif v['state'] then
-          -- only merge M.state
-          tableMerge(v['state'], data[k])
-        else
-          -- merge whole M
-          tableMerge(v, data[k])
-        end
-        if type(v['onDeserialized']) == 'function' then
-          v['onDeserialized'](data[k])
-        end
+  for i = 1,#resolvedModules do
+    local v = resolvedModules[i]
+    local k = resolvedModuleIndexToName[i]
+    --print("k="..tostring(k) .. " = " .. tostring(v))
+    if (filter == nil or k == filter) and type(v) == 'table' and (v['onDeserialized'] ~= nil or v['onDeserialize'] ~= nil) and data[k] ~= nil then
+      if type(v['onDeserialize']) == 'function' then
+        -- having a deserilization function? then use that!
+        v['onDeserialize'](data[k])
+      elseif v['state'] then
+        -- only merge M.state
+        tableMerge(v['state'], data[k])
+      else
+        -- merge whole M
+        tableMerge(v, data[k])
+      end
+      if type(v['onDeserialized']) == 'function' then
+        v['onDeserialized'](data[k])
       end
     end
   end

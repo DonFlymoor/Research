@@ -12,7 +12,7 @@ end
 this function returns info.json data of specific level
 ]]
 local function getMissionInfo(levelName)
-  return readJsonFile('/levels/' .. levelName..'/info.json')
+  return jsonReadFile('/levels/' .. levelName..'/info.json')
 end
 
 --[[
@@ -27,7 +27,7 @@ local function setDefaultSP(defaultSPName, levelName)
     levelName = getLevelName()
   end
 
-  local data = readJsonFile(settingsFilePath) or {}
+  local data = jsonReadFile(settingsFilePath) or {}
   if not data.levels then
     data.levels = {}
   end
@@ -36,7 +36,7 @@ local function setDefaultSP(defaultSPName, levelName)
   end
 
   data.levels[levelName].defaultSpawnPointName = defaultSPName
-  local res = serializeJsonToFile(settingsFilePath, data, true)
+  local res = jsonWriteFile(settingsFilePath, data, true)
   if not res then
     log('W', "setDefaultSP ", "unable to save default spawnPoint")
   end
@@ -54,7 +54,7 @@ local function loadDefaultSpawnpoint()
   end
 
   levelInfo.spawnPoints = levelInfo.spawnPoints or {}
-  local data = readJsonFile(settingsFilePath) or {}
+  local data = jsonReadFile(settingsFilePath) or {}
   data.levels = data.levels or {}
   data.levels[levelName] = data.levels[levelName] or {}
 

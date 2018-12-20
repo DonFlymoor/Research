@@ -39,8 +39,15 @@
         </div>
 
         <md-subheader class="md-no-sticky">Piece</md-subheader>
+
+          <md-radio-group ng-model="pieceSet.value" layout="row" layout-align="center center" ng-change="pieceSetChange()">
+            <md-radio-button value="hex">Hex</md-radio-button>
+            <md-radio-button value="square"> Square </md-radio-button>
+            <md-radio-button value="free"> Free </md-radio-button>
+          </md-radio-group>
+
         <div layout="row" layout-align="center center">
-          <md-button style="min-width: 40px;"ng-repeat="piece in pieceParameters" ng-click="selectPiece($index)" md-no-ink class="md-raised md-primary" ng-class="$index == selectedBuildPieceIndex ? 'md-accent' : ''" aria-label="Settings" ng-disabled="clearedTrack">
+          <md-button style="min-width: 40px;"ng-repeat="piece in pieceParameters[pieceSet.value]" ng-click="selectPiece($index)" md-no-ink class="md-raised md-primary" ng-class="$index == selectedBuildPieceIndex ? 'md-accent' : ''" aria-label="Settings" ng-disabled="clearedTrack">
             <md-tooltip >{{:: piece.tooltip | translate }}</md-tooltip>
             <div class="container" layout="column" layout-align="center center">
               <div style="position: relative; width: 80%; height: 80%;">
@@ -82,11 +89,12 @@
 
           <md-subheader class="md-no-sticky">Parameters</md-subheader>
           <div layout="column" layout-align="center start">
-            <div layout="column" layout-align="center start" ng-repeat="param in pieceParameters[selectedBuildPieceIndex].parameters | filter: {show: true}">
+            <div layout="column" layout-align="center start" ng-repeat="param in pieceParameters[pieceSet.value][selectedBuildPieceIndex].parameters | filter: {show: true}">
               <md-subheader class="md-no-sticky">{{param.name}}</md-subheader>
               <div layout="row" >
                 <md-input-container>
-                  <input ng-if="param.type == 'number'" type="number" ng-mouseup="parameterChanged($index)" ng-model="param.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+                  <input ng-if="param.type == 'number'" type="number" ng-step="param.stepSize" ng-mouseup="parameterChanged($index)" ng-model="param.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+
                   <md-checkbox md-no-ink ng-if="param.type == 'checkbox'" ng-change="parameterChanged($index)" ng-model="param.value" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
 
                 </md-input-container>
@@ -144,23 +152,23 @@
         <md-list-item layout="column" layout-align="start start"style="padding:0;">
           <md-subheader class="md-no-sticky">Height</md-subheader>
           <div layout="row">
-            <md-button ng-click="modify('elevate', (modifierValues.elevate - 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-10</md-button>
-            <md-button ng-click="modify('elevate', (modifierValues.elevate - 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-5</md-button>
-            <md-button ng-click="modify('elevate', (modifierValues.elevate + 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+5</md-button>
-            <md-button ng-click="modify('elevate', (modifierValues.elevate + 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+10</md-button>
+            <md-button ng-click="modify('height', (modifierValues.height - 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-10</md-button>
+            <md-button ng-click="modify('height', (modifierValues.height - 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">-5</md-button>
+            <md-button ng-click="modify('height', (modifierValues.height + 5))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+5</md-button>
+            <md-button ng-click="modify('height', (modifierValues.height + 10))" md-no-ink class="md-raised md-primary" aria-label="Settings" style="min-width: 40px;max-height: 5px" ng-disabled="clearedTrack">+10</md-button>
             <md-input-container  flex="10">
-              <input type="number" ng-change="modify('elevate', modifierValues.elevate)" ng-model="modifierValues.elevate" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
+              <input type="number" ng-change="modify('height', modifierValues.height)" ng-model="modifierValues.height" aria-label="red" aria-controls="red-slider" ng-disabled="clearedTrack">
             </md-input-container>
 
-            <md-button ng-click="modify('elevate', modifierValues.elevate)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+            <md-button ng-click="modify('height', modifierValues.height)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
               <md-tooltip>{{:: 'ui.trackBuilder.addMarker' | translate }}</md-tooltip>
               <md-icon class="material-icons">adjust</md-icon>
             </md-button>
-            <md-button ng-click="modify('elevate', 0)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+            <md-button ng-click="modify('height', 0)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
               <md-tooltip>{{:: 'ui.trackBuilder.reset' | translate }}</md-tooltip>
               <md-icon class="material-icons">replay</md-icon>
             </md-button>
-            <md-button ng-click="modify('elevate', null)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
+            <md-button ng-click="modify('height', null)" layout-align="end end" md-no-ink class="md-icon-button md-accent" aria-label="Settings" style="width: 30px" ng-disabled="clearedTrack">
               <md-tooltip>{{:: 'ui.trackBuilder.clear' | translate }}</md-tooltip>
               <md-icon class="material-icons">clear</md-icon>
             </md-button>
@@ -195,6 +203,62 @@
             </md-button>
           </div>
         </md-list-item>
+
+      </bng-pane-body>
+    </bng-accordion-pane>
+
+   <bng-accordion-pane is-open="true" style="padding-right: 10px; padding-left: 10px; padding-bottom: 20px" class="md-list-item">
+      <bng-pane-header>
+        <span>Modify</span>
+        <!-- <md-icon class="material-icons">edit_location</md-icon> -->
+        <md-tooltip md-direction="">{{:: 'ui.controls.expandCollapse' | translate}}</md-tooltip>
+      </bng-pane-header>
+
+      <bng-pane-body>
+        <md-list-item layout="row" layout-align="start start"style="padding:0;" >
+          <div layout="column" layout-align="center center">
+            <md-subheader class="md-no-sticky">
+              Left
+            </md-subheader>
+            
+            <md-select ng-model="modifierValues.leftMesh" ng-change="modifyMesh('leftMesh',modifierValues.leftMesh)">
+              <md-option> - </md-option>
+              <md-option ng-repeat="b in meshTypes.border" ng-value="b" >
+                {{b}}
+              </md-option>
+            </md-select>
+          </div>
+          <div layout="column" layout-align=" center">
+            <md-subheader class="md-no-sticky">
+              Center
+            </md-subheader>
+            
+            <md-select ng-model="modifierValues.centerMesh" ng-change="modifyMesh('centerMesh',modifierValues.centerMesh)">
+              <md-option> - </md-option>
+              <md-option ng-repeat="b in meshTypes.center" ng-value="b">
+                {{b}}
+              </md-option>
+            </md-select>
+          </div>
+          <div layout="column" layout-align="center center">
+            <md-subheader class="md-no-sticky">
+              Right
+            </md-subheader>
+            
+            <md-select ng-model="modifierValues.rightMesh" ng-change="modifyMesh('rightMesh',modifierValues.rightMesh)">
+              <md-option> - </md-option>
+              <md-option ng-repeat="b in meshTypes.border" ng-value="b">
+                {{b}}
+              </md-option>
+            </md-select>
+          </div>
+
+
+
+
+        </md-list-item>
+
+        <md-divider></md-divider>
 
       </bng-pane-body>
     </bng-accordion-pane>

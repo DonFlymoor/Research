@@ -18,7 +18,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -39,7 +39,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -84,7 +84,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -107,7 +107,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -153,7 +153,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -176,7 +176,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -221,7 +221,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -244,7 +244,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -289,7 +289,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -312,7 +312,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -357,7 +357,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -380,7 +380,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],
@@ -425,7 +425,7 @@
     ],
     "nodes": [
         ["id", "posX", "posY", "posZ"],
-        {"collision":false},
+        {"collision":true},
         {"selfCollision":true},
         //rear wheels
         {"nodeWeight":5.0},
@@ -448,7 +448,7 @@
         {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
         {"breakGroup":""},
         {"beamDeform":78500,"beamStrength":434000},
-        {"beamSpring":801000,"beamDamp":6},
+        {"beamSpring":1501000,"beamDamp":25},
         //rear wheel
         ["rw1r","rw1rr"],
         ["rw1l","rw1ll"],

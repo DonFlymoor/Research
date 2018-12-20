@@ -2,15 +2,6 @@ local M  = {}
 local logTag = "commands.lua"
 local mustSwitchBack = false
 
-local function getGame()
-  local game = scenetree.findObject("Game")
-  if not game then
-    log('E', logTag, 'Game object does not exist')
-    return nil
-  end
-  return game
-end
-
 local function getCamera(game)
   if not game then
     log('E', logTag, 'need Game object to find Camera')
@@ -24,14 +15,14 @@ local function getCamera(game)
 end
 
 local function setGameCamera()
-  TorqueScript.call("clearCameraRotationalSpeeds")
+  core_camera.clearInputs()
   local game = getGame()
   if not game then return end
   game:setCameraHandler(be:getPlayerVehicle(0))
 end
 
 local function setFreeCamera()
-  TorqueScript.call("clearCameraRotationalSpeeds")
+  core_camera.clearInputs()
   local game = getGame()
   if not game then return end
   local camera = getCamera(game)
@@ -103,11 +94,11 @@ local function toggleCamera(player)
     if isFreeCamera(player) then
       setGameCamera()
       extensions.core_camera.updateUIMessage(player)
-      extensions.hook("onCameraToggled", {cameraType='GameCam'})      
+      extensions.hook("onCameraToggled", {cameraType='GameCam'})
     else
       setFreeCamera()
       ui_message("ui.camera.freecam",  10, "cameramode")
-      extensions.hook("onCameraToggled", {cameraType='FreeCam'})      
+      extensions.hook("onCameraToggled", {cameraType='FreeCam'})
     end
   end
 end
@@ -183,7 +174,7 @@ end
 local function setFreeCameraTransformJson(json)
   setFreeCamera()
 
-  json = readJsonData(json, nil)
+  json = jsonDecode(json, nil)
   if not json then return end
 
   setCameraPosRot(json[1], json[2], json[3], json[4], json[5], json[6], json[7])

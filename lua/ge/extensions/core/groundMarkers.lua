@@ -19,6 +19,116 @@ local color = {}
 local previousWp
 local dist = 0
 
+local intersectionMarker
+local lastPos = nil
+local endOfPath = false
+
+local function onVehicleResetted ()
+  lastPos = nil
+  endOfPath = false
+end
+
+local function setIntesectionMarkerAt(pos, rot)
+  if rot == nil then return end
+  intersectionMarker = scenetree.findObject('Arrow')
+
+  local register = false
+
+  if intersectionMarker == nil then
+    intersectionMarker = createObject('TSStatic')
+    register = true
+  end
+
+  intersectionMarker:setPosition(pos + Point3F(0, 0, 2))
+  local r = quatFromDir(rot:normalized())
+  intersectionMarker:setPosRot(pos.x, pos.y, pos.z + 2, r.x,r.y,r.z,r.w)
+  intersectionMarker.instanceColor = ColorF(color[1], color[2], color[3], 1):asLinear4F()
+  intersectionMarker.hidden = false
+
+  if register then
+    intersectionMarker:setField('collisionType', 0, "Collision Mesh")
+    intersectionMarker:setField('decalType', 0, "Collision Mesh")
+    intersectionMarker:setField('shapeName', 0, "art/shapes/interface/chevron_x3.dae")
+    intersectionMarker.scale = Point3F(1, 1, 1)
+    intersectionMarker.useInstanceRenderData = true
+    intersectionMarker.canSave = false
+    intersectionMarker:registerObject('Arrow')
+  end
+end
+
+local nextPos = nil
+local lastPos = nil
+local pos = nil
+local pickNext = true
+local wp = nil
+
+local function setIntersectionMarkers()
+  local playerVehicle = be:getPlayerVehicle(0)
+
+  if playerVehicle == nil then return end
+
+  local vpos = playerVehicle:getPosition()
+
+  if pos ~= lastPos then
+    setIntesectionMarkerAt(Point3F(pos.x, pos.y, pos.z), ((vec3(pos) - vec3(nextPos)):normalized() ))
+    lastPos = pos
+  end
+
+  pickNext = false
+
+  if wp ~= nil then
+    for k, p in pairs(path) do
+      if (p.pos ~= nil and p.wp ~= nil) then
+        if wp == p.wp then
+          pickNext = true
+        end
+      end
+    end
+  end
+
+  if (vec3(vpos) - vec3(pos)):length() < 1 then
+    pickNext = false
+    endOfPath = false
+  end
+
+  if pickNext or endOfPath then return end
+
+  for k, p in pairs(path) do
+    if (p.pos ~= nil and p.wp ~= nil) then
+      if path[k-1] ~= nil and path[k+1] ~= nil and k > 1 and k < #path then
+        local vec1 = vec3(vec3(p.pos) - vec3(path[k-1].pos)):normalized()
+        local vec2 = vec3(vec3(path[k+1].pos) - vec3(p.pos)):normalized()
+        local dotProd = math.abs(vec2:dot(vec1))
+        local turnLength = math.abs((vec1-vec2):length())
+        local links
+        local linkCount = 0
+        for nk, np in pairs(map.getMap().nodes) do
+          for lk, lp in pairs(np.links) do
+            if nk == p.wp or lk == p.wp then
+              linkCount = linkCount + 1
+            end
+          end
+        end
+
+        if linkCount > 2 and (dotProd < 0.9 or turnLength > 1.5) then
+          nextPos = path[k+1].pos
+          pos = p.pos
+          wp = p.wp
+          pickNext = false
+          return
+        end
+      end
+    end
+  end
+
+  pos = vec3(0, -100, 0) -- TODO not like this
+  wp = nil
+  setIntesectionMarkerAt(Point3F(0, -100, 0), ((vec3(pos) - vec3(nextPos)):normalized() ))
+  if #path > 1 then
+    endOfPath = true
+  end
+end
+
 local function setFocus(wp, step, fStart, fEnd, _endPos, _disableVeh, _color)
   --print(dumps(wp), step, fStart, fEnd, _endPos, _disableVeh)
   endWP = nil
@@ -29,6 +139,8 @@ local function setFocus(wp, step, fStart, fEnd, _endPos, _disableVeh, _color)
   endPos = _endPos
   disableVeh = _disableVeh
   color = _color or {0.2, 0.53, 1}
+
+  --setIntersectionMarkers()
 end
 
 local function getPathLength()
@@ -226,7 +338,12 @@ local function onPreRender(dt)
     data.color.a = math.min(alphaNear, alphaFar)
   end
 
-  Engine.Render.DynamicDecalMgr.addDecals('art/arrow_waypoint_1.dds', decals, decalsSize)
+  Engine.Render.DynamicDecalMgr.addDecals(decals, decalsSize)
+
+  if intersectionMarker ~= nil then
+    local distIM = (vec3Pos - vec3(intersectionMarker:getPosition())):length()
+    intersectionMarker.instanceColor = ColorF(color[1], color[2], color[3], calculateAlpha(distIM/10, 1, 1)):asLinear4F()
+  end
 end
 
 local function onClientEndMission()
@@ -237,8 +354,18 @@ local function onClientEndMission()
   path = {{}}
   pathSize = 0
   decals = {}
+
+  -- clean intersection markers
+  intersectionMarker = scenetree.findObject('Arrow')
+  if not intersectionMarker then
+    return
+  end
+  intersectionMarker.hidden = true
+  lastPos = nil
+  endOfPath = false
 end
 -- public interface
+M.onVehicleResetted = onVehicleResetted
 M.onPreRender = onPreRender
 M.setFocus = setFocus
 M.getPathLength = getPathLength

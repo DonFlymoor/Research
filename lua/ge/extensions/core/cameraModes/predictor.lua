@@ -9,9 +9,7 @@ function C:init(future)
   self.hidden = true
   self.future = future or self.future or 0.1
 end
-function C:onVehicleResetted(...)
-  return true
-end
+
 function C:update(data)
   local curPos = data.res.targetPos
   if self.lastPos == nil then self.lastPos = curPos end

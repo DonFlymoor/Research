@@ -5,8 +5,8 @@
     "control"           : "yaxis"
     },
     {
-    "control"           : "xaxis",
     "action"            : "rotate_camera_hz_mouse",
+    "control"           : "xaxis"
     },
     {
     "action"            : "nodegrabberGrab",
@@ -24,6 +24,14 @@
     "action"            : "changeCameraSpeed",
     "control"           : "alt zaxis"
     },
+    {
+    "action"            : "changeCameraSpeed",
+    "control"           : "alt zaxis"
+    },
+    {
+    "action"            : "cycle_hovered_roads",
+    "control"           : "zaxis"
+    }
   ],
 "name"              : "mouse0",
 "vidpid"            : "6f1d2b60"

@@ -8,8 +8,8 @@
     "slotType" : "tire_R_14x5.5",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.87, "y":0.90, "z":0.90}}],
-        ["tire_01a_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.87, "y":0.90, "z":0.90}}],
+        ["tire_01a_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.81, "y":0.92, "z":0.92}}],
+        ["tire_01a_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.81, "y":0.92, "z":0.92}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
@@ -84,8 +84,8 @@
     "slotType" : "tire_R_14x5.5",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01b_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.87, "y":0.90, "z":0.90}}],
-        ["tire_01b_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.87, "y":0.90, "z":0.90}}],
+        ["tire_01b_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.81, "y":0.92, "z":0.92}}],
+        ["tire_01b_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.81, "y":0.92, "z":0.92}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
@@ -160,8 +160,8 @@
     "slotType" : "tire_R_14x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.90, "y":0.90, "z":0.90}}],
-        ["tire_01a_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.90, "y":0.90, "z":0.90}}],
+        ["tire_01a_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.99, "y":0.91, "z":0.91}}],
+        ["tire_01a_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.99, "y":0.91, "z":0.91}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
@@ -178,7 +178,7 @@
         {"enableTirePeripheryReinfBeams":true},
 
         //general settings
-        {"radius":0.315},
+        {"radius":0.313},
         {"tireWidth":0.175},
 
         //tire options
@@ -236,8 +236,8 @@
     "slotType" : "tire_R_14x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01b_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.90, "y":0.90, "z":0.90}}],
-        ["tire_01b_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.90, "y":0.90, "z":0.90}}],
+        ["tire_01b_15x7_27", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.99, "y":0.91, "z":0.91}}],
+        ["tire_01b_15x7_27", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.99, "y":0.91, "z":0.91}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
@@ -254,7 +254,7 @@
         {"enableTirePeripheryReinfBeams":true},
 
         //general settings
-        {"radius":0.315},
+        {"radius":0.313},
         {"tireWidth":0.175},
 
         //tire options
@@ -312,7 +312,7 @@
     "slotType" : "tire_R_15x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x7_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
+        ["tire_01a_15x7_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
         ["tire_01a_15x7_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -388,7 +388,7 @@
     "slotType" : "tire_R_15x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x7_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
+        ["tire_01a_15x7_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
         ["tire_01a_15x7_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -464,7 +464,7 @@
     "slotType" : "tire_R_15x7_alt",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x7_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
+        ["tire_01a_15x7_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
         ["tire_01a_15x7_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.98, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -483,26 +483,26 @@
 
         //general settings
         {"radius":0.315},
-        {"tireWidth":0.175},
+        {"tireWidth":0.180},
 
         //tire options
         {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":15},
-        {"wheelSideBeamSpringExpansion":441000,"wheelSideBeamDampExpansion":25},
-        {"wheelSideTransitionZone":0.10,"wheelSideBeamPrecompression":0.98},
+        {"wheelSideBeamSpringExpansion":421000,"wheelSideBeamDampExpansion":25},
+        {"wheelSideTransitionZone":0.1,"wheelSideBeamPrecompression":0.98},
 
         {"wheelReinfBeamSpring":41000,"wheelReinfBeamDamp":160},
         {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":261000,"wheelTreadBeamDamp":5},
+        {"wheelTreadBeamSpring":201000,"wheelTreadBeamDamp":50},
         {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":101000,"wheelTreadReinfBeamDamp":60},
+        {"wheelTreadReinfBeamSpring":101000,"wheelTreadReinfBeamDamp":50},
         {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":181000,"wheelPeripheryBeamDamp":25},
-        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.98},
+        {"wheelPeripheryBeamSpring":151000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.99},
 
-        {"wheelPeripheryReinfBeamSpring":91000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":25},
         {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
 
         //general tire values
@@ -518,9 +518,9 @@
         {"treadCoef":0.5},
 
         //advanced friction values
-        {"noLoadCoef":1.5},
-        {"loadSensitivitySlope":0.00018}
-        {"fullLoadCoef":0.45},
+        {"noLoadCoef":1.51},
+        {"loadSensitivitySlope":0.000165}
+        {"fullLoadCoef":0.5},
         {"softnessCoef":0.75},
 
         //deform values
@@ -540,7 +540,7 @@
     "slotType" : "tire_R_15x11",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x11_25_stretched", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["tire_01a_16x11_25_stretched", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
         ["tire_01a_16x11_25_stretched", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
@@ -616,12 +616,12 @@
     "slotType" : "tire_R_15x8",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_15x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
+        ["tire_01a_15x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":1, "z":1}}],
         ["tire_01a_15x8_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$tirepressure_R", "range", "psi", "Wheels", 30, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
+        ["$tirepressure_R", "range", "psi", "Wheels", 28, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
     ],
     "pressureWheels": [
         ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -692,12 +692,12 @@
     "slotType" : "tire_R_15x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_25_wide", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":0.98, "z":0.98}}],
+        ["tire_01a_16x8_25_wide", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.1, "y":0.98, "z":0.98}}],
         ["tire_01a_16x8_25_wide", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":-0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.1, "y":0.98, "z":0.98}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$tirepressure_R", "range", "psi", "Wheels", 30, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
+        ["$tirepressure_R", "range", "psi", "Wheels", 28, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
     ],
     "pressureWheels": [
         ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -715,22 +715,99 @@
 
         //tire options
         {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":15},
-        {"wheelSideBeamSpringExpansion":471000,"wheelSideBeamDampExpansion":35},
-        {"wheelSideTransitionZone":0.12,"wheelSideBeamPrecompression":0.98},
+        {"wheelSideBeamSpringExpansion":461000,"wheelSideBeamDampExpansion":35},
+        {"wheelSideTransitionZone":0.1,"wheelSideBeamPrecompression":0.985},
 
-        {"wheelReinfBeamSpring":46000,"wheelReinfBeamDamp":180},
+        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":160},
         {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":301000,"wheelTreadBeamDamp":65},
+        {"wheelTreadBeamSpring":341000,"wheelTreadBeamDamp":65},
         {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":81000,"wheelTreadReinfBeamDamp":75},
+        {"wheelTreadReinfBeamSpring":111000,"wheelTreadReinfBeamDamp":75},
         {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
         {"wheelPeripheryBeamSpring":201000,"wheelPeripheryBeamDamp":35},
         {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.98},
 
-        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":35},
+        {"wheelPeripheryReinfBeamSpring":151000,"wheelPeripheryReinfBeamDamp":35},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
+
+        //general tire values
+        {"nodeWeight":0.17},
+        {"nodeMaterial":"|NM_RUBBER"},
+        {"triangleCollision":false},
+        {"pressurePSI":"$tirepressure_R"},
+        {"dragCoef":5},
+
+        //groundmodel friction multipliers
+        {"frictionCoef":1.0},
+        {"slidingFrictionCoef":1.0},
+        //{"stribeckVelMult":0.6},
+        {"treadCoef":0.5},
+
+        //advanced friction values
+        {"noLoadCoef":1.52},
+        {"loadSensitivitySlope":0.00016}
+        {"fullLoadCoef":0.55},
+        {"softnessCoef":0.8},
+
+        //deform values
+        {"wheelSideBeamDeform":15000,"wheelSideBeamStrength":20000},
+        {"wheelReinfBeamDeform":101000,"wheelReinfBeamStrength":101000},
+        {"wheelTreadBeamDeform":11000,"wheelTreadBeamStrength":14000},
+        {"wheelTreadReinfBeamDeform":11000,"wheelTreadReinfBeamStrength":14000},
+        {"wheelPeripheryBeamDeform":101000,"wheelPeripheryBeamStrength":101000},
+    ],
+},
+"tire_R_245_50_15_alt_sport": {
+    "information":{
+        "authors":"BeamNG",
+        "name":"245/50R15 Sport Rear Tires",
+        "value":190,
+    },
+    "slotType" : "tire_R_15x10",
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["tire_01a_16x10_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.98, "z":0.98}}],
+        ["tire_01a_16x10_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
+        ["$tirepressure_R", "range", "psi", "Wheels", 27, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
+    ],
+    "pressureWheels": [
+        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
+        {"disableMeshBreaking":false,"disableHubMeshBreaking":false},
+        {"hasTire":true},
+        {"enableTireReinfBeams":false},
+        {"enableTireLbeams":true},
+        {"enableTireSideReinfBeams":false},
+        {"enableTreadReinfBeams":true},
+        {"enableTirePeripheryReinfBeams":true},
+
+        //general settings
+        {"radius":0.315},
+        {"tireWidth":0.225},
+
+        //tire options
+        {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":15},
+        {"wheelSideBeamSpringExpansion":461000,"wheelSideBeamDampExpansion":25},
+        {"wheelSideTransitionZone":0.1,"wheelSideBeamPrecompression":0.98},
+
+        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":160},
+        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
+
+        {"wheelTreadBeamSpring":341000,"wheelTreadBeamDamp":65},
+        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
+
+        {"wheelTreadReinfBeamSpring":111000,"wheelTreadReinfBeamDamp":65},
+        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.97},
+
+        {"wheelPeripheryBeamSpring":151000,"wheelPeripheryBeamDamp":35},
+        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.975},
+
+        {"wheelPeripheryReinfBeamSpring":201000,"wheelPeripheryReinfBeamDamp":35},
         {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
 
         //general tire values
@@ -746,8 +823,8 @@
         {"treadCoef":0.5},
 
         //advanced friction values
-        {"noLoadCoef":1.56},
-        {"loadSensitivitySlope":0.000164}
+        {"noLoadCoef":1.54},
+        {"loadSensitivitySlope":0.000158}
         {"fullLoadCoef":0.55},
         {"softnessCoef":0.8},
 
@@ -768,7 +845,7 @@
     "slotType" : "tire_R_16x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":1, "z":1}}],
+        ["tire_01a_16x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.96, "y":1, "z":1}}],
         ["tire_01a_16x8_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":1, "z":1}}],
     ],
     "variables": [
@@ -844,7 +921,7 @@
     "slotType" : "tire_R_16x8",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
+        ["tire_01a_16x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.98, "z":0.98}}],
         ["tire_01a_16x8_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -920,7 +997,7 @@
     "slotType" : "tire_R_17x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
+        ["tire_01a_17x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.98, "z":0.98}}],
         ["tire_01a_17x8_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -942,11 +1019,11 @@
         {"tireWidth":0.195},
 
         //tire options
-        {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":25},
+        {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":15},
         {"wheelSideBeamSpringExpansion":401000,"wheelSideBeamDampExpansion":25},
-        {"wheelSideTransitionZone":0.1,"wheelSideBeamPrecompression":0.99},
+        {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":175},
+        {"wheelReinfBeamSpring":28000,"wheelReinfBeamDamp":170},
         {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
         {"wheelTreadBeamSpring":261000,"wheelTreadBeamDamp":55},
@@ -958,8 +1035,8 @@
         {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":25},
         {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.98},
 
-        {"wheelPeripheryReinfBeamSpring":81000,"wheelPeripheryReinfBeamDamp":25},
-        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.0},
+        {"wheelPeripheryReinfBeamSpring":101000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.02},
 
         //general tire values
         {"nodeWeight":0.15},
@@ -975,7 +1052,7 @@
 
         //advanced friction values
         {"noLoadCoef":1.55},
-        {"loadSensitivitySlope":0.0002}
+        {"loadSensitivitySlope":0.00019}
         {"fullLoadCoef":0.5},
         {"softnessCoef":0.7},
 
@@ -996,7 +1073,7 @@
     "slotType" : "tire_R_17x7",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
+        ["tire_01a_17x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.98, "z":0.98}}],
         ["tire_01a_17x8_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -1018,7 +1095,7 @@
         {"tireWidth":0.195},
 
         //tire options
-        {"wheelSideBeamSpring":21000,"wheelSideBeamDamp":45},
+        {"wheelSideBeamSpring":16000,"wheelSideBeamDamp":45},
         {"wheelSideBeamSpringExpansion":441000,"wheelSideBeamDampExpansion":45},
         {"wheelSideTransitionZone":0.06,"wheelSideBeamPrecompression":0.98},
 
@@ -1045,14 +1122,14 @@
         {"dragCoef":5},
 
         //groundmodel friction multipliers
-        {"frictionCoef":1.2},
-        {"slidingFrictionCoef":1.2},
+        {"frictionCoef":1.05},
+        {"slidingFrictionCoef":1.15},
         {"treadCoef":0.8},
 
         //advanced friction values
-        {"noLoadCoef":1.36},
-        {"loadSensitivitySlope":0.00018}
-        {"fullLoadCoef":0.45},
+        {"noLoadCoef":1.09},
+        {"loadSensitivitySlope":0.00004}
+        {"fullLoadCoef":0.55},
         {"softnessCoef":1.0},
 
         //deform values
@@ -1072,7 +1149,7 @@
     "slotType" : "tire_R_17x8",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
+        ["tire_01a_17x8_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1, "y":0.98, "z":0.98}}],
         ["tire_01a_17x8_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -1148,7 +1225,7 @@
     "slotType" : "tire_R_17x8.5",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1 "y":1, "z":1}}],
+        ["tire_01a_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1 "y":1, "z":1}}],
         ["tire_01a_17x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":1, "z":1}}],
     ],
     "variables": [
@@ -1174,10 +1251,10 @@
         {"wheelSideBeamSpringExpansion":441000,"wheelSideBeamDampExpansion":25},
         {"wheelSideTransitionZone":0.1,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":25000,"wheelReinfBeamDamp":180},
+        {"wheelReinfBeamSpring":33000,"wheelReinfBeamDamp":170},
         {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":221000,"wheelTreadBeamDamp":65},
+        {"wheelTreadBeamSpring":241000,"wheelTreadBeamDamp":65},
         {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
         {"wheelTreadReinfBeamSpring":181000,"wheelTreadReinfBeamDamp":65},
@@ -1187,7 +1264,7 @@
         {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.98},
 
         {"wheelPeripheryReinfBeamSpring":181000,"wheelPeripheryReinfBeamDamp":25},
-        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.0},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.02},
 
         //general tire values
         {"nodeWeight":0.16},
@@ -1203,7 +1280,7 @@
 
         //advanced friction values
         {"noLoadCoef":1.57},
-        {"loadSensitivitySlope":0.00018}
+        {"loadSensitivitySlope":0.00017}
         {"fullLoadCoef":0.5},
         {"softnessCoef":0.7},
 
@@ -1224,7 +1301,7 @@
     "slotType" : "tire_R_17x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":0.98, "z":0.98}}],
+        ["tire_01a_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.0, "y":0.98, "z":0.98}}],
         ["tire_01a_17x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.0, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -1300,7 +1377,7 @@
     "slotType" : "tire_R_17x9",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01f_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.02, "y":0.98, "z":0.98}}],
+        ["tire_01f_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.02, "y":0.98, "z":0.98}}],
         ["tire_01f_17x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.50, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.02, "y":0.98, "z":0.98}}],
     ],
     "variables": [
@@ -1375,7 +1452,7 @@
     "slotType" : "tire_R_17x10",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.11, "y":1, "z":1}}],
+        ["tire_01a_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.11, "y":1, "z":1}}],
         ["tire_01a_17x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.11, "y":1, "z":1}}],
     ],
     "variables": [
@@ -1450,7 +1527,7 @@
     "slotType" : "tire_R_17x10",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01f_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.11, "y":1.0, "z":1.0}}],
+        ["tire_01f_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.11, "y":1.0, "z":1.0}}],
         ["tire_01f_17x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.11, "y":1.0, "z":1.0}}],
     ],
     "variables": [
@@ -1526,7 +1603,7 @@
     "slotType" : "tire_R_18x8",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_18x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":1, "z":1}}],
+        ["tire_01a_18x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.96, "y":1, "z":1}}],
         ["tire_01a_18x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":1, "z":1}}],
     ],
     "variables": [
@@ -1561,11 +1638,11 @@
         {"wheelTreadReinfBeamSpring":121000,"wheelTreadReinfBeamDamp":45},
         {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":25},
         {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.985},
 
-        {"wheelPeripheryReinfBeamSpring":161000,"wheelPeripheryReinfBeamDamp":25},
-        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.003}
+        {"wheelPeripheryReinfBeamSpring":141000,"wheelPeripheryReinfBeamDamp":25},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.01}
 
         //general tire values
         {"nodeWeight":0.16},
@@ -1602,7 +1679,7 @@
     "slotType" : "tire_R_18x8",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01f_18x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":1, "z":1}}],
+        ["tire_01f_18x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.96, "y":1, "z":1}}],
         ["tire_01f_18x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.48, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.96, "y":1, "z":1}}],
     ],
     "variables": [
@@ -1678,12 +1755,12 @@
     "slotType" : "tire_R_18x11",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_18x11_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
+        ["tire_01a_18x11_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
         ["tire_01a_18x11_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$tirepressure_R", "range", "psi", "Wheels", 30, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
+        ["$tirepressure_R", "range", "psi", "Wheels", 32, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
     ],
     "pressureWheels": [
         ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
@@ -1701,26 +1778,26 @@
 
         //tire options
         {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":15},
-        {"wheelSideBeamSpringExpansion":481000,"wheelSideBeamDampExpansion":35},
+        {"wheelSideBeamSpringExpansion":501000,"wheelSideBeamDampExpansion":35},
         {"wheelSideTransitionZone":0.08,"wheelSideBeamPrecompression":0.99},
 
-        {"wheelReinfBeamSpring":41000,"wheelReinfBeamDamp":185},
+        {"wheelReinfBeamSpring":31000,"wheelReinfBeamDamp":170},
         {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
 
-        {"wheelTreadBeamSpring":281000,"wheelTreadBeamDamp":55},
+        {"wheelTreadBeamSpring":301000,"wheelTreadBeamDamp":55},
         {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
 
-        {"wheelTreadReinfBeamSpring":181000,"wheelTreadReinfBeamDamp":45},
+        {"wheelTreadReinfBeamSpring":201000,"wheelTreadReinfBeamDamp":45},
         {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
 
-        {"wheelPeripheryBeamSpring":121000,"wheelPeripheryBeamDamp":25},
+        {"wheelPeripheryBeamSpring":141000,"wheelPeripheryBeamDamp":25},
         {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.98},
 
         {"wheelPeripheryReinfBeamSpring":181000,"wheelPeripheryReinfBeamDamp":25},
-        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.003},
+        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":1.01},
 
         //general tire values
-        {"nodeWeight":0.17},
+        {"nodeWeight":0.175},
         {"nodeMaterial":"|NM_RUBBER"},
         {"triangleCollision":false},
         {"pressurePSI":"$tirepressure_R"},
@@ -1732,10 +1809,10 @@
         {"treadCoef":0.5},
 
         //advanced friction values
-        {"noLoadCoef":1.565},
+        {"noLoadCoef":1.575},
         {"loadSensitivitySlope":0.000145}
         {"fullLoadCoef":0.5},
-        {"softnessCoef":0.7},
+        {"softnessCoef":0.75},
 
         //deform values
         {"wheelSideBeamDeform":17000,"wheelSideBeamStrength":22000},
@@ -1754,7 +1831,7 @@
     "slotType" : "tire_R_18x11",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01f_18x11_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
+        ["tire_01f_18x11_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
         ["tire_01f_18x11_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
     ],
     "variables": [
@@ -1906,7 +1983,7 @@
     "slotType" : "tire_R_19x11",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_19x11_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
+        ["tire_01a_19x11_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
         ["tire_01a_19x11_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.475, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":0.9, "y":1.0, "z":1.0}}],
     ],
     "variables": [
@@ -1973,82 +2050,6 @@
         {"wheelPeripheryBeamDeform":101000,"wheelPeripheryBeamStrength":101000},
     ],
 },
-"tire_R_245_50_15_alt_sport": {
-    "information":{
-        "authors":"BeamNG",
-        "name":"245/50R15 Sport Rear Tires",
-        "value":190,
-    },
-    "slotType" : "tire_R_15x10",
-    "flexbodies": [
-        ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01a_16x10_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
-        ["tire_01a_16x10_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.54, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1, "y":0.98, "z":0.98}}],
-    ],
-    "variables": [
-        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"],
-        ["$tirepressure_R", "range", "psi", "Wheels", 30, 0, 50, "Tire Pressure", "Relative to atmospheric pressure", {"subCategory":"Rear"}],
-    ],
-    "pressureWheels": [
-        ["name","hubGroup","group","node1:","node2:","nodeS","nodeArm:","wheelDir"],
-        {"disableMeshBreaking":false,"disableHubMeshBreaking":false},
-        {"hasTire":true},
-        {"enableTireReinfBeams":false},
-        {"enableTireLbeams":true},
-        {"enableTireSideReinfBeams":false},
-        {"enableTreadReinfBeams":true},
-        {"enableTirePeripheryReinfBeams":true},
-
-        //general settings
-        {"radius":0.315},
-        {"tireWidth":0.225},
-
-        //tire options
-        {"wheelSideBeamSpring":5100,"wheelSideBeamDamp":15},
-        {"wheelSideBeamSpringExpansion":471000,"wheelSideBeamDampExpansion":35},
-        {"wheelSideTransitionZone":0.12,"wheelSideBeamPrecompression":0.98},
-
-        {"wheelReinfBeamSpring":46000,"wheelReinfBeamDamp":185},
-        {"wheelReinfBeamDampCutoffHz":500,"wheelReinfBeamPrecompression":0.99},
-
-        {"wheelTreadBeamSpring":301000,"wheelTreadBeamDamp":65},
-        {"wheelTreadBeamDampCutoffHz":500,"wheelTreadBeamPrecompression":0.99},
-
-        {"wheelTreadReinfBeamSpring":81000,"wheelTreadReinfBeamDamp":75},
-        {"wheelTreadReinfBeamDampCutoffHz":500,"wheelTreadReinfBeamPrecompression":0.99},
-
-        {"wheelPeripheryBeamSpring":201000,"wheelPeripheryBeamDamp":30},
-        {"wheelPeripheryBeamDampCutoffHz":500,"wheelPeripheryBeamPrecompression":0.98},
-
-        {"wheelPeripheryReinfBeamSpring":121000,"wheelPeripheryReinfBeamDamp":30},
-        {"wheelPeripheryReinfBeamDampCutoffHz":500,"wheelPeripheryReinfBeamPrecompression":0.99},
-
-        //general tire values
-        {"nodeWeight":0.17},
-        {"nodeMaterial":"|NM_RUBBER"},
-        {"triangleCollision":false},
-        {"pressurePSI":"$tirepressure_R"},
-        {"dragCoef":5},
-
-        //groundmodel friction multipliers
-        {"frictionCoef":1.0},
-        {"slidingFrictionCoef":1.0},
-        {"treadCoef":0.5},
-
-        //advanced friction values
-        {"noLoadCoef":1.56},
-        {"loadSensitivitySlope":0.000164}
-        {"fullLoadCoef":0.55},
-        {"softnessCoef":0.8},
-
-        //deform values
-        {"wheelSideBeamDeform":15000,"wheelSideBeamStrength":20000},
-        {"wheelReinfBeamDeform":101000,"wheelReinfBeamStrength":101000},
-        {"wheelTreadBeamDeform":11000,"wheelTreadBeamStrength":14000},
-        {"wheelTreadReinfBeamDeform":11000,"wheelTreadReinfBeamStrength":14000},
-        {"wheelPeripheryBeamDeform":101000,"wheelPeripheryBeamStrength":101000},
-    ],
-},
 "tire_R_285_35_17_race": {
     "information":{
         "authors":"BeamNG",
@@ -2058,7 +2059,7 @@
     "slotType" : "tire_R_17x12",
     "flexbodies": [
         ["mesh", "[group]:", "nonFlexMaterials"],
-        ["tire_01f_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.22, "y":1, "z":1}}],
+        ["tire_01f_17x9_25", ["wheel_RR","tire_RR"], [], {"pos":{"x":-0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":180}, "scale":{"x":1.22, "y":1, "z":1}}],
         ["tire_01f_17x9_25", ["wheel_RL","tire_RL"], [], {"pos":{"x": 0.52, "y":0.0, "z":0.0}, "rot":{"x":0, "y":0, "z":0}, "scale":{"x":1.22, "y":1, "z":1}}],
     ],
     "variables": [

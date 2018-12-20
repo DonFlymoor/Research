@@ -12,7 +12,6 @@ local fsign = fsign
 local constants = {rpmToAV = 0.104719755, avToRPM = 9.549296596425384}
 
 local newDesiredGearIndex = 0
-local previousGearIndex = 0
 local gearbox = nil
 local engine = nil
 
@@ -35,10 +34,29 @@ M.clutchRatio = 0
 M.isArcadeSwitched = false
 M.isSportModeActive = false
 
+M.smoothedAvgAVInput = 0
+M.rpm = 0
+M.idleRPM = 0
+M.maxRPM = 0
+
+M.engineThrottle = 0
+M.engineLoad = 0
+M.engineTorque = 0
+M.gearboxTorque = 0
+
+M.ignition = true
+M.isEngineRunning = 0
+
+M.oilTemp = 0
+M.waterTemp = 0
+M.checkEngine = false
+
+M.energyStorages = {}
+
 local clutchHandling = {
   clutchLaunchTargetAV = 0,
   clutchLaunchStartAV = 0,
-  clutchLaunchIFactor = 0,
+  clutchLaunchIFactor = 0
 }
 
 local function getGearName()
@@ -62,59 +80,71 @@ local function gearboxBehaviorChanged(behavior)
 end
 
 local function shiftUp()
-  local previousGearIndex = gearbox.gearIndex
+  local prevGearIndex = gearbox.gearIndex
   local gearIndex = newDesiredGearIndex == 0 and gearbox.gearIndex + 1 or newDesiredGearIndex + 1
   gearIndex = min(max(gearIndex, gearbox.minGearIndex), gearbox.maxGearIndex)
 
   if M.gearboxHandling.gearboxSafety then
     local gearRatio = gearbox.gearRatios[newDesiredGearIndex]
     if gearbox.outputAV1 * gearRatio > engine.maxAV then
-      gearIndex = previousGearIndex
+      gearIndex = prevGearIndex
     end
   end
 
   if gearbox.gearIndex ~= gearIndex then
     newDesiredGearIndex = gearIndex
-    previousGearIndex = gearbox.gearIndex
-    M.updateGearboxGFX  = gearboxLogic.whileShifting
+    M.updateGearboxGFX = gearboxLogic.whileShifting
   end
 end
 
 local function shiftDown()
-  local previousGearIndex = gearbox.gearIndex
+  local prevGearIndex = gearbox.gearIndex
   local gearIndex = newDesiredGearIndex == 0 and gearbox.gearIndex - 1 or newDesiredGearIndex - 1
   gearIndex = min(max(gearIndex, gearbox.minGearIndex), gearbox.maxGearIndex)
 
   if M.gearboxHandling.gearboxSafety then
     local gearRatio = gearbox.gearRatios[gearIndex]
     if gearbox.outputAV1 * gearRatio > engine.maxAV then
-      gearIndex = previousGearIndex
+      gearIndex = prevGearIndex
     end
   end
 
   if gearbox.gearIndex ~= gearIndex then
     newDesiredGearIndex = gearIndex
-    previousGearIndex = gearbox.gearIndex
     M.updateGearboxGFX = gearboxLogic.whileShifting
   end
 end
 
 local function shiftToGearIndex(index)
-  local previousGearIndex = gearbox.gearIndex
+  local prevGearIndex = gearbox.gearIndex
   local gearIndex = min(max(index, gearbox.minGearIndex), gearbox.maxGearIndex)
 
   if M.gearboxHandling.gearboxSafety then
     local gearRatio = gearbox.gearRatios[index]
     if gearbox.outputAV1 * gearRatio > engine.maxAV then
-      gearIndex = previousGearIndex
+      gearIndex = prevGearIndex
     end
   end
 
   if gearbox.gearIndex ~= gearIndex then
     newDesiredGearIndex = gearIndex
-    previousGearIndex = gearbox.gearIndex
     M.updateGearboxGFX = gearboxLogic.whileShifting
   end
+end
+
+local function updateExposedData()
+  M.rpm = engine and (engine.outputAV1 * constants.avToRPM) or 0
+  M.smoothedAvgAVInput = sharedFunctions.updateAvgAVSingleDevice("gearbox")
+  M.waterTemp = (engine and engine.thermals) and (engine.thermals.coolantTemperature and engine.thermals.coolantTemperature or engine.thermals.oilTemperature) or 0
+  M.oilTemp = (engine and engine.thermals) and engine.thermals.oilTemperature or 0
+  M.checkEngine = engine and engine.isDisabled or false
+  M.ignition = engine and not engine.isDisabled or false
+  M.engineThrottle = (engine and engine.isDisabled) and 0 or M.throttle
+  M.engineLoad = engine and (engine.isDisabled and 0 or engine.instantEngineLoad) or 0
+  M.running = engine and not engine.isDisabled or false
+  M.engineTorque = engine and engine.combustionTorque or 0
+  M.gearboxTorque = gearbox and gearbox.outputTorque or 0
+  M.isEngineRunning = engine and ((engine.isStalled or engine.ignitionCoef <= 0) and 0 or 1) or 1
 end
 
 local function updateInGearArcade(dt)
@@ -194,7 +224,6 @@ local function updateInGearArcade(dt)
 
   if gearbox.gearIndex ~= gearIndex then
     newDesiredGearIndex = gearIndex
-    previousGearIndex = gearbox.gearIndex
     M.updateGearboxGFX = gearboxLogic.whileShifting
   end
 
@@ -220,11 +249,12 @@ local function updateInGearArcade(dt)
 
   --always prevent stalling
   if abs(gearbox.outputAV1 * gearbox.gearRatio) < engine.idleAV then
-    local stallPrevent = min(max((engine.outputAV1 * 0.95 - engine.idleAV ) / (engine.idleAV * 0.1), 0), 1)
+    local stallPrevent = min(max((engine.outputAV1 * 0.95 - engine.idleAV) / (engine.idleAV * 0.1), 0), 1)
     M.clutchRatio = min(M.clutchRatio, stallPrevent * stallPrevent)
   end
 
   M.currentGearIndex = gearIndex
+  updateExposedData()
 end
 
 local function updateWhileShiftingArcade(dt)
@@ -243,9 +273,9 @@ local function updateWhileShiftingArcade(dt)
 
   gearbox:setGearIndex(newDesiredGearIndex)
   newDesiredGearIndex = 0
-  previousGearIndex = 0
   M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
   M.updateGearboxGFX = gearboxLogic.inGear
+  updateExposedData()
 end
 
 local function updateInGear(dt)
@@ -291,6 +321,7 @@ local function updateInGear(dt)
     M.clutchRatio = 1 - M.inputValues.clutch
   end
   M.currentGearIndex = gearbox.gearIndex
+  updateExposedData()
 end
 
 local function updateWhileShifting(dt)
@@ -299,22 +330,27 @@ local function updateWhileShifting(dt)
   M.throttle = M.inputValues.throttle
   M.isArcadeSwitched = false
   if newDesiredGearIndex > gearbox.gearIndex and gearbox.gearIndex ~= 0 then
-    engine:cutIgnition(0.02)
+    engine:cutIgnition(0.15)
   end
 
   gearbox:setGearIndex(newDesiredGearIndex)
   newDesiredGearIndex = 0
-  previousGearIndex = 0
   M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
   M.updateGearboxGFX = gearboxLogic.inGear
+  updateExposedData()
 end
 
-local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPoints, engineDevice, gearboxDevice)
+local function sendTorqueData()
+  if engine then
+    engine:sendTorqueData()
+  end
+end
+
+local function init(jbeamData, sharedFunctionTable)
   sharedFunctions = sharedFunctionTable
-  engine = engineDevice
-  gearbox = gearboxDevice
+  engine = powertrain.getDevice("mainEngine")
+  gearbox = powertrain.getDevice("gearbox")
   newDesiredGearIndex = 0
-  previousGearIndex = 0
 
   M.currentGearIndex = 0
   M.throttle = 0
@@ -322,27 +358,31 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   M.clutchRatio = 0
 
   gearboxAvailableLogic = {
-    arcade =
-    {
+    arcade = {
       inGear = updateInGearArcade,
       whileShifting = updateWhileShiftingArcade,
       shiftUp = sharedFunctions.warnCannotShiftSequential,
       shiftDown = sharedFunctions.warnCannotShiftSequential,
-      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior,
+      shiftToGearIndex = sharedFunctions.switchToRealisticBehavior
     },
-    realistic =
-    {
+    realistic = {
       inGear = updateInGear,
       whileShifting = updateWhileShifting,
       shiftUp = shiftUp,
       shiftDown = shiftDown,
-      shiftToGearIndex = shiftToGearIndex,
+      shiftToGearIndex = shiftToGearIndex
     }
   }
 
   clutchHandling.clutchLaunchTargetAV = (jbeamData.clutchLaunchTargetRPM or 3000) * constants.rpmToAV * 0.5
   clutchHandling.clutchLaunchStartAV = ((jbeamData.clutchLaunchStartRPM or 2000) * constants.rpmToAV - engine.idleAV) * 0.5
   clutchHandling.clutchLaunchIFactor = 0
+
+  M.maxRPM = engine.maxRPM
+  M.idleRPM = engine.idleRPM
+  M.maxGearIndex = gearbox.maxGearIndex
+  M.minGearIndex = abs(gearbox.minGearIndex)
+  M.energyStorages = sharedFunctions.getEnergyStorages({engine})
 end
 
 M.init = init
@@ -354,5 +394,6 @@ M.shiftToGearIndex = shiftToGearIndex
 M.updateGearboxGFX = nop
 M.getGearName = getGearName
 M.getGearPosition = getGearPosition
+M.sendTorqueData = sendTorqueData
 
 return M

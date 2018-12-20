@@ -5,8 +5,21 @@
 <div ng-cloak class="container select" bng-nav-root root-nav-actions="{up: {cmd: 'up()', navigation: true}, down: {cmd: 'down()', navigation: true}, left: {cmd: 'left()', navigation: true}, right: {cmd: 'right()', navigation: true}}">
   <div class="container" style="left: 16px; right: 16px;" bng-nav-item bng-nav-default-focus="true" item-nav-actions="{confirm: {cmd: 'confirm()', name: 'ui.actions.spawn', navigation: false}}">
     <bng-grid rows="9" cols="16" class="filler">
-      <bng-grid-item col="3" row="2" colspan="13" rowspan="6" layout="row" layout-align="center stretch" class="info">
 
+      <bng-grid-item col="1" row="8" colspan="2" rowspan="2" class="color2">
+        <gp-circle style="position: absolute; top: calc(50% - 10px); left: calc(50% - 10px);"></gp-circle>
+        <!-- 10px = 1/2 circle dim
+          30px = one extra side of the gradient
+          34px = arrow height
+          2.5px = 1/2 gradient height -->
+        <gp-gradient style="position: absolute; bottom: calc(50% + 15px); left: calc(50% - 2.5px); height: calc(7%);" orientation="vertical" reverse="true"></gp-gradient>
+        <gp-gradient style="position: absolute; left: calc(50% + 15px); top: calc(50% - 2.5px); width: calc(10%);"></gp-gradient>
+        <!-- <div style="width: 10%; height: 7%; left: calc(50% - 1.5px); bottom: calc(50% - 1.5px); position: absolute;">
+          <gp-gradient-corner horizontal="'bottom'" vertical="'left'" active="false"></gp-gradient-corner>
+        </div> -->
+      </bng-grid-item>
+
+      <bng-grid-item col="3" row="2" colspan="13" rowspan="6" layout="row" layout-align="center stretch" class="info">
         <gp-panel navigatable="false" class="filler infoPanelLeft" rotated="true" part="true" style="width: 250px;">
           <div class="filler" layout="column" layout-align="space-between start" style="min-height: 400px; max-height: 600px; direction: ltr;">
             <div ng-repeat="key in gpSelect.overviewKeylist track by $index" ng-if="gpSelect.showData(key, false)" layout="column" class="infoItem font1 color1">
@@ -42,7 +55,7 @@
               </div>
 
               <div ng-if="gpSelect.getCurrentConfig().aggregates.Source['BeamNG - Official']" class="color1" style="position: absolute; bottom: 10px; left: 10px;" layout="row" layout-align="center center">
-                <bng-icon style="margin-right: 8px; width: 22px; height: 22px; position: relative;" src="'general_beamng_logo_bw'" type="sprite"></bng-icon>
+                <bng-icon style="margin-right: 8px; width: 22px; height: 22px; position: relative;" src="'general_beamng_logo_w'" type="sprite"></bng-icon>
                 <span class="font2 color1">{{:: 'ui.common.official' | translate}}</span>
               </div>
 
@@ -88,18 +101,6 @@
         <gp-img-list horizontal="true" navigatable="false" increase-func="increaseConfig" decrease-func="decreaseConfig"  class="container" active="true" ratio="16/9" list="gpSelect.models[gpSelect.selectedModel].configs" sort-by="gpSelect.sortByValue" selected="gpSelect.selectedConfigs[gpSelect.selectedModel]" left="gpSelect.last === 'left'" right="gpSelect.last === 'right'"></gp-img-list>
       </bng-grid-item>
 
-      <bng-grid-item col="1" row="8" colspan="2" rowspan="2" class="color2">
-        <gp-circle style="position: absolute; top: calc(50% - 10px); left: calc(50% - 10px);"></gp-circle>
-        <!-- 10px = 1/2 circle dim
-          30px = one extra side of the gradient
-          34px = arrow height
-          2.5px = 1/2 gradient height -->
-        <gp-gradient style="position: absolute; bottom: calc(50% + 15px); left: calc(50% - 2.5px); height: calc(7%);" orientation="vertical" reverse="true"></gp-gradient>
-        <gp-gradient style="position: absolute; left: calc(50% + 15px); top: calc(50% - 2.5px); width: calc(10%);"></gp-gradient>
-        <!-- <div style="width: 10%; height: 7%; left: calc(50% - 1.5px); bottom: calc(50% - 1.5px); position: absolute;">
-          <gp-gradient-corner horizontal="'bottom'" vertical="'left'" active="false"></gp-gradient-corner>
-        </div> -->
-      </bng-grid-item>
     </bng-grid>
   </div>
 </div>

@@ -36,17 +36,18 @@ local invWheelCount = 0
 local speedoWheelCount = 0
 local initialSpeedoWheelCount = 0
 local invSpeedoWheelCount = 0
-local wheelRotatorTorques = {}
-local wheelAVs = {}
+local ffiWheelRotatorTorques
+local ffiWheelAVs
 
 local minBrakeMass = 1
 local brakeSmokeEfficiencyThreshold = 0.75
 local wheelInfo = {}
+local guiWheelInfo = {wheels = wheelInfo}
 local axleBeamLookup = {}
 
-local startPosition = nil
-local state = "idle"
-local targetSpeed = 100 / 3.6
+-- local startPosition = nil
+-- local state = "idle"
+-- local targetSpeed = 100 / 3.6
 
 local absBehavior = nil
 local maxBrakeTorque = 0
@@ -83,6 +84,10 @@ local padThermalEfficiencyData = {
   ["godmode"] = {w1x1Coef = 0.007692, w2x1Coef = -0.007692, b1 = 10, b2 = 100, a = -1.001}
 }
 
+-- local tireThermalEfficiencyData = {
+--   ["street"] = {w1x1Coef = 0.025, w2x1Coef = -0.016, b1 = -4.1, b2 = 8.8, a = -0.95} --w1x1Coef = w1 / (2 * x1), w2x1Coef = w2 / (2 * x1)
+-- }
+
 local virtualAirspeedMaps = {
   {acceleration = 0.1, invGainSum = 0, wheelCoef = 1, correctionCoef = 1.01}, -- stable, idle
   {acceleration = 0, invGainSum = 0, wheelCoef = 1, correctionCoef = 0.9}, -- heavyBrakingInit, idle
@@ -92,6 +97,19 @@ local virtualAirspeedMaps = {
 }
 
 local updateThermalsGFXMethod = nop
+
+local tireNodeWheelLookup = nil
+
+local function nodeCollision(p)
+  --add energy to node
+  local collisionNodeId = p.id1
+  local wheelID = tireNodeWheelLookup[collisionNodeId]
+  if wheelID then
+    local wd = M.wheels[wheelID]
+    local collisionEnergy = p.slipForce * p.slipVel * lastDt
+    wd.treadSurfaceTemperature = wd.treadSurfaceTemperature + collisionEnergy * wd.treadSurfaceEnergyCoef
+  end
+end
 
 local function beamBroke(id)
   local beamName = v.data.beams[id].name
@@ -108,7 +126,7 @@ local function beamBroke(id)
       wd.desiredBrakingTorque = 0
       wd.angularVelocity = 0
       wd.angularVelocityBrakeCouple = 0
-      wd.obj:setTorqueAndBrakeTorque(0, 0)
+      obj:setWheelTorqueAndBrakeTorque(wd.cid, 0, 0)
       damageTracker.setDamage("wheels", wd.name, true)
       -- Brake damage
       damageTracker.setDamage("wheels", "brake" .. wd.name, true)
@@ -151,14 +169,60 @@ local function calculateThermalEfficiency(temperature, config)
   return result
 end
 
+-- local function updateWheelThermalsGFX(dt)
+--   local tEnv = obj:getEnvTemperature() + kelvinToCelsius
+
+--   local tireThermalData = {}
+
+--   for i = 0, initialWheelCountDec do
+--     local wd = M.wheels[i]
+--     local kTreadSurfaceToCore = 600
+--     local kTreadSurfaceToAir = 300
+--     local kTreadCoreToTireAir = 50
+--     local kTireAirToRim = 100
+--     local kRimToRimAir = 50
+
+--     local energyTreadSurfaceToCore = (wd.treadSurfaceTemperature - wd.treadCoreTemperature) * kTreadSurfaceToCore
+--     local energyTreadSurfaceToAir = (wd.treadSurfaceTemperature - tEnv) * kTreadSurfaceToAir
+--     local energyTreadCoreToTireAir = (wd.treadCoreTemperature - wd.tireAirTemperature) * kTreadCoreToTireAir
+--     local energyTireAirToRim = (wd.tireAirTemperature - wd.rimTemperature) * kTireAirToRim
+--     --local energyRimToRimAir = (wd.rimTemperature - wd.rimAirTemperature) * kRimToRimAir
+--     local energyRimToRimAir = (wd.rimTemperature - tEnv) * kRimToRimAir --use tEnv for now until rimAir is implemented with brake thermals
+
+--     wd.treadSurfaceTemperature = wd.treadSurfaceTemperature - ((energyTreadSurfaceToCore + energyTreadSurfaceToAir) * dt) * wd.treadSurfaceEnergyCoef
+--     wd.treadCoreTemperature = wd.treadCoreTemperature + ((energyTreadSurfaceToCore - energyTreadCoreToTireAir) * dt) * wd.treadCoreEnergyCoef
+--     wd.tireAirTemperature = wd.tireAirTemperature + ((energyTreadCoreToTireAir - energyTireAirToRim) * dt) * wd.tireAirEnergyCoef
+--     wd.rimTemperature = wd.rimTemperature + ((energyTireAirToRim - energyRimToRimAir) * dt) * wd.rimEnergyCoef
+--     wd.rimAirTemperature = tEnv
+
+--     local frictionAdjustmentCoef = calculateThermalEfficiency(wd.treadSurfaceTemperature + celsiusToKelvin, tireThermalEfficiencyData.street)
+--     --print(frictionAdjustmentCoef)
+--     -- i've disabled below lines because they break strato hmx 920
+--     -- for _, v in ipairs(wd.treadNodes) do
+--     --   --obj:setNodeFrictionSlidingCoefs(v.cid, v.frictionCoef * frictionAdjustmentCoef, v.slidingFrictionCoef * frictionAdjustmentCoef)
+--     -- end
+
+--     tireThermalData[wd.name] = {
+--       name = wd.name,
+--       surfaceTemp = wd.treadSurfaceTemperature,
+--       bulkTemp = wd.treadCoreTemperature,
+--       tireAirTemp = wd.tireAirTemperature,
+--       rimTemp = wd.rimTemperature,
+--       wheelAirTemp = wd.rimAirTemperature,
+--       frictionCoef = frictionAdjustmentCoef
+--     }
+--   end
+
+--   if streams.willSend("tireThermalData") then
+--     gui.send("tireThermalData", tireThermalData)
+--   end
+-- end
+
 local function updateThermalsGFX(dt)
   local tEnv = obj:getEnvTemperature() + kelvinToCelsius
-  local airSpeed = electrics.values.airspeed
+  local airSpeed = electrics.values.airflowspeed
   local updateGUI = streams.willSend("wheelThermalData")
   local updateDamage = damageTracker.willSend()
-  if updateGUI then
-    table.clear(wheelInfo)
-  end
   for i = 0, initialWheelCountDec do
     local wd = M.wheels[i]
     if wd.enableBrakeThermals and not wd.isBroken then
@@ -218,23 +282,42 @@ local function updateThermalsGFX(dt)
       end
 
       if updateGUI then
-        wheelInfo[wd.name] = {
-          energyToBrakeSurface = energyToBrakeSurface / dt,
-          brakeSurfaceTemperature = wd.brakeSurfaceTemperature,
-          brakeCoreTemperature = wd.brakeCoreTemperature,
-          surfaceCooling = surfaceCooling,
-          coreCooling = coreCooling,
-          energyBrakeSurfaceToAir = energyBrakeSurfaceToAir,
-          energyBrakeSurfaceToCore = energyBrakeSurfaceToCore,
-          energyBrakeCoreToAir = energyBrakeCoreToAir,
-          energyRadiationToAir = energyRadiationToAir,
-          finalBrakeEfficiency = wd.brakeThermalEfficiency,
-          brakeThermalEfficiency = thermalEfficiency,
-          padGlazingFactor = wd.padGlazingFactor,
-          slopeSwitchBit = slopeSwitchBit,
-          brakeType = wd.brakeType,
-          padMaterial = wd.padMaterial
-        }
+        if wheelInfo[wd.name] then
+          local wi = wheelInfo[wd.name]
+          wi.energyToBrakeSurface = energyToBrakeSurface / dt
+          wi.brakeSurfaceTemperature = wd.brakeSurfaceTemperature
+          wi.brakeCoreTemperature = wd.brakeCoreTemperature
+          wi.surfaceCooling = surfaceCooling
+          wi.coreCooling = coreCooling
+          wi.energyBrakeSurfaceToAir = energyBrakeSurfaceToAir
+          wi.energyBrakeSurfaceToCore = energyBrakeSurfaceToCore
+          wi.energyBrakeCoreToAir = energyBrakeCoreToAir
+          wi.energyRadiationToAir = energyRadiationToAir
+          wi.finalBrakeEfficiency = wd.brakeThermalEfficiency
+          wi.brakeThermalEfficiency = thermalEfficiency
+          wi.padGlazingFactor = wd.padGlazingFactor
+          wi.slopeSwitchBit = slopeSwitchBit
+          wi.brakeType = wd.brakeType
+          wi.padMaterial = wd.padMaterial
+        else
+          wheelInfo[wd.name] = {
+            energyToBrakeSurface = energyToBrakeSurface / dt,
+            brakeSurfaceTemperature = wd.brakeSurfaceTemperature,
+            brakeCoreTemperature = wd.brakeCoreTemperature,
+            surfaceCooling = surfaceCooling,
+            coreCooling = coreCooling,
+            energyBrakeSurfaceToAir = energyBrakeSurfaceToAir,
+            energyBrakeSurfaceToCore = energyBrakeSurfaceToCore,
+            energyBrakeCoreToAir = energyBrakeCoreToAir,
+            energyRadiationToAir = energyRadiationToAir,
+            finalBrakeEfficiency = wd.brakeThermalEfficiency,
+            brakeThermalEfficiency = thermalEfficiency,
+            padGlazingFactor = wd.padGlazingFactor,
+            slopeSwitchBit = slopeSwitchBit,
+            brakeType = wd.brakeType,
+            padMaterial = wd.padMaterial
+          }
+        end
       end
     elseif wd.isBroken and updateGUI then
       wheelInfo[wd.name] = {
@@ -258,12 +341,7 @@ local function updateThermalsGFX(dt)
   end
 
   if updateGUI then
-    gui.send(
-      "wheelThermalData",
-      {
-        wheels = wheelInfo
-      }
-    )
+    gui.send("wheelThermalData", guiWheelInfo)
   end
 end
 
@@ -319,33 +397,33 @@ local function updateWheelsGFX(dt)
   electrics.values.absActive = absActive
 end
 
-local function updateBrakingDistanceGFX(dt)
-  if (input.brake or 0) < 0.2 then
-    state = "idle"
-  end
+-- local function updateBrakingDistanceGFX(dt)
+--   if (input.brake or 0) < 0.2 then
+--     state = "idle"
+--   end
 
-  local airspeed = electrics.values.airspeed
-  if state == "idle" then
-    if input.brake > 0.2 and airspeed > targetSpeed then
-      state = "waiting"
-    end
-  elseif state == "waiting" then
-    if airspeed <= targetSpeed then
-      startPosition = obj:getPosition()
-      state = "measuring"
-      gui.message({txt = "Measuring braking distance...", context = {}}, 1, "vehicle.brakingdistance")
-    end
-  elseif state == "measuring" then
-    if airspeed <= 1 then
-      local endPosition = obj:getPosition()
-      local distance = (startPosition - endPosition):length()
-      local avgDeceleration = -(square(airspeed) - square(targetSpeed)) / (2 * distance)
-      gui.message({txt = string.format("Brakingdistance: %.2fm, G: %.2f", distance, avgDeceleration / 9.81), context = {}}, 5, "vehicle.brakingdistance")
-      startPosition = nil
-      state = "idle"
-    end
-  end
-end
+--   local airspeed = electrics.values.airspeed
+--   if state == "idle" then
+--     if input.brake > 0.2 and airspeed > targetSpeed then
+--       state = "waiting"
+--     end
+--   elseif state == "waiting" then
+--     if airspeed <= targetSpeed then
+--       startPosition = obj:getPosition()
+--       state = "measuring"
+--       gui.message({txt = "Measuring braking distance...", context = {}}, 1, "vehicle.brakingdistance")
+--     end
+--   elseif state == "measuring" then
+--     if airspeed <= 1 then
+--       local endPosition = obj:getPosition()
+--       local distance = (startPosition - endPosition):length()
+--       local avgDeceleration = -(square(airspeed) - square(targetSpeed)) / (2 * distance)
+--       gui.message({txt = string.format("Brakingdistance: %.2fm, G: %.2f", distance, avgDeceleration / 9.81), context = {}}, 5, "vehicle.brakingdistance")
+--       startPosition = nil
+--       state = "idle"
+--     end
+--   end
+-- end
 
 local function updateGFX(dt)
   updateThermalsGFXMethod(dt)
@@ -354,13 +432,16 @@ local function updateGFX(dt)
 end
 
 local function updateWheelSlip(p)
+  nodeCollision(p)
   if v.data.nodes[p.id1] then
     local wheelID = v.data.nodes[p.id1].wheelID
-    if wheelID and p then
+    if wheelID then
       local wd = M.wheelRotators[wheelID]
       wd.contactMaterialID1 = p.materialID1
       wd.contactMaterialID2 = p.materialID2
       wd.contactDepth = max(p.depth, wd.contactDepth)
+    else
+      sounds.bodyCollision(p)
     end
   end
 end
@@ -477,18 +558,16 @@ local function updateWheelVelocities(dt)
   local parkingbrakeInput = input.parkingbrake
   absActive = false
 
-  obj:getAVandBrakeCoupleAVs(wheelAVs)
-
   brakeTorqueLimitCache[1] = 0
   brakeTorqueLimitCache[2] = 0
 
   local wheels = M.wheels
   for i = 0, initialWheelCountDec do
     local wd = wheels[i]
+    local wav = ffiWheelAVs[wd.cid]
     if not wd.isBroken then
-      local cid2 = wd.cid2
-      wd.angularVelocity = wheelAVs[cid2]
-      wd.angularVelocityBrakeCouple = wheelAVs[cid2 + 1]
+      wd.angularVelocity = wav.angularVelocity
+      wd.angularVelocityBrakeCouple = wav.angularVelocityBrakeCouple
       -- composite brake (normal + parking)
       wd.desiredBrakingTorque = max(wd:updateBrake(brake, invAirspeed, airspeed, airspeedCutOff, dt), wd.parkingTorque * parkingbrakeInput)
     end
@@ -500,10 +579,10 @@ local function updateWheelVelocities(dt)
   local rotators = M.rotators
   for i = 0, initialRotatorCountDec do
     local wd = rotators[i]
+    local wav = ffiWheelAVs[wd.cid]
     if not wd.isBroken then
-      local cid2 = wd.cid2
-      wd.angularVelocity = wheelAVs[cid2]
-      wd.angularVelocityBrakeCouple = wheelAVs[cid2 + 1]
+      wd.angularVelocity = wav.angularVelocity
+      wd.angularVelocityBrakeCouple = wav.angularVelocityBrakeCouple
     end
   end
 end
@@ -513,25 +592,23 @@ local function updateWheelTorques(dt)
 
   local torqueReactionCoefs = powertrain.torqueReactionCoefs
   local wheelRotators = M.wheelRotators
-  local torques = wheelRotatorTorques
+  local torques = ffiWheelRotatorTorques
   for i = 0, initialWheelRotatorCountDec do
     local wd = wheelRotators[i]
     local brakingTorque = wd.brakePressureDelay:get(wd.desiredBrakingTorque) * wd.brakeThermalEfficiency
     wd.brakingTorque = brakingTorque
-    local cid4 = wd.cid4
+    local t = torques[i]
     if wd.isBroken then
-      torques[cid4] = 0
-      torques[cid4 + 1] = 0
-      torques[cid4 + 2] = 0
+      t.propulsionTorque = 0
+      t.brakingTorque = 0
+      t.engineReactionTorque = 0
     else
       local propulsionTorque = wd.propulsionTorque
-      torques[cid4] = propulsionTorque
-      torques[cid4 + 1] = brakingTorque + wd.frictionTorque
-      torques[cid4 + 2] = abs(propulsionTorque) * torqueReactionCoefs[wd.torsionReactorIdx]
+      t.propulsionTorque = propulsionTorque
+      t.brakingTorque = brakingTorque + wd.frictionTorque
+      t.engineReactionTorque = abs(propulsionTorque) * torqueReactionCoefs[wd.torsionReactorIdx]
     end
   end
-
-  obj:setWheelsTorqueBrakeEngine(torques)
 end
 
 local function setABSBehavior(behavior)
@@ -592,8 +669,8 @@ local function resetThermals()
 end
 
 local function resetWheels()
-  startPosition = nil
-  state = "idle"
+  -- startPosition = nil
+  -- state = "idle"
 
   M.wheelRotatorCount = initialWheelRotatorCountDec + 1
 
@@ -643,14 +720,6 @@ local function resetWheels()
 
   brakeTorqueLimits[1] = maxBrakeTorque * 2
   brakeTorqueLimits[2] = maxBrakeTorque * 2
-
-  for k, _ in ipairs(wheelRotatorTorques) do
-    wheelRotatorTorques[k] = 0
-  end
-
-  for k, _ in ipairs(wheelAVs) do
-    wheelAVs[k] = 0
-  end
 end
 
 local function reset()
@@ -760,9 +829,15 @@ local function initThermals()
   end
 end
 
+ffi.cdef [[
+  struct{float propulsionTorque; float brakingTorque; float engineReactionTorque; float unused;}* bng_getWheelsTorqueBrakeEngineArray(void *obj);
+  struct{float angularVelocity; float angularVelocityBrakeCouple;}* bng_getWheelsAVBrakeAVArray(void *obj);
+  void bng_applyTorqueAxisCouple(void *obj, float torque, int axisn1, int axisn2, int node);
+]]
+
 local function initWheels()
-  startPosition = nil
-  state = "idle"
+  -- startPosition = nil
+  -- state = "idle"
   electrics.values.avgWheelAV = 0
   electrics.values.wheelspeed = 0
 
@@ -805,6 +880,7 @@ local function initWheels()
         softnessCoef = wd.softnessCoef or 0.6,
         node1 = wd.node1,
         node2 = wd.node2,
+        isPropulsed = false, --powertrain.lua sets this to true for actually propulsed wheels
         brakeMass = wd.brakeMass,
         padMaterial = wd.padMaterial,
         enableBrakeThermals = wd.enableBrakeThermals,
@@ -832,11 +908,9 @@ local function initWheels()
         downForce = 0,
         obj = wobj,
         cid = wd.cid,
-        cid2 = wd.cid * 2,
-        cid4 = wd.cid * 4,
         slipErrorIntegral = 0,
         lastSlipError = 0,
-        slipRatioTarget = 0.2,
+        slipRatioTarget = wd.absSlipRatioTarget or 0.18,
         isBroken = false,
         isSpeedo = wd.speedo and 1 or (wd.speedo == nil and 1 or 0),
         hasABS = wd.enableABSactuator or wd.enableABS or false,
@@ -860,7 +934,7 @@ local function initWheels()
         brakeThermalEfficiency = 1
       }
 
-      table.insert(M.wheelRotators, i, wheel)
+      M.wheelRotators[wd.cid] = wheel
       if wd.axleBeams then
         for _, name in pairs(wd.axleBeams) do
           if not axleBeamLookup[name] then
@@ -870,24 +944,17 @@ local function initWheels()
         end
       end
       --insert as wheels as well (temporary) for better backwards compat (controller init right after wheels init, no second stage init done yet)
-      table.insert(M.wheels, i, wheel)
+      M.wheels[wd.cid] = wheel
     else
-      log("W", "drivetrain.init", 'Wheel "' .. wd.name .. '" could not be added to drivetrain')
+      log("W", "wheels.initWheels", 'Wheel "' .. wd.name .. '" could not be added to drivetrain')
     end
   end
 
   local absMode = settings.getValue("absBehavior") or "realistic"
   setABSBehavior(absMode)
 
-  wheelRotatorTorques = table.new(maxWheelCid * 4 + 1, 0)
-  for i = 0, maxWheelCid * 4 + 1 do
-    wheelRotatorTorques[i] = 0
-  end
-
-  wheelAVs = table.new(maxWheelCid * 2 + 1, 0)
-  for i = 0, maxWheelCid * 2 + 1 do
-    wheelAVs[i] = 0
-  end
+  ffiWheelRotatorTorques = ffi.C.bng_getWheelsTorqueBrakeEngineArray(obj)
+  ffiWheelAVs = ffi.C.bng_getWheelsAVBrakeAVArray(obj)
 
   brakeTorqueLimits = {}
   brakeTorqueLimits[1] = maxBrakeTorque * 2
@@ -937,7 +1004,7 @@ local function initSecondStage()
   local avgWheelPos = vec3(0, 0, 0)
   for _, rotator in pairs(M.wheelRotators) do
     if rotator.rotatorType == "wheel" then
-      table.insert(M.wheels, M.wheelCount, rotator)
+      M.wheels[M.wheelCount] = rotator
       M.wheelCount = M.wheelCount + 1
       M.wheelIDs[rotator.name] = rotator.wheelID
       if rotator.isSpeedo == 1 then
@@ -946,7 +1013,7 @@ local function initSecondStage()
       local wheelNodePos = v.data.nodes[rotator.node1].pos --find the wheel position
       avgWheelPos = avgWheelPos + wheelNodePos --sum up all positions
     elseif rotator.rotatorType == "rotator" then
-      table.insert(M.rotators, M.rotatorCount, rotator)
+      M.rotators[M.rotatorCount] = rotator
       M.rotatorCount = M.rotatorCount + 1
       M.rotatorIDs[rotator.name] = rotator.wheelID
     end
@@ -963,6 +1030,8 @@ local function initSecondStage()
   local vectorForward = vec3(v.data.nodes[v.data.refNodes[0].ref].pos) - vec3(v.data.nodes[v.data.refNodes[0].back].pos) --vector facing forward
   local vectorUp = vec3(v.data.nodes[v.data.refNodes[0].up].pos) - vec3(v.data.nodes[v.data.refNodes[0].ref].pos)
   local vectorRight = vectorForward:cross(vectorUp) --vector facing to the right
+
+  tireNodeWheelLookup = {}
 
   for i = 0, initialWheelCountDec do
     local wd = M.wheels[i]
@@ -984,6 +1053,25 @@ local function initSecondStage()
       local overallArea = math.pi * wd.radius * wd.radius
       local tireArea = overallArea - hubArea
       wd.tireVolume = tireArea * wd.tireWidth
+    end
+
+    local tEnv = obj:getEnvTemperature() + kelvinToCelsius
+    wd.treadSurfaceTemperature = tEnv
+    wd.treadCoreTemperature = tEnv
+    wd.tireAirTemperature = tEnv
+    wd.rimTemperature = tEnv
+    wd.rimAirTemperature = tEnv
+
+    local tireWeight = 15
+    wd.treadSurfaceEnergyCoef = 1 / ((tireWeight * 0.1) * 0.15 * 2000) -- 10% tire weight is surface
+    wd.treadCoreEnergyCoef = 1 / ((tireWeight * 0.9) * 0.15 * 2000) -- 90% tire weight is core
+    local tireAirWeight = 0.030 * 1.2 * 2 --30L air at 2bar with air density at 20C
+    wd.tireAirEnergyCoef = 1 / (tireAirWeight * 0.15 * 1000)
+    local rimWeight = 8
+    wd.rimEnergyCoef = 1 / (rimWeight * 0.15 * 900)
+
+    for _, v in pairs(wd.treadNodes or {}) do
+      tireNodeWheelLookup[v.cid] = i
     end
 
     damageTracker.setDamage("wheels", wd.name, false)

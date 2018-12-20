@@ -4,6 +4,9 @@
 
 local M = {}
 
+local diskUsage = nil
+local diskUsageRunning = false
+
 local function getFallbackReason()
   local cmdArgs = Engine.getStartingArgs()
   local fallbackIndex = tableFindKey(cmdArgs, '-fallback')
@@ -206,7 +209,52 @@ local function getInfo()
     elseif res.mods.unpacked > 10 or res.mods.zip > 100 then
       table.insert(res.mods.warnings, {type = 'warn', msg = 'toomanymods'})
     end
-    
+  end
+
+  if sailingTheHighSeas then
+    res.hs = {warnings={}}
+    table.insert(res.hs.warnings, {type = 'warn', msg = 'highseas'})
+  end
+
+  res.disk={}
+  res.disk.warnings = {}
+  res.disk.freeSpace = Engine.Platform.getDiskFreeSpace()
+  res.disk.usage = diskUsage
+  if res.disk.freeSpace.root < 1073741824 or res.disk.freeSpace.user < 1073741824 then --minimun on each disk 1 GB free
+    table.insert(res.disk.warnings, {type = 'warn', msg = 'lowfreespace'})
+  end
+
+  local originalSize = -1
+  if FS:fileExists("integrity.json") then
+    local manifest = jsonReadFile("integrity.json")
+    if manifest and manifest.format == 1 and manifest.integritydata then
+      for _,v in pairs(manifest.integritydata) do
+        originalSize = originalSize + v[2]
+      end
+    end
+  end
+
+  if res.disk.usage and diskUsage and originalSize>0 then
+    M.runDiskUsage() --send the data we saved
+    local rootsize = nil
+    for _,v in pairs(diskUsage) do 
+      if v.name == "rootpath" then
+        rootsize = v.size
+        break
+      end
+    end
+    log('D', 'hardwareinfo.disk', ' originalSize='..tostring(originalSize).."   rootsize="..tostring(rootsize) )
+    if sailingTheHighSeas or (rootsize and (originalSize - 10485760 > rootsize or rootsize > originalSize + 268435456)) then -- allow a size difference of -100mb and +256mb because of `_CommonRedist`
+      table.insert(res.disk.warnings, {type = 'warn', msg = 'rootmodified'})
+    end
+  end
+  if string.find( getUserPath(), ".:\\Users\\.-\\OneDrive") then
+    table.insert(res.disk.warnings, {type = 'warn', msg = 'onedrive'})
+  end
+
+  local cache = FS:findFiles("", "cache.*", 1, false, true )
+  if #cache > 5 then
+    table.insert(res.disk.warnings, {type = 'warn', msg = 'toomanycache'})
   end
 
   local stateLevels = { ['ok'] = 1, ['warn'] = 2, ['error'] = 3 }
@@ -230,6 +278,7 @@ local function getInfo()
     end
   end
 
+  res.sailingTheHighSeas = sailingTheHighSeas
   if res.mods == nil then res.mods = {state="load"} end
 
   return res
@@ -250,7 +299,7 @@ local function logInfo(filename)
     os = Engine.Platform.getOSInfo(),
     pwr = Engine.Platform.getPowerInfo(),
   }
-  serializeJsonToFile(filename, res, true)
+  jsonWriteFile(filename, res, true)
 end
 
 local function runPhysicsBenchmark()
@@ -268,12 +317,12 @@ local function onBananaBenchReady(outFilename)
     guihooks.trigger('BananaBenchReady', nil)
     return nil
   end
-  local data = readJsonFile(outFilename)
+  local data = jsonReadFile(outFilename)
   guihooks.trigger('BananaBenchReady', data)
 end
 
 local function readBananabenchFile()
-  return readJsonFile('bananabench.json')
+  return jsonReadFile('bananabench.json')
 end
 
 local function latestBenchmarkExists()
@@ -289,6 +338,35 @@ local function onModManagerReady()
   requestInfo()
 end
 
+local function diskInfoCallback(data)
+  -- log('D', 'hardwareinfo.diskInfoCallback', 'data: ' .. dumps(data))
+  guihooks.trigger('diskInfoCallback', data)
+  if not data.running then
+    diskUsage = diskUsage or {}
+    table.insert(diskUsage,data)
+    diskUsageRunning = false
+    requestInfo()
+    --log('D', 'hardwareinfo.diskInfoCallback', 'diskUsage: ' .. dumps(diskUsage))
+  else
+    diskUsageRunning = true
+  end
+end
+
+local function runDiskUsage()
+  if diskUsage or diskUsageRunning then
+    --log('E', 'hardwareinfo.diskInfoCallback', 'DATA: ')
+    if diskUsage then
+      for _,v in pairs(diskUsage) do
+        guihooks.trigger('diskInfoCallback', v)
+      end
+    end
+  else
+    --log('E', 'hardwareinfo.diskInfoCallback', 'RUN: ')
+    Engine.Platform.runDiskUsage()
+    diskUsageRunning = true
+  end
+end
+
 M.getInfo = getInfo
 M.requestInfo = requestInfo
 M.logInfo = logInfo
@@ -298,5 +376,7 @@ M.latestBananbench = readBananabenchFile
 M.latestBenchmarkExists = latestBenchmarkExists
 M.acknowledgeWarning = acknowledgeWarning
 M.onModManagerReady = onModManagerReady
+M.diskInfoCallback = diskInfoCallback
+M.runDiskUsage = runDiskUsage
 
 return M

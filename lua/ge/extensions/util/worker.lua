@@ -43,16 +43,7 @@ local function compileDae(path)
   return true
 end
 
-N.compileMeshFolder = function(job, w)
-  loadMaterialsInPath(w.path)
-  local files = FS:findFilesByRootPattern(w.path, '*.dae', -1, true, false)
-  for i = 1, #files do
-    job.yield()
-    compileDae(files[i])
-  end
-end
-
-N.compileMesh = function(job, w)
+N.compileMesh = function(w)
   if not w.filename then
     log('E', 'util_worker.compileMesh', 'filename missing: ' .. dumps(w))
     return
@@ -62,14 +53,41 @@ N.compileMesh = function(job, w)
   compileDae(w.filename)
 end
 
-N.compileImposter = function(job, w)
+N.testImage = function(w)
+  if not FS:fileExists(w.filename) then
+    log('E', 'util_worker.testImage', 'filename not existing: ' .. tostring(w.filename))
+    return false
+  end
+
+  -- TODO: test with w.filename
+
+end
+
+N.compileImposter = function(w)
   Engine.Render.updateImposters(false)
 end
 
-local function work(job)
+N.testMod = function(w)
+  extensions.test_testMods.work(w.tagid, w.resource_version_id)
+end
+
+N.testVehiclesPerformances = function(w)
+  log('I', 'worker', "testVehiclesPerformances: " .. dumps(w.pcFiles))
+  extensions.util_saveDynamicData.work(w.pcFiles)
+  log('I', 'worker', "testVehiclesPerformances DONE")
+end
+
+local function onJobDone(job, totalRunning)
+  --log('E', 'onJobDone : ' .. dumps(job) .. ', # = ' .. tostring(totalRunning))
+  if totalRunning == 0 then
+    shutdown(0)
+  end
+end
+
+local function work()
   --log('I', 'util_worker', 'working: ' .. tostring(jobfile))
   --TorqueScript.eval("$disableTerrainMaterialCollisionWarning=1;$disableCachedColladaNotification=1;")
-  local workItems = readJsonFile(jobfile)
+  local workItems = jsonReadFile(jobfile)
   if not workItems then
     log('E', 'worker', 'unable to read work items from file: ' .. tostring(jobfile))
   end
@@ -77,11 +95,10 @@ local function work(job)
 
   -- this calls the helper functions in N
   for i = 1, #workItems do
-    job.yield()
     local w = workItems[i]
     if w.type then
       if N[w.type] then
-        N[w.type](job, w)
+        N[w.type](w)
       else
         log('E', 'util_worker', " - unknown work type: " .. dumps(w))
       end
@@ -89,16 +106,21 @@ local function work(job)
       log('E', 'util_worker', " - unknown work type: " .. dumps(w))
     end
   end
-  shutdown(0)
+  -- we use onJobDone for job tracking :)
+  if extensions.core_jobsystem.getRunningJobCount() == 0 then
+    -- no jobs? no problem! :)
+    shutdown(0)
+  end
 end
 
 local function onExtensionLoaded()
   Lua:blacklistLogLevel("DA")
   log('I', 'util_worker', 'loaded')
-  extensions.core_jobsystem.create(work, 1) -- yield every second, good for background tasks
+  work()
 end
 
 -- interface
 M.onExtensionLoaded = onExtensionLoaded
+M.onJobDone = onJobDone
 
 return M

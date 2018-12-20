@@ -18,6 +18,9 @@
 --OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 --THE SOFTWARE.
 
+-- double ended queue library
+-- as in, yu can push/pop from the start and the end
+
 local push_right = function(self, x)
   assert(x ~= nil)
   self.tail = self.tail + 1
@@ -48,7 +51,6 @@ end
 
 local pop_left = function(self)
   if self:is_empty() then return nil end
-  local r = self[self.head+1]
   self.head = self.head + 1
   local r = self[self.head]
   self[self.head] = nil
@@ -58,13 +60,13 @@ end
 local rotate_right = function(self, n)
   n = n or 1
   if self:is_empty() then return nil end
-  for i=1,n do self:push_left(self:pop_right()) end
+  for _=1,n do self:push_left(self:pop_right()) end
 end
 
 local rotate_left = function(self, n)
   n = n or 1
   if self:is_empty() then return nil end
-  for i=1,n do self:push_right(self:pop_left()) end
+  for _=1,n do self:push_right(self:pop_left()) end
 end
 
 local _remove_at_internal = function(self, idx)
@@ -163,3 +165,53 @@ end
 return {
   new = new,
 }
+
+--[[ test code:
+
+local cwtest = require "cwtest"
+local deque = require "deque"
+
+local T = cwtest.new()
+
+T:start("deque"); do
+  local q = deque.new()
+  T:eq( q:length(), 0 )
+  T:eq( q:is_empty(), true )
+  T:eq( q:contents(), {} )
+  q:push_right(3)
+  q:push_right(4)
+  q:push_left(2)
+  q:push_right(5)
+  q:push_left(1)
+  T:eq( q:length(), 5 )
+  T:eq( q:is_empty(), false )
+  T:eq( q:contents(), {1, 2, 3, 4, 5} )
+  T:eq( q:pop_right(), 5 )
+  T:eq( q:peek_right(), 4 )
+  T:eq( q:pop_left(), 1 )
+  T:eq( q:peek_left(), 2 )
+  T:eq( q:contents(), {2, 3, 4} )
+  q:rotate_right()
+  T:eq( q:contents(), {4, 2, 3} )
+  q:rotate_left(4)
+  T:eq( q:contents(), {2, 3, 4} )
+  q:rotate_right(2)
+  T:eq( q:contents(), {3, 4, 2} )
+  T:eq( q:remove_right(6), false )
+  T:eq( q:remove_right(2), true )
+  q:push_right(3)
+  q:push_left(4)
+  q:push_right(4)
+  T:eq( q:contents(), {4, 3, 4, 3, 4} )
+  T:eq( q:remove_right(3), true )
+  T:eq( q:remove_left(4), true )
+  T:eq( q:contents(), {3, 4, 4} )
+  local t = {}
+  for x in q:iter_left() do t[#t+1] = x end
+  T:eq( t, {3, 4, 4} )
+  t = {}
+  for x in q:iter_right() do t[#t+1] = x end
+  T:eq( t, {4, 4, 3} )
+end; T:done()
+
+]]

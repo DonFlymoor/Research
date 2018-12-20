@@ -11,6 +11,10 @@ function C:init()
   self.camLastFOV = 90
   self.camLastQDir = quat(1,0,0,1)
   self.transitionTime = 0
+  self:onSettingsChanged()
+end
+
+function C:onSettingsChanged()
   self.transitionDuration = settings.getValue('cameraTransitionTime') or 350 -- in ms
 end
 
@@ -36,10 +40,6 @@ function C:update(data)
   self.camLastQDir = quat(data.res.rot)
   self.camLastFOV = data.res.fov
   return true
-end
-
-function C:reloaded()
-  self.transitionDuration = settings.getValue('cameraTransitionTime') or 350
 end
 
 function C:start()

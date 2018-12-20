@@ -3,6 +3,7 @@
     {
     "isInverted"        : true                , 
     "filterType"        : 2,
+    "linearity"         :2.5,
     "action"            : "steering"      , 
     "control"           : "xaxis"             , 
     }, 

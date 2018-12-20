@@ -348,7 +348,7 @@ angular.module('beamng.garage')
   }
 
   function getVehicleCurrentColors () {
-    bngApi.engineLua('beamng_cef.getVehicleColor()', (res) => {
+    bngApi.engineLua('getVehicleColor()', (res) => {
 
       logger.log(res);
       $scope.$evalAsync(() => {

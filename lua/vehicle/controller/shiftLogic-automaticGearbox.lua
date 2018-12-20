@@ -36,6 +36,25 @@ M.clutchRatio = 0
 M.isArcadeSwitched = false
 M.isSportModeActive = false
 
+M.smoothedAvgAVInput = 0
+M.rpm = 0
+M.idleRPM = 0
+M.maxRPM = 0
+
+M.engineThrottle = 0
+M.engineLoad = 0
+M.engineTorque = 0
+M.gearboxTorque = 0
+
+M.ignition = true
+M.isEngineRunning = 0
+
+M.oilTemp = 0
+M.waterTemp = 0
+M.checkEngine = false
+
+M.energyStorages = {}
+
 local automaticHandling = {
   availableModes = {"P", "R", "N", "D", "S", "1", "2", "M"},
   hShifterModeLookup = {[-1] = "R", [0] = "N", "P", "D", "S", "2", "1", "M1"},
@@ -259,6 +278,21 @@ local function shiftToGearIndex(index)
   applyGearboxModeRestrictions()
 end
 
+local function updateExposedData()
+  M.rpm = engine and (engine.outputAV1 * constants.avToRPM) or 0
+  M.smoothedAvgAVInput = sharedFunctions.updateAvgAVSingleDevice("gearbox")
+  M.waterTemp = (engine and engine.thermals) and (engine.thermals.coolantTemperature and engine.thermals.coolantTemperature or engine.thermals.oilTemperature) or 0
+  M.oilTemp = (engine and engine.thermals) and engine.thermals.oilTemperature or 0
+  M.checkEngine = engine and engine.isDisabled or false
+  M.ignition = engine and not engine.isDisabled or false
+  M.engineThrottle = (engine and engine.isDisabled) and 0 or M.throttle
+  M.engineLoad = engine and (engine.isDisabled and 0 or engine.instantEngineLoad) or 0
+  M.running = engine and not engine.isDisabled or false
+  M.engineTorque = engine and engine.combustionTorque or 0
+  M.gearboxTorque = gearbox and gearbox.outputTorque or 0
+  M.isEngineRunning = engine and ((engine.isStalled or engine.ignitionCoef <= 0) and 0 or 1) or 1
+end
+
 local function updateInGearArcade(dt)
   M.throttle = M.inputValues.throttle
   M.brake = M.inputValues.brake
@@ -354,6 +388,7 @@ local function updateInGearArcade(dt)
   end
 
   M.currentGearIndex = gearIndex
+  updateExposedData()
 end
 
 local function updateWhileShiftingArcade()
@@ -372,6 +407,7 @@ local function updateWhileShiftingArcade()
   newDesiredGearIndex = 0
   M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
   M.updateGearboxGFX = gearboxLogic.inGear
+  updateExposedData()
 end
 
 local function updateInGear(dt)
@@ -436,6 +472,7 @@ local function updateInGear(dt)
   end
 
   M.currentGearIndex = gearIndex
+  updateExposedData()
 
   if isManualMode then
     automaticHandling.mode = "M" .. gearIndex
@@ -464,13 +501,20 @@ local function updateWhileShifting()
   newDesiredGearIndex = 0
   M.timer.gearChangeDelayTimer = M.timerConstants.gearChangeDelay
   M.updateGearboxGFX = gearboxLogic.inGear
+  updateExposedData()
 end
 
-local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPoints, engineDevice, gearboxDevice)
+local function sendTorqueData()
+  if engine then
+    engine:sendTorqueData()
+  end
+end
+
+local function init(jbeamData, sharedFunctionTable)
   sharedFunctions = sharedFunctionTable
-  engine = engineDevice
-  gearbox = gearboxDevice
-  torqueConverter = powertrain.getDevice(expectedDeviceNames.torqueConverter)
+  engine = powertrain.getDevice("mainEngine")
+  gearbox = powertrain.getDevice("gearbox")
+  torqueConverter = powertrain.getDevice("torqueConverter")
   newDesiredGearIndex = 0
 
   M.currentGearIndex = 0
@@ -551,6 +595,12 @@ local function init(jbeamData, expectedDeviceNames, sharedFunctionTable, shiftPo
   automaticHandling.autoDownShiftInM = jbeamData.autoDownShiftInM == nil and true or jbeamData.autoDownShiftInM
   automaticHandling.throttleCoefWhileShifting = jbeamData.throttleCoefWhileShifting or 1
 
+  M.maxRPM = engine.maxRPM
+  M.idleRPM = engine.idleRPM
+  M.maxGearIndex = automaticHandling.maxGearIndex
+  M.minGearIndex = abs(automaticHandling.minGearIndex)
+  M.energyStorages = sharedFunctions.getEnergyStorages({engine})
+
   applyGearboxMode()
 end
 
@@ -563,5 +613,6 @@ M.shiftToGearIndex = shiftToGearIndex
 M.updateGearboxGFX = nop
 M.getGearName = getGearName
 M.getGearPosition = getGearPosition
+M.sendTorqueData = sendTorqueData
 
 return M

@@ -20,7 +20,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
-        ["$camber_FR", "range", "", "Wheel Alignment", 0.9892, 0.95, 1.03, "Camber Adjust", "Adjusts the wheel camber angle", {"subCategory":"Front"}]
+        ["$camber_FR", "range", "", "Wheel Alignment", 0.9988, 0.95, 1.03, "Camber Adjust", "Adjusts the wheel camber angle", {"subCategory":"Front"}]
         ["$caster_FR", "range", "", "Wheel Alignment", 1, 0.98, 1.02, "Caster Adjust", "Adjusts forward rake of the steering axis", {"subCategory":"Front"}],
         ["$trackoffset_F", "range", "+m", "Wheels", 0.0, -0.02, 0.05, "Wheel Offset", "Spacing of the wheel from the hub", {"stepDis":0.001,"subCategory":"Front"}]
     ],
@@ -76,6 +76,13 @@
         ["fh4r", "strut_FR", true, true, 0.0, 20001000, 500000, 500000],
         ["fh4l", "strut_FL", true, true, 0.0, 20001000, 500000, 500000],
     ],
+    "torsionbars": [
+        ["id1:", "id2:", "id3:", "id4:"],
+        {"spring":200000, "damp":0, "deform":25000, "strength":100000},
+        //rigidify steering arm
+        ["fw1rr", "fw1r", "fh1r", "fh3r"],
+        ["fw1ll", "fw1l", "fh1l", "fh3l"],
+    ],
     "beams": [
           ["id1:", "id2:"],
           //--FRONT RUNNING GEAR--
@@ -124,7 +131,7 @@
           ["fh5l","fw1l"],
           ["fw2l","fw1l"],
           ["fh1l","fw1ll"],
-          ["fh3l","fw1ll"{"beamSpring":12001000,"dampCutoffHz":500,"beamDamp":500}],
+          ["fh3l","fw1ll"{"beamSpring":12001000,"beamDamp":500}],
           ["fh5l","fw1ll"],
           ["fw2l","fw1ll"],
           //camber
@@ -311,18 +318,18 @@
     "beams": [
           ["id1:", "id2:"],
           //front progressive springs
-          {"beamPrecompression":1.395, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.195},
+          {"beamPrecompression":1.59, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.46},
           {"beamDeform":137500,"beamStrength":172500},
-          {"beamSpring":43000,"beamDamp":0},
-          {"beamLimitSpring":201000,"beamLimitDamp":0},
-          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
-          ["fh4l","fs1l",{"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5300}],
+          {"beamSpring":28000,"beamDamp":0},
+          {"beamLimitSpring":101000,"beamLimitDamp":0},
+          ["fh4r","fs1r",{"soundFile":"event:>Vehicle>Suspension>legacy>spring_creak1c","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
+          ["fh4l","fs1l",{"soundFile":"event:>Vehicle>Suspension>legacy>spring_compress2","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5300}],
           //dampers
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":0,"beamDamp":7000},
+          {"beamSpring":0,"beamDamp":6200},
           {"beamLimitSpring":0,"beamLimitDamp":0},
-          ["fh1r","fs1r",{"beamDampFast":2300,"beamDampRebound":11000,"beamDampReboundFast":3700,"beamDampVelocitySplit":0.1}],
-          ["fh1l","fs1l",{"beamDampFast":2300,"beamDampRebound":11000,"beamDampReboundFast":3700,"beamDampVelocitySplit":0.1}],
+          ["fh1r","fs1r",{"beamDampFast":1550,"beamDampRebound":9500,"beamDampReboundFast":2375,"beamDampVelocitySplit":0.07,"dampCutoffHz":1000}],
+          ["fh1l","fs1l",{"beamDampFast":1550,"beamDampRebound":9500,"beamDampReboundFast":2375,"beamDampVelocitySplit":0.07,"dampCutoffHz":1000}],
           //shock and suspension friction
           {"beamSpring":0,"beamDamp":400000},
           ["fh1r","fs1r",{"beamDampFast":0,"beamDampRebound":400000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
@@ -351,22 +358,22 @@
     "beams": [
           ["id1:", "id2:"],
           //front progressive springs
-          {"beamPrecompression":1.47, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.225},
+          {"beamPrecompression":1.68, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.46},
           {"beamDeform":137500,"beamStrength":172500},
-          {"beamSpring":38000,"beamDamp":0},
-          {"beamLimitSpring":201000,"beamLimitDamp":0},
-          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
-          ["fh4l","fs1l",{"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5300}],
+          {"beamSpring":26000,"beamDamp":0},
+          {"beamLimitSpring":101000,"beamLimitDamp":0},
+          ["fh4r","fs1r",{"soundFile":"event:>Vehicle>Suspension>legacy>spring_creak1c","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
+          ["fh4l","fs1l",{"soundFile":"event:>Vehicle>Suspension>legacy>spring_compress2","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5300}],
           //dampers
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":0,"beamDamp":4000},
+          {"beamSpring":0,"beamDamp":6000},
           {"beamLimitSpring":0,"beamLimitDamp":0},
-          ["fh1r","fs1r",{"beamDampFast":2200,"beamDampRebound":6800,"beamDampReboundFast":3200,"beamDampVelocitySplit":0.1}],
-          ["fh1l","fs1l",{"beamDampFast":2200,"beamDampRebound":6800,"beamDampReboundFast":3200,"beamDampVelocitySplit":0.1}],
+          ["fh1r","fs1r",{"beamDampFast":2000,"beamDampRebound":8000,"beamDampReboundFast":2670,"beamDampVelocitySplit":0.1,"dampCutoffHz":1000}],
+          ["fh1l","fs1l",{"beamDampFast":2000,"beamDampRebound":8000,"beamDampReboundFast":2670,"beamDampVelocitySplit":0.1,"dampCutoffHz":1000}],
           //shock and suspension friction
           {"beamSpring":0,"beamDamp":300000},
-          ["fh1r","fs1r",{"beamDampFast":0,"beamDampRebound":300000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
-          ["fh1l","fs1l",{"beamDampFast":0,"beamDampRebound":300000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["fh1r","fs1r",{"beamDampFast":0,"beamDampRebound":200000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
+          ["fh1l","fs1l",{"beamDampFast":0,"beamDampRebound":200000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
           //bump stops
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.20},
           {"beamSpring":0,"beamDamp":0},
@@ -391,18 +398,18 @@
     "beams": [
           ["id1:", "id2:"],
           //front progressive springs
-          {"beamPrecompression":1.27, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.16},
+          {"beamPrecompression":1.42, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":0.38},
           {"beamDeform":137500,"beamStrength":172500},
-          {"beamSpring":52000,"beamDamp":0},
-          {"beamLimitSpring":251000,"beamLimitDamp":0},
-          ["fh4r","fs1r",{"soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":24000}],
-          ["fh4l","fs1l",{"soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5600}],
+          {"beamSpring":36000,"beamDamp":0},
+          {"beamLimitSpring":151000,"beamLimitDamp":0},
+          ["fh4r","fs1r",{"soundFile":"event:>Vehicle>Suspension>legacy>spring_creak1c","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":24000}],
+          ["fh4l","fs1l",{"soundFile":"event:>Vehicle>Suspension>legacy>spring_compress2","volumeFactor":0.6,"decayMode":1,"decayFactor":4,"pitchFactor":2,"maxStress":5600}],
           //dampers
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":0,"beamDamp":8000},
+          {"beamSpring":0,"beamDamp":7600},
           {"beamLimitSpring":0,"beamLimitDamp":0},
-          ["fh1r","fs1r",{"beamDampFast":2700,"beamDampRebound":14000,"beamDampReboundFast":4700,"beamDampVelocitySplit":0.1,"dampCutoffHz":750}],
-          ["fh1l","fs1l",{"beamDampFast":2700,"beamDampRebound":14000,"beamDampReboundFast":4700,"beamDampVelocitySplit":0.1,"dampCutoffHz":750}],
+          ["fh1r","fs1r",{"beamDampFast":2500,"beamDampRebound":12000,"beamDampReboundFast":4000,"beamDampVelocitySplit":0.08,"dampCutoffHz":750}],
+          ["fh1l","fs1l",{"beamDampFast":2500,"beamDampRebound":12000,"beamDampReboundFast":4000,"beamDampVelocitySplit":0.08,"dampCutoffHz":750}],
           //shock and suspension friction
           {"beamSpring":0,"beamDamp":400000},
           ["fh1r","fs1r",{"beamDampFast":0,"beamDampRebound":400000,"beamDampReboundFast":0,"beamDampVelocitySplit":0.0001}],
@@ -446,9 +453,9 @@
          //The case() is for backwards compatibility for old configs containing the "rideheight_F" variable.
          //To change the base ride height, edit the springheight_F offset in the expression.
          ["fh4r","fs1r"{"beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=case($rideheight_F == nil, $springheight_F + 0.03, '')",
-             "soundFile":"art/sound/spring_creak1c.ogg","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
+             "soundFile":"event:>Vehicle>Suspension>legacy>spring_creak1c","volumeFactor":4,"decayMode":0,"decayFactor":3,"pitchFactor":1,"maxStress":18000}],
          ["fh4l","fs1l"{"beamPrecompression":"$=$rideheight_F", "precompressionRange":"$=case($rideheight_F == nil, $springheight_F + 0.03, '')",
-             "soundFile":"art/sound/spring_compress2.ogg","volumeFactor":0.7,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":4500}],
+             "soundFile":"event:>Vehicle>Suspension>legacy>spring_compress2","volumeFactor":0.7,"decayMode":1,"decayFactor":5,"pitchFactor":2,"maxStress":4500}],
          //dampers
          {"beamPrecompression":1.0, "beamType":"|BOUNDED","beamLongBound":1.0,"beamShortBound":1.0},
          {"beamDeform":127500,"beamStrength":167500},
@@ -491,17 +498,26 @@
          {"collision":true}
          {"nodeWeight":2.0},
          //front anti-roll
-         ["arbfr", -0.58, -1.3, 0.35],
-         ["arbfl", 0.58, -1.3, 0.35],
-         ["arbf", 0.0, -1.55, 0.44],
+         ["arbfr", -0.58, -1.35, 0.3],
+         ["arbfl", 0.58, -1.35, 0.3],
          {"group":""},
+    ],
+    "torsionbars": [
+        ["id1:", "id2:", "id3:", "id4:"],
+        //24mm 2543
+        //25mm 2994
+        //26mm 3502
+        //27mm 4073
+        //28mm 4710
+        {"spring":3502, "damp":10, "deform":10000, "strength":9999999},
+        ["arbfr", "fx1r", "fx1l", "arbfl"],
     ],
     "beams": [
           ["id1:", "id2:"],
           //--ANTI-ROLL--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
           {"beamSpring":5001000,"beamDamp":100},
-          {"beamDeform":52000,"beamStrength":712000},
+          {"beamDeform":20000,"beamStrength":712000},
           //end links
           ["arbfr","fh4r"],
           ["arbfl","fh4l"],
@@ -510,13 +526,6 @@
           ["arbfl","fx1l"],
           ["arbfr","fx1l"],
           ["arbfl","fx1r"],
-          ["arbfr","arbfl"],
-          {"beamSpring":3501000,"beamDamp":10},
-          //anti-roll
-          ["arbf", "fx1r"],
-          ["arbf", "fx1l"],
-          ["arbf", "arbfr"],
-          ["arbf", "arbfl"],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
     ],
 },
@@ -542,17 +551,26 @@
          {"collision":true}
          {"nodeWeight":2.5},
          //front anti-roll
-         ["arbfr", -0.58, -1.3, 0.35],
-         ["arbfl", 0.58, -1.3, 0.35],
-         ["arbf", 0.0, -1.55, 0.44],
+         ["arbfr", -0.58, -1.35, 0.3],
+         ["arbfl", 0.58, -1.35, 0.3],
          {"group":""},
+    ],
+    "torsionbars": [
+        ["id1:", "id2:", "id3:", "id4:"],
+        //24mm 2543
+        //25mm 2994
+        //26mm 3502
+        //27mm 4073
+        //28mm 4710
+        {"spring":4073, "damp":10, "deform":10000, "strength":9999999},
+        ["arbfr", "fx1r", "fx1l", "arbfl"],
     ],
     "beams": [
           ["id1:", "id2:"],
           //--ANTI-ROLL--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
           {"beamSpring":5001000,"beamDamp":100},
-          {"beamDeform":52000,"beamStrength":712000},
+          {"beamDeform":20000,"beamStrength":712000},
           //end links
           ["arbfr","fh4r"],
           ["arbfl","fh4l"],
@@ -561,13 +579,6 @@
           ["arbfl","fx1l"],
           ["arbfr","fx1l"],
           ["arbfl","fx1r"],
-          ["arbfr","arbfl"],
-          {"beamSpring":4001000,"beamDamp":10},
-          //anti-roll
-          ["arbf", "fx1r"],
-          ["arbf", "fx1l"],
-          ["arbf", "arbfr"],
-          ["arbf", "arbfl"],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
     ],
 },
@@ -582,10 +593,6 @@
         ["mesh", "[group]:", "nonFlexMaterials"],
         ["etk800_swaybar_F", ["etk800_body","etk800_subframe_F","etk800_swaybar_F"]],
     ],
-    "variables": [
-        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
-        ["$arb_F", "range", "", "Suspension", 4500000, 250000, 6000000, "Anti-Roll Spring Rate", "Torsional spring rate of the sway bar"{"minDis":0, "subCategory":"Front"}]
-    ],
     "nodes": [
          ["id", "posX", "posY", "posZ"],
          //anti-roll
@@ -596,17 +603,27 @@
          {"collision":true}
          {"nodeWeight":3.5},
          //front anti-roll
-         ["arbfr", -0.58, -1.4, 0.35],
-         ["arbfl", 0.58, -1.4, 0.35],
-         ["arbf", 0.0, -1.55, 0.44],
+         ["arbfr", -0.58, -1.35, 0.3],
+         ["arbfl", 0.58, -1.35, 0.3],
          {"group":""},
+    ],
+    "variables": [
+        ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
+        ["$arb_spring_F", "range", "N/m", "Suspension", 45000, 5000, 100000, "Anti-Roll Spring Rate", "Stiffness of the anti-roll bar, defined at the end links", {"stepDis":1000,"subCategory":"Front"}]
+    ],
+    "torsionbars": [
+        ["id1:", "id2:", "id3:", "id4:"],
+        //motion ratio 1 (difference between real and jbeam sway bar)
+        //arm length 0.321
+        {"spring":"$=$arb_spring_F*0.321*0.321", "damp":10, "deform":10000, "strength":9999999},
+        ["arbfr", "fx1r", "fx1l", "arbfl"],
     ],
     "beams": [
           ["id1:", "id2:"],
           //--ANTI-ROLL--
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
           {"beamSpring":5001000,"beamDamp":100},
-          {"beamDeform":52000,"beamStrength":712000},
+          {"beamDeform":20000,"beamStrength":712000},
           //end links
           ["arbfr","fh4r"],
           ["arbfl","fh4l"],
@@ -615,13 +632,6 @@
           ["arbfl","fx1l"],
           ["arbfr","fx1l"],
           ["arbfl","fx1r"],
-          ["arbfr","arbfl"],
-          {"beamSpring":"$arb_F","beamDamp":10},
-          //anti-roll
-          ["arbf", "fx1r"],
-          ["arbf", "fx1l"],
-          ["arbf", "arbfr"],
-          ["arbf", "arbfl"],
           {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
     ],
 },
@@ -664,7 +674,7 @@
     ],
     "variables": [
         ["name", "type", "unit", "category", "default", "min", "max", "title", "description"]
-        ["$toe_FR", "range", "", "Wheel Alignment", 1.0002, 1.02, 0.98, "Toe Adjust", "Adjusts the wheel toe-in angle", {"subCategory":"Front"}]
+        ["$toe_FR", "range", "", "Wheel Alignment", 1.0008, 1.02, 0.98, "Toe Adjust", "Adjusts the wheel toe-in angle", {"subCategory":"Front"}]
         ["$steer_center_F", "range", "", "Wheel Alignment", 0, -0.002, 0.002, "Toe Left/Right Trim", "Fine tunes the centerpoint of the steering", {"subCategory":"Front"}]
     ],
     "beams": [
@@ -673,17 +683,17 @@
           {"beamSpring":10001000,"beamDamp":250,"beamDeform":100000,"beamStrength":275000},
           ["fh6r","fh6l"],
           //toe out
-          {"beamSpring":20001000,"beamDamp":250,"beamDeform":55000,"beamStrength":225000},
+          {"beamSpring":19001000,"beamDamp":250,"beamDeform":55000,"beamStrength":275000},
           ["fh3r","fh6r"{"beamPrecompression":"$=$toe_FR+$steer_center_F","beamPrecompressionTime":0.5}],
           ["fh3l","fh6l"{"beamPrecompression":"$=$toe_FR-$steer_center_F","beamPrecompressionTime":0.5}],
           //steering damper
           {"beamPrecompression":1.0, "beamType":"|BOUNDED", "beamLongBound":1.0, "beamShortBound":1.0},
-          {"beamSpring":0,"beamDeform":16800,"beamStrength":42000},
           {"beamLimitSpring":0,"beamLimitDamp":0},
-          ["fh3r","fx2r",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
-          ["fh3l","fx2l",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
-          ["fh5r","fx1r",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
-          ["fh5l","fx1l",{"beamDampVelocitySplit":0.15,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":0,"beamDampRebound":0}],
+          {"beamSpring":0},
+          ["fh3r","fx2r",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":100,"beamDampRebound":100,"dampCutoffHz":1000}],
+          ["fh3l","fx2l",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":100,"beamDampRebound":100,"dampCutoffHz":1000}],
+          ["fh5r","fx1r",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":100,"beamDampRebound":100,"dampCutoffHz":1000}],
+          ["fh5l","fx1l",{"beamDampVelocitySplit":0.1,"beamDampFast":500,"beamDampReboundFast":500,"beamDamp":100,"beamDampRebound":100,"dampCutoffHz":1000}],
           {"beamPrecompression":1.0, "beamType":"|NORMAL", "beamLongBound":1, "beamShortBound":1},
     ],
     "triangles": [

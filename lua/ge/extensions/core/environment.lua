@@ -77,6 +77,7 @@ local function setTimeOfDay(timeOfDay)
     timeObj.dayScale = timeOfDay.dayScale
     timeObj.nightScale = timeOfDay.nightScale
     timeObj.dayLength = timeOfDay.dayLength
+    timeObj.azimuthOverride = timeOfDay.azimuthOverride
   end
 end
 
@@ -87,6 +88,7 @@ local function getTimeOfDay()
     timeOfDay.time = timeObj.time
     timeOfDay.play = timeObj.play
     timeOfDay.dayScale = timeObj.dayScale
+    timeOfDay.azimuthOverride = timeObj.azimuthOverride
     timeOfDay.nightScale = timeObj.nightScale
     timeOfDay.dayLength = timeObj.dayLength
   end
@@ -255,11 +257,11 @@ local function dumpGroundModels()
       }
     end
   end
-  writeJsonFile('groundmodels_dump.json', gms, true)
+  jsonWriteFile('groundmodels_dump.json', gms, true)
 end
 
 local function loadGroundModelFile(filename)
-  local gms = readJsonFile(filename)
+  local gms = jsonReadFile(filename)
   if not gms then
     log('E', 'ge.environment.reloadGroundModels', 'unable to load main ground models file: ' .. filename);
     return
@@ -410,38 +412,6 @@ local function invertLerp(from,to,value)
   return (value - from) / (to-from)
 end
 
---local dbgui_window_open = core_imgui.BoolPtr(true)
---local dbgui_windowFlag_MenuBar = core_imgui.ImGuiWindowFlags("ImGuiWindowFlags_MenuBar")
-
-local function renderdebugUI()
-  core_imgui.Begin("Environment-Debug", dbgui_window_open, dbgui_windowFlag_MenuBar)
-
-  local fontHeight = core_imgui.GetTextLineHeight()
-  core_imgui.BeginChild("groundmodels", core_imgui.ImVec2(150, 0))
-  local ffi = require('ffi')
-
-  for i = 1, 10 do
-    local pos = core_imgui.GetCursorScreenPos()
-    core_imgui.Text("A: " .. tostring(i))
-    core_imgui.ImDrawList_AddRectFilled(
-      core_imgui.GetWindowDrawList(),
-      pos,
-      core_imgui.ImVec2(pos.x + 20, pos.y + fontHeight),
-      core_imgui.GetColorU32ByVec4(core_imgui.ImVec4(1,0,0,1))
-    )
-    core_imgui.SameLine()
-    core_imgui.Text("A: " .. tostring(i))
-  end
-  core_imgui.EndChild()
-
-
-  core_imgui.BeginChild("groundmodels1",core_imgui.ImVec2(150, 0))
-  core_imgui.Text("A")
-  core_imgui.Text("B")
-  core_imgui.EndChild()
-
-  core_imgui.End()
-end
 
 local function onUpdate()
   local levelInfo = getObject("LevelInfo")
@@ -467,8 +437,6 @@ local function onUpdate()
   end
 
   be:setSeaLevelTemperatureK( tempC + 273.15 )
-
-  --renderdebugUI()
 end
 
 local function onClientStartMission(mission)
@@ -502,6 +470,7 @@ M.setPrecipitation = setPrecipitation
 M.getPrecipitation = getPrecipitation
 M.setGravity = setGravity
 M.getGravity = getGravity
+M.reloadGroundModels = reloadGroundModels
 M.store_init=store_init
 M.onClientPreStartMission = onClientPreStartMission
 M.onInit = reset

@@ -525,7 +525,7 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          {"deformGroup":"doorglass_FR_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_doorglass_FR", ["etk800_door_FR"],[]{"deformSound":"GlassBreakSound5", "deformVolume":0.7}],
+         ["etk800_doorglass_FR", ["etk800_door_FR"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound5", "deformVolume":0.7}],
          {"deformGroup":"doorglass_FR_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
          ["etk800_doorglass_FR_int", ["etk800_door_FR"]],
          {"deformGroup":""}
@@ -562,7 +562,7 @@
     "flexbodies": [
          ["mesh", "[group]:", "nonFlexMaterials"],
          {"deformGroup":"doorglass_FL_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_doorglass_FL", ["etk800_door_FL"],[]{"deformSound":"GlassBreakSound6", "deformVolume":0.7}],
+         ["etk800_doorglass_FL", ["etk800_door_FL"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound6", "deformVolume":0.7}],
          {"deformGroup":"doorglass_FL_break", "deformMaterialBase":"etk800_glass_int", "deformMaterialDamaged":"etk800_glass_dmg"}
          ["etk800_doorglass_FL_int", ["etk800_door_FL"]],
          {"deformGroup":""}

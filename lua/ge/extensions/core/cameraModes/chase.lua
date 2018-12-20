@@ -4,23 +4,10 @@
 
 local C = {}
 C.__index = C
-local dtSmoother = newExponentialSmoothing(30)
 
 function C:init()
   self.disabledByDefault = true
-  if self.defaultRotation == nil then
-    self.defaultRotation = vec3(0, -17, 0)
-  end
-  self.defaultRotation = vec3(self.defaultRotation)
-  self.camRot = vec3(self.defaultRotation)
-  self.camMinDist = self.distanceMin or 3
-  self.distance = self.distance or 5
-  self.defaultDistance = self.distance
-  self.camDist = self.defaultDistance
-  self.camLastDist = self.defaultDistance
   self.camLastRot = vec3()
-  self.mode = self.mode or 'ref'
-  self.fov = self.fov or 65
   self.fwdVeloSmoother = newTemporalSmoothing(100)
   local chaseDirSmoothCoef = 0.0008
   self.dirSmoothX = newTemporalSmoothing(chaseDirSmoothCoef)
@@ -31,24 +18,35 @@ function C:init()
   self.lastRefPos = vec3()
   self.camLastPoslx = vec3()
   self.camLastUp = vec3()
-  self.offset = vec3(self.offset)
   self.camResetted = 0
-  self:reloaded()
-  dtSmoother = newExponentialSmoothing(30)
+  self:onVehicleCameraConfigChanged()
+  self:onSettingsChanged()
+  self:reset()
 end
 
-function C:reloaded()
-  -- make sure this gets recalculated by invalidating it
+function C:onVehicleCameraConfigChanged()
+  if self.defaultRotation == nil then
+    self.defaultRotation = vec3(0, -17, 0)
+  else
+    self.defaultRotation = vec3(self.defaultRotation)
+    self.defaultRotation.y = -self.defaultRotation.y
+  end
+  self.camRot = vec3(self.defaultRotation)
+  self.camMinDist = self.distanceMin or 3
+  self.distance = self.distance or 5
+  self.defaultDistance = self.distance
+  self.camDist = self.defaultDistance
+  self.camLastDist = self.defaultDistance
+  self.mode = self.mode or 'ref'
+  self.fov = self.fov or 65
+  self.offset = vec3(self.offset)
   self.camBase = nil
-  -- global fov tuning
-  self.fov = self.fov + settings.getValue('cameraFOVTune') or 0
-  self.fov = math.min(150, math.max(1, self.fov))
+end
+
+function C:onSettingsChanged()
   self.relaxation = settings.getValue('cameraOrbitRelaxation') or 3
   self.rollSmoothing = math.max(settings.getValue('cameraChaseRollSmoothing') or 1, 0.000001)
-  self.camRot = vec3(self.defaultRotation)
-  self.camRot.x = 0
-  self.forwardLooking = true
-  self.camResetted = 2
+  self:reset() --TODO is this really necessary?
 end
 
 function C:reset()
@@ -56,14 +54,21 @@ function C:reset()
   self.camRot.x = 0
   self.forwardLooking = true
   self.camResetted = 2
+  self.relYaw = 0
+  self.relPitch = 0
 end
 
 function C:update(data)
   -- update input
-  local dtfactor = data.dt * 1000
+  local deadzone = 0.5
+  self.relYaw =   clamp(self.relYaw   + 0.15*MoveManager.yawRelative  , -1, 1)
+  self.relPitch = clamp(self.relPitch + 0.15*MoveManager.pitchRelative, -1, 1)
+  local relYawUsed   = self.relYaw
+  local relPitchUsed = self.relPitch
+  if math.abs(relYawUsed)   < deadzone then relYawUsed   = 0 end
+  if math.abs(relPitchUsed) < deadzone then relPitchUsed = 0 end
 
-  local dx = (MoveManager.yawLeftSpeed - MoveManager.yawRightSpeed) * dtfactor
-  --print("dx: " .. tostring(dx))
+  local dx = 200*relYawUsed + 100*data.dt*(MoveManager.yawRight - MoveManager.yawLeft)
   self.camRot.x = 0
   if not self.forwardLooking then
     self.camRot.x = -180
@@ -80,24 +85,24 @@ function C:update(data)
     self.camRot.x = -self.camRot.x
   end
 
-  local dy = (MoveManager.pitchUpSpeed - MoveManager.pitchDownSpeed) * dtfactor
+  local dy = 200*relPitchUsed + 100*data.dt*(MoveManager.pitchUp - MoveManager.pitchDown)
   self.camRot.y = self.defaultRotation.y
   if dy > triggerValue then
+    self.camRot.y = self.defaultRotation.y + 30
+  elseif dy < -triggerValue then
     if self.forwardLooking then
       self.camRot.x = -180
     else
       self.camRot.x = 0
     end
-    --self.camRot.y = self.defaultRotation.y + 17
-  elseif dy < -triggerValue then
-    self.camRot.y = self.defaultRotation.y - 30
+    --self.camRot.y = self.defaultRotation.y - 17
   end
 
-  --self.camRot.y = self.camRot.y - BeamEngine.camY * 10 + (MoveManager.pitchUpSpeed - MoveManager.pitchDownSpeed) * (dtfactor * -1)
-  --self.camRot.z = self.camRot.z +  MoveManager.roll  * 10.0f + (MoveManager.rollLeftSpeed - MoveManager.rollRightSpeed) * (data.dt * 300)
+  --self.camRot.y = self.camRot.y - 10*MoveManager.pitchRelative + 100*data.dt*(MoveManager.pitchUp   - MoveManager.pitchDown)
+  --self.camRot.z = self.camRot.z + 10*MoveManager.rollRelative  + 300*data.dt*(MoveManager.rollRight - MoveManager.rollLeft )
 
-  if self.camRot.y > 85 then self.camRot.y = 85 end
-  if self.camRot.y < -85 then self.camRot.y = -85 end
+  self.camRot.y = clamp(self.camRot.y, -85, 85)
+  --dump(self.camRot.y, self.defaultRotation.y)
 
   -- make sure the rotation is never bigger than 2 PI
   if self.camRot.x > 180 then
@@ -108,10 +113,7 @@ function C:update(data)
     self.camLastRot.x = self.camLastRot.x + math.pi * 2
   end
 
-  BeamEngine.camX = 0
-  BeamEngine.camY = 0
-
-  local ddist = (BeamEngine.zoomInSpeed - BeamEngine.zoomOutSpeed) * dtfactor
+  local ddist = 0.1 * data.dt * (MoveManager.zoomIn - MoveManager.zoomOut) * self.fov
   self.camDist = self.defaultDistance
   if ddist > triggerValue then
     self.camDist = self.defaultDistance * 2
@@ -175,7 +177,7 @@ function C:update(data)
       -- if rolling is disabled, we are always up no matter what ...
       up = vec3(0,0,1)
     end
-    dir = vec3(self.dirSmoothX:getUncapped(dir.x, dtfactor), self.dirSmoothY:getUncapped(dir.y, dtfactor), self.dirSmoothZ:getUncapped(dir.z, dtfactor)):normalized()
+    dir = vec3(self.dirSmoothX:getUncapped(dir.x, data.dt*1000), self.dirSmoothY:getUncapped(dir.y, data.dt*1000), self.dirSmoothZ:getUncapped(dir.z, data.dt*1000)):normalized()
     --local lxratio = 1 / (data.dt * 8)
     --dir = (1 / (lxratio + 1) * dir + (lxratio / (lxratio + 1)) * dirlx):normalized()
   end
@@ -206,7 +208,7 @@ function C:update(data)
   end
   self.lastDataPos = vec3(data.pos)
 
-  local rot = vec3(math.rad(self.camRot.x), -math.rad(self.camRot.y), math.rad(self.camRot.z))
+  local rot = vec3(math.rad(self.camRot.x), math.rad(self.camRot.y), math.rad(self.camRot.z))
 
   -- smoothing
   local ratio = 1 / (data.dt * 8)
@@ -254,6 +256,12 @@ function C:setRefNodes(centerNodeID, leftNodeID, backNodeID)
   self.refNodes.ref = centerNodeID
   self.refNodes.left = leftNodeID
   self.refNodes.back = backNodeID
+end
+
+function C:mouseLocked(locked)
+  if locked then return end
+  self.relYaw = 0
+  self.relPitch = 0
 end
 
 function C:onSerialize()

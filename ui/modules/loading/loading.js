@@ -25,10 +25,16 @@ angular.module('beamng.stuff')
     $scope.$digest();
   });
 
+  bngApi.engineLua('sailingTheHighSeas', (val) => {
+    $scope.sailingTheHighSeas = val
+  });
 
   bngApi.engineLua(`dirContent("game:/ui/modules/loading/${beamng.product}/")`, (data) => {
     var files = data.map((elem) => elem.slice('/ui/'.length + (elem.indexOf("game:")==0?'game:'.length:0)));
     var file = files[Utils.random(0, files.length -1, true)];
+    if ($scope.sailingTheHighSeas === true) {
+      file = "modules/mainmenu/unofficial_version.jpg"
+    }
     $scope.$evalAsync(() => {
       vm.img = file;
       // give angualar a head start to finish running it's digest
@@ -65,7 +71,7 @@ angular.module('beamng.stuff')
 
   // no infinite loading screen
   var timeout = setTimeout(() => bngApi.engineLua('core_gamestate.loadingScreenActive()'), 10000);
-  
+
   $scope.$on('$destroy', function () {
     clearTimeout(timeout)
   });

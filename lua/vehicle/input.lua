@@ -8,11 +8,6 @@ M.keys = {} -- Backwards compatibility
 M.state = {}
 M.filterSettings = {}
 
-M.FILTER_KBD    = 0
-M.FILTER_PAD    = 1
-M.FILTER_DIRECT = 2
-M.FILTER_KBD2   = 3
-
 --set kbd initial rates (derive these from the menu options eventually)
 local kbdInRate = 2.2
 local kbdOutRate = 1.6
@@ -30,6 +25,8 @@ local vehicleSteeringWheelLock = 450
 local handbrakeSoundEngaging    = nil
 local handbrakeSoundDisengaging = nil
 local handbrakeSoundDisengaged  = nil
+
+local correctionSmooth = newTemporalSmoothingNonLinear(20)
 
 local function init()
   --scale rates based on steering wheel degrees
@@ -183,7 +180,7 @@ local function update(dt)
   -- map the values
   for k, e in pairs(M.state) do
     local ival = 0
-    if e.filter == M.FILTER_DIRECT then
+    if e.filter == FILTER_DIRECT then
       if e.angle == nil or e.angle == 0 then
         ival = e.val
       else
@@ -194,19 +191,19 @@ local function update(dt)
       end
     else
       ival = math.min(math.max(e.val, -1), 1)
-      if e.filter == M.FILTER_PAD then -- joystick / game controller - smoothing without autocentering
+      if e.filter == FILTER_PAD then -- joystick / game controller - smoothing without autocentering
         if k == 'steering' then
           ival = e.smootherPAD:getWithRate(ival, dt, dynamicInputRatePad(ival, dt, e.smootherPAD:value()))
         else
           ival = e.smootherPAD:get(ival, dt)
         end
-      elseif e.filter == M.FILTER_KBD then
+      elseif e.filter == FILTER_KBD then
         if k == 'steering' then
           ival = e.smootherKBD:getWithRate(ival, dt, dynamicInputRateKbd(ival, dt, e.smootherKBD:value()))
         else
           ival = e.smootherKBD:get(ival, dt)
         end
-      elseif e.filter == M.FILTER_KBD2 then
+      elseif e.filter == FILTER_KBD2 then
         if k == 'steering' then
           ival = e.smootherKBD:getWithRate(ival, dt, dynamicInputRateKbd2(ival, e.smootherKBD:value()))
         else
@@ -294,13 +291,13 @@ end
 
 local function settingsChanged()
   M.filterSettings = {}
-  for i,v in ipairs({ M.FILTER_KBD, M.FILTER_PAD, M.FILTER_DIRECT, M.FILTER_KBD2 }) do
+  for i,v in ipairs({ FILTER_KBD, FILTER_PAD, FILTER_DIRECT, FILTER_KBD2 }) do
     local f = {}
-    local limitEnabled= settings.getValue("filter"..tostring(v).."_limitEnabled"   , false)
+    local limitEnabled = settings.getValue("inputFilter"..tostring(v).."_limitEnabled"   , false)
     if limitEnabled then
-      local startSpeed = math.max(0,math.min(100,settings.getValue("filter"..tostring(v).."_limitStartSpeed",     0))) -- 0..100 m/s
-      local endSpeed   = math.max(0,math.min(100,settings.getValue("filter"..tostring(v).."_limitEndSpeed"  ,   100))) -- 0..100 m/s
-      f.limitMultiplier= math.max(0,math.min(  1,settings.getValue("filter"..tostring(v).."_limitMultiplier",     1))) -- 0..1 multi
+      local startSpeed = math.max(0,math.min(100,settings.getValue("inputFilter"..tostring(v).."_limitStartSpeed",     0))) -- 0..100 m/s
+      local endSpeed   = math.max(0,math.min(100,settings.getValue("inputFilter"..tostring(v).."_limitEndSpeed"  ,   100))) -- 0..100 m/s
+      f.limitMultiplier= math.max(0,math.min(  1,settings.getValue("inputFilter"..tostring(v).."_limitMultiplier",     1))) -- 0..1 multi
       if startSpeed > endSpeed then
         log("W", "", "Invalid speeds for speed sensitive filter #"..dumps(v)..", sanitizing by swapping: ["..dumps(startSpeed)..".."..dumps(endSpeed).."]")
         startSpeed, endSpeed = endSpeed, startSpeed

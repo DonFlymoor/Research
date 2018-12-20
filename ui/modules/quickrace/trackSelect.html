@@ -64,6 +64,15 @@
       </md-list-item>
 -->
 
+
+      <md-list-item class="md-2-line" ng-if="selected.difficulty" >
+        <md-icon class="material-icons" style="font-size: 2em">games</md-icon>
+        <div class="md-list-item-text">
+          <h3 >{{ ::'ui.common.property.difficulty' | translate }}</h3>
+          <p >{{ difText(selected.difficulty) || 'Unknown' }}</p>
+        </div>
+      </md-list-item>
+
       <md-list-item class="md-2-line" ng-if="selected.reversible" >
          <md-icon class="material-icons" style="font-size: 2em">swap_horiz</md-icon>
         <div class="md-list-item-text">

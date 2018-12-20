@@ -14,93 +14,66 @@ local function rotateEuler(x, y, z, q)
   return q
 end
 
-function C:reloaded()
-  -- global fov tuning
-  self.fov = self.fov + settings.getValue('cameraFOVTune') or 0
-  self.fov = math.min(150, math.max(1, self.fov))
-
-  self.globalOffset = vec3(
-    settings.getValue('cameraPosTuneX') or 0,
-    settings.getValue('cameraPosTuneY') or 0,
-    settings.getValue('cameraPosTuneZ') or 0
-  )
-
-  -- if right hand drive, invert X axis
-  if self.rightHandCamera then
-    self.globalOffset.x = - self.globalOffset.x
-  end
-
-end
-
 function C:init()
-  self.camRot = vec3(0, 0, 0)
-  self.fov = self.fov or 55
-  self.fovInit = self.fovInit or self.fov
-  self:reloaded()
+  self:onVehicleCameraConfigChanged()
+  self:onSettingsChanged()
+  self:reset()
 end
 
+function C:onVehicleCameraConfigChanged()
+  self.hidden = self.name == "driver" -- 'driver' camera data is kept, for driver.lua and other cams to use it. but the cam is hidden from the end-user
+end
+function C:onSettingsChanged()
+  self.fov = math.max(2, self.fov or 55)
+end
 
 function C:reset()
-  self.camRot = vec3(0, 0, 0)
-  self.fov = self.fovInit + settings.getValue('cameraFOVTune') or 0
-end
-
-function C:lookback()
-  if self.camRot.x > 0 then
-    self.camRot.x = 0
-  else
-    self.camRot.x = 180
-  end
+  self.camRot = vec3()
+  self.fovOffset = 0
 end
 
 function C:update(data)
   -- update input
-  self.camRot.y = self.camRot.y - BeamEngine.camY * 10 + (MoveManager.pitchUpSpeed - MoveManager.pitchDownSpeed) * (-1000 * data.dt)
-  self.camRot.x = self.camRot.x + BeamEngine.camX * 10 + (MoveManager.yawLeftSpeed - MoveManager.yawRightSpeed) * (1000 * data.dt)
-  --self.camRot.z = self.camRot.z +  MoveManager.roll  * 10.0f + (MoveManager.rollLeftSpeed - MoveManager.rollRightSpeed) * (dt)
+  self.camRot.x = self.camRot.x + 10*MoveManager.yawRelative   + 100*data.dt*(MoveManager.yawRight - MoveManager.yawLeft)
+  self.camRot.y = self.camRot.y - 10*MoveManager.pitchRelative + 100*data.dt*(MoveManager.pitchDown  - MoveManager.pitchUp)
+  --self.camRot.z = self.camRot.z - 10*MoveManager.rollRelative  + 100*data.dt*(MoveManager.rollRight- MoveManager.rollLeft)
+  self.camRot.y = clamp(self.camRot.y, -85, 85)
 
-  local rdz = (BeamEngine.zoomInSpeed - BeamEngine.zoomOutSpeed) * data.dt * 4000
-  self.fov = math.min(math.max(self.fov + rdz, 10), 150)
+  -- fov tweaks
+  local extraOffset = 4.5 * data.dt * (MoveManager.zoomIn - MoveManager.zoomOut) * getCameraFov()
+  self.fovOffset = clamp(self.fovOffset + extraOffset, 2-self.fov, 120-self.fov)
+  local fov = self.fov + self.fovOffset
+  local mustNotifyFov = round(fov*10) ~= round((self.lastNotifiedFov or self.fov) * 10)
+  if mustNotifyFov then
+    self.lastNotifiedFov = fov
+    ui_message({txt='ui.camera.fov', context={degrees=fov}}, 2, 'cameramode')
+  end
 
-  if self.camRot.y > 85 then self.camRot.y = 85 end
-  if self.camRot.y < -85 then self.camRot.y = -85 end
+  -- position
+  local carPos = data.pos
+  local nodePos = vec3(data.veh:getNodePosition(self.camNodeID))
 
-  BeamEngine.camX = 0
-  BeamEngine.camY = 0
-
-  --
   local ref  = vec3(data.veh:getNodePosition(self.refNodes.ref))
   local left = vec3(data.veh:getNodePosition(self.refNodes.left))
   local back = vec3(data.veh:getNodePosition(self.refNodes.back))
-
-  local onboardCamPos = vec3(data.veh:getNodePosition(self.camNodeID))
-
-
   local dir = (ref - back):normalized()
-  local camPos = data.pos + onboardCamPos
+
   local camLeft = (ref - left):normalized()
   if dir:squaredLength() == 0 or camLeft:squaredLength() == 0 then
-    data.res.pos = camPos
+    data.res.pos = carPos + nodePos
     data.res.rot = quatFromDir(vec3(0,1,0), vec3(0, 0, 1))
     return false
   end
 
   local camUp = -(dir:cross(camLeft):normalized())
   local qdir = quatFromDir(dir)
-
-  local rotatedUp = vec3(0, 0, 1)
-  rotatedUp = qdir * rotatedUp
-
-  -- TODO: add camera roll input support: camRot.z
-  local lookRot = 0 -- removed for now. readd: TODO: // bo->avgCamSteering.get(steering) * steerLookMax * (1.0f - min(camRefVelo.lenSquared(), 150.0f) / 200.0f)
-  qdir = rotateEuler(-math.rad(-self.camRot.x), -math.rad(self.camRot.y), math.atan2(rotatedUp:dot(camLeft), rotatedUp:dot(camUp)), qdir)
-
-  local camOffset = (qdir * self.globalOffset)
+  local rotatedUp = qdir * vec3(0, 0, 1)
+  qdir = rotateEuler(math.rad(self.camRot.x), math.rad(self.camRot.y), math.atan2(rotatedUp:dot(camLeft), rotatedUp:dot(camUp)), qdir)
 
   -- application
-  data.res.pos = camPos + camOffset
+  data.res.pos = carPos + nodePos
   data.res.rot = qdir
-  data.res.fov = self.fov
+  data.res.fov = fov
   return true
 end
 

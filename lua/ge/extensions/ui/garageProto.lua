@@ -54,7 +54,7 @@ local function activate()
   log('D', 'nodeStream.activate', "activated")
   local missionFile = getMissionFilename()
   if missionFile ~= garageLevel then
-    beamng_cef.startLevel(garageLevel)--Tested&&Works
+    core_levels.startLevel(garageLevel)--Tested&&Works
   else
     _start()
   end

@@ -10,7 +10,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["etk800_headlightframe_R", ["etk800_headlight_R"]],
          {"deformGroup":"headlightglass_R_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_headlightglass_R", ["etk800_headlight_R"],[]{"deformSound":"GlassBreakSound3", "deformVolume":0.4}],
+         ["etk800_headlightglass_R", ["etk800_headlight_R"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound3", "deformVolume":0.4}],
          {"deformGroup":""},
          {"deformGroup":"headlightglass_R_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_headlight_R", ["etk800_headlight_R"]],
@@ -157,7 +157,7 @@
          ["mesh", "[group]:", "nonFlexMaterials"],
          ["etk800_headlightframe_L", ["etk800_headlight_L"]],
          {"deformGroup":"headlightglass_L_break", "deformMaterialBase":"etk800_glass", "deformMaterialDamaged":"etk800_glass_dmg"}
-         ["etk800_headlightglass_L", ["etk800_headlight_L"],[]{"deformSound":"GlassBreakSound4", "deformVolume":0.6}],
+         ["etk800_headlightglass_L", ["etk800_headlight_L"],[]{"deformSound":"event:>Destruction>Vehicle>Glass>glassbreaksound4", "deformVolume":0.6}],
          {"deformGroup":""},
          {"deformGroup":"headlightglass_L_break", "deformMaterialBase":"etk800_lights", "deformMaterialDamaged":"etk800_lights_dmg"}
          ["etk800_headlight_L", ["etk800_headlight_L"]],

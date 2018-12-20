@@ -428,7 +428,6 @@ function EditorGui::onWake(%this) {
     // before activating an editor plugin, so that if the plugin
     // installs an ActionMap, it will be highest on the stack.
 
-    MoveMap.push();
     EditorMap.push();
 
     // Active the current editor plugin.
@@ -455,7 +454,6 @@ function EditorGui::onSleep(%this) {
 
     // Remove the editor's ActionMaps.
     EditorMap.pop();
-    MoveMap.pop();
 
     // Notify the editor plugins that the editor will be closing.
     foreach (%plugin in EditorPluginSet) %plugin.onEditorSleep();

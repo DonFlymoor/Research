@@ -7,7 +7,7 @@ local vehicles = require("core/vehicles")
 
 local workerCoroutine = nil
 
-local config = readJsonFile('settings/createThumbnails_config.json')
+local config = jsonReadFile('settings/createThumbnails_config.json')
 local options = config.options
 local views = config.views
 local defaultRes = nil
@@ -90,7 +90,7 @@ local function setViews(default, v, parameters)
       core_camera.setDistance(veh:getID(), viewType[6])
       core_camera.setOffset(veh:getID(), vec3(viewType[1] / viewType[6], viewType[2] / viewType[6], viewType[3] / viewType[6]))
       core_camera.setRotation(veh:getID(), vec3(viewType[4], 0, 0))
-      
+
       for i,v in pairs(views) do
         if parameters[i] then
           views[i].offset = {parameters[i][1], parameters[i][2], parameters[i][3]}
@@ -100,12 +100,12 @@ local function setViews(default, v, parameters)
           views[i].width = parameters[i][7]
           views[i].height = parameters[i][7]*9/16
         end
-      end 
-    end 
+      end
+    end
   end
-end 
+end
 
-local function createThumbnails(default, currentMap, plateText, parameters, width) 
+local function createThumbnails(default, currentMap, plateText, parameters, width)
   local veh = be:getObject(0)
   veh = scenetree.findObjectById(veh:getID())
   local vehicleName = string.match(veh:getPath(), "vehicles/([^/]*)/") -- just get the name
@@ -113,7 +113,7 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
   options.plate = plateText
 
   if default then
-    config = readJsonFile('settings/createThumbnails_config.json')
+    config = jsonReadFile('settings/createThumbnails_config.json')
     views = config.views
     for i,v in pairs(views) do
     dump(width)
@@ -123,7 +123,7 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
   end
 
   if not currentMap then
-    core_levels.startFreeroam("levels/showroom_v2_dark/main.level.json")  
+    freeroam_freeroam.startFreeroam("levels/showroom_v2_dark/main.level.json")
   end
 
   local vehPos = nil
@@ -146,12 +146,12 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
 
   -- set GraphicBorderless to true, to make sure the view dimensions actually are the ones the picture is taken in
   settings.setValue('GraphicBorderless', true)
-  settings.setValue('vsync', 1)
+  settings.setValue('vsync', true)
   settings.setValue('GraphicDynReflectionEnabled', false)
   defaultRes = settings.getValue('GraphicResolutions')
 
   -- set correct level
-  --beamng_cef.startLevel(levelFullPath)
+  --core_levels.startLevel(levelFullPath)
 
   -- main thing
 
@@ -166,9 +166,9 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
     local configs = core_vehicles.getConfigList(true).configs
     local configCount = tableSize(configs)
     log('I', logTag, table.maxn(configs).." configs")
-    
+
     coroutine.yield()
-    
+
     local counter = 0
     for _, v in pairs(configs) do
       counter = counter + 1
@@ -192,12 +192,12 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
 
       guihooks.trigger('hide_ui', true)
 
-      for viewName, useView in pairs(views) do 
+      for viewName, useView in pairs(views) do
         if useView.allow == nil then
           useView.allow = {}
         end
-        if v.aggregates.Type.Prop and not tableContains(useView.allow, "Prop") then goto skipView end
-        if v.aggregates.Type.Trailer and not tableContains(useView.allow, "Trailer") then goto skipView end
+        -- if v.aggregates.Type.Prop and not tableContains(useView.allow, "Prop") then goto skipView end
+        -- if v.aggregates.Type.Trailer and not tableContains(useView.allow, "Trailer") then goto skipView end
         if not v.is_default_config and tableContains(useView.allow, "onlyDefault") then goto skipView end
         if options.views ~= nil and not tableContains(options.views, viewName) then goto skipView end
         local findValView = findValConf(useView)
@@ -221,7 +221,7 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
         else
           newVehicle:setPositionRotation(0,0,0.5,0,0,0,1)
         end
-        
+
         newVehicle:queueLuaCommand("input.event('parkingbrake', 1, 1)")
 
         -- scenetree.hemisphere:setPosition(Point3F(pos.x, pos.y, 0))
@@ -238,7 +238,7 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
 
         core_camera.resetCameraByID(vehicleId)
         core_camera.setFOV(vehicleId, 20)
-        
+
         for i=1,80 do
           coroutine.yield()
         end
@@ -258,7 +258,7 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
         if findValView('dist') == nil then
           useView.dist = 1
         end
-        
+
         local idealDistance = newVehicle:getViewportFillingCameraDistance() * findValView('dist')
         if default then
           core_camera.setDistance(vehicleId, idealDistance)
@@ -271,8 +271,8 @@ local function createThumbnails(default, currentMap, plateText, parameters, widt
             core_camera.setOffset(vehicleId, vec3(findValView('offset')[1] / findValView('dist'), findValView('offset')[2] / findValView('dist'), findValView('offset')[3] / findValView('dist')))
           end
         end
-        
-        --BeamEngine.zoomInSpeed = idealDistance
+
+        --MoveManager.zoomInSpeed = idealDistance
         --print("* new distance: " .. tostring(idealDistance))
 
         for i=1,80 do
@@ -324,7 +324,7 @@ end
 local function onExtensionLoaded()
   log('I', logTag, "module loaded")
   -- set GraphicBorderless to true, to make sure the view dimensions actually are the ones the picture is taken in
-  
+
 end
 
 local function onExtensionUnloaded()

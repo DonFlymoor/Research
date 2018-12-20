@@ -925,7 +925,7 @@ local function drawDebug(dtReal, lastFocusPos)
 end
 
 local function saveSVG(filename)
-  local svg = require('svgwriter')
+  local svg = require('libs/EzSVG/EzSVG')
 
   local terrain = scenetree.findObject(scenetree.findClassObjects('TerrainBlock')[1])
   local terrainPosition = vec3(terrain:getPosition())
@@ -1031,7 +1031,7 @@ local function onWaypoint(args)
   ]]
 
   --local t = {msg = 'Trigger "' .. args.triggerName .. '" : ' .. args.event, time = 1}
-  --local js = 'HookManager.trigger("Message",' .. encodeJson(t) .. ')'
+  --local js = 'HookManager.trigger("Message",' .. jsonEncode(t) .. ')'
   --print(js)
   --be:executeJS(js)
 end

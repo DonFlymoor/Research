@@ -195,7 +195,8 @@ local function createBusMarker(markerName)
   marker:setField('originSort', 0, "0")
   marker:setField('forceDetail', 0, "-1")
   marker.canSave = false
-  marker:registerObject(markerName)
+  marker:registerObject(markerName)  
+  scenetree.MissionGroup:addObject(marker)
   return marker
 end
 
@@ -494,7 +495,9 @@ local function onPreRender(dt, dtSim)
     prevAcc = currAcc
 
     -- calculate damage rating
-    local damage = map.getTrackedObjects()[pv:getID()].damage
+    local trakedObj = map.getTrackedObjects()[pv:getID()]
+    if not trakedObj then return end
+    local damage = trakedObj.damage
     if not initialDamage then initialDamage = damage end
     stats[stop].damage.mark = damage
 
@@ -700,14 +703,15 @@ local function onScenarioLoaded(scenario)
     local playerVehicle = be:getPlayerVehicle(0)
     local configPath = playerVehicle:getField('partConfig', '0')
     -- reading in config file so we can add seat ballast
-    local vehicleConfig = readJsonFile(configPath)
+    local vehicleConfig = jsonReadFile(configPath)
     vehicleConfig.parts.citybus_seats_ballast = "citybus_seats_ballast"
     -- applying new config to vehicle
     playerVehicle:queueLuaCommand("partmgmt.setConfig(".. serialize(vehicleConfig) ..")")
   end
 end
 
-local function onExtensionUnloaded()
+local function onExtensionUnloaded()  
+  markers = {}
   core_groundMarkers.setFocus(nil)
 
   --we freeze in the reset(), we need to unfreeze manually

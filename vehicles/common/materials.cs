@@ -565,26 +565,23 @@ singleton Material(supercharger_blower)
 singleton Material(gavril_v8)
 {
     mapTo = "gavril_v8";
-    diffuseMap[1] = "vehicles/common/gavril_v8_d.dds";
-    specularMap[1] = "vehicles/common/gavril_v8_s.dds";
-    normalMap[1] = "vehicles/common/gavril_v8_n.dds";
-    diffuseMap[0] = "vehicles/common/null.dds";
-    specularMap[0] = "vehicles/common/null.dds";
+    vertColor[0] = "0";
+    colorMap[0] = "vehicles/common/gavril_v8_d.dds";
     normalMap[0] = "vehicles/common/gavril_v8_n.dds";
-    specularPower[0] = "128";
+    specularMap[0] = "vehicles/common/gavril_v8_s.dds";
+    reflectivityMap[0] = "vehicles/common/gavril_v8_r.dds";
+    specularPower[0] = "19";
     pixelSpecular[0] = "1";
-    specularPower[1] = "32";
-    pixelSpecular[1] = "1";
     diffuseColor[0] = "1 1 1 1";
-    diffuseColor[1] = "1 1 1 1";
     useAnisotropic[0] = "1";
-    useAnisotropic[1] = "1";
     castShadows = "1";
-    translucent = "1";
+    translucent = "0";
+    emissive[0] = "0";
+    glow[0] = "0";
+    cubemap = "global_cubemap_metalblurred";
     translucentBlendOp = "None";
     alphaTest = "0";
     alphaRef = "0";
-    dynamicCubemap = true; //cubemap = "BNG_Sky_02_cubemap";
     materialTag0 = "beamng"; materialTag1 = "vehicle";
 };
 

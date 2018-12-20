@@ -19,13 +19,6 @@ angular.module('beamng.stuff')
       ],
     },
 
-    terrain: {
-      toggleGroup_1: [
-        { label: 'ui.debug.terrain.staticCollision', key: 'staticCollision', onChange: () => { Debug.toggleStaticCollision(Debug.state.terrain.staticCollision); } },
-        { label: 'ui.debug.terrain.groundmodel',     key: 'groundmodel',     onChange: () => { Debug.toggleTerrainCollision(Debug.state.terrain.groundmodel);    } }
-      ]
-    },
-
     renderer: {
       toggleGroup_1: [
         { label: 'ui.debug.renderer.boundingBoxes',  key: 'boundingboxes',  onChange: () => { Debug.toggleBoundingBoxes(Debug.state.renderer.boundingboxes);    } },
@@ -35,12 +28,18 @@ angular.module('beamng.stuff')
 
       buttonGroup_1: [
         { label: 'ui.debug.renderer.toggleFps', action: Debug.toggleFps }
-      ]
+      ],
     },
 
     effects: {
       buttonGroup_1: [
         { label: 'ui.debug.effects.toggleFreeCamera', action: Debug.toggleFreeCamera }
+      ]
+    },
+
+    terrain: {
+      buttonGroup_1: [
+        { label: 'ui.debug.terrain.groundmodel', action: Debug.showGroundModelDebug}
       ]
     }
   }

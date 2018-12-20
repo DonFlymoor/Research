@@ -23,7 +23,11 @@ end
 
 local function saveCheckpoint(vehicleId, vehicleName, cpData)
   local vehicle = be:getObjectByID(vehicleId)
-  if not vehicle then return end
+  if not vehicle then
+    log('I', logTag,'saveCheckpoint could not find vehicle: '..vehicleName)
+    return 
+  end
+  
   -- log('I', logTag,'saving point for '..vehicleName)
 
   local vehicleCheckpoints = M.state.vehicleCheckpoints
@@ -33,11 +37,17 @@ local function saveCheckpoint(vehicleId, vehicleName, cpData)
   if not vehicleName then
     vehicleName = 'unnamed_'..vehicleId
   end
+
   vehicleCheckpoints[vehicleId].vehicleName = vehicleName
   vehicleCheckpoints[vehicleId].checkTimer = 0
   vehicleCheckpoints[vehicleId].pos = (cpData and vec3(cpData.desiredPos)) or vec3(vehicle:getPosition())
   vehicleCheckpoints[vehicleId].dirVec = (cpData and vec3(cpData.desiredDir)) or vec3(vehicle:getDirectionVector())
-  vehicleCheckpoints[vehicleId].upVec =  vec3(vehicle:getDirectionVectorUp())  
+  vehicleCheckpoints[vehicleId].upVec =  vec3(vehicle:getDirectionVectorUp())
+  vehicleCheckpoints[vehicleId].currentWpName =  cpData and cpData.currentWpName
+  vehicleCheckpoints[vehicleId].currentWpIndex =  cpData and cpData.currentWpIndex
+  vehicleCheckpoints[vehicleId].nextWpIndex =  cpData and cpData.nextWpIndex
+
+  -- dump(vehicleCheckpoints[vehicleId])
 end
 
 local function completeReset(vehicleId, vehicleName)
@@ -48,6 +58,8 @@ local function completeReset(vehicleId, vehicleName)
     helper.setAiPath(arg)   
     -- dump(arg)         
   end
+
+  scenario_waypoints.updateResetVehicleData(vehicleId, M.state.vehicleCheckpoints[vehicleId].currentWpIndex, M.state.vehicleCheckpoints[vehicleId].nextWpIndex)
 end
 
 local function ResetToSavedCheckpoint(vehicle, vehicleName)
@@ -100,12 +112,18 @@ local function setCheckpoint(playerId)
   end
 end
 
-local function teleportToCheckpoint(playerId)
-  -- log('I', logTag, 'teleportToCheckpoint called...'..tostring(playerId))
-  local vehicle = be:getPlayerVehicle(playerId)
+
+local function teleportToCheckpoint(vehicleId)
+  local vehicle = be:getObjectByID(vehicleId)
   if vehicle then 
     ResetToSavedCheckpoint(vehicle, vehicle:getField('name', ''))    
   end  
+end
+
+local function gotoCheckpoint(playerId)
+  -- log('I', logTag, 'teleportToCheckpoint called...'..tostring(playerId))
+  local vehicleId = be:getPlayerVehicleID(playerId)
+  teleportToCheckpoint(vehicleId)
 end
 
 local function onRaceWaypointReached(data)
@@ -122,9 +140,26 @@ local function onRaceWaypointReached(data)
   local cpData = {}
   cpData.desiredPos = data.curPos
 
+  -- TODO(AK): Don't use the next way point to determine the direction. it could be behind the vehicle and make it face the wrong direction.
+  --           May be try the direction of the waypoint or use the vehicle direction
   if vehWpData.nextWp then
-    cpData.desiredDir = (data.curPos - vehWpData.nextWp.pos):normalized()
+    cpData.desiredDir = nil--(data.curPos - vehWpData.nextWp.pos):normalized()
   end
+  
+  -- For directional waypoints, use the direction of the waypoints
+  if data.curRot then
+    cpData.desiredDir = data.curRot
+  
+  -- For other waypoints, use the velocity direction of the vehicle
+  else
+    local vehicleData = map.objects[data.vehicleId]
+    local vehicleVelocity = vehicleData.vel
+    cpData.desiredDir = vehicleVelocity
+  end
+
+  cpData.currentWpName = data.waypointName
+  cpData.currentWpIndex = data.cur
+  cpData.nextWpIndex = data.next
   saveCheckpoint(data.vehicleId, data.vehicleName, cpData)
 
   local state = M.state
@@ -166,6 +201,7 @@ local function onPreRender(dt)
       if vehicle and not vehicle.playerUsable then
         local vehPos = vec3(vehicle:getPosition())
         if (vehPos - data.initialPos):squaredLength() > 1 then
+          -- log('I', logTag,'Ai have left starting point.....')
           if data.prevVehPos and not data.raceOver then
             if (vehPos - data.prevVehPos):squaredLength() < 0.0016 then
               log('I', logTag,'Resetting '..data.vehicleName..' to last checkpoint')
@@ -220,7 +256,9 @@ local function onVehicleSpawned(vehId)
   -- end
   -- log('I', logTag, msg)
   -- dump(state)
-  initialiseCheckpointData(vehId)  
+  if not M.state.vehicleCheckpoints[vehId] then
+    initialiseCheckpointData(vehId)  
+  end
 end 
 
 local function onVehicleDestroyed(vid)
@@ -250,11 +288,11 @@ local function onClientEndMission( mission )
   resetData()
 end
 
-local function onVehicleAIStateChanged(data)
-  if data and data.aiControlled == true then
-    initialiseCheckpointData(data.vehicleId)
-  end
-end
+-- local function onVehicleAIStateChanged(data)
+--   if data and data.aiControlled == true and not M.state.vehicleCheckpoints[data.vehicleId] then
+--     initialiseCheckpointData(data.vehicleId)
+--   end
+-- end
 
 local function onSaveCampaign(saveCallback)
   local data = {}
@@ -272,23 +310,24 @@ local function onResumeCampaign(campaignInProgress, data)
 end
 
 -- public interface
-M.onVehicleSpawned            = onVehicleSpawned
-M.onVehicleDestroyed          = onVehicleDestroyed
-M.onClientPreStartMission     = onClientPreStartMission
-M.onClientEndMission          = onClientEndMission
-M.completeReset               = completeReset
-M.onRaceWaypointReached       = onRaceWaypointReached
-M.onSerialize                 = onSerialize
-M.onDeserialized              = onDeserialized
-M.onVehicleAIStateChanged     = onVehicleAIStateChanged
+M.onVehicleSpawned        = onVehicleSpawned
+M.onVehicleDestroyed      = onVehicleDestroyed
+M.onClientPreStartMission = onClientPreStartMission
+M.onClientEndMission      = onClientEndMission
+M.completeReset           = completeReset
+M.onRaceWaypointReached   = onRaceWaypointReached
+M.onSerialize             = onSerialize
+M.onDeserialized          = onDeserialized
 
-M.onScenarioRestarted         = onScenarioRestarted
-M.onPreRender                 = onPreRender
-M.onSaveCampaign              = onSaveCampaign
-M.onResumeCampaign            = onResumeCampaign
+M.onScenarioRestarted     = onScenarioRestarted
+M.onPreRender             = onPreRender
+M.onSaveCampaign          = onSaveCampaign
+M.onResumeCampaign        = onResumeCampaign
 
-M.setCheckpoint               = setCheckpoint
-M.teleportToCheckpoint        = teleportToCheckpoint
-M.saveAIPath                  = saveAIPath
+M.teleportToCheckpoint    = teleportToCheckpoint
+M.setCheckpoint           = setCheckpoint
+M.gotoCheckpoint          = gotoCheckpoint
+M.saveCheckpoint          = saveCheckpoint
+M.saveAIPath              = saveAIPath
 return M
 

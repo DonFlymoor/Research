@@ -58,6 +58,9 @@ new CustomMaterial( AL_VectorLightMaterial )
 
     sampler["prePassBuffer1"] = "#prepass[RT1]";
     sampler["prePassBuffer2"] = "#prepass[RT2]";
+    sampler["prePassBuffer3"] = "#prepass[RT3]";
+    sampler["prePassBuffer4"] = "#prepass[RT4]";
+    sampler["prePassBuffer5"] = "#prepass[RT5]";
 
     target = "lightinfo";
 

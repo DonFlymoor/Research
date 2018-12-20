@@ -1,8 +1,8 @@
 angular.module('beamng.apps')
 .directive('simpleRoll', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
-        '<object  style="width:100%; height:100%; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleRoll/simple-roll.svg?t=' + Date.now() + '"/>',
+    template:
+        '<object  style="width:100%; height:100%; pointer-events: none" type="image/svg+xml" data="modules/apps/SimpleRoll/simple-roll.svg?t=' + Date.now() + '"></object>',
     replace: true,
     link: function (scope, element, attrs) {
       var streamsList = ['sensors'];

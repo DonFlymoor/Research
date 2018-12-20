@@ -2181,7 +2181,7 @@ local function test()
           end
         end
 
-        local ok, ast = require('tsparser').parse(content)
+        local ok, ast = require('utils/torqueScriptParser').parse(content)
         --dump(ast)
         if not ok then
           ctx.lastBytes = nil

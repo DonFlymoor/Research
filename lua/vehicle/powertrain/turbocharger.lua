@@ -17,6 +17,18 @@ local psiToPascal = 6894.757293178
 M.isExisting = true
 
 local assignedEngine = nil
+local forcedInductionInfoStream = {
+  rpm = 0,
+  coef = 1,
+  boost = 0,
+  maxBoost = 0,
+  exhaustPower = 0,
+  friction = 0,
+  backpressure = 0,
+  bovEngaged = 0,
+  wastegateFactor = 0,
+  turboTemp = 0
+}
 
 --Turbo related stuff
 local curTurboAV = 0
@@ -53,12 +65,14 @@ local lastEngineLoad = 0
 local bovOpenChangeThreshold = 0
 local bovOpenThreshold = 0
 local bovSoundVolumeCoef = 1
+local bovSoundPressureCoef = 1
 local bovTimer = 0
 local ignitionCutSmoother = nil
 local needsBov = false
 local bovSound = nil
 
 local flutterSoundVolumeCoef = 1
+local flutterSoundPressureCoef = 1
 local flutterSound = nil
 
 --Engine related stuff
@@ -109,7 +123,7 @@ local function updateGFX(dt)
   end
 
   --calculate an arbitary "turbo temp" that reflects the effects of oil and coolant cooling on the actual temps inside the turbo
-  local turboTemp = assignedEngine.thermals.exhaustTemperature + assignedEngine.thermals.coolantTemperature + assignedEngine.thermals.oilTemperature
+  local turboTemp = assignedEngine.thermals.exhaustTemperature + (assignedEngine.thermals.coolantTemperature or 0) + assignedEngine.thermals.oilTemperature
   --calculate turbo damage using our turbo temp
   if turboTemp > turboDamageThresholdTemperature then
     frictionCoef = frictionCoef * (1 + (turboTemp - turboDamageThresholdTemperature) * 0.001 * dt)
@@ -130,13 +144,15 @@ local function updateGFX(dt)
   if bovRequested and needsBov and not lastBOVValue and bovTimer <= 0 then
     if bovEnabled then
       local relativePressure = min(max(turboPressure / maxTurboPressure, 0), 1)
-      local bovVolume = relativePressure * relativePressure * relativePressure * bovSoundVolumeCoef
-      obj:setVolume(bovSound, bovVolume)
+      local bovVolume = relativePressure * bovSoundPressureCoef
+      --print (bovVolume) -- pressure amount when triggering bov
+      --print (bovSoundVolumeCoef) -- this should be a static value
+      obj:setVolumePitchCT(bovSound, bovVolume, 1, bovSoundVolumeCoef, 0)
       obj:playSFX(bovSound)
     else
       local relativePressure = min(max(turboPressure / maxTurboPressure, 0), 1)
-      local flutterVolume = relativePressure * relativePressure * relativePressure * flutterSoundVolumeCoef
-      obj:setVolume(flutterSound, flutterVolume)
+      local flutterVolume = relativePressure * flutterSoundPressureCoef
+      obj:setVolumePitchCT(flutterSound, flutterVolume, 1, flutterSoundVolumeCoef, 0)
       obj:playSFX(flutterSound)
     end
     bovTimer = 0.5
@@ -186,23 +202,16 @@ local function updateGFX(dt)
 
   -- Update streams
   if streams.willSend("forcedInductionInfo") then
-    gui.send(
-      "forcedInductionInfo",
-      {
-        rpm = curTurboAV * avToRPM,
-        coef = assignedEngine.forcedInductionCoef,
-        --send kPa to UI
-        boost = turboPressure * 0.001,
-        maxBoost = maxWastegateLimit * 0.001,
-        --specific stuff
-        exhaustPower = exhaustPower / dt,
-        friction = frictionCoef,
-        backpressure = backPressure / dt,
-        bovEngaged = (bovEngaged and 1 or 0) * 10,
-        wastegateFactor = wastegateFactor * 10,
-        turboTemp = turboTemp
-      }
-    )
+    forcedInductionInfoStream.rpm = curTurboAV * avToRPM
+    forcedInductionInfoStream.coef = assignedEngine.forcedInductionCoef
+    forcedInductionInfoStream.boost = turboPressure * 0.001
+    forcedInductionInfoStream.exhaustPower = exhaustPower / dt
+    forcedInductionInfoStream.backpressure = backPressure / dt
+    forcedInductionInfoStream.bovEngaged = (bovEngaged and 1 or 0) * 10
+    forcedInductionInfoStream.wastegateFactor = wastegateFactor * 10
+    forcedInductionInfoStream.turboTemp = turboTemp
+
+    gui.send("forcedInductionInfo", forcedInductionInfoStream)
   end
 end
 
@@ -347,6 +356,9 @@ local function init(device, jbeamData)
   needsBov = assignedEngine.requiredEnergyType ~= "diesel"
   maxTurboPressure = maxWastegateStart * invPascalToPSI * (1 + (maxWastegateRange * invPascalToPSI) * 0.01) * psiToPascal
 
+  forcedInductionInfoStream.friction = frictionCoef
+  forcedInductionInfoStream.maxBoost = maxWastegateLimit * 0.001
+
   damageTracker.setDamage("engine", "turbochargerHot", false)
 
   M.updateGFX = updateGFX
@@ -364,11 +376,13 @@ local function initSounds()
   turboWhineVolumePerAV = (turbo.whineVolumePer10kRPM or 0.04) * 0.01 * rpmToAV
   turboHissVolumePerPascal = (turbo.hissVolumePerPSI or 0.04) * invPascalToPSI
 
-  bovSoundVolumeCoef = min(max(turbo.bovSoundVolumeCoef or 0.3, 0), 1)
+  bovSoundVolumeCoef = turbo.bovSoundVolumeCoef or 0.3
+  bovSoundPressureCoef = turbo.bovSoundPressureCoef or 0.3
   local bovSoundFileName = turbo.bovSoundFileName or "event:>Vehicle>Forced_Induction>Turbo_01>turbo_bov"
   bovSound = obj:createSFXSource(bovSoundFileName, "AudioDefaultLoop3D", "Bov", assignedEngine.engineNodeID)
 
-  flutterSoundVolumeCoef = min(max(turbo.flutterSoundVolumeCoef or 0.3, 0), 1)
+  flutterSoundVolumeCoef = turbo.flutterSoundVolumeCoef or 0.3
+  flutterSoundPressureCoef = turbo.flutterSoundPressureCoef or 0.3
   local flutterSoundFileName = turbo.flutterSoundFileName or "event:>Vehicle>Forced_Induction>Turbo_02>turbo_bov"
   flutterSound = obj:createSFXSource(flutterSoundFileName, "AudioDefaultLoop3D", "Flutter", assignedEngine.engineNodeID)
 

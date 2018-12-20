@@ -1,7 +1,7 @@
 {
 "bindings" :   [
     {
-    "ffb" :       {"forceLimit"        : 4.5                   , "smoothing"         : 150                 , "forceCoef"         : 350                 , "forceCoefLowSpeed": 170, "smoothingHF"       : 50                  }, 
+    "ffb" :       {"forceLimit"        : 4.5                   , "smoothing"         : 150                 , "forceCoef"         : 350                 , "forceCoefLowSpeed": 170, "smoothingHF"       : 150                  }, 
     "isForceInverted"   : false                , 
     "ffbUpdateType" : 0,
     "isForceEnabled"    : true                , 

@@ -116,9 +116,7 @@ angular.module('beamng.stuff')
       skipped: {color: $scope.colors.skipped, enabled: true},
       bronze: {color: $scope.colors.bronze, enabled: true},
       silver: {color: $scope.colors.silver, enabled: true},
-      gold: {color: $scope.colors.gold, enabled: true},
-      found: {color: $scope.colors.found, enabled: true},
-      notFound: {color: $scope.colors.notFound, enabled: true},
+      gold: {color: $scope.colors.gold, enabled: true}
     },
     type: {},
     subtype: {}
@@ -129,6 +127,7 @@ angular.module('beamng.stuff')
     $scope.$evalAsync(() => {
       vm.data.points = originalData.points.filter(e => e.type === 'site' ? ($scope.filter.subtype[e.subtype] || {}).enabled : ($scope.filter.type[e.type] || {}).enabled && ($scope.filter.state[e.state] || {}).enabled);
       // console.log(vm.data.points);
+      vm.data.logPoints = vm.data.points.concat(originalData.logPoints);
     });
   };
 
@@ -179,6 +178,7 @@ angular.module('beamng.stuff')
   // console.log($scope.filter);
   vm.data = $stateParams.data;
   var originalData = angular.copy($stateParams.data);
+  vm.data.logPoints = vm.data.points.concat(Array.isArray(vm.data.logPoints) ? vm.data.logPoints : []);
 
   vm.selectedMission = {
     title: '',
@@ -187,7 +187,11 @@ angular.module('beamng.stuff')
   };
 
   $scope.select = function (mission) {
-    $scope.$broadcast('poi:focus', mission);
+    // IMPORTANT this only works due to the mission being an object reference
+    // be carefull
+    if (vm.data.points.indexOf(mission) !== -1) {
+      $scope.$broadcast('poi:focus', mission);
+    }
   };
 
   $scope.$on('mapview:missionFocus', (_, mission) => {
@@ -248,7 +252,7 @@ angular.module('beamng.stuff')
           <div class="body">
             <details ng-repeat="mission in item.list track by $index" ng-mouseover="selectPoint({point: mission})">
               <summary>
-                <svg style="background-color: {{ mission.iconColor}}; height: 20px; width: 20px; border-radius: 50%; vertical-align: middle;"><use xlink:href="{{ mission.icon}}" style="fill: black;"/></svg>
+                <svg ng-if="mission.iconColor" style="background-color: {{ mission.iconColor}}; height: 20px; width: 20px; border-radius: 50%; vertical-align: middle;"><use xlink:href="{{ mission.icon}}" style="fill: black;"/></svg>
                 {{ mission.title | translate }}
               </summary>
               <p ng-if="mission.objectives.length > 0">
@@ -257,7 +261,7 @@ angular.module('beamng.stuff')
                   <label>{{key}}</label>
                 </div>
               </p>
-              <p ng-if="mission.desc !== undefined"> {{mission.desc | translate}} </p>
+              <p ng-if="mission.desc !== undefined" bng-translate="{{mission.desc}}"></p>
             </details>
           </div>
         </md-tab>
@@ -272,9 +276,9 @@ angular.module('beamng.stuff')
         if (scope.points !== undefined) {
           scope.cat = [
             {list: scope.points.filter(e => ['ready', 'bronze', 'silver'].indexOf(e.state) !== -1 && e.type !== 'site'), name: "Open"},
-            {list: scope.points.filter(e => e.state === 'failed' || e.state === 'skipped'), name: "Failed"},
+            {list: scope.points.filter(e => ['failed', 'skipped'].indexOf(e.state) !== -1), name: "Failed"},
             {list: scope.points.filter(e => ['gold'].indexOf(e.state) !== -1), name: "Closed"},
-            {list: scope.points.filter(e => e.type === 'photoSafari'), name: "Photo Safari"}
+            {list: scope.points.filter(e => e.type === 'photoSafari' && e.state === 'notFound'), name: "Photo Safari"}
           ]
         }
       }
@@ -477,7 +481,7 @@ angular.module('beamng.stuff')
 
       scope.$on('poi:focus', (_, d) => {
         if (d.x === scope.x && d.y ===  scope.y) {
-          console.debug('asdfljas;dfljk');
+          // console.debug('asdfljas;dfljk');
           element[0].focus();
         }
       });

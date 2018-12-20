@@ -1,12 +1,12 @@
 <div ng-mouseenter="enterMouse()" layout="column" style="height:100%; width:100%;" class="bngApp">
-<link type="text/css" rel="stylesheet" href="modules/apps/busLine/app.css">
-  <div layout-align"end center" class="busLine">
+  <link type="text/css" rel="stylesheet" href="modules/apps/busLine/app.css" />
+  <div layout-align="end center" class="busLine">
     <!-- header -->
     <div class="displayHeader" layout="row" layout-align="space-between center">
       <div style="margin-left: 2%" class="time">{{time}}</div>
-     
-      <div style="width: 8%; " layout-align="end">
-        <img style="margin: 0 auto; width: 80%;"  src='../../../../ui/images/beamng_logo_50x50.png' />
+
+      <div style="width: 8%;" layout-align="end">
+        <img style="margin: 0 auto; width: 80%;" src='../../../../ui/images/beamng_logo_50x50.png' />
       </div>
     </div>
     <!-- route -->
@@ -21,14 +21,14 @@
         </div>
       </div>
     </div>
-    <!-- stops -->
     <div class="displayStops" ng-if="stopsList.length > 0">
       <div class="stop" ng-repeat="stop in stopsList">
         <div class="bullet">
-          <div class="chevron" ng-style="{'background-color': routeColor}" ></div>
+          <div class="chevron" ng-style="{'background-color': routeColor}"></div>
         </div>
         <div class="stopContainer">
           <div class="title">
+            <!-- for an interesting reason this throws an error in the html validator, please ignore for now -->
             {{stop | limitTo: 17}}{{stop.length > 17 ? '...' : ''}}
           </div>
         </div>
@@ -37,15 +37,16 @@
     <!-- footer -->
     <div class="displayFooter">
       <div class="nextStop">
-          <div class="chevron" ng-style="{'background-color': routeColor}"></div>
-          <!-- <div style="position: absolute; font-size: 12px; text-align: center; line-height: 10px; margin-top: 2px; width: 100%;">
+        <div class="chevron" ng-style="{'background-color': routeColor}"></div>
+        <!-- <div style="position: absolute; font-size: 12px; text-align: center; line-height: 10px; margin-top: 2px; width: 100%;">
             Next
-            <br /> 
+            <br />
             Stop
           </div> -->
       </div>
       <div class="nextStopTitle" ng-style="{'background-color': routeColor}">
         <div class="title">
+          <!-- for an interesting reason this throws an error in the html validator, please ignore for now -->
           {{nextStop | limitTo: 17}}{{nextStop.length > 17 ? '...' : ''}}
         </div>
       </div>

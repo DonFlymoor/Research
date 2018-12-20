@@ -18,7 +18,7 @@ local options = {
   uiUnitVolume = {modes={keys={'l', 'gal'}, values={'ui.unit.l', 'ui.unit.gal'}}},
   uiUnitPressure = {modes={keys={'inHg', 'bar', 'psi', 'kPa'}, values={'ui.unit.inHg', 'ui.unit.bar', 'ui.unit.psi', 'ui.unit.kPa'}}},
 
-  uiUpscaling = {modes={keys={'disabled', '720', '1080'}, values={'Disabled', '1280 x 720', '1920 x 1080'}}},
+  uiUpscaling = {modes={keys={'disabled', '720', '1080', '1440'}, values={'Disabled', '1280 x 720', '1920 x 1080', '2560 x 1440'}}},
   onlineFeatures = {modes={keys={'enable', 'disable'}, values={'ui.common.enable', 'ui.common.disable'}}},
   defaultGearboxBehavior = {modes={keys={'arcade', 'realistic'}, values={'ui.common.arcade', 'ui.common.realistic'}}},
   absBehavior = {modes={keys={'realistic', 'off', 'arcade'}, values={'ui.common.ABSrealistic', 'ui.common.ABSoff', 'ui.common.ABSarcade'}}},
@@ -54,12 +54,12 @@ local settingsList = {       -- { storage, default_value }
   uiUnitVolume                = { cloud  , 'gal' },
   uiUnitPressure              = { cloud  , 'psi' },
   onlineFeatures              = { cloud  , 'ask' },
-  modAutoUpdates              = { disk   , true },
+  modAutoUpdates              = { disk   , false },
   communityTranslations       = { cloud  , 'disable' },
   disableDynamicCollision     = { disk   , false },
   GraphicFullscreen           = { disk   , true },
   devMode                     = { cloud  , false },
-  creatorMode                 = { cloud  , false },
+  creatorMode                 = { deprecated , false },
   externalUi                  = { cloud  , false },
   showPcs                     = { cloud  , false },
   multiseat                   = { discard, false }, -- intentionally use multiseat only until game is closed
@@ -67,37 +67,61 @@ local settingsList = {       -- { storage, default_value }
   traffic                     = { discard, false }, -- intentionally use traffic only until game is closed
   rpmLedsEnabled              = { disk   , false },
   unfocusedInput              = { cloud  , false },
+  filter0_limitEnabled        = { deprecated },
+  filter0_limitStartSpeed     = { deprecated },
+  filter0_limitEndSpeed       = { deprecated },
+  filter0_limitMultiplier     = { deprecated },
+  filter1_limitEnabled        = { deprecated },
+  filter1_limitStartSpeed     = { deprecated },
+  filter1_limitEndSpeed       = { deprecated },
+  filter1_limitMultiplier     = { deprecated },
+  filter2_limitEnabled        = { deprecated },
+  filter2_limitStartSpeed     = { deprecated },
+  filter2_limitEndSpeed       = { deprecated },
+  filter2_limitMultiplier     = { deprecated },
+  filter3_limitEnabled        = { deprecated },
+  filter3_limitStartSpeed     = { deprecated },
+  filter3_limitEndSpeed       = { deprecated },
+  filter3_limitMultiplier     = { deprecated },
   -- key (grip)
-  filter0_limitEnabled        = { disk   , false },
-  filter0_limitStartSpeed     = { disk   ,    14 },
-  filter0_limitEndSpeed       = { disk   ,    70 },
-  filter0_limitMultiplier     = { disk   ,   0.3 },
+  inputFilter0_limitEnabled   = { disk   , false },
+  inputFilter0_limitStartSpeed= { disk   ,    14 },
+  inputFilter0_limitEndSpeed  = { disk   ,    70 },
+  inputFilter0_limitMultiplier= { disk   ,   0.3 },
   -- pad
-  filter1_limitEnabled        = { disk   , false },
-  filter1_limitStartSpeed     = { disk   ,    14 },
-  filter1_limitEndSpeed       = { disk   ,    70 },
-  filter1_limitMultiplier     = { disk   ,   0.5 },
+  inputFilter1_limitEnabled   = { disk   , false },
+  inputFilter1_limitStartSpeed= { disk   ,    14 },
+  inputFilter1_limitEndSpeed  = { disk   ,    70 },
+  inputFilter1_limitMultiplier= { disk   ,   0.5 },
   -- direct
-  filter2_limitEnabled        = { disk   , false },
-  filter2_limitStartSpeed     = { disk   ,     0 },
-  filter2_limitEndSpeed       = { disk   ,   100 },
-  filter2_limitMultiplier     = { disk   ,   0.8 },
+  inputFilter2_limitEnabled   = { disk   , false },
+  inputFilter2_limitStartSpeed= { disk   ,     0 },
+  inputFilter2_limitEndSpeed  = { disk   ,   100 },
+  inputFilter2_limitMultiplier= { disk   ,   0.8 },
   -- key (drift)
-  filter3_limitEnabled        = { disk   , false },
-  filter3_limitStartSpeed     = { disk   ,    20 },
-  filter3_limitEndSpeed       = { disk   ,    80 },
-  filter3_limitMultiplier     = { disk   ,   0.8 },
+  inputFilter3_limitEnabled   = { disk   , false },
+  inputFilter3_limitStartSpeed= { disk   ,    20 },
+  inputFilter3_limitEndSpeed  = { disk   ,    80 },
+  inputFilter3_limitMultiplier= { disk   ,   0.8 },
   userLanguage                = { cloud  , '' }, -- empty = no user language set, using steam or OS language then
   cameraOrbitRelaxation       = { cloud  , 3 },
-  cameraOrbitMaxDynamicFov    = { cloud  , 35 },
+  cameraOrbitFovModifier      = { cloud  , 0 },
+  cameraOrbitMaxDynamicFov    = { cloud  , 40 },
   cameraOrbitSmoothing        = { cloud  , true },
-  cameraFOVTune               = { cloud  , 0 },
-  cameraPosTuneX              = { cloud  , 0 },
-  cameraPosTuneY              = { cloud  , 0 },
-  cameraPosTuneZ              = { cloud  , 0 },
+  cameraFOVTune               = { deprecated, nil },
+  cameraPosTuneX              = { deprecated, nil },
+  cameraPosTuneY              = { deprecated, nil },
+  cameraPosTuneZ              = { deprecated, nil },
+  cameraDriverVehicleConfigs  = { cloud  , nil },
+  cameraDriverFov             = { cloud  , 45 },
+  cameraDriverPhysics         = { cloud  , 100 },
+  cameraDriverStableHorizon   = { cloud  , 0 },
+  cameraDriverAutocenter      = { cloud  , true },
+  cameraDriverAllowSeatAdjustments={cloud, false },
   cameraFanVsTV               = { cloud  , 0.1 },
   cameraTVSpeed               = { cloud  , 1 },
   cameraTransitionTime        = { cloud  , 300 },
+  cameraCollision             = { cloud  , false },
   disableSteeringwheel        = { cloud  , false },
   interpolatePosition         = { cloud  , true },
   interpolateAlternative      = { cloud  , false },
@@ -105,9 +129,6 @@ local settingsList = {       -- { storage, default_value }
   interpolateLua              = { cloud  , false },
   replayLevel                 = { cloud  , -1 },
   replayAlpha                 = { disk   , true },
-  interpolateCenter           = { deprecated, nil },
-  interpolateCircles          = { deprecated, nil },
-  interpolateNodes            = { deprecated, nil },
   restrictScenarios           = { cloud  , true },
   autoSaveInGarage            = { cloud  , false },
   cameraChaseRollSmoothing    = { cloud  , 1 },
@@ -135,11 +156,11 @@ local settingsList = {       -- { storage, default_value }
   PostFXHDRGeneralEnabled     = { disk   , nil },
   GraphicGPU                  = { disk   , nil },
   GraphicSyncFullscreen       = { deprecated, nil },
-  vsync                       = { disk   , 0 },
+  vsync                       = { disk   , false },
   GraphicResolutions          = { disk   , nil },
   GraphicGrassDensity         = { disk   , nil },
   AudioMasterVol              = { disk   , nil },
-  AudioMusicVol               = { deprecated, nil },
+  AudioMusicVol               = { disk   , nil },
   AudioMaxChannels            = { disk   , nil },
   AudioEffectsVol             = { disk   , nil },
   GraphicAntialias            = { disk   , nil },
@@ -202,6 +223,7 @@ local settingsList = {       -- { storage, default_value }
   PerformanceWarningsbatterylow            = { disk, nil },
   PerformanceWarningsbatterycritical       = { disk, nil },
   PerformanceWarningswin8rec               = { disk, nil },
+  PerformanceWarningshighseas              = { disk, nil },
   SleepInBackground                        = { disk, nil },
 
   motionSimEnabled                         = { disk, false },
@@ -209,9 +231,11 @@ local settingsList = {       -- { storage, default_value }
   motionSimIP                              = { disk, "127.0.0.1" },
   motionSimPort                            = { disk, 4444 },
   motionSimHz                              = { disk, 100 },
-  motionSimAccelerationSmoothingX          = {disk, 40},
-  motionSimAccelerationSmoothingY          = {disk, 40},
-  motionSimAccelerationSmoothingZ          = {disk, 40}
+  motionSimAccelerationSmoothingX          = { disk, 40 },
+  motionSimAccelerationSmoothingY          = { disk, 40 },
+  motionSimAccelerationSmoothingZ          = { disk, 40 },
+
+  modNumParallelDownload                   = { disk, 3 },
 }
 
 local defaultValues = { }
@@ -258,6 +282,7 @@ local function save()
   -- let UI and Lua know
   sendUIState()
   extensions.hook('onSettingsChanged')
+  virtualinput.onSettingsChanged()
   be:queueAllObjectLua('onSettingsChanged()')
 end
 
@@ -283,7 +308,7 @@ local function refreshLanguages()
     values.userLanguage = ''
   end
 
-  local languageMap = require('languageMap') -- load locally, so we don't have it hanging around in memory all the time
+  local languageMap = require('utils/languageMap') -- load locally, so we don't have it hanging around in memory all the time
 
   -- 1) set new language
   Lua.userLanguage = values.userLanguage
@@ -358,6 +383,13 @@ local function setState(newState, ignoreCache)
 
   if values.unfocusedInput         ~= nil then WinInput.setUnfocusedInput (values.unfocusedInput)        end
   if values.multiseatTags          ~= nil then be.multiseatTags          = values.multiseat and values.multiseatTags end
+
+  if shipping_build then
+    values.replayLevel            = nil
+    values.interpolateAlternative = nil
+    values.interpolateLua         = nil
+    values.interpolateFull        = nil
+  end
 
   if values.replayLevel            ~= nil then be.replayLevel            = values.replayLevel            end
   if values.replayAlpha            ~= nil then be.replayAlpha            = values.replayAlpha            end

@@ -20,23 +20,27 @@ local function setRemainingRatio(storage, ratio)
   storage.storedEnergy = storage.initialStoredEnergy * min(max(ratio, 0), 1)
 end
 
+local function reset(storage)
+  storage.storedEnergy = storage.startingCapacity * 3600000 --kWh to J
+  storage.remainingRatio = storage.initialStoredEnergy > 0 and storage.storedEnergy / storage.initialStoredEnergy or 0
+end
+
 local function new(jbeamData)
   local storage = {
     name = jbeamData.name,
     type = jbeamData.type,
     energyType = "electricEnergy",
-
     assignedDevices = {},
     remainingRatio = 1,
-
+    reset = reset,
     updateGFX = updateGFX,
     registerDevice = registerDevice,
-    setRemainingRatio = setRemainingRatio,
+    setRemainingRatio = setRemainingRatio
   }
 
   storage.capacity = jbeamData.batteryCapacity or 0 --kWh
-  local startingCapacity = jbeamData.startingFuelCapacity or storage.capacity
-  storage.storedEnergy = startingCapacity * 3600000 --kWh to J
+  storage.startingCapacity = jbeamData.startingFuelCapacity or storage.capacity
+  storage.storedEnergy = storage.startingCapacity * 3600000 --kWh to J
   storage.remainingVolume = storage.capacity
 
   storage.initialStoredEnergy = storage.capacity * 3600000 --kWh to J

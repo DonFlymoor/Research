@@ -54,12 +54,12 @@ singleton Material(DefaultMaterial2)
 
 new CubemapData(CloudyCubemap)
 {
-   cubeFace[0] = "levels/mount_glorious/art/skies/BNG_Sky_02/cubemap/cloudy_1.png";
-   cubeFace[1] = "levels/mount_glorious/art/skies/BNG_Sky_02/cubemap/cloudy_2.png";
-   cubeFace[2] = "levels/mount_glorious/art/skies/BNG_Sky_02/cubemap/cloudy_3.png";
-   cubeFace[3] = "levels/mount_glorious/art/skies/BNG_Sky_02/cubemap/cloudy_4.png";
-   cubeFace[4] = "levels/mount_glorious/art/skies/BNG_Sky_02/cubemap/cloudy_5.png";
-   cubeFace[5] = "levels/mount_glorious/art/skies/BNG_Sky_02/cubemap/cloudy_6.png";
+   cubeFace[0] = "levels/derby/art/skies/BNG_Sky_03_storm/cubemap/skybox_1.png";
+   cubeFace[1] = "levels/derby/art/skies/BNG_Sky_03_storm/cubemap/skybox_2.png";
+   cubeFace[2] = "levels/derby/art/skies/BNG_Sky_03_storm/cubemap/skybox_3.png";
+   cubeFace[3] = "levels/derby/art/skies/BNG_Sky_03_storm/cubemap/skybox_4.png";
+   cubeFace[4] = "levels/derby/art/skies/BNG_Sky_03_storm/cubemap/skybox_5.png";
+   cubeFace[5] = "levels/derby/art/skies/BNG_Sky_03_storm/cubemap/skybox_6.png";
 };
 
 new CubemapData(cubemap_forest)

@@ -28,7 +28,7 @@ local function nodeCollision(p)
   --dump(p)
 
   --log('D', "particlefilter.particleEmitted", p.materialID1..", "..p.materialID2)
-  local pKey = p.materialID1.."_"..p.materialID2
+  local pKey = p.materialID1 * 10000 + p.materialID2
   if v.materialsMap[pKey] ~= nil then
     for k,r in pairs(v.materialsMap[pKey]) do
       --log('D', "particlefilter.particleEmitted", r.compareFuncStr)

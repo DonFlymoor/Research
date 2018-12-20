@@ -1,0 +1,29 @@
+<html ng-app="gaugesScreen">
+
+<head>
+  <script src="../../../ui/lib/ext/angular.min.js"></script>
+  <script src="gauges_screen.js"></script>
+  <link type="text/css" rel="stylesheet" href="gauges_screen.css">
+</head>
+
+<body ng-controller="GaugesScreenController as gaugeCtrl">
+  <div class="gauge">
+    <div class="center-screen">
+      <div class="speed">
+        <div class="speedVal">{{data.speedVal}}</div>
+        <div class="speedUnit">{{data.speedUnit}}</div>
+      </div>
+      <div class="temp">{{data.temp}}</div>
+      <div class="time">{{data.time}}</div>
+      <div class="consumption">
+        <div class="consumptionVal">{{data.consumptionVal}}</div>
+        <div class="consumptionUnit">{{data.consumptionUnit}}</div>
+      </div>
+    </div>
+    <div class="gear-screen">
+      <div >{{data.gear}}</div>
+    </div>
+    <div style="right: 51px; bottom: 22px; position: absolute;" ng-include="'gauges_screen.svg'" onload="svgLoaded()"></div>
+</body>
+
+</html>

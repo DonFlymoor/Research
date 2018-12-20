@@ -102,6 +102,8 @@ local showPcs = settings.getValue('showPcs')
 
 local _modelNames
 
+local SteamLicensePlateVehicleId
+
 local cache = {}
 
 local cacheCleared = false
@@ -337,7 +339,7 @@ local function _modelConfigsHelper (key, model, ignoreCache, pcs)
       local fn = "vehicles/" .. key .. "/info_" .. configName .. ".json"
       local readData = {}
       if FS:fileExists(fn) then
-        readData = readJsonFile(fn)
+        readData = jsonReadFile(fn)
         if readData == nil then
           log('E', 'vehicles', 'unable to read info file, ignoring: '.. fn)
           readData = {}
@@ -417,7 +419,7 @@ local function getModel (key, ignoreCache, forcePcs)
 
     local model = {}
 
-    local data = readJsonFile("vehicles/"..key.."/info.json")
+    local data = jsonReadFile("vehicles/"..key.."/info.json")
 
     local fixedVehicle = false
     if data == nil then
@@ -502,12 +504,9 @@ local function getModel (key, ignoreCache, forcePcs)
       _fillAggregates(data, model.aggregates)
     end
 
-    -- all configs should have the same aggregates as the base model
-    -- the model should have all aggregates of the configs
     local aggHelper = {}
     for _, config in pairs(cache[key].configs) do
       _mergeAggregates(config.aggregates, aggHelper)
-      _mergeAggregates(cache[key].model.aggregates, config.aggregates)
     end
     _mergeAggregates(aggHelper, cache[key].model.aggregates)
 
@@ -522,7 +521,7 @@ local function getVehicle()
   local myObj = be:getPlayerVehicle(0)
   if myObj then
     mydataobj.model = myObj:getField('JBeam','0')
-    mydataobj.configuration = myObj:getField('partConfig', '0')--encodeJson(myObj.partConfig:c_str())
+    mydataobj.configuration = myObj:getField('partConfig', '0')--jsonEncode(myObj.partConfig:c_str())
     mydataobj.position = myObj:getField('position','0')
     mydataobj.color = myObj:getField('color', "0")
   end
@@ -681,6 +680,9 @@ end
 
 local function spawnFilldefaults (key, opt)
   local model = getModel(key)
+
+  -- TODO: crash on invalid vehicle name ... !
+
   -- dump(model)
   if not opt then
     opt = {}
@@ -926,14 +928,14 @@ end
 
 local function loadDefault ()
   if FS:fileExists('settings/default.pc') then
-    local data = readJsonFile('settings/default.pc')
+    local data = jsonReadFile('settings/default.pc')
     replaceVehicle(data.model, {config = 'settings/default.pc'})
   end
 end
 
 local function spawnDefault ()
   if FS:fileExists('settings/default.pc') then
-    local data = readJsonFile('settings/default.pc')
+    local data = jsonReadFile('settings/default.pc')
     spawnNewVehicle(data.model, {config = 'settings/default.pc'})
   else
     spawnNewVehicle(defaultVehicleModel)
@@ -956,7 +958,7 @@ local function saveVehicleConfig(id, file, data)
   data.colors[1] = {colors[1].r, colors[1].g, colors[1].b, colors[1].a}
   data.colors[2] = {colors[2].r, colors[2].g, colors[2].b, colors[2].a}
   data.colors[3] = {colors[3].r, colors[3].g, colors[3].b, colors[3].a}
-  local res = serializeJsonToFile(file, data, true)
+  local res = jsonWriteFile(file, data, true)
   if res then
     guihooks.trigger("VehicleconfigSaved", {})
   else
@@ -1053,6 +1055,115 @@ local function onSettingsChanged()
   end
 end
 
+local function getVehicleLicenseName(veh)
+  if gdcdemo then
+    return 'GDC2017'
+  end
+
+  if not veh then veh = be:getPlayerVehicle(0) end
+  if not veh then return '' end
+  if type(veh) == 'number' then
+    veh = be:getObjectByID(veh)
+  end
+  if not veh then return '' end
+
+  local txt = veh:getDynDataFieldbyName("licenseText", 0)
+  if txt and txt:len() > 0 then return txt end
+
+  if Steam and Steam.isWorking and Steam.accountLoggedIn and not SteamLicensePlateVehicleId and veh:getID() == be:getPlayerVehicle(0):getID() then
+    SteamLicensePlateVehicleId = veh:getID()
+    txt = Steam.playerName
+    --print("steam username: " .. Steam.playerName)
+    txt = txt:gsub('%"', '%\'') -- replace " with '
+    -- more cleaning up required?
+  else
+    local T = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'}
+    txt = T[math.random(1, #T)] .. T[math.random(1, #T)] .. T[math.random(1, #T)] ..'-'..math.random(0, 9)..math.random(0, 9)..math.random(0, 9)..math.random(0, 9)
+  end
+
+  veh:setDynDataFieldbyName("licenseText", 0, txt)
+  return txt
+end
+
+-- nil values are equal last values
+local function setPlateText(txt, vehId, designPath)
+  local veh = nil
+  if vehId then
+    veh = be:getObjectByID(vehId)
+  else
+    veh = be:getPlayerVehicle(0)
+  end
+  if not veh then return end
+  if txt then
+    veh:setDynDataFieldbyName("licenseText", 0, txt)
+  else
+    txt = getVehicleLicenseName(vehId)
+  end
+
+  if not designPath then
+    designPath = veh:getDynDataFieldbyName("licenseDesign", 0) or ''
+  else
+    veh:setDynDataFieldbyName("licenseDesign", 0, designPath)
+  end
+
+  local design = jsonReadFile(designPath)
+ -- dump(design)
+  if not design or not design.data then
+    if designPath:len() > 0 then
+      log('E', 'main', "License plate "..designPath.." not existing")
+    end
+    local levelPath, levelName, _ = path.split( getMissionFilename() )
+    if levelPath then
+      local levelName = string.match(levelPath,'levels/(%a+)')
+      --log('E', 'main.setPlateText', "levelPath= "..tostring(levelPath).." levelName="..tostring(levelName))
+      designPath =  'vehicles/common/licenseplates/'..levelPath:gsub('levels/', '')..'/licensePlate-default.json'
+      design = jsonReadFile(designPath)
+    end
+  end
+
+  if not design or not design.data then
+    designPath = 'vehicles/common/licenseplates/default/licensePlate-default.json'
+    design = jsonReadFile(designPath)
+  end
+
+----adding licenseplate html generator and characterlayout to Json file
+
+  if design then
+    if design.data.characterLayout then
+      if FS:fileExists(design.data.characterLayout) then
+        design.data.characterLayout = jsonReadFile(design.data.characterLayout)
+      else
+        log('E',tostring(design.data.characterLayout) , ' File not existing')
+      end
+    else
+      design.data.characterLayout= "vehicles/common/licenseplates/default/platefont.json"
+      design.data.characterLayout= jsonReadFile(design.data.characterLayout)
+    end
+
+    if design.data.generator then
+      if FS:fileExists(design.data.generator) then
+        design.data.generator = "local://local/" .. design.data.generator
+      else
+        log('E',tostring(design.data.generator) , ' File not existing')
+      end
+    else
+      design.data.generator = "local://local/vehicles/common/licenseplates/default/licenseplate-default.html"
+    end
+    veh:createUITexture("@licenseplate-default", design.data.generator, 1024, 512, UI_TEXTURE_USAGE_MANUAL, 1)
+    veh:queueJSUITexture("@licenseplate-default", 'init("diffuse","' .. txt .. '", '.. jsonEncode(design) .. ');')
+    veh:createUITexture("@licenseplate-default-normal", design.data.generator, 1024, 512, UI_TEXTURE_USAGE_MANUAL, 1)
+    veh:queueJSUITexture("@licenseplate-default-normal", 'init("bump","' .. txt .. '", '.. jsonEncode(design) .. ');')
+    veh:createUITexture("@licenseplate-default-specular", design.data.generator, 1024, 512, UI_TEXTURE_USAGE_MANUAL, 1)
+    veh:queueJSUITexture("@licenseplate-default-specular", 'init("specular","' .. txt .. '", '.. jsonEncode(design) .. ');')
+  end
+end
+
+local function onVehicleDestroyed(vid) 
+  if SteamLicensePlateVehicleId == vid then
+    SteamLicensePlateVehicleId = nil
+  end
+end
+
 --public interface
 M.getCurrentVehicleDetails = getCurrentVehicleDetails
 
@@ -1090,5 +1201,11 @@ M.onSettingsChanged = onSettingsChanged
 M.saveVehicleConfig = saveVehicleConfig
 M.setVehicleColors = setVehicleColors
 M.setVehicleColorsNames = setVehicleColorsNames
+
+-- License plate
+M.setPlateText = setPlateText
+M.getVehicleLicenseName = getVehicleLicenseName
+
+M.onVehicleDestroyed = onVehicleDestroyed
 
 return M

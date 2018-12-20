@@ -130,7 +130,7 @@ local function work(job)
   --dump(compiledFiles)
 
   log('I', 'compilemeshes', 'saved files to be hard linked to file: cdae_compilation_hardlink_todo.json')
-  serializeJsonToFile('cdae_compilation_hardlink_todo.json', hardLinkFilesTodo, true)
+  jsonWriteFile('cdae_compilation_hardlink_todo.json', hardLinkFilesTodo, true)
 
 
   -- checking for missed files

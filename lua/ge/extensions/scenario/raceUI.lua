@@ -7,30 +7,31 @@ local M = {}
 local lastWaypointTimes = {}
 local currentLap = 1
 
--- called at start countDown
-local function onScenarioChange(scenario)
-  guihooks.trigger('ScenarioNotRunning')
-  --log( 'D', 'raceUI', 'onScenarioChange' )
+local function initialise(scenario)
+  lastWaypointTimes = {}
+  
+  guihooks.trigger('WayPoint', nil)
+  guihooks.trigger('RaceLapChange', nil)
+end
 
+local function onRaceStart()
+  local scenario = scenario_scenarios.getScenario()
+  if not scenario then return end
+
+  if scenario.lapConfig and #scenario.lapConfig > 1 then
+    guihooks.trigger('WayPoint', 'Checkpoint 0 / '..tostring(#scenario.lapConfig) )
+  end 
+
+  if scenario.lapCount > 1 then
+    guihooks.trigger('RaceLapChange', {current = 1, count = scenario.lapCount} )
+  end
+end
+
+local function onScenarioChange(scenario)
+  --log( 'D', 'raceUI', 'onScenarioChange' )
   if not scenario or scenario.state == 'pre-start' then
     guihooks.trigger('WayPoint', nil)
     return
-  end
-  guihooks.trigger('ScenarioStopTimer')
-
-   if scenario and scenario.state == 'running' then
-    lastWaypointTimes = {}
-
-    if scenario.lapCount > 1 then
-      guihooks.trigger('RaceLapChange', {current = 1, count = scenario.lapCount} )
-    else
-      guihooks.trigger('RaceLapChange', nil)
-    end
-    if scenario.lapConfig and #scenario.lapConfig > 1 then
-      guihooks.trigger('WayPoint', 'Checkpoint 0 / '..tostring(#scenario.lapConfig) )
-    else
-      guihooks.trigger('WayPoint', nil)
-    end
   end
 end
 
@@ -91,5 +92,7 @@ end
 M.onScenarioChange = onScenarioChange
 M.onRaceWaypointReached = onRaceWaypointReached
 M.onRaceLap = onRaceLap
+M.onRaceStart = onRaceStart
+M.initialise = initialise
 
 return M

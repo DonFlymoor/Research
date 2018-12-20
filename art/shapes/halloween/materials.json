@@ -1,0 +1,12 @@
+singleton Material(scarecrow)
+{
+    mapTo = "scarecrow";
+    materialTag0 = "beamng";
+    specularPower[0] = "1";
+    materialTag1 = "halloween";
+    useAnisotropic[0] = "1";
+    diffuseColor[1] = "1 1 1 1";
+    specularStrength[0] = "0.490196";
+    detailScale[0] = "0.2 0.2";
+    diffuseColor[0] = "0.886275 0.882353 0.882353 1";
+};

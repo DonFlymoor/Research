@@ -225,7 +225,7 @@ local function init()
     end
     local result, errorStr = pcall(loadFunc)
     if not result then
-      log("E", "controller.init", string.format("Can't load controller '%s', looking for file: '%s', further info below:", c.fileName, filePath))
+      log("E", "controller.init", string.format("Can't load controller '%s' at '/%s.lua', further info below:", c.fileName, filePath))
       log("E", "controller.init", errorStr)
       log("E", "controller.init", debug.traceback())
     end

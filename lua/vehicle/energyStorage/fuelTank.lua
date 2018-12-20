@@ -11,7 +11,7 @@ local function updateGFX(storage, dt)
   storage.remainingVolume = storage.initialStoredEnergy > 0 and storage.storedEnergy / (storage.fuelLiquidDensity * storage.energyDensity) or 0
   storage.remainingRatio = storage.initialStoredEnergy > 0 and storage.storedEnergy / storage.initialStoredEnergy or 0
 
-  for k,v in pairs(storage.fuelNodes) do
+  for k, v in pairs(storage.fuelNodes) do
     obj:setNodeMass(k, v + storage.storedEnergy * storage.fuelNodeMassCoef)
   end
 
@@ -38,6 +38,14 @@ end
 
 local function reset(storage)
   storage.currentLeakRate = 0
+  storage.storedEnergy = storage.startingCapacity * storage.fuelLiquidDensity * storage.energyDensity
+
+  --apply final weight as soon as possible
+  for k, v in pairs(storage.fuelNodes) do
+    obj:setNodeMass(k, v + storage.storedEnergy * storage.fuelNodeMassCoef)
+  end
+
+  storage.remainingRatio = storage.initialStoredEnergy > 0 and storage.storedEnergy / storage.initialStoredEnergy or 0
 end
 
 local function deserialize(storage, data)
@@ -47,7 +55,7 @@ local function deserialize(storage, data)
 end
 
 local function serialize(storage)
-  return { remainingVolume = storage.remainingVolume }
+  return {remainingVolume = storage.remainingVolume}
 end
 
 local function new(jbeamData)
@@ -55,15 +63,12 @@ local function new(jbeamData)
     name = jbeamData.name,
     type = jbeamData.type,
     energyType = jbeamData.energyType or "gasoline",
-
     assignedDevices = {},
     remainingRatio = 1,
     remainingVolume = 1,
     currentLeakRate = 0,
-
     breakTriggerBeam = jbeamData.breakTriggerBeam,
     jbeamData = jbeamData,
-
     updateGFX = updateGFX,
     setRemainingVolume = setRemainingVolume,
     setRemainingRatio = setRemainingRatio,
@@ -71,7 +76,7 @@ local function new(jbeamData)
     serialize = serialize,
     registerDevice = registerDevice,
     onBreak = onBreak,
-    reset = reset,
+    reset = reset
   }
 
   if storage.energyType == "gasoline" then
@@ -88,8 +93,8 @@ local function new(jbeamData)
   storage.fuelLiquidDensity = jbeamData.fuelLiquidDensity or storage.fuelLiquidDensity or 0 --kg/L, TODO: take tEnv into account
 
   storage.capacity = jbeamData.fuelCapacity or 0
-  local startingCapacity = min(jbeamData.startingFuelCapacity or storage.capacity, storage.capacity)
-  storage.storedEnergy = startingCapacity * storage.fuelLiquidDensity * storage.energyDensity
+  storage.startingCapacity = min(jbeamData.startingFuelCapacity or storage.capacity, storage.capacity)
+  storage.storedEnergy = storage.startingCapacity * storage.fuelLiquidDensity * storage.energyDensity
 
   storage.brokenLeakRate = storage.capacity / 60 --drain tank in 60 seconds, no matter how much fuel is in there
 
@@ -97,17 +102,17 @@ local function new(jbeamData)
   storage.fuelNodes = {}
   local fuelNodeCount = 0
   if jbeamData.fuel and jbeamData.fuel._engineGroup_nodes then
-    for _,n in pairs(jbeamData.fuel._engineGroup_nodes) do
+    for _, n in pairs(jbeamData.fuel._engineGroup_nodes) do
       storage.fuelNodes[n] = v.data.nodes[n].nodeWeight --save initial mass as the offset for the fuel node weights
       fuelNodeCount = fuelNodeCount + 1
     end
     if fuelNodeCount > 0 and storage.energyDensity > 0 then
-      storage.fuelNodeMassCoef =  1 / (storage.energyDensity * fuelNodeCount) --calculate weight per energy left
+      storage.fuelNodeMassCoef = 1 / (storage.energyDensity * fuelNodeCount) --calculate weight per energy left
     end
   end
 
   --apply final weight as soon as possible
-  for k,v in pairs(storage.fuelNodes) do
+  for k, v in pairs(storage.fuelNodes) do
     obj:setNodeMass(k, v + storage.storedEnergy * storage.fuelNodeMassCoef)
   end
 

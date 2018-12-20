@@ -42,9 +42,9 @@ local function updateTranslations ()
     -- this counter could later be used to indcate how much of the specific language is translated
     local index = v:match('.*%/(.*)%.json')
     if lang[index] == nil then
-      lang[index] = {files = 1, translations = readJsonFile(v)}
+      lang[index] = {files = 1, translations = jsonReadFile(v)}
     else
-      lang[index] = {files = lang[index].files + 1, translations = tableMergeRecursive(lang[index].translations, readJsonFile(v))}
+      lang[index] = {files = lang[index].files + 1, translations = tableMergeRecursive(lang[index].translations, jsonReadFile(v))}
     end
   end
   -- guihooks.trigger('appJsonDump', {lang = lang, files = files})
@@ -84,7 +84,7 @@ local function stateChanged()
 
   -- and save it to disc (if not in safe mode)
   if not isSafeMode() then
-    serializeJsonToFile(persistencyfile, { header = dbHeader, mods = mods}, true)
+    jsonWriteFile(persistencyfile, { header = dbHeader, mods = mods}, true)
   end
 end
 
@@ -314,13 +314,13 @@ local function updateZIPEntry(filename)
       mods[modname].modInfoPath = '/mod_info/'..modID..'/'
       local jsonContent = zip:readFileEntryByIdx(k2)
       if jsonContent then
-        mods[modname].modData = readJsonData(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
+        mods[modname].modData = jsonDecode(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
         -- fix the relative paths to be absolute paths for the UI
         if type(mods[modname].modData.attachments) == 'table' then
           mods[modname].modData.imgs = {}
-          for k2,v2 in pairs(mods[modname].modData.attachments) do
-            table.insert(mods[modname].modData.imgs, mods[modname].modInfoPath .. v2.thumb_filename:gsub("\\", "/") )
-            --table.insert(d.modData.imgs, d.modInfoPath .. "/images/" .. v2.data_filename:gsub("\\", "/") )
+          for _,va in pairs(mods[modname].modData.attachments) do
+            table.insert(mods[modname].modData.imgs, mods[modname].modInfoPath .. va.thumb_filename:gsub("\\", "/") )
+            --table.insert(d.modData.imgs, d.modInfoPath .. "/images/" .. va.data_filename:gsub("\\", "/") )
           end
         end
         if type(mods[modname].modData.icon) == 'string' then
@@ -331,7 +331,7 @@ local function updateZIPEntry(filename)
     end
   end
 
-  return mods[modname]
+  return mods[modname], filesInZIP
 end
 
 local function checkDuplicatedMods(filelist)
@@ -354,7 +354,7 @@ local function checkDuplicatedMods(filelist)
           if modID then
             local jsonContent = zip:readFileEntryByIdx(k2)
             if jsonContent then
-              local modInfo = readJsonData(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
+              local modInfo = jsonDecode(jsonContent, tostring(filename) .. ' : ' .. tostring(k2))
               -- log('D', 'modmanager.checkDuplicatedMods', modInfo.filename.."  "..modID.."  "..tostring(modInfo.last_update).."  res="..tostring(modInfo.resource_date).."  rel="..tostring(modInfo.release_date).."")
               if idModList[modID] ~= nil then
                 local oldFilepath = ""
@@ -412,7 +412,7 @@ local function checkDuplicatedMods(filelist)
   for _,v in pairs(oldModToDelete) do
     M.deleteMod(v.name)
     if FS:fileExists(v.path) then log('E', 'modmanager.checkDuplicatedMods', "delete '"..tostring(v.path).."' = "..dumps(FS:removeFile(v.path)) ) end
-    if FS:fileExists(v.path) then 
+    if FS:fileExists(v.path) then
       log('E', 'modmanager.checkDuplicatedMods', "failed to delete "..tostring(v.path))
       local errMsgID = "Duplicate mod id="..v.name.."\n Delete this old file ["..v.path.."]"
       guihooks.trigger('modmanagerError', errMsgID)
@@ -430,6 +430,7 @@ local initDB = extensions.core_jobsystem.wrap(function(job)
     dbHeader = { version = 1.1 }
   end
 
+  local newMountedFiles = {} --array of files added by mount
   -- catch new files
   local zipfileList = FS:findFilesByRootPattern( "mods", "*.zip", -1, true, false )
   local unpackedList = FS:findFilesByRootPattern( "mods/unpacked/", "*", 0, true, true )
@@ -451,11 +452,15 @@ local initDB = extensions.core_jobsystem.wrap(function(job)
 
       if FS:directoryExists(filename) then filename=filename.."/" end
 
-      local mod = updateZIPEntry(filename)
+      local mod, modFiles = updateZIPEntry(filename)
       if mod and isSafeMode() then mod.active = false end
       if mod and mod.active ~= false then
+        if telemetry_gameTelemetry then
+          telemetry_gameTelemetry.startTracking({activityType = "Mod", name = mod.modname})
+        end
         log('D', 'modmanager.initDB', 'mountEntry -- ' .. tostring(filename) .. ': ' .. (mod.modID or '') .. ' : ' .. (mod.modname or ''))
         addMountEntryToList(mountList, filename, mod.mountPoint)
+        newMountedFiles = arrayConcat(newMountedFiles,modFiles)
         job.yield()
       end
     end
@@ -473,6 +478,15 @@ local initDB = extensions.core_jobsystem.wrap(function(job)
       log('W', 'modmanager', 'mod vanished: ' .. tostring(v.fullpath))
     end
   end
+
+  --File change notification
+  local tim = hptimer()
+  for k,v in pairs(newMountedFiles) do
+    newMountedFiles[k] = {filename = v, type = "added" }
+  end
+  log("D","modmanager.initDB", "Notification : took ".. tostring(tim:stopAndReset()) .. "ms to reorganise ".. tostring(#newMountedFiles) .. " files")
+  onFileChanged(newMountedFiles)
+  log("D","modmanager.initDB", "Notification : took ".. tostring(tim:stopAndReset()) .. "ms to callback")
 
   --dump(mods)
   stateChanged()
@@ -493,12 +507,16 @@ local initDB = extensions.core_jobsystem.wrap(function(job)
 
   local modScriptFiles = FS:findFilesByRootPattern('/scripts/', 'modScript.lua', -1, true, false)
   for k,v in ipairs(modScriptFiles) do
-    dofile(v)
+    if not pcall(dofile, v) then
+      log('E', 'modmanager.modScript', 'Failed to execute ' .. v)
+    end
   end
 
   modScriptFiles = FS:findFilesByRootPattern('/mods_data/', 'modScript.lua', 1, true, false)
-  for k,v in ipairs(modScriptFiles) do
-    dofile(v)
+  for k,v in ipairs(modScriptFiles) do    
+    if not pcall(dofile, v) then
+      log('E', 'modmanager.modScript', 'Failed to execute ' .. v)
+    end
   end
 
   extensions.load = old_loadModule
@@ -526,22 +544,14 @@ end
 
 local function onUiReady()
   local data = nil
-  data = readJsonFile(persistencyfile)
-  if data == nil then
-    initDB()
-    data = readJsonFile(persistencyfile)
+  data = jsonReadFile(persistencyfile)
+  if data then
+    dbHeader = data.header
+    if data.mods then
+      tableMerge(mods, data.mods)
+    end
   end
 
-  if data == nil then
-    log('W', 'modmanager', 'failed to start up: unable to load persistency file: ' .. tostring(persistencyfile))
-    return
-  end
-
-  dbHeader = data.header
-
-  if data.mods then
-    tableMerge(mods, data.mods)
-  end
   initDB()
 end
 
@@ -585,7 +595,7 @@ local function test()
 
     local path, filename, ext = string.match(v, "(.-)([^\\/]-%.?([^%.\\/]*))$")
     local infofile = path .. string.sub(filename, 0, -string.len(ext)-2) .. '.json'
-    local data = readJsonFile(infofile)
+    local data = jsonReadFile(infofile)
     if data then
       dump(data)
     end
@@ -686,6 +696,7 @@ local function activateAllMods()
     end
     if mods[modname] then
       mods[modname].active = true
+      extensions.hook('onModActivated', deepcopy(mods[modname]))
     end
   end
   if( #mountList > 0) then
@@ -861,11 +872,12 @@ local function workOffChangedMod(filename, type)
   local dir, basefilename, ext = path.split2(filename)
   if ext == 'zip' and FS:fileExists(filename) and (type == 'added' or type == 'modified') then
     log('D', 'modmanager.onFileChanged', tostring(filename) .. ' : ' .. tostring(type) .. ' > ' .. tostring(ext))
-    local mod = updateZIPEntry(filename)
+    local mod, files = updateZIPEntry(filename)
     if mod and mod.active ~= false then
       log('D', 'modmanager.onFileChanged', 'activateMod -- ' .. tostring(filename))
       activateMod(mod.modname)
     end
+    FS:triggerFilesChanged(files) -- alert c++ of changed files
     stateChanged()
   end
 end
@@ -1023,7 +1035,7 @@ end
 local function getStats()
   local r = {zip=0, unpacked=0, disabled=0}
   for modname,mdata in pairs(mods) do
-    if not mdata.active then 
+    if not mdata.active then
       r.disabled = r.disabled+1
     elseif mdata.stat.filetype == "file" then
       r.zip = r.zip+1
@@ -1051,7 +1063,7 @@ local function updateZipMod(oldFileName,newFileName)
       return
     end
   end
-  
+
   if oldMod then
     deleteMod(getModNameFromPath(oldFileName))
   else

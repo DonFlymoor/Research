@@ -3,9 +3,9 @@
 -- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
 vmType = "vehicle"
 
-package.path = "lua/vehicle/?.lua;lua/vehicle/jbeam/?.lua;lua/common/?.lua;lua/common/socket/?.lua;lua/?.lua;?.lua"
+package.path = "lua/vehicle/?.lua;lua/vehicle/jbeam/?.lua;lua/common/?.lua;lua/common/libs/luasocket/?.lua;lua/?.lua;?.lua"
 package.cpath = ""
-require("compatibility")
+require("luaCore")
 
 log = function(...)
   Lua:log(...)
@@ -15,16 +15,16 @@ print = function(...)
 end
 
 require("utils")
+require("ve_utils")
 require("mathlib")
 
 math.randomseed(os.time())
 
 -- improve stacktraces
-local STP = require "StackTracePlus"
+local STP = require "libs/StackTracePlus/StackTracePlus"
 debug.traceback = STP.stacktrace
 debug.tracesimple = STP.stacktraceSimple
-
-perf = require("perf")
+perf = require("utils/perf")
 settings = require("simplesettings")
 backwardsCompatibility = require("backwardsCompatibility")
 objectId = obj:getID()
@@ -99,7 +99,6 @@ function debugDraw(x, y, z)
   ai.debugDraw(focusPos)
   beamstate.debugDraw(focusPos)
   controller.debugDraw(focusPos)
-  motionSim.debugDraw(focusPos)
   extensions.hook("onDebugDraw", focusPos)
 end
 
@@ -143,6 +142,23 @@ function initSystems()
   initCalled = true
 end
 
+local function insertCommas(inputString)
+  local list = {}
+  for substring in string.gmatch(inputString, "%S+") do
+    table.insert(list, substring)
+  end
+
+  local result = ""
+  for i, v in ipairs(list) do
+    if i < (table.getn(list)) then
+      result = result .. v .. ", "
+    else
+      result = result .. v
+    end
+  end
+  return result
+end
+
 function init(path, partConfigData)
   local hp1 = HighPerfTimer()
   local hp2 = HighPerfTimer()
@@ -174,7 +190,7 @@ function init(path, partConfigData)
 
   wheels = require("wheels")
   sounds = require("sounds")
-
+  -- vehedit = require('vehicleeditor/veMain')
   bdebug = require("bdebug")
   input = require("input")
   props = require("props")
@@ -198,7 +214,13 @@ function init(path, partConfigData)
   mapmgr = require("mapmgr")
   fire = require("fire")
   commands = require("commands")
-  motionSim = require("motionSim")
+
+  local isMotionSimEnabled = settings.getValue("motionSimEnabled") or false
+  if isMotionSimEnabled then
+    motionSim = require("motionSim")
+  else
+    motionSim = {init = nop, reset = nop, update = nop, updateGFX = nop, settingsChanged = nop}
+  end
 
   table.insert(loadingTimes, {"0 startup", hp1:stopAndReset()})
 
@@ -246,8 +268,20 @@ function init(path, partConfigData)
   --if v.vehicles == nil then
   -- load jbeam files
   if not v.loadVehicle(path) then -- important: the real vehicle dir is always last, all additional paths come first
-    log("E", "main", "unable to load vehicle: aborted loading")
-    return
+    log("E", "main", "unable to load vehicle. Loading default pickup instead")
+
+    local modelName = "pickup"
+    local vehicleInfo = jsonReadFile("vehicles/" .. modelName .. "/info.json")
+    if not vehicleInfo then
+      log("E", "main", "No info.json for default pickup found.")
+    end
+
+    local defaultPC = vehicleInfo["default_pc"]
+    local defaultColor = vehicleInfo.colors[vehicleInfo["default_color"]]
+
+    partmgmt.load("vehicles/" .. modelName .. "/" .. defaultPC .. ".pc", false)
+    v.loadVehicle("vehicles/" .. modelName .. "/")
+    obj:queueGameEngineLua("(be:getObjectByID(" .. obj:getID() .. ")):setColor(Point4F(" .. insertCommas(defaultColor) .. "))")
   end
   table.insert(loadingTimes, {"1.X.X.X loadDirectories (sum)", hp1:stopAndReset()})
 
@@ -308,10 +342,10 @@ function init(path, partConfigData)
   --perf.saveDataToCSV('vehicle_boottime_perf.csv')
 
   -- dump boot time stats
-  --log('D', 'default.init', 'Vehicle boot time stats:')
-  --for _, t in pairs(loadingTimes) do
-  --  log('D', 'default.init', '  * ' .. rpad(t[1], 34, ' ') .. ' = ' .. lpad(string.format('%5.3f', t[2]), 8, ' ') .. ' ms')
-  --end
+  -- log('D', 'default.init', 'Vehicle boot time stats:')
+  -- for _, t in pairs(loadingTimes) do
+  --   log('D', 'default.init', '  * ' .. rpad(t[1], 34, ' ') .. ' = ' .. lpad(string.format('%5.3f', t[2]), 8, ' ') .. ' ms')
+  -- end
 
   -- dump them into a file as well
   --[[
@@ -326,6 +360,8 @@ function init(path, partConfigData)
   end
   --]]
   extensions.hook("onVehicleLoaded", retainDebug)
+
+  --extensions.load('vehicleeditor_veMain')
 
   return true -- false = unload Lua
 end
@@ -345,6 +381,9 @@ function beamDeformed(id, ratio)
   beamstate.beamDeformed(id, ratio)
   controller.beamDeformed(id, ratio)
   bdebug.beamDeformed(id, ratio)
+end
+
+function torsionbarBroken(id, energy)
 end
 
 function couplerFound(nodeId, obj2id, obj2nodeId)
@@ -409,13 +448,13 @@ function vehicleResetted(retainDebug)
     motionSim.reset()
     powertrain.resetSounds()
     controller.resetSounds()
+    sounds.reset()
 
     controller.resetLastStage() --meant to be last in reset
   end
   initCalled = false
 
   gui.message("", 0, "^vehicle\\.") -- clear damage messages on vehicle restart
-  loadingTimes["4_vehicleResetted"] = hp1:stopAndReset()
 end
 
 function nodeCollision(p)

@@ -45,6 +45,17 @@
   </md-list-item>
 
   <md-list-item md-no-ink>
+    <p>{{ 'ui.options.modNumParallelDownload' | translate }}</p>
+    <md-select aria-label="_" flex ng-model="options.data.values.modNumParallelDownload" ng-change="options.applyState()">
+      <md-select-label style="width:100%;"></md-select-label>
+      <md-option md-no-ink value="1">1</md-option>
+      <md-option md-no-ink value="2">2</md-option>
+      <md-option md-no-ink value="3">3</md-option>
+      <md-option md-no-ink value="10">10</md-option>
+    </md-select>
+  </md-list-item>
+
+  <md-list-item md-no-ink>
     <p>{{ 'ui.options.userInterface.garageAutoSave' | translate }}</p>
     <md-checkbox ng-model="options.data.values.autoSaveInGarage" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
@@ -61,11 +72,6 @@
   <md-list-item md-no-ink>
     <p>{{ 'ui.options.userInterface.enableAdvanced' | translate }}</p>
     <md-checkbox ng-model="options.data.values.devMode" ng-change="options.applyState()"></md-checkbox>
-  </md-list-item>
-
-  <md-list-item md-no-ink>
-    <p>{{ 'ui.options.userInterface.creatorMode' | translate }}</p>
-    <md-checkbox ng-model="options.data.values.creatorMode" ng-change="options.applyState()"></md-checkbox>
   </md-list-item>
 
   <md-list-item md-no-ink ng-if="opt.internal">

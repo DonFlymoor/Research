@@ -2,6 +2,7 @@
 singleton Material(wca_rock)
 {
     mapTo = "wca_rock1";
+    groundType = "ROCK";
     diffuseMap[0] = "levels/west_coast_usa/art/shapes/rocks/wca_rock_d.dds";
     specularMap[0] = "levels/west_coast_usa/art/shapes/rocks/wca_rock_s.dds";
     normalMap[0] = "levels/west_coast_usa/art/shapes/rocks/wca_rock_n.dds";
@@ -24,6 +25,7 @@ singleton Material(wca_cliff)
 {
     vertColor[0] = "1";
     mapTo = "wca_cliff";
+    groundType = "ROCK";
     diffuseMap[0] = "levels/west_coast_usa/art/shapes/rocks/wca_cliff_d.dds";
     specularMap[0] = "levels/west_coast_usa/art/shapes/rocks/wca_cliff_s.dds";
     normalMap[0] = "levels/west_coast_usa/art/shapes/rocks/wca_cliff_n.dds";

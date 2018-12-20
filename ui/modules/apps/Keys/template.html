@@ -1,10 +1,10 @@
-
 <div style="max-height:100%; max-width: 100%; overflow:auto;">
   <style>
     .keys {
       opacity: 0.7;
       transition-duration: 0.3s;
     }
+
     .keys:hover {
       opacity: 1;
       transition-duration: 0.3s;
@@ -27,10 +27,9 @@
       <md-divider ng-if="!small && (players.length > 1 || bindings[show].length > 0)"></md-divider>
 
       <div ng-if="!small && players.length > 1" layout="row" layout-align="center center">
-        <md-button ng-if="bindings.length > 1" md-no-ink ng-click="backward()">
-          < </md-button>
-            <span>Player {{show}}</span>
-            <md-button ng-if="bindings.length > 1" md-no-ink ng-click="forward()"> > </md-button>
+        <md-button ng-if="bindings.length > 1" md-no-ink ng-click="backward()"></md-button>
+        <span>Player {{show}}</span>
+        <md-button ng-if="bindings.length > 1" md-no-ink ng-click="forward()"></md-button>
       </div>
       <div ng-if="bindings[show].length > 0 && !small" style="min-height:38px; padding: 0 10px 0 10px">
         <div ng-repeat="entry in bindings[show]" layout="row" layout-align="space-between center">
@@ -44,5 +43,4 @@
       </div>
     </div>
   </div>
-
 </div>

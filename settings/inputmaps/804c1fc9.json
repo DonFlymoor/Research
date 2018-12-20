@@ -16,7 +16,7 @@
 "action" : "toggle_foglights", "control" : "button2"
 
 },     {
-"control" : "xaxis", "isForceEnabled" : true, "action" : "steering", "ffb" :       {"responseCorrected" : false, "forceCoefLowSpeed" : 290, "forceCoef" : 380, "smoothingHF" : 250, "frequency" : "0", "smoothing" : 500, "responseCurve" : [[0, 0], [1, 1]], "forceLimit" : 10}, "filterType" : "2", "ffbUpdateType" : 1, "isForceInverted" : false
+"control" : "xaxis", "isForceEnabled" : true, "action" : "steering", "ffb" :       {"responseCorrected" : false, "forceCoefLowSpeed" : 290, "forceCoef" : 380, "smoothingHF" : 500, "frequency" : "0", "smoothing" : 500, "responseCurve" : [[0, 0], [1, 1]], "forceLimit" : 10}, "filterType" : "2", "ffbUpdateType" : 1, "isForceInverted" : false
 
 },     {
 "action" : "toggle_hazard_signal", "control" : "button12"

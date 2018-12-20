@@ -127,19 +127,19 @@ local function registerDefaultMenus()
         local filePath = "/vehicles/"..vehicleName.."/info.json"
         local vicon = "material_directions_car"
         if FS:fileExists(filePath) then --check for main info
-          local mainInfo = readJsonFile(filePath)
+          local mainInfo = jsonReadFile(filePath)
           veh = scenetree.findObjectById(veh:getID())
           local vehConfig = string.match(veh.partConfig, "([^./]*).pc")
           --print("vehConfig = "..dumps(veh.partConfig) .. "   v="..dumps(vehConfig))
           if veh.partConfig:sub(1,1) == "{" or veh.partConfig:sub(1,1) == "[" then
             vehConfig = "*custom*"
-          else
+          elseif not vehConfig or string.len(vehConfig) ==0 then
             vehConfig = mainInfo["default_pc"]
             if vehConfig == nil then vehConfig = "" end
           end
           filePath = "/vehicles/"..vehicleName.."/info_"..(vehConfig or "")..".json"
           if FS:fileExists(filePath) then --check info of pc
-            local InfoConfig = readJsonFile(filePath)
+            local InfoConfig = jsonReadFile(filePath)
             vehicleNameSTR = mainInfo["Name"] .. "\\n" .. InfoConfig["Configuration"]
             vicon = "vehicles/"..vehicleName.."/".. vehConfig .."_garage_side.png"
           else

@@ -11,7 +11,7 @@ local M = {}
 local function onExtensionLoaded()
     -- decide if we want this module to be loaded or not:
     -- if it has flexbodies, unload again
-    if v.data.flexbodies ~= nil and tableSize(v.data.flexbodies) ~= 0 then
+    if (v.data.flexbodies ~= nil and tableSize(v.data.flexbodies) ~= 0) and (v.data.information and not v.data.information.showSkeleton) then
         -- unload again
         return false
     end

@@ -3,37 +3,42 @@ angular.module('beamng.stuff')
 /**
  * @ngdoc object
  * @name beamng.stuff:Contributors
- * @description Everyone & everything contributed to BeamNG.drive
+ * @description Everyone & everything who has contributed to BeamNG.drive
 **/
 .constant('Contributors', [
   { translateId: 'ui.credits.programmers',
     members: [
-      {first: 'Thomas',   last: 'Fischer',           aka: 'tdev'},
-      {first: 'Lefteris', last: 'Stamatogiannakis',  aka: 'estama'},
-      {first: 'Luis',     last: 'Anton Rebollo',     aka: 'Souga'},
-      {first: 'Bruno',    last: 'Gonzalez',          aka: 'stenyak'},
-      {first: 'Andrew',   last: 'Kabakwu',           aka: ''},
-      {first: 'Petros',   last: 'Kondylis',          aka: ''},
-      {first: 'Fabian',   last: 'Enkler',            aka: ''},
-      {first: 'Timo',     last: 'Stabbert',          aka: ''},
-      {first: 'Nour',     last: 'Mohamed',           aka: ''},
-      {first: 'Ludger',   last: 'Meyer-Wülfing',     aka: 'meywue'},
-      {first: 'Pascale',  last: 'Maul',              aka: ''},
-      {first: 'Mirco',    last: 'Weigel',            aka: 'theshark'},
-      {first: 'Xiaoyi',   last: 'Wang',              aka: ''},
-      {first: 'Matti',    last: 'Yrjänheikki',       aka: 'Masa'},
-      {first: 'Moncef',   last: 'Slimane',           aka: ''},
-      {first: 'Marc',     last: 'Vince',             aka: ''},
-      {first: 'Juan',     last: 'Mendes',            aka: ''},
-      {first: 'Ben',      last: 'Payne',             aka: ''},
-      {first: 'Thomas',   last: 'Portassau',         aka: 'thomatoes50'},
-      {first: 'Felix',    last: 'Unger',             aka: ''},
-      {first: 'Waldenar', last: 'Zeitler',           aka: ''},
-      {first: 'Nicusor',  last: 'Nedelcu',           aka: ''},
-      {first: 'Boluwatife',   last: 'Falaye',        aka: ''},
-      {first: 'Mayowa David', last: 'Abogunrin',     aka: ''},
-      {first: 'Edelamr',  last: 'Schneider',         aka: ''},
-      {first: 'Eike',     last: 'Externest',         aka: ''}
+      {first: 'Thomas',       last: 'Fischer',           aka: 'tdev'},
+      {first: 'Lefteris',     last: 'Stamatogiannakis',  aka: 'estama'},
+      {first: 'Luis',         last: 'Anton Rebollo',     aka: 'Souga'},
+      {first: 'Bruno',        last: 'Gonzalez',          aka: 'stenyak'},
+      {first: 'Andrew',       last: 'Kabakwu',           aka: ''},
+      {first: 'Petros',       last: 'Kondylis',          aka: ''},
+      {first: 'Fabian',       last: 'Enkler',            aka: ''},
+      {first: 'Timo',         last: 'Stabbert',          aka: ''},
+      {first: 'Nour',         last: 'Mohamed',           aka: ''},
+      {first: 'Ludger',       last: 'Meyer-Wülfing',     aka: 'meywue'},
+      {first: 'Pascale',      last: 'Maul',              aka: ''},
+      {first: 'Mirco',        last: 'Weigel',            aka: 'theshark'},
+      {first: 'Xiaoyi',       last: 'Wang',              aka: ''},
+      {first: 'Matti',        last: 'Yrjänheikki',       aka: 'Masa'},
+      {first: 'Moncef',       last: 'Slimane',           aka: ''},
+      {first: 'Marc',         last: 'Vince',             aka: ''},
+      {first: 'Juan',         last: 'Mendes',            aka: ''},
+      {first: 'Ben',          last: 'Payne',             aka: ''},
+      {first: 'Thomas',       last: 'Portassau',         aka: 'thomatoes50'},
+      {first: 'Felix',        last: 'Unger',             aka: ''},
+      {first: 'Waldemar',     last: 'Zeitler',           aka: ''},
+      {first: 'Nicusor',      last: 'Nedelcu',           aka: ''},
+      {first: 'Boluwatife',   last: 'Falaye',            aka: ''},
+      {first: 'Mayowa David', last: 'Abogunrin',         aka: ''},
+      {first: 'Edelmar',      last: 'Schneider',         aka: ''},
+      {first: 'Eike',         last: 'Externest',         aka: ''},
+      {first: 'Clément',      last: 'Roche',             aka: ''},
+      {first: 'Max',          last: 'Razer',             aka: ''},
+      {first: 'Paul',         last: 'Görs',              aka: ''},
+      {first: 'Elmar',        last: 'Berghöfer',         aka: ''},
+      {first: 'Marc',         last: 'Müller',            aka: 'Signaltonsalat'}
     ]
   },
 
@@ -43,7 +48,6 @@ angular.module('beamng.stuff')
       {first: 'Mitchell',      last: 'Sahl',       aka: 'B25Mitch'},
       {first: 'Corey',         last: 'Bergerud',   aka: 'Goosah'},
       {first: 'Sam',           last: 'Millington', aka: 'DrowsySam'},
-      {first: 'Ananda Neelam', last: 'Thathayya',  aka: 'Nadeox1'},
       {first: 'Jali',          last: 'Hautala',    aka: 'Jalkku'},
       {first: 'Jukka',         last: 'Muikkula',   aka: 'Miura'},
       {first: 'Janne',         last: 'Nummela',    aka: ''},
@@ -62,9 +66,11 @@ angular.module('beamng.stuff')
 
   { translateId: 'ui.credits.environmentArtists',
     members: [
-      {first: 'Sam',      last: 'Hutchinson', aka: 'LJFHutch'},
-      {first: 'Christin', last: 'Walther',    aka: ''},
-      {first: 'Justin',   last: 'Roczniak',   aka: 'Donoteat'}
+      {first: 'Sam',         last: 'Hutchinson',     aka: 'LJFHutch'},
+      {first: 'Christin',    last: 'Walther',        aka: ''},
+      {first: 'Justin',      last: 'Roczniak',       aka: 'Donoteat'},
+      {first: 'Luca',        last: 'Brighi',         aka: ''},
+      {first: 'Sebastien',   last: 'Pelletier',      aka: ''}
     ]
   },
 
@@ -91,7 +97,8 @@ angular.module('beamng.stuff')
   { translateId: 'ui.credits.organization',
     members: [
       {first: 'Saskia',       last: 'Opitz',        aka: ''},
-      {first: 'Christoforos', last: 'Lambrianidis', aka: ''}
+      {first: 'Christoforos', last: 'Lambrianidis', aka: ''},
+      {first: 'Arend',        last: 'Stührmann',    aka: ''}
     ]
   },
 
@@ -159,6 +166,16 @@ angular.module('beamng.stuff')
     ]
   },
 
+    { translateId: 'ui.credits.soundtrack',
+    members: [
+      {first: 'Mark Knight', last: 'Copyright 2018', aka: 'Element No. 10'},
+      {first: 'Mark Knight', last: 'Copyright 2018', aka: 'Getting Away'},
+      {first: 'Mark Knight', last: 'Copyright 2018', aka: 'Juno Rocks'},
+      {first: 'Mark Knight', last: 'Copyright 2018', aka: 'Neon Night Racer'},
+      {first: 'Mark Knight', last: 'Copyright 2018', aka: 'Night Driver'}
+    ]
+  },
+
   { translateId: 'ui.credits.madePossibleWith',
     members: [
       {first: 'fmod',                        last: '', aka: ''},
@@ -167,7 +184,7 @@ angular.module('beamng.stuff')
       {first: 'Chromium Embedded Framework', last: '', aka: ''},
       {first: 'AngularJS',                   last: '', aka: ''},
       {first: 'Material Design',             last: '', aka: ''},
-      {first: 'LuaSocket',                   last: '', aka: ''},
+      {first: 'LuaSocket',                   last: '', aka: ''}
     ]
   }
 ])

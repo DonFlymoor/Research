@@ -44,8 +44,8 @@ local function init()
     local files = FS:findFiles(directory, "*.lua", -1, true, false)
     if files then
       for _, file in ipairs(files) do
-        local dirname, file, ext = path.split(file)
-        local fileName = file:sub(1, -5)
+        local _, fileNameWithExt, _ = path.split(file)
+        local fileName = fileNameWithExt:sub(1, -5)
         local storageFactoryPath = "energyStorage/" .. fileName
         availableStorageFactories[fileName] = storageFactoryPath
       end
@@ -128,6 +128,20 @@ local function reset()
     end
     damageTracker.setDamage("energyStorage", v.name, false)
   end
+
+  for _, device in pairs(powertrain.getDevices()) do
+    if device.energyStorage then
+      if device.energyStorage and type(device.energyStorage) ~= "table" then
+        device.energyStorage = {device.energyStorage}
+      end
+      for _, s in pairs(device.energyStorage) do
+        local storage = energyStorages[s]
+        if storage then
+          device:registerStorage(storage.name)
+        end
+      end
+    end
+  end
 end
 
 local function beamBroke(id)
@@ -173,7 +187,7 @@ local function onSerialize()
 end
 
 M.init = init
-M.reset = init
+M.reset = reset
 M.updateGFX = nop
 
 M.onDeserialize = onDeserialize

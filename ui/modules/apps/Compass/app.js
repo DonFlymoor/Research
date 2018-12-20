@@ -1,13 +1,13 @@
 angular.module('beamng.apps')
 .directive('compass', ['StreamsManager', function (StreamsManager) {
   return {
-    template: 
-        '<object style="width:100%; height:100%; box-sizing:border-box; pointer-events: none" type="image/svg+xml" data="modules/apps/Compass/compass.svg?t=' + Date.now() + '"/>',
+    template:
+        '<object style="width:100%; height:100%; box-sizing:border-box; pointer-events: none" type="image/svg+xml" data="modules/apps/Compass/compass.svg?t=' + Date.now() + '"></object>',
     replace: true,
     restrict: 'EA',
-    link: function (scope, element, attrs) {      
+    link: function (scope, element, attrs) {
       StreamsManager.add(['sensors']);
-      
+
       element.on('load', function () {
         var svg    = angular.element(element[0].contentDocument)
           , arrow  = svg[0].getElementById('compass-needle')

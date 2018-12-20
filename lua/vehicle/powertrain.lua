@@ -45,6 +45,7 @@ local dummyShaftCounter = 0
 
 local engineSoundIDCounter = -1
 local deviceStream = {}
+local streamData = {devices = deviceStream}
 
 local function nop()
 end
@@ -83,7 +84,7 @@ local function sendDeviceData()
       deviceStream[v.name].currentMode = (v.availableModes and #v.availableModes > 1) and v.mode or nil
     end
     -- dump(deviceStream)
-    gui.send("powertrainDeviceData", {devices = deviceStream})
+    gui.send("powertrainDeviceData", streamData)
   end
 end
 
@@ -276,7 +277,7 @@ local function init()
     local vehicleDirectory = vehiclePath .. "lua/powertrain"
     local globalFiles = FS:findFiles(globalDirectory, "*.lua", -1, true, false)
     local vehicleFiles = FS:findFiles(vehicleDirectory, "*.lua", -1, true, false)
-    local files = tableMerge(globalFiles, vehicleFiles)
+    local files = arrayConcat(globalFiles, vehicleFiles)
     if files then
       for _, filePath in ipairs(files) do
         local _, file, _ = path.split(filePath)
@@ -294,8 +295,9 @@ local function init()
   --dump(availableDeviceFactories)
 
   M.wheels = {}
-  for _, wd in pairs(wheels.wheelRotators) do
-    M.wheels[wd.name] = wd
+  for i = 0, wheels.wheelRotatorCount - 1 do
+    local wheel = wheels.wheelRotators[i]
+    M.wheels[wheel.name] = wheel
   end
 
   if not v.data.powertrain and (v.data.differentials or v.data.engine) then
@@ -375,7 +377,7 @@ local function init()
         if type(device.breakTriggerBeam) ~= "table" then
           device.breakTriggerBeam = {device.breakTriggerBeam}
         end
-        for _, name in pairs(device.breakTriggerBeam) do
+        for _, name in ipairs(device.breakTriggerBeam) do
           beamTriggers[name] = device.name
         end
       end
@@ -645,16 +647,16 @@ M.sendDeviceTree = sendDeviceTree
 M.setVehiclePath = setVehiclePath
 M.getEngineSoundID = getEngineSoundID
 
-function startProfile()
-  --require("extensions/p").start("Fl-99sm0")
-  --require("extensions/p").start("am0i0","report.txt")
-  --require("extensions/p").start("Flp9-9m0i0","report.txt")
-  require("extensions/p").start("Fplm0i0", "beam-profiler.log")
-end
+--function startProfile()
+--require("extensions/p").start("Fl-99sm0")
+--require("extensions/p").start("am0i0","report.txt")
+--require("extensions/p").start("Flp9-9m0i0","report.txt")
+--require("extensions/p").start("Fplm0i0", "beam-profiler.log")
+--end
 
-function endProfile()
-  require("extensions/p").stop(true)
-end
+--function endProfile()
+--require("extensions/p").stop(true)
+--end
 
 return M
 

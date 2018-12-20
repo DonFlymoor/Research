@@ -3,14 +3,14 @@ angular.module('beamng.apps')
   return {
     template:
         '<div style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono;">' +
-          '<div layout="column" style="position: absolute; top: 0; left: 5px;">' + 
+          '<div layout="column" style="position: absolute; top: 0; left: 5px;">' +
             '<small style="color:#0F51BA; padding:2px">Turbo RPM</small>' +
             '<small style="color:#15DA00; padding:2px">Boost</small>'+
             '<small style="color:#FB000D; padding:2px" >Wastegate</small>'+
             '<small style="color:#FFA200; padding:2px">BOV</small>' +
           '</div>' +
           '<canvas></canvas>' +
-        '<div>',
+        '</div>',
     replace: true,
     restrict: 'EA',
     link: function (scope, element, attrs) {
@@ -56,7 +56,7 @@ angular.module('beamng.apps')
         canvas.width = data.width;
         canvas.height = data.height;
       });
-      
+
     }
   }
 }])

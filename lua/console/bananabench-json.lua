@@ -10,4 +10,4 @@ end
 
 local res = bench.physics()
 --dump(res)
-serializeJsonToFile(outputFilename, res, true)
+jsonWriteFile(outputFilename, res, true)

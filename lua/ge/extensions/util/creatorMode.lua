@@ -8,8 +8,8 @@ local creatorModeHttpServer = nil
 local wsServer = nil -- websocket
 local wsClientConnection = nil -- websocket client Conn
 
-local encodeJsonFull = require('jsonEncoderFull')() -- slow but conform encoder
-local copas = require'copas'
+local jsonEncodeFull = require('libs/lunajson/lunajson').encode() -- slow but conform encoder
+local copas = require('libs/copas/copas')
 
 local requestVehicleState = 0
 
@@ -24,7 +24,7 @@ local function messageBrowser(d)
     if not wsClientConnection then return end
     d.ok = true;
     d.id = -1;
-    local res = encodeJsonFull(d)
+    local res = jsonEncodeFull(d)
     wsClientConnection:send(res)
   end))
 end
@@ -40,7 +40,7 @@ local function bngApi_websocket_handler(ws)
     end
     req = json.decode(req)
     if not req or not req.api then
-      ws:send(encodeJson({ok=false}))
+      ws:send(jsonEncode({ok=false}))
       return
     end
 
@@ -50,12 +50,12 @@ local function bngApi_websocket_handler(ws)
       if req.id ~= -1 then
         -- -1 == global request, no return requested
         --print('result = ' .. dumps(res))
-        local res = encodeJsonFull({ok = true, id=req.id, api=req.api, result=res, stdOut=stdOut, cmd=req.cmd})
+        local res = jsonEncodeFull({ok = true, id=req.id, api=req.api, result=res, stdOut=stdOut, cmd=req.cmd})
         ws:send(res)
       end
     else
       print("unknown API: "..tostring(req.api))
-      ws:send(encodeJson({ok=false, error='unknown_api'}))
+      ws:send(jsonEncode({ok=false, error='unknown_api'}))
     end
   end
   print(">>> DONE")
@@ -64,11 +64,17 @@ end
 
 
 local function creatorModeEnabledChanged()
+
+  if true then return end
+  -- IMPORTANT --------------------------------------------------------------
+  -- disable creator mode even if it is enabled in the settings
+  ---------------------------------------------------------------------------
+
   if not settings then return end
 
   if settings.getValue('creatorMode') == true and not creatorModeHttpServer then
     -- start
-    creatorModeHttpServer = require('simpleHttpServer')
+    creatorModeHttpServer = require('utils/simpleHttpServer')
     creatorModeHttpServer.start(listenHost, httpListenPort, 'ui/entrypoints/creatormode', nil, function(req, path)
       return {
         httpPort = httpListenPort,
@@ -78,7 +84,7 @@ local function creatorModeEnabledChanged()
     end)
 
     -- the websocket counterpart
-    wsServer = require('websocket').server.copas.listen({
+    wsServer = require('libs/lua-websockets/websocket').server.copas.listen({
       interface = listenHost,
       port = httpListenPort + 1,
       protocols = {
@@ -114,7 +120,7 @@ local function setupVehicleWs(vid)
       if not wsClientConnection then return end
       d.ok = true;
       d.id = -1;
-      local res = encodeJsonFull(d)
+      local res = jsonEncodeFull(d)
       wsClientConnection:send(res)
     end))
   end
@@ -180,6 +186,7 @@ end
 
 M.onUpdate = onUpdate
 
+-- IMPORTANT: THIS IS COMPLETELY DISABLED
 -- check if we need to enable/disable ourself
 M.onExtensionLoaded = creatorModeEnabledChanged
 M.onSettingsChanged = creatorModeEnabledChanged

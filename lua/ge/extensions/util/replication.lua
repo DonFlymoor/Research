@@ -4,13 +4,13 @@
 
 local M = {}
 
---local encodeJsonFull = require('jsonEncoderFull')() -- slow but conform encoder
+--local jsonEncodeFull = require('libs/lunajson/lunajson').encode() -- slow but conform encoder
 
 local replicationURL = 'ws://replicator/s1/v1/ws'
 
 local ws_client
 
-local copas = require('copas')
+local copas = require('libs/copas/copas')
 
 local function receive_data_job(job)
   while true do
@@ -42,7 +42,7 @@ end
 
 local function connect()
   extensions.core_jobsystem.create(function ()
-    ws_client = require('websocket').client.copas()
+    ws_client = require('libs/lua-websockets/websocket').client.copas()
     print(' connecting to ' .. tostring(replicationURL))
     ws_client:connect(replicationURL)
     print(' .. done!')
@@ -50,7 +50,7 @@ local function connect()
     extensions.core_jobsystem.create(receive_data_job)
 
     local d = {'join'}
-    ws_client:send(encodeJson(d))
+    ws_client:send(jsonEncode(d))
 
     SimObject.replicationEnabled = true
   end)
@@ -62,7 +62,7 @@ local function onChange(action, objName, objPID, arg1, arg2)
   --print('onChange: ' .. tostring(action) .. ', ' .. tostring(objName) .. ', ' .. tostring(objPID) .. ', ' .. tostring(arg1) .. ' = ' .. tostring(arg2))
   coroutine.resume(coroutine.create(function ()
     local d = {action, objPID, arg1, arg2 }
-    ws_client:send(encodeJson(d))
+    ws_client:send(jsonEncode(d))
   end))
 end
 

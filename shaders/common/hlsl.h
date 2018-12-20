@@ -65,6 +65,11 @@ float4 tex1Dlod( in SamplerTexture1D SAMPLER, in float4 UV )
     return SAMPLER._texture.SampleLevel( SAMPLER._filter, UV.x, UV.y, UV.z );
 }
 
+float4 texCUBElod( in SamplerTextureCube SAMPLER, in float4 UV )
+{
+    return SAMPLER._texture.SampleLevel( SAMPLER._filter, UV.xyz, UV.w );
+}
+
 #define sampler1D SamplerTexture1D
 #define sampler2D SamplerTexture2D
 #define sampler3D SamplerTexture3D

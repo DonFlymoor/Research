@@ -27,7 +27,7 @@
       "GraphicDynReflectionEnabled": false,
       "GraphicDynReflectionFacesPerupdate": 1,
       "GraphicDynReflectionDetail": 0,
-      "GraphicDynReflectionDistance": 40,
+      "GraphicDynReflectionDistance": 50,
       "GraphicDynReflectionTexsize": 0
     },
 
@@ -38,11 +38,11 @@
       "GraphicShaderQuality": 2,
       "GraphicPostfxQuality": 2,
       "GraphicAnisotropic": 8,
-      "GraphicAntialias": 3,
+      "GraphicAntialias": 4,
       "GraphicDynReflectionEnabled": false,
-      "GraphicDynReflectionFacesPerupdate": 2,
-      "GraphicDynReflectionDetail": 0.1,
-      "GraphicDynReflectionDistance": 80,
+      "GraphicDynReflectionFacesPerupdate": 1,
+      "GraphicDynReflectionDetail": 0.5,
+      "GraphicDynReflectionDistance": 200,
       "GraphicDynReflectionTexsize": 1
     },
 
@@ -53,11 +53,11 @@
       "GraphicShaderQuality": 3,
       "GraphicPostfxQuality": 3,
       "GraphicAnisotropic": 16,
-      "GraphicAntialias": 3,
+      "GraphicAntialias": 4,
       "GraphicDynReflectionEnabled": false,
-      "GraphicDynReflectionFacesPerupdate": 2,
-      "GraphicDynReflectionDetail": 0.3,
-      "GraphicDynReflectionDistance": 450,
+      "GraphicDynReflectionFacesPerupdate": 1,
+      "GraphicDynReflectionDetail": 0.75,
+      "GraphicDynReflectionDistance": 256,
       "GraphicDynReflectionTexsize": 1
     }
   ]

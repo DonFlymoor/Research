@@ -235,6 +235,7 @@ angular.module('beamng.apps')
         scope.lastHotlappingTimerTime = -1;
         scope.currentLapTimerPromise = null
         scope.currentLapTimer = function() {
+            if (typeof scope.times.snapshot[0] === 'undefined') scope.times.snapshot[0] = {'durationMillis':0}; //FIXME this line just tries to avoid log flooding with errors, needs a proper fix
             var timer = scope.times.snapshot[0]['durationMillis'] + ((new Date).getTime() - scope.lastHotlappingTimerTime);
             var sec_num = parseInt(timer, 10); // don't forget the second param
 

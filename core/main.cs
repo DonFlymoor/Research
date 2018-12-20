@@ -65,7 +65,7 @@ function onStart()
         // later on.
         $levelToLoad = "";
 
-        LuaExecuteQueueString("core_levels.startFreeroam('" @ %levelFile @ "')");
+        LuaExecuteQueueString("freeroam_freeroam.startFreeroam('" @ %levelFile @ "')");
         return;
     }
 }

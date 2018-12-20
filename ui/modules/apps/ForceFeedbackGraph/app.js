@@ -8,18 +8,18 @@ angular.module('beamng.apps')
         <div class="md-caption" style="padding: 2px; color: silver; position: absolute; top: 0; left: 0; width: auto; height: auto; background-color: rgba(50, 50, 50, 0.9)" layout="column">
           <md-checkbox style="margin:0px" ng-model="showForces">Force</md-checkbox>
           <span ng-show="showForces" layout="column">
-              <span style="color: #FD9393; margin:0px">At driver: {{ sensors.ffbAtDriver | number:2 }}Nm</span>
-              <span style="color: #FF4343; margin:0px">At wheel: {{ sensors.ffbAtWheel | number:2 }}Nm</span>
-              <span style="color: #992343; margin:0px">Limit: &plusmn;{{ sensors.maxffb |number:2 }}Nm</span>
+              <span style="color: #FD9393; margin:0px">At driver: {{ sensors.ffbAtDriver }}</span>
+              <span style="color: #FF4343; margin:0px">At wheel: {{ sensors.ffbAtWheel }}</span>
+              <span style="color: #992343; margin:0px">Limit: &plusmn;{{ sensors.maxffb }}</span>
               <!--<span style="margin:0px">,</span>-->
           </span>
           <md-checkbox style="margin:0px" ng-model="showRates">Rate</md-checkbox>
           <span ng-show="showRates" layout="column">
-              <span style="color: #c1d9f0; margin:0px">Limit: {{ sensors.maxffbRate | number:0}}Hz</span>
+              <span style="color: #c1d9f0; margin:0px">Limit: {{ sensors.maxffbRate }}Hz</span>
           </span>
           <md-checkbox style="margin:0px" ng-model="showInput">Input</md-checkbox>
           <span ng-show="showInput" layout="column">
-              <span style="color: #A8DD73; margin:0px">Steering: {{ input*100 | number:0 }}%</span>
+              <span style="color: #A8DD73; margin:0px">Steering: {{ input }}%</span>
           </span>
         </div>
       </div>`,
@@ -69,6 +69,8 @@ angular.module('beamng.apps')
       };
       scope.input = 0;
 
+      var dirtycount = 0;
+      var lasttime = new Date();
       scope.$on('streamsUpdate', function (event, streams) {
         if (scope.showRates) {
           maxRateGraph.append(new Date(), (2.0*streams.sensors.maxffbRate / ffbRateScale) - 1); // desired ffb rate (according to binding setting and measured hardware ffb call speeds)
@@ -82,19 +84,28 @@ angular.module('beamng.apps')
           ffbAtDriverGraph.append(new Date(),  streams.sensors.ffbAtDriver / ffbScale); // current ffb, corrected against FFB response curve
           ffbAtWheelGraph.append(new Date(),  streams.sensors.ffbAtWheel    / ffbScale); // current ffb
         }
-        scope.$apply(() => {
-          // for (var key in scope.sensors) {
-          //   if (streams.sensors[key] !== undefined) {
-          //     scope.sensors[key] = streams.sensors[key];
-          //   }
-          // }
-          // switch comments if at some point we notice there is data sometimes missing in the sensor stream (but iirc it should be a buffer so no problems there)
-          scope.sensors = streams.sensors;
 
-          if (streams.electrics.steering_input !== undefined) {
-            scope.input = streams.electrics.steering_input;
-          }
-        });
+        var dirty = false;
+        for (var key in scope.sensors) {
+            if (streams.sensors[key] !== undefined && scope.sensors[key] != streams.sensors[key].toFixed(1)) {
+                dirty = true;
+                break;
+            }
+        }
+        if (streams.electrics.steering_input !== undefined && scope.input != (streams.electrics.steering_input*100).toFixed(0)) dirty = true;
+
+        if (dirty) {
+          scope.$apply(() => {
+            for (var key in scope.sensors) {
+              if (streams.sensors[key] !== undefined) {
+                scope.sensors[key] = streams.sensors[key].toFixed(1);
+              }
+            }
+            if (streams.electrics.steering_input !== undefined) {
+              scope.input = (streams.electrics.steering_input*100).toFixed(0);
+            }
+          });
+        }
       });
 
       scope.$on('app:resized', function (event, data) {

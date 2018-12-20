@@ -1,11 +1,11 @@
 angular.module('beamng.apps')
-.directive('torqueCurve', ['$log', 'bngApi', 'CanvasShortcuts', 'StreamsManager', 'UiUnits', 
+.directive('torqueCurve', ['$log', 'bngApi', 'CanvasShortcuts', 'StreamsManager', 'UiUnits',
 function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
   return {
     template:`
-      
+
       <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: whitesmoke">
-      
+
         <div>
           <md-input-container style="padding: 0" md-no-ink ng-hide="engines.length <= 1">
             <md-select ng-model="selectedEngine" aria-label="_" ng-change="onEngineSelection()">
@@ -28,21 +28,21 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
         <div style="position: relative; height: 120px; padding: 10% overflow-x: auto; overflow-y: hidden" layout="row" layout-align="left center">
           <div layout="row" flex layout-padding>
             <table ng-repeat="(key, obj) in config" ng-if="obj.isPresent" style="vertical-align: center; font-size: 12px; margin: 0 4px 0 4px; padding: 0 3px 0 3px; border-left: 1px solid black; border-right: 1px solid black; border-radius: 2px;">
-              <tr><th colspan="2">{{ obj.name }}</tr>
+              <tr><th colspan="2">{{ obj.name }}</th></tr>
               <tr>
-                <td><graph-legend-tip type="line" color="{{ ::obj.torque.color }}" dash-array="{{ obj.torque.dashArray }}"></graph-legend-tip> Torque</td> 
+                <td><graph-legend-tip type="line" color="{{ ::obj.torque.color }}" dash-array="{{ obj.torque.dashArray }}"></graph-legend-tip> Torque</td>
                 <td style="font-family: monospace">{{ obj.torque.val.toFixed(2) }}/{{ obj.torque.max.toFixed(0) }}</td>
                 <td style="font-family: monospace; padding: 0 3px">[{{ obj.torque.units }}]</td>
               </tr>
               <tr>
-                <td><graph-legend-tip type="line" color="{{ ::obj.power.color }}" dash-array="{{ obj.power.dashArray }}"></graph-legend-tip> Power</td> 
+                <td><graph-legend-tip type="line" color="{{ ::obj.power.color }}" dash-array="{{ obj.power.dashArray }}"></graph-legend-tip> Power</td>
                 <td style="font-family: monospace">{{ obj.power.val.toFixed(2) }}/{{ obj.power.max.toFixed(0) }}</td>
                 <td style="font-family: monospace; padding: 0 3px">[{{ obj.power.units }}]</td>
-              </tr>            
+              </tr>
             </table>
           </div>
         </div>
-        
+
       </div>`,
     replace: true,
     restrict: 'EA',
@@ -78,7 +78,7 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
 
       scope.engineIndex = -1;
       scope.engines = [];
-      
+
       scope.selectedEngine = '';
 
       scope.$on('VehicleChange', () => {
@@ -116,7 +116,7 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
           });
 
         }, 0);
-        
+
       });
 
       scope.onEngineSelection = () => {
@@ -136,7 +136,7 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
           scope.config[key].isPresent = false;
         }
 
-        maxRpm = currentVehicle.engines[engineIndex].maxRPM;        
+        maxRpm = currentVehicle.engines[engineIndex].maxRPM;
         updateScopeData(currentVehicle.engines[engineIndex].curves);
         scope.engineIndex = engineIndex;
         plotStaticGraphs();
@@ -156,19 +156,19 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
               mt = Math.max.apply(Math, curves[key].torque);
 
           scope.config[key] = {
-            torque: { 
-              color: 'black', 
-              dashArray: curves[key].dash ? curves[key].dash : [], 
-              width: curves[key].width, 
-              data: curves[key].torque.map(key => UiUnits.torque(key).val ), 
+            torque: {
+              color: 'black',
+              dashArray: curves[key].dash ? curves[key].dash : [],
+              width: curves[key].width,
+              data: curves[key].torque.map(key => UiUnits.torque(key).val ),
               max: UiUnits.torque(mt).val ,
               units: UiUnits.torque(mp).unit
-            }, 
-            power: { 
-              color: 'red',   
-              dashArray: curves[key].dash ? curves[key].dash : [], 
-              width: curves[key].width, 
-              data: curves[key].power.map(key => UiUnits.power(key).val ), 
+            },
+            power: {
+              color: 'red',
+              dashArray: curves[key].dash ? curves[key].dash : [],
+              width: curves[key].width,
+              data: curves[key].power.map(key => UiUnits.power(key).val ),
               max: UiUnits.power(mp).val,
               units: UiUnits.power(mp).unit
             },
@@ -183,14 +183,14 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
         sctx.clearRect(0, 0, staticCanvas.width, staticCanvas.height);
 
         var maxPower = 0 , maxTorque = 0;
-        
+
         for (var key in scope.config) {
           if (scope.config[key].isPresent) {
             maxPower  = Math.max(maxPower,  scope.config[key].power.max);
-            maxTorque = Math.max(maxTorque, scope.config[key].torque.max);    
+            maxTorque = Math.max(maxTorque, scope.config[key].torque.max);
           }
         }
-        
+
         var maxPower  = Math.ceil(maxPower / 250) * 250;
         var maxTorque = Math.ceil(maxTorque / 250) * 250;
         var powerTicks  = Array(6).fill().map((x, i, a) => i * maxPower / (a.length - 1));
@@ -241,29 +241,29 @@ function ($log, bngApi, CanvasShortcuts, StreamsManager, UiUnits) {
               scope.config[key].power.val = scope.config[key].power.data[rpmInd];
               scope.config[key].torque.val = scope.config[key].torque.data[rpmInd];
             }
-          }  
+          }
         });
       });
 
       var _ready = false;
 
       scope.$on('app:resized', function (event, data) {
-        // We can use this event as initialization trigger since it is emitted from 
+        // We can use this event as initialization trigger since it is emitted from
         // the app-container for this reason
         staticCanvas.width = canvasWrapper.offsetWidth;
         staticCanvas.height = canvasWrapper.offsetHeight+plotMargins.bottom;
         dynamicCanvas.width = canvasWrapper.offsetWidth;
         dynamicCanvas.height = canvasWrapper.offsetHeight+plotMargins.bottom;
-        
+
         if (!_ready) {
           _ready = true;
-          bngApi.activeObjectLua('controller.mainController.sendTorqueData()');    
+          bngApi.activeObjectLua('controller.mainController.sendTorqueData()');
         } else {
           plotStaticGraphs();
         }
       });
 
-      
+
     }
   }
 }])

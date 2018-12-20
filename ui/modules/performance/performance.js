@@ -14,8 +14,8 @@
 
     $scope.vsync = false;
     $scope.fps_limiter = 0;
-    if(Settings.values.GraphicSyncFullscreen !== undefined) {
-      $scope.vsync = Settings.values.GraphicSyncFullscreen;
+    if(Settings.values.vsync !== undefined) {
+      $scope.vsync = Settings.values.vsync;
     }
 
     //fps-limiter
@@ -27,7 +27,7 @@
     $scope.$on('SettingsChanged', function (event, data) {
       //console.log('onHardwareInfo', data)
       $scope.$apply(function() {
-        $scope.vsync = data.values.GraphicSyncFullscreen;
+        $scope.vsync = data.values.vsync;
         $scope.fps_limiter = data.values.FPSLimiter;
       });
     });

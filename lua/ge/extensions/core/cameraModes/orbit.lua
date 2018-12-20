@@ -17,29 +17,15 @@ local function getRot(base, vf, vz)
 end
 
 function C:init()
-  if self.defaultRotation == nil then
-    self.defaultRotation = vec3(0, -17, 0)
-  end
   self.target = false
-  self.defaultRotation = vec3(self.defaultRotation)
-  self.offset = vec3(self.offset)
-  self.camRot = vec3(self.defaultRotation)
-  self.camLastRot = vec3(math.rad(self.camRot.x), math.rad(self.camRot.y), 0)
-  self.camMinDist = self.distanceMin or 3
-  self.camDist = self.distance or 5
-  self.camLastDist = self.distance or 5
-  self.defaultDistance = self.distance or 5
   self.camLastTargetPos = vec3()
   self.camLastPos = vec3()
   self.camLastPos2 = vec3()
   self.camLastPosPerp = vec3()
   self.camVel = vec3()
-  self.mode = self.mode or 'ref'
-  self.fov = self.fov or 65
   self.cameraResetted = 3
   self.lockCamera = false
   self.orbitOffset = vec3()
-  self.smoothingEnabled = settings.getValue('cameraOrbitSmoothing', true)
   self.preResetPos = vec3(1e+300, 0, 0)
   self.lastTargetSpeed = 0
 
@@ -47,8 +33,33 @@ function C:init()
   self.targetLeft = vec3(0, 0, 0)
   self.targetBack = vec3(0, 0, 0)
 
-  self:reloaded()
+  self:onVehicleCameraConfigChanged()
+  self:onSettingsChanged()
+  self:reset()
 end
+
+function C:onVehicleCameraConfigChanged()
+  if self.defaultRotation == nil then
+    self.defaultRotation = vec3(0, -17, 0)
+  end
+  self.defaultRotation = vec3(self.defaultRotation)
+  self.offset = vec3(self.offset)
+  if not self.camRot then self.camRot = vec3(self.defaultRotation) end
+  self.camLastRot = vec3(math.rad(self.camRot.x), math.rad(self.camRot.y), 0)
+  self.camMinDist = self.distanceMin or 3
+  self.camDist = self.distance or 5
+  self.camLastDist = self.distance or 5
+  self.defaultDistance = self.distance or 5
+  self.mode = self.mode or 'ref'
+end
+function C:onSettingsChanged()
+  core_camera.clearInputs() --TODO is this really necessary?
+  self.fovModifier = settings.getValue('cameraOrbitFovModifier')
+  self.relaxation = settings.getValue('cameraOrbitRelaxation') or 3
+  self.maxDynamicFov = settings.getValue('cameraOrbitMaxDynamicFov') or 35
+  self.smoothingEnabled = settings.getValue('cameraOrbitSmoothing', true)
+end
+
 
 function C:reset()
   self.camBase = nil
@@ -58,28 +69,9 @@ function C:reset()
     self.camRot = vec3(self.defaultRotation)
     self.cameraResetted = 3
     self.camDist = self.defaultDistance
-    -- for some reason this fixes things sometimes :|
-    MoveManager.pitchUpSpeed = 0
-    MoveManager.pitchDownSpeed = 0
-    MoveManager.yawLeftSpeed = 0
-    MoveManager.yawRightSpeed = 0
     self.lockCamera = false
+    core_camera.clearInputs()
   end
-end
-
-function C:reloaded()
-  -- if a reset countdown is NOT already happening
-  -- make sure this gets recalculated by invalidating it
-  MoveManager.pitchUpSpeed = 0
-  MoveManager.pitchDownSpeed = 0
-  MoveManager.yawLeftSpeed = 0
-  MoveManager.yawRightSpeed = 0
-  -- global fov tuning
-  self.fov = self.fov + settings.getValue('cameraFOVTune') or 0
-  self.fov = math.min(150, math.max(1, self.fov))
-  self.relaxation = settings.getValue('cameraOrbitRelaxation') or 3
-  self.maxDynamicFov = settings.getValue('cameraOrbitMaxDynamicFov') or 35
-  self.smoothingEnabled = settings.getValue('cameraOrbitSmoothing', true)
 end
 
 function C:lookback()
@@ -111,7 +103,7 @@ end
 
 -- params in global coords
 function C:setRef(center, left, back)
-  self.target = true
+  self.target = center ~= nil and true or false
   self.targetCenter = center
   self.targetLeft = left
   self.targetBack = back
@@ -158,7 +150,11 @@ function C:update(data)
     if self.offset and self.offset.x and nx:length() ~= 0 and ny:length() ~= 0 then
       self.camBase = vec3(self.offset.x / nx:length(), self.offset.y / ny:length(), self.offset.z / nz:length())
       self.camOffset2 = nx * self.camBase.x + ny * self.camBase.y + nz * self.camBase.z
-      targetPos = data.pos + ref + self.camOffset2
+      if self.target then
+        targetPos = data.pos + ref
+      else
+        targetPos = data.pos + ref + self.camOffset2
+      end
     elseif self.camOffset2 then
       targetPos = data.pos + ref + self.camOffset2
       self.camOffset2 = nil -- we only use previous offset for only one frame when needed
@@ -171,8 +167,8 @@ function C:update(data)
   end
   -- print((self.camLastTargetPos - targetPos):length() / (data.dtSim+ 1e-30))
 
-  local yawDif = MoveManager.yawLeftSpeed - MoveManager.yawRightSpeed
-  local pitchDif = MoveManager.pitchUpSpeed - MoveManager.pitchDownSpeed
+  local yawDif = 0.1*(MoveManager.yawRight - MoveManager.yawLeft)
+  local pitchDif = 0.1*(MoveManager.pitchDown - MoveManager.pitchUp)
 
   if self.lockCamera == true then
     local camdir = self.camLastTargetPos - self.camLastPos2
@@ -207,15 +203,15 @@ function C:update(data)
   end
 
   local maxRot = 4.5
-  if (math.abs(yawDif) + math.abs(pitchDif) + math.abs(BeamEngine.camX) + math.abs(BeamEngine.camY) > 0) then
+  if (math.abs(yawDif) + math.abs(pitchDif) + math.abs(MoveManager.yawRelative) + math.abs(MoveManager.pitchRelative) > 0) then
     maxRot = 1000
   end
 
   -- debugDrawer:drawSphere(self.camLastPos2:toPoint3F(), 1, ColorF(1,1,0,0.3))
   local dtfactor = data.dt * 1000
-  self.camRot.x = self.camRot.x - fsign(BeamEngine.camX) * math.min(math.abs(BeamEngine.camX * 10), maxRot * data.dt) - yawDif * dtfactor
-  self.camRot.y = self.camRot.y - fsign(BeamEngine.camY) * math.min(math.abs(BeamEngine.camY * 10), maxRot * data.dt) - pitchDif * dtfactor
-  --self.camRot.z = self.camRot.z +  MoveManager.roll  * 10.0f + (MoveManager.rollLeftSpeed - MoveManager.rollRightSpeed) * (data.dt * 300)
+  self.camRot.x = self.camRot.x - fsign(MoveManager.yawRelative) * math.min(math.abs(MoveManager.yawRelative * 10), maxRot * data.dt) - yawDif * dtfactor
+  self.camRot.y = self.camRot.y - fsign(-MoveManager.pitchRelative) * math.min(math.abs(MoveManager.pitchRelative * 10), maxRot * data.dt) - pitchDif * dtfactor
+  --self.camRot.z = self.camRot.z + 300*data.dt*(MoveManager.rollRight - MoveManager.rollLeft)
 
   self.camRot.y = math.min(math.max(self.camRot.y, -85), 85)
 
@@ -232,10 +228,7 @@ function C:update(data)
     self.camLastRot.x = self.camLastRot.x + math.pi * 2
   end
 
-  BeamEngine.camX = 0
-  BeamEngine.camY = 0
-
-  self.camDist = self.camDist + (BeamEngine.zoomInSpeed - BeamEngine.zoomOutSpeed) * dtfactor
+  self.camDist = self.camDist + (MoveManager.zoomIn - MoveManager.zoomOut) * dtfactor * 0.001 * getCameraFov()
   if self.camDist < self.camMinDist then
     self.camDist = self.camMinDist
   end
@@ -291,7 +284,7 @@ function C:update(data)
     dist = 1 / (ratio + 1) * self.camDist + (ratio / (ratio + 1)) * self.camLastDist
   end
 
-  local fov = self.fov
+  local fov = self.fov + self.fovModifier
   local player = 0
   local lveh = be:getPlayerVehicle(player)
   local fovdistDiff = 0
@@ -331,14 +324,12 @@ function C:update(data)
     local hdegToRad = math.pi/180 * 0.5
 
     -- compute how much more FOV we're going to add depending on speed (from zero up to self.maxDynamicFov)
-    fov = self.fov + self.maxDynamicFov * (math.min(1, targetSpeed/130))
+    fov = self.fov + self.fovModifier + self.maxDynamicFov * (math.min(1, targetSpeed/130))
 
     -- apply final field of view
     -- compute and apply the camera distance that will preserve the originalWidth
-    fovdistDiff = (self.camDist - refToRear) * (math.tan(self.fov * hdegToRad) / math.tan(fov * hdegToRad) - 1)
+    fovdistDiff = (self.camDist - refToRear) * (math.tan((self.fov+self.fovModifier) * hdegToRad) / math.tan(fov * hdegToRad) - 1)
 
-    --local val1 = self.fov
-    --log("I", "", graphs(val1, 150)..string.format("%5.2f", val1))
     --debugDrawer:drawSphere((rear):toPoint3F(), 0.2, ColorF(1.0, 0.0, 0, 0.2))
   end
 

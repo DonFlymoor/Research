@@ -54,18 +54,37 @@ local function openSession()
   Engine.Online.openSession()
 end
 
-local function apiCall(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback)
+local function downloadURL(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback, isJson, postFileName)
+  --print('=== downloadURL ===')
+  --print(' uri = ' .. dumps(uri) .. ' / ' .. type(uri))
+  --print(' finishCallback = ' .. dumps(finishCallback) .. ' / ' .. type(finishCallback))
+  --print(' postDataTbl = ' .. dumps(postDataTbl) .. ' / ' .. type(postDataTbl))
+  --print(' outfile = ' .. dumps(outfile) .. ' / ' .. type(outfile))
+  --print(' reqType = ' .. dumps(reqType) .. ' / ' .. type(reqType))
+  --print(' progressCallback = ' .. dumps(progressCallback) .. ' / ' .. type(progressCallback))
+  --print(' isJson = ' .. dumps(isJson) .. ' / ' .. type(isJson))
+
   if not enabled then return false end
 
+  if reqType == nil then
+    reqType = 'get'
+  end
+  reqType = string.lower(reqType)
+
   if not Engine.Online.isAuthenticated() then
-    log('E', "online.apiCall", "Client isn't authenticated!!!")
+    log('E', "online.downloadURL", "Client isn't authenticated!!!")
     return false
   end
 
   -- d is the local tracking table to associate the request throughout the system. Store internal data into it that you need to work with
   local d = { priv = {}, pub = {}} -- data splitted into a private and public part. Private contains implementation specific things that the API user should not care about
-  d.pub.uri = uri
-  d.priv.uri = uri
+  if string.find(uri, 'http://') or string.find(uri, 'https://') then
+    d.pub.url = uri
+    d.priv.url = uri
+  else
+    d.pub.uri = uri
+    d.priv.uri = uri
+  end
 
   -- callback or fire and forget?
   if finishCallback then
@@ -98,14 +117,28 @@ local function apiCall(uri, finishCallback, postDataTbl, outfile, reqType, progr
   -- prepare the data to post, empty by default
   d.priv.postDataString = ''
   if postDataTbl then
-    d.priv.postDataString = encodeJson(postDataTbl)
+    d.priv.postDataString = jsonEncode(postDataTbl)
   end
 
-  d.priv.reqType = reqType or 'get'
-  --print('calling API: ' .. tostring(reqType) .. ' | request: ' .. dumps(d) .. ' | ' .. postDataString)
+  d.priv.postFileName = ''
+  if postFileName then
+    d.priv.postFileName = tostring(postFileName)
+  end
+
+  d.priv.reqType = reqType
+  d.priv.isJson = isJson
+  -- print('calling API: ' .. tostring(reqType) .. ' | request: ' .. dumps(d))
 
   -- the c++ side will use d.id for the callbacks, so make sure they are valid
   SecureComm.apiCall(d.priv)
+end
+
+local function download(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback)
+  return downloadURL(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback, false)
+end
+
+local function apiCall(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback, postFileName)
+  return downloadURL(uri, finishCallback, postDataTbl, outfile, reqType, progressCallback, true, postFileName)
 end
 
 -- do not remove, called by c++
@@ -300,6 +333,7 @@ M.onUIOnlineMessageHide = onUIOnlineMessageHide
 
 -- interfaces for usage
 M.apiCall = apiCall
+M.download = download
 
 -- interface for te UI
 M.requestState = sendUIState

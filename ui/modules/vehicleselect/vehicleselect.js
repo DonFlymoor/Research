@@ -238,7 +238,6 @@ angular.module('beamng.stuff')
   vm.mode = VehicleSelectConfig.configs[$stateParams.mode || 'default'];
   // logger.log($stateParams);
 
-
   vm.selectConfig = function (configname, launch) {
     vm.selectedConfig = vm.configs[configname];
     vm.detailsKeys = Object.keys(vm.selectedConfig.aggregates);
@@ -304,8 +303,14 @@ angular.module('beamng.stuff')
     vm.hasConfigs     = Object.keys(response.configs).length > 1;
     vm.configs        = response.configs;
 
-    
-   
+    // Filter out powerglow configs
+    if (vm.mode.name !== "lightRunner") {
+      for (var key in vm.configs) {
+        if (vm.configs[key].key === "powerglow") {
+          delete vm.configs[key]
+        }
+      }
+    }
 
     // Checking if quickrace is being used within career mode.
     // If it is then the available configs are filtered to what the player owns.
@@ -358,7 +363,28 @@ function (logger, $scope, $state, $timeout, $stateParams, $rootScope, bngApi, In
 
   Vehicles.populate().then(() => {
     vm.data = angular.copy(InstalledContent.vehicles);
-
+    if (vm.mode.name !== "lightRunner") {
+      for (var key in vm.data.configs) {
+        if (vm.data.configs[key].key === "powerglow") {
+          vm.data.configs.splice(key, 1);
+        }
+      }
+      // TODO: Find a better way to reset search query if lightRunner mode is not being used... yay hacks.
+      if (vm.query === "Powerglow") {
+        $scope.$evalAsync(function() {
+          vm.query = "";
+          vm.showConfigurations  = false;
+          vm.switchList();
+        })
+      }
+    }
+    if (vm.mode.name === "lightRunner") {
+      $scope.$evalAsync(function() {
+        vm.query = "Powerglow";
+        vm.showConfigurations = true;
+        vm.switchList()
+      })
+    }
     // used to filter owned vehicles if quickrace is being access from career mode.
     if (VehicleSelectConfig.configs['quickrace'] && VehicleSelectConfig.configs['quickrace'].getVehicles() !== undefined) {
       var ownedVehicles = VehicleSelectConfig.configs['quickrace'].getVehicles();
@@ -371,7 +397,6 @@ function (logger, $scope, $state, $timeout, $stateParams, $rootScope, bngApi, In
     }
 
     if ($stateParams.mode === "busRoutes") {
-      console.warn(VehicleSelectConfig.configs);
       vm.data.models = vm.data.models.filter((e) => {
         // filtering out every vehicle except for Official Buses
         if (e["Body Style"] === "Bus" && e.aggregates.Source["BeamNG - Official"] === true)
@@ -429,7 +454,8 @@ function (logger, $scope, $state, $timeout, $stateParams, $rootScope, bngApi, In
   vm.goToConfigs = function (model) {
     var args = {
       model: model.key,
-      mode: $stateParams.mode || 'default'
+      mode: $stateParams.mode || 'default',
+      event: $stateParams.event || ''
     };
 
     if (model.model_key !== undefined) {

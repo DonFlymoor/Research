@@ -16,31 +16,34 @@ local udpSocket = nil
 
 local ffi = require("ffi")
 
+local function declareOutgaugeStruct()
 -- the documentation can be found at LFS/docs/InSim.txt
-ffi.cdef[[
-typedef struct outgauge_t  {
-    unsigned       time;            // time in milliseconds (to check order)
-    char           car[4];          // Car name
-    unsigned short flags;           // Info (see OG_x below)
-    char           gear;            // Reverse:0, Neutral:1, First:2...
-    char           plid;            // Unique ID of viewed player (0 = none)
-    float          speed;           // M/S
-    float          rpm;             // RPM
-    float          turbo;           // BAR
-    float          engTemp;         // C
-    float          fuel;            // 0 to 1
-    float          oilPressure;     // BAR
-    float          oilTemp;         // C
-    unsigned       dashLights;      // Dash lights available (see DL_x below)
-    unsigned       showLights;      // Dash lights currently switched on
-    float          throttle;        // 0 to 1
-    float          brake;           // 0 to 1
-    float          clutch;          // 0 to 1
-    char           display1[16];    // Usually Fuel
-    char           display2[16];    // Usually Settings
-    int            id;              // optional - only if OutGauge ID is specified
-} outgauge_t;
-]]
+  ffi.cdef[[
+  typedef struct outgauge_t  {
+      unsigned       time;            // time in milliseconds (to check order)
+      char           car[4];          // Car name
+      unsigned short flags;           // Info (see OG_x below)
+      char           gear;            // Reverse:0, Neutral:1, First:2...
+      char           plid;            // Unique ID of viewed player (0 = none)
+      float          speed;           // M/S
+      float          rpm;             // RPM
+      float          turbo;           // BAR
+      float          engTemp;         // C
+      float          fuel;            // 0 to 1
+      float          oilPressure;     // BAR
+      float          oilTemp;         // C
+      unsigned       dashLights;      // Dash lights available (see DL_x below)
+      unsigned       showLights;      // Dash lights currently switched on
+      float          throttle;        // 0 to 1
+      float          brake;           // 0 to 1
+      float          clutch;          // 0 to 1
+      char           display1[16];    // Usually Fuel
+      char           display2[16];    // Usually Settings
+      int            id;              // optional - only if OutGauge ID is specified
+  } outgauge_t;
+  ]]
+end
+pcall(declareOutgaugeStruct)
 
 --[[
 CONSTANTS
@@ -128,17 +131,9 @@ local function sendPackage(ip, port, id)
   o.display2 = "" -- TODO
   o.id       = id
 
-  --log('D', 'OutGauge', 'got id: ' .. o.id)
-
-  --convert the struct into a string
-  local packet = ffi.string(o, ffi.sizeof(o))
-
-  --log('D', 'OutGauge', 'Sending To: ' .. ip .. 'port: ' .. port)
-  -- send it
-  if not udpSocket then
-    udpSocket = socket.udp()
-  end
+  local packet = ffi.string(o, ffi.sizeof(o)) --convert the struct into a string
   udpSocket:sendto(packet, ip, port)
+  --log("I", "", "SendPackage for ID '"..dumps(id).."': "..dumps(electrics.values.rpm))
 end
 
 
@@ -148,25 +143,31 @@ end
 
 local function onExtensionLoaded()
   if not ffi then
-    log('E', 'outgauge', 'unable to load outgauge module: Lua FFI required')
+    log('E', 'outgauge', 'Unable to load outgauge module: Lua FFI required')
     return false
   end
 
-  if not settings or settings.getValue('outgaugeEnabled') ~= true then
-    log('E', 'outgauge', 'not enabled in settings')
-    return false
+  if not udpSocket then
+    udpSocket = socket.udp()
   end
 
   ip = settings.getValue('outgaugeIP')
   port = tonumber(settings.getValue('outgaugePort'))
 
-  -- attach this to the update loop and enable the module
-  log('D', 'outgauge', 'initialized with: ' .. tostring(ip) .. ':' .. tostring(port))
+  log('I', '', 'Outgauge initialized for: ' .. tostring(ip) .. ':' .. tostring(port))
   return true
+end
+
+local function onExtensionUnloaded()
+  if udpSocket then
+    udpSocket:close()
+  end
+  udpSocket = nil
 end
 
 -- public interface
 M.onExtensionLoaded = onExtensionLoaded
+M.onExtensionUnloaded = onExtensionUnloaded
 M.updateGFX = updateGFX
 
 M.sendPackage = sendPackage

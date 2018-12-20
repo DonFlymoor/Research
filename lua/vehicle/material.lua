@@ -293,8 +293,8 @@ local function switchBrokenMaterial(beam)
     if dm then --if there is a mesh assigned to this deformGroup
       if dm.deformSound and dm.deformSound ~= "" and not brokenSwitches[msc] then    --check if the mesh has a deform sound
         --sounds.playSoundOnceAtNode(dm.deformSound, beam.id1, dm.deformVolume or 1)   --play the deform sound
-		sounds.playSoundOnceAtNode(dm.deformSound, beam.id1, (dm.deformVolume or 1) * 0.5)
-		--print ((dm.deformVolume or 1) * 0.5)
+        sounds.playSoundOnceAtNode(dm.deformSound, beam.id1, (dm.deformVolume or 1) * 0.5)
+        --print ((dm.deformVolume or 1) * 0.5)
         beamstate.addDamage(500)
       end
     end

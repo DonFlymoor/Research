@@ -148,7 +148,7 @@ local function exchangeLevel()
     -- get random level
     local newLevel = levelPathMap[ tableChooseRandomKey(levelPathMap) ]
     TorqueScript.eval('schedule( 1000, 0, \"startLevel\", \"' .. newLevel .. '\" );') --TODO deprecated, should use the line below
-    --beamng_cef.startLevel(newLevel) --TODO this should be used instead
+    --core_levels.startLevel(newLevel) --TODO this should be used instead
 end
 
 --

@@ -72,6 +72,16 @@ datablock LightAnimData( FireLightAnim )
     colorKeys[2] = "";
 };
 
+datablock LightAnimData( LightningLightAnim )
+{
+    brightnessA = 0.0;
+    brightnessZ = 3.0;
+    brightnessPeriod = 25;
+	// Strikes List = aszqthfcfcba   ahgfgfceba   atwnwnwneba   awzztmtmetlfba
+    brightnessKeys = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaszqthfcfcbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaahgfgfcebabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaatwnwnwnebaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaawzztmtmetlfbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    brightnessSmooth = true;
+};
+
 datablock LightAnimData( SpinLightAnim )
 {
     rotA[2] = "0";
