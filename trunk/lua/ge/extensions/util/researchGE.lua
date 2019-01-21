@@ -4,7 +4,7 @@
 
 local M = {}
 local logTag = 'ResearchGE'
-local version = 'v1.5'
+local version = 'v1.8'
 
 local socket = require('libs/luasocket/socket.socket')
 local rcom = require('utils/researchCommunication')
@@ -33,6 +33,8 @@ local restartRequested = false
 local sensors = {}
 
 local lidars = {}
+
+local spawnPending = nil
 
 local _log = log
 local function log(level, message)
@@ -189,7 +191,7 @@ M.handleShowHUD = function(msg)
 end
 
 M.handleSetPhysicsDeterministic = function(msg)
-  be:setPhysicsSpeedFactor(1)
+  be:setPhysicsSpeedFactor(-1)
   be:setPhysicsDeterministic(true)
   rcom.sendACK(skt, 'SetPhysicsDeterministic')
   return true
@@ -235,6 +237,19 @@ M.handleStep = function(msg)
   return true
 end
 
+M.handleTeleport = function(msg)
+  local vID = msg['vehicle']
+  local veh = scenarioHelper.getVehicleByName(vID)
+  if msg['rot'] ~= nil then
+    local quat = quatFromEuler(msg['rot'][1], msg['rot'][2], msg['rot'][3])
+    veh:setPositionRotation(msg['pos'][1], msg['pos'][2], msg['pos'][3], quat.x, quat.y, quat.z, quat.w)
+  else
+    veh:setPosition(Point3F(msg['pos'][1], msg['pos'][2], msg['pos'][3]))
+  end
+  rcom.sendACK(skt, 'Teleported')
+  return true
+end
+
 M.handleVehicleConnection = function(msg)
   local vID, vHost, vPort, veh, command
 
@@ -249,17 +264,6 @@ M.handleVehicleConnection = function(msg)
   command = 'researchVE.startConnecting("' .. vHost .. '", '
   command = command .. tostring(vPort) .. ')'
   veh:queueLuaCommand(command)
-  return true
-end
-
-M.handleSetPositionRotation = function(msg)
-  local pos = msg['pos']
-  local rot = msg['rot']
-
-  rot = quatFromDir(vec3(rot[1], rot[2], rot[3]))
-  be:getPlayerVehicle(vehicleCursor):setPositionRotation(pos[1], pos[2], pos[3], rot.x, rot.y, rot.z, rot.w)
-
-  rcom.sendACK(skt, 'VehicleMoved')
   return true
 end
 
@@ -282,6 +286,23 @@ M.handleCloseShmem = function(msg)
   return true
 end
 
+M.handleWaitForSpawn = function(msg)
+  local name = msg['name']
+  spawnPending = name
+  return true
+end
+
+M.onVehicleSpawned = function(vID)
+  if spawnPending ~= nil then
+    local name = scenario_scenarios.getVehicleName(vID)
+    if name == spawnPending then
+      local resp = {type = 'VehicleSpawned', name = name}
+      spawnPending = nil
+      rcom.sendMessage(skt, resp)
+    end
+  end
+end
+
 sensors.Camera = function(req, callback)
   local offset, orientation, up
   local pos, direction, rot, fov, resolution, nearFar, vehicle, vehicleObj, data
@@ -301,7 +322,6 @@ sensors.Camera = function(req, callback)
   else
     orientation = quatFromEuler(0, 0, 0)
     offset = vec3(0, 0, 0)
-    up = vec3(0, 0, 1)
   end
 
   direction = req['direction']
@@ -312,7 +332,7 @@ sensors.Camera = function(req, callback)
   resolution = req['resolution']
   nearFar = req['near_far']
 
-  rot = quatFromDir(direction, up) * orientation
+  rot = quatFromDir(direction, vec3(0, 0, 1)) * orientation
 
   pos = req['pos']
   pos = vec3(pos[1], pos[2], pos[3])
@@ -394,6 +414,13 @@ M.handleGetDecalRoadVertices = function(msg)
   return true
 end
 
+M.handleGetDecalRoadData = function(msg)
+  local response = Sim.getDecalRoadData()
+  response = {type = "DecalRoadData", data = response}
+  rcom.sendMessage(skt, response)
+  return true
+end
+
 M.handleEngineFlags = function(msg)
   log('I', 'Setting engine flags!')
   local flags = msg['flags']
@@ -403,6 +430,11 @@ M.handleEngineFlags = function(msg)
 
   rcom.sendACK(skt, 'SetEngineFlags')
   return true
+end
+
+M.handleTimeOfDayChange = function(msg)
+  core_environment.setTimeOfDay({time = msg['tod']})
+  rcom.sendACK(skt, 'TimeOfDayChanged')
 end
 
 local function getVehicleState(vid)
@@ -436,7 +468,6 @@ local function getVehicleState(vid)
     state['vel'].y,
     state['vel'].z
   }
-  return state
 end
 
 M.handleUpdateScenario = function(msg)
@@ -489,6 +520,13 @@ M.handleCloseLidar = function(msg)
   return true
 end
 
+M.handleSetWeatherPreset = function(msg)
+  local preset = msg['preset']
+  local time = msg['time']
+  core_weather.switchWeather(preset, time)
+  rcom.sendACK(skt, 'WeatherPresetChanged')
+end
+
 M.handleGameStateRequest = function(msg)
   local state = core_gamestate.state.state
   resp = {type = 'GameState'}
@@ -500,6 +538,12 @@ M.handleGameStateRequest = function(msg)
   end
   rcom.sendMessage(skt, resp)
   return true
+end
+
+M.handleDisplayGuiMessage = function(msg)
+  local message = msg['message']
+  guihooks.message(message)
+  rcom.sendACK(skt, 'GuiMessageDisplayed')
 end
 
 return M

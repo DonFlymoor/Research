@@ -1,3 +1,7 @@
+-- This Source Code Form is subject to the terms of the bCDDL, v. 1.1.
+-- If a copy of the bCDDL was not distributed with this
+-- file, You can obtain one at http://beamng.com/bCDDL-1.1.txt
+
 local M = {}
 local logTag = 'ResearchVE'
 
@@ -75,6 +79,46 @@ M.onDebugDraw = function()
   checkMessage()
 end
 
+local function getVehicleState()
+  local vehicleState = {
+    pos = obj:getPosition(),
+    dir = obj:getDirectionVector(),
+    up = obj:getDirectionVectorUp(),
+    vel = obj:getVelocity(),
+    front = obj:getFrontPosition()
+  }
+  vehicleState['pos'] = {
+    vehicleState['pos'].x,
+    vehicleState['pos'].y,
+    vehicleState['pos'].z
+  }
+
+  vehicleState['dir'] = {
+    vehicleState['dir'].x,
+    vehicleState['dir'].y,
+    vehicleState['dir'].z
+  }
+
+  vehicleState['up'] = {
+    vehicleState['up'].x,
+    vehicleState['up'].y,
+    vehicleState['up'].z
+  }
+
+  vehicleState['vel'] = {
+    vehicleState['vel'].x,
+    vehicleState['vel'].y,
+    vehicleState['vel'].z
+  }
+
+  vehicleState['front'] = {
+    vehicleState['front'].x,
+    vehicleState['front'].y,
+    vehicleState['front'].z
+  }
+  return vehicleState
+end
+
 -- Handlers
 
 local function submitInput(inputs, key)
@@ -130,40 +174,8 @@ sensorHandlers.Damage = function(msg)
   resp['deformGroupDamage'] = beamstate.deformGroupDamage
   resp['lowpressure'] = beamstate.lowpressure
   resp['damage'] = beamstate.damage
+  resp['partDamage'] = beamstate.getPartDamageData()
   return resp
-end
-
-local function getVehicleState()
-  local vehicleState = {
-    pos = obj:getPosition(),
-    dir = obj:getDirectionVector(),
-    up = obj:getDirectionVectorUp(),
-    vel = obj:getVelocity()
-  }
-  vehicleState['pos'] = {
-    vehicleState['pos'].x,
-    vehicleState['pos'].y,
-    vehicleState['pos'].z
-  }
-
-  vehicleState['dir'] = {
-    vehicleState['dir'].x,
-    vehicleState['dir'].y,
-    vehicleState['dir'].z
-  }
-
-  vehicleState['up'] = {
-    vehicleState['up'].x,
-    vehicleState['up'].y,
-    vehicleState['up'].z
-  }
-
-  vehicleState['vel'] = {
-    vehicleState['vel'].x,
-    vehicleState['vel'].y,
-    vehicleState['vel'].z
-  }
-  return vehicleState
 end
 
 local function getSensorData(request)
@@ -177,6 +189,24 @@ local function getSensorData(request)
   end
 
   return nil
+end
+
+M.handleGetPartConfig = function(msg)
+  local cfg = partmgmt.getConfig()
+  local resp = {type = 'PartConfig', config = cfg}
+  rcom.sendMessage(skt, resp)
+end
+
+M.handleGetPartOptions = function(msg)
+  local options = v.slotMap
+  local resp = {type = 'PartOptions', options = options}
+  rcom.sendMessage(skt, resp)
+end
+
+M.handleSetPartConfig = function(msg)
+  local cfg = msg['config']
+  skt = nil
+  partmgmt.setConfig(cfg)
 end
 
 M.handleSensorRequest = function(msg)
@@ -194,6 +224,13 @@ M.handleSensorRequest = function(msg)
   response = {type = 'SensorData', data = response}
   response['state'] = getVehicleState()
   rcom.sendMessage(skt, response)
+end
+
+M.handleSetColor = function(msg)
+  local cmd = 'Point4F(' .. msg['r'] .. ', ' .. msg['g'] .. ', ' .. msg['b'] .. ', ' .. msg['a'] .. ')'
+  cmd = 'be:getObjectByID(' .. obj:getID() .. '):setColor(' .. cmd .. ')'
+  obj:queueGameEngineLua(cmd)
+  rcom.sendACK(skt, 'ColorSet')
 end
 
 M.handleSetAiMode = function(msg)
@@ -261,17 +298,14 @@ M.handleSetAiSpan = function(msg)
 end
 
 M.handleSetDriveInLane = function(msg)
-  if msg['lane'] then
-    ai.driveInLane('on')
-  else
-    ai.driveInLane('off')
-  end
+  ai.driveInLane = msg['lane']
   rcom.sendACK(skt, 'AiDriveInLaneSet')
 end
 
 M.handleUpdateVehicle = function(msg)
   local response = {type = 'VehicleUpdate'}
-  response['state'] = getVehicleState()
+  local vehicleState = getVehicleState()
+  response['state'] = vehicleState
   rcom.sendMessage(skt, response)
   return true
 end
