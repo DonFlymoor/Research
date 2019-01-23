@@ -4,7 +4,7 @@
 
 local M = {}
 local logTag = 'ResearchGE'
-local version = 'v1.8'
+local version = 'v1.9'
 
 local socket = require('libs/luasocket/socket.socket')
 local rcom = require('utils/researchCommunication')
@@ -315,9 +315,9 @@ sensors.Camera = function(req, callback)
   if req['vehicle'] then
     vehicle = scenarioHelper.getVehicleByName(req['vehicle'])
     orientation = vec3(vehicle:getDirectionVector())
+
     up = vec3(vehicle:getDirectionVectorUp())
     orientation = quatFromDir(orientation, up)
-
     offset = vec3(vehicle:getPosition())
   else
     orientation = quatFromEuler(0, 0, 0)
@@ -544,6 +544,24 @@ M.handleDisplayGuiMessage = function(msg)
   local message = msg['message']
   guihooks.message(message)
   rcom.sendACK(skt, 'GuiMessageDisplayed')
+end
+
+M.handleSwitchVehicle = function(msg)
+  local vID = msg['vid']
+  local vehicle = scenetree.findObject(vID)
+  be:enterVehicle(0, vehicle)
+  rcom.sendACK(skt, 'VehicleSwitched')
+end
+
+M.handleSetFreeCamera = function(msg)
+  local pos = msg['pos']
+  local direction = msg['dir']
+  local rot = quatFromDir(vec3(direction[1], direction[2], direction[3]))
+
+  commands.setFreeCamera()
+  commands.setCameraPosRot(pos[1], pos[2], pos[3], rot.x, rot.y, rot.z, rot.w)
+  rcom.sendACK(skt, 'FreeCameraSet')
+  return true
 end
 
 return M
